@@ -1,6 +1,6 @@
 ﻿namespace WPR_project.DTO_s
 {
-    public class Class
+    public class ClassDTO
     {
     }
 }
