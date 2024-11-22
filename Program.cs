@@ -27,6 +27,10 @@ namespace WPR_project
 
             app.UseAuthorization();
 
+            app.UseStaticFiles();
+
+            app.MapFallbackToFile("index.html");
+
 
             app.MapControllers();
 
