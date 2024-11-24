@@ -1,6 +1,7 @@
 ﻿namespace WPR_project.Models
 {
-    public class HuurOpties
+    public class Abonnement
     {
+
     }
 }
