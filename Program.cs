@@ -1,4 +1,8 @@
 
+using WPR_project.Data;
+using Microsoft.EntityFrameworkCore;
+
+
 namespace WPR_project
 {
     public class Program
@@ -6,6 +10,12 @@ namespace WPR_project
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            //database connection
+            builder.Services.AddDbContext<GebruikerGegevensContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
             // Add services to the container.
 

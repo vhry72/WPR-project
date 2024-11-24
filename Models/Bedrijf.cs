@@ -1,6 +1,6 @@
 ﻿namespace WPR_project.Models
 {
-    public class BedrijfsAccount
+    public class Bedrijf
     {
 
         public string bedrijfsNaam { get; set; }

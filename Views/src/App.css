@@ -1,42 +1,196 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* Reset alle marges, padding en box-sizing voor alle elementen */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Stijl voor het body-element */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Stijl voor de navigatiebalk */
+nav {
+    display: flex;
+    justify-content: space-between; /* Plaats het logo links en menu rechts */
+    align-items: center; /* Verticaal centreren */
+    padding: 20px 5%; /* Zorg voor wat padding aan de zijkanten */
+    background-color: #333;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+    nav ul {
+        display: flex;
+        list-style: none;
+        margin: 0;
+    }
+
+        nav ul li {
+            margin: 0 20px;
+        }
+
+            nav ul li a {
+                color: white;
+                text-decoration: none;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+                nav ul li a:hover {
+                    color: #646cff;
+                }
+
+header .logo img {
+    max-height: 60px; /* Zorg dat het logo kleiner is */
 }
 
-.card {
-  padding: 2em;
+
+    /* Stijl voor de lijst in de navigatiebalk */
+    nav ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+    }
+
+        /* Stijl voor de lijstitems in de navigatiebalk */
+        nav ul li {
+            margin: 0 15px; /* Voeg ruimte toe tussen de items */
+        }
+
+            /* Stijl voor de links in de navigatiebalk */
+            nav ul li a {
+                text-decoration: none;
+                color: white; /* Pas de kleur van de links aan */
+                font-size: 18px; /* Vergroot de tekst */
+                padding: 10px 15px; /* Voeg padding toe aan de links */
+            }
+
+                /* Hover-effect voor de links in de navigatiebalk */
+                nav ul li a:hover {
+                    background-color: #555; /* Optioneel: voeg een hover-effect toe */
+                    border-radius: 5px; /* Optioneel: voeg afgeronde hoeken toe */
+                }
+
+/* Stijl voor de container */
+.container {
+    width: 90%;
+    margin: 0 auto;
 }
 
-.read-the-docs {
-  color: #888;
+/* Stijl voor de header */
+header {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+    /* Stijl voor het logo in de header */
+    header .logo img {
+        width: 150px;
+    }
+
+    /* Stijl voor de lijst in de header navigatie */
+    header nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+        /* Stijl voor de lijstitems in de header navigatie */
+        header nav ul li {
+            margin: 0 15px;
+        }
+
+            /* Stijl voor de links in de header navigatie */
+            header nav ul li a {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+/* Stijl voor de hero-sectie */
+.hero {
+    background-image: url('/path/to/your/image.jpg'); /* Zorg dat het pad klopt */
+    background-size: cover;
+    background-position: center;
+    height: 700px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+}
+
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+    }
+
+    .hero .cta {
+        padding: 15px 30px;
+        background-color: #646cff;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .hero .cta:hover {
+            background-color: #535bf2;
+        }
+
+/* Stijl voor de services-sectie */
+.services {
+    padding: 50px 0;
+    text-align: center;
+    background-color: #8c8ca7;
+}
+
+    /* Stijl voor de h2 in de services-sectie */
+    .services h2 {
+        margin-bottom: 40px;
+        font-size: 2.5rem;
+    }
+
+/* Stijl voor de lijst van services */
+.service-list {
+    display: flex;
+    justify-content: space-around;
+}
+
+/* Stijl voor individuele service-items */
+.service {
+    width: 22%;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+    /* Stijl voor de afbeeldingen in de service-items */
+    .service img {
+        width: 200px;
+        margin-bottom: 20px;
+    }
+
+    /* Stijl voor de h3 in de service-items */
+    .service h3 {
+        font-size: 1.5rem; 
+        margin-bottom: 15px;
+    }
+
+/* Stijl voor de footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 30px;
 }

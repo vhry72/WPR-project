@@ -1,6 +1,6 @@
 ﻿namespace WPR_project.Models
 {
-    public class Klant
+    public class Voertuig
     {
     }
 }

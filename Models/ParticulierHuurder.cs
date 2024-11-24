@@ -9,16 +9,16 @@ namespace WPR_project.Models
         public string gebruikerMail { get; set; }
         public int telNummer { get; set; }
 
-        public string BevestigingsMail()
-        {
-            if (gebruikerMail != null)
-            {
-                return gebruikerMail;
-            }
-            else
-            {
-                return "Geen E-mail ingevoerd!";
-            }
-        }
+        //public string BevestigingsMail()
+        //{
+        //    if (gebruikerMail != null)
+        //    {
+        //        return gebruikerMail;
+        //    }
+        //    else
+        //    {
+        //        return "Geen E-mail ingevoerd!";
+        //    }
+        //}
     }
 }
