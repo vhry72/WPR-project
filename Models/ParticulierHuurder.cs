@@ -4,9 +4,8 @@ using System.Transactions;
 namespace WPR_project.Models { 
     public class ParticulierHuurder
     { 
-        public int Id { get; set; }
-        public string adress { get; set; }
-
+        public int gebruikerId { get; set; }
+        public string naam { get; set; }
         public string email { get; set; }
         public int phoneNumber { get; set; }
 

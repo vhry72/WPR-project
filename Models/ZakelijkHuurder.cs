@@ -2,12 +2,10 @@
 {
     public class ZakelijkHuurder
     {
-        public int Id { get; set; }  
+        public int zakelijkeId { get; set; }  
         public string adres { get; set; }
-
         public string email { get; set; }
         public int telNummer { get; set; }
-
         public string bedrijfsNaam { get; set;}
 
     }
