@@ -1,7 +1,5 @@
-
 using WPR_project.Data;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace WPR_project
 {
@@ -11,22 +9,18 @@ namespace WPR_project
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            //database connection
+            // Database connection
             builder.Services.AddDbContext<GegevensContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
-
-            // Add services to the container.
-
+            // Add services to the container
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Configure the HTTP request pipeline
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -34,14 +28,10 @@ namespace WPR_project
             }
 
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
             app.UseStaticFiles();
 
             app.MapFallbackToFile("index.html");
-
-
             app.MapControllers();
 
             app.Run();

@@ -53,24 +53,10 @@ namespace WPR_project.Data
                 entity.ToTable("Huurverzoeken");
                 entity.HasKey(e => e.HuurderID);
 
-                // <!!!!!!!!!!!!!!!!!!!!!> hier moeten de id's gecorrigeerd nog worden!
+                // < !!!!!!!!!!!!!!!!!!!!!> hier moeten de id's gecorrigeerd nog worden!
 
-                //// Relatie: Huurverzoek -> Voertuig
-                //entity.HasOne(h => h.voertuigId)
-                //      .WithMany(v => v.Huurverzoeken)
-                //      .HasForeignKey(h => h.VoertuigId);
-
-                //// Relatie: Huurverzoek -> ParticulierHuurder (optioneel)
-                //entity.HasOne(h => h.ParticulierHuurder)
-                //      .WithMany(p => p.Huurverzoeken)
-                //      .HasForeignKey(h => h.ParticulierHuurderId)
-                //      .IsRequired(false);
-
-                //// Relatie: Huurverzoek -> ZakelijkHuurder (optioneel)
-                //entity.HasOne(h => h.ZakelijkHuurder)
-                //      .WithMany(z => z.Huurverzoeken)
-                //      .HasForeignKey(h => h.ZakelijkHuurderId)
-                //      .IsRequired(false);
+                // Relatie: Huurverzoek -> Voertuig nog invullen
+               
             });
 
             // WagenParkBeheerder Configuratie
