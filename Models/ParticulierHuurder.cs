@@ -1,13 +1,15 @@
 ﻿using System.Security.Cryptography.X509Certificates;
+using System.Transactions;
 
-namespace WPR_project.Models
-{
+namespace WPR_project.Models { 
     public class ParticulierHuurder
-    {
-        public int gebruikerId { get; set; }
-        public string gebruikerAdres { get; set; }
-        public string gebruikerMail { get; set; }
-        public int telNummer { get; set; }
+    { 
+        public int Id { get; set; }
+        public string adress { get; set; }
+
+        public string email { get; set; }
+        public int phoneNumber { get; set; }
+
 
         //public string BevestigingsMail()
         //{
