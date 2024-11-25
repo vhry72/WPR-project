@@ -6,24 +6,24 @@ namespace WPR_project.Repositories
 {
     public class HuurderRegistratieRepository : IHuurderRegistratieRepository
     {
-        private readonly GebruikerGegevensContext _context;
+        private readonly GegevensContext _context;
 
-        public HuurderRegistratieRepository(GebruikerGegevensContext context)
+        public HuurderRegistratieRepository(GegevensContext context)
         {
             _context = context;
         }
 
         public void Add(ParticulierHuurder particulierHuurder)
         {
-            _context.ParticulierHuurder.Add(particulierHuurder);
+            _context.ParticulierHuurders.Add(particulierHuurder);
         }
 
         public void Delete(int id)
         {
-            var particulierHuurder = _context.ParticulierHuurder.Find(id);
+            var particulierHuurder = _context.ParticulierHuurders.Find(id);
             if (particulierHuurder!= null)
             {
-                _context.ParticulierHuurder.Remove(particulierHuurder);
+                _context.ParticulierHuurders.Remove(particulierHuurder);
             }
         }
 
@@ -34,7 +34,7 @@ namespace WPR_project.Repositories
 
         public ParticulierHuurder GetById(int id)
         {
-            return _context.ParticulierHuurder.Find(id);
+            return _context.ParticulierHuurders.Find(id);
         }
 
         public void Save()
@@ -44,7 +44,7 @@ namespace WPR_project.Repositories
 
         public void Update(ParticulierHuurder particulierHuurder)
         {
-            _context.ParticulierHuurder.Update(particulierHuurder);
+            _context.ParticulierHuurders.Update(particulierHuurder);
         }
     }
 }

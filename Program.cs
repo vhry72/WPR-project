@@ -12,7 +12,7 @@ namespace WPR_project
             var builder = WebApplication.CreateBuilder(args);
 
             //database connection
-            builder.Services.AddDbContext<GebruikerGegevensContext>(options =>
+            builder.Services.AddDbContext<GegevensContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 
