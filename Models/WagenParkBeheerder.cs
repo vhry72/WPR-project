@@ -3,17 +3,8 @@
     public class WagenParkBeheerder
     {
         public int beheerderId { get; set; }
+        public string email { get; set; }
+        public int phoneNumber { get; set; }
 
-        void getStatusVoertuigen() {
-
-        }
-
-        void getHuurVerzoek() {
-
-        }
-        void AanvraagVerhuren()
-        {
-
-        }
     }
 }

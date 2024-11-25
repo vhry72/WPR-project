@@ -2,5 +2,6 @@
 {
     public class Medewerker
     {
+        public int Id { get; set; } 
     }
 }
