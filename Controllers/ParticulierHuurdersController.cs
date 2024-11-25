@@ -14,9 +14,9 @@ namespace WPR_project.Controllers
     [ApiController]
     public class ParticulierHuurdersController : ControllerBase
     {
-        private readonly GebruikerGegevensContext _context;
+        private readonly GegevensContext _context;
 
-        public ParticulierHuurdersController(GebruikerGegevensContext context)
+        public ParticulierHuurdersController(GegevensContext context)
         {
             _context = context;
         }
@@ -25,14 +25,14 @@ namespace WPR_project.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ParticulierHuurder>>> GetParticulierHuurder()
         {
-            return await _context.ParticulierHuurder.ToListAsync();
+            return await _context.ParticulierHuurders.ToListAsync();
         }
 
         // GET: api/ParticulierHuurders/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ParticulierHuurder>> GetParticulierHuurder(int id)
         {
-            var particulierHuurder = await _context.ParticulierHuurder.FindAsync(id);
+            var particulierHuurder = await _context.ParticulierHuurders.FindAsync(id);
 
             if (particulierHuurder == null)
             {
@@ -78,7 +78,7 @@ namespace WPR_project.Controllers
         [HttpPost]
         public async Task<ActionResult<ParticulierHuurder>> PostParticulierHuurder(ParticulierHuurder particulierHuurder)
         {
-            _context.ParticulierHuurder.Add(particulierHuurder);
+            _context.ParticulierHuurders.Add(particulierHuurder);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetParticulierHuurder", new { id = particulierHuurder.gebruikerId }, particulierHuurder);
@@ -88,13 +88,13 @@ namespace WPR_project.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteParticulierHuurder(int id)
         {
-            var particulierHuurder = await _context.ParticulierHuurder.FindAsync(id);
+            var particulierHuurder = await _context.ParticulierHuurders.FindAsync(id);
             if (particulierHuurder == null)
             {
                 return NotFound();
             }
 
-            _context.ParticulierHuurder.Remove(particulierHuurder);
+            _context.ParticulierHuurders.Remove(particulierHuurder);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -102,7 +102,7 @@ namespace WPR_project.Controllers
 
         private bool ParticulierHuurderExists(int id)
         {
-            return _context.ParticulierHuurder.Any(e => e.gebruikerId == id);
+            return _context.ParticulierHuurders.Any(e => e.gebruikerId == id);
         }
     }
 }

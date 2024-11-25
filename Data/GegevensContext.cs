@@ -2,17 +2,21 @@
 
 namespace WPR_project.Data
 {
-    public class GebruikerGegevensContext : DbContext
+    public class GegevensContext : DbContext
     {
-        public GebruikerGegevensContext(DbContextOptions<GebruikerGegevensContext> options) : base(options)
+        public GegevensContext(DbContextOptions<GegevensContext> options) : base(options)
         {
         }
+        public DbSet<WPR_project.Models.ParticulierHuurder> ParticulierHuurders { get; set; }
+        public DbSet<WPR_project.Models.ZakelijkHuurder> ZakelijkHuurders { get; set; }
+        public DbSet<WPR_project.Models.Voertuig> Voertuigen { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<WPR_project.Models.ParticulierHuurder>(entity =>
             {
-                entity.ToTable("ParticulierHuurder");
+                entity.ToTable("ParticulierHuurders");
                 entity.HasKey(e => e.gebruikerId); // Stel de primaire sleutel in
             });
         }
@@ -21,8 +25,6 @@ namespace WPR_project.Data
         {
             optionsBuilder.UseSqlServer("Server=DESKTOP-3JG6Q2V;Database=HuurderRegistratie;Trusted_Connection=True;");
         }
-
-        public DbSet<WPR_project.Models.ParticulierHuurder> ParticulierHuurder { get; set; }
        
     }
 }
