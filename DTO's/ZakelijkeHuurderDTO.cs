@@ -6,7 +6,6 @@ namespace WPR_project.DTO_s
     {
         public int zakelijkeId { get; set; }
         public string zakelijkeEmail { get; set; }
-        public string zakelijkAdres { get; set; }
         public string bedrijfsnaam { get; set; }
     }
 }

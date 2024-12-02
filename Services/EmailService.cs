@@ -10,7 +10,7 @@ namespace WPR_project.Services.Email
         private readonly string _smtpUser = "noreply@example.com";
         private readonly string _smtpPass = "yourpassword";
 
-        public void SendEmail(string to, string subject, string body)
+        public void SendEmail(string naar, string subject, string body)
         {
             var client = new SmtpClient(_smtpServer, _smtpPort)
             {
@@ -25,7 +25,7 @@ namespace WPR_project.Services.Email
                 Body = body,
                 IsBodyHtml = false,
             };
-            mailMessage.To.Add(to);
+            mailMessage.To.Add(naar);
 
             client.Send(mailMessage);
         }
