@@ -4,10 +4,10 @@ using System.Transactions;
 namespace WPR_project.Models { 
     public class ParticulierHuurder
     { 
-        public int gebruikerId { get; set; }
-        public string naam { get; set; }
-        public string email { get; set; }
-        public int phoneNumber { get; set; }
+        public int ParticulierId { get; set; }
+        public string particulierNaam { get; set; }
+        public string particulierEmail { get; set; }
+        public int telefoonNummer { get; set; }
 
 
         //public string BevestigingsMail()

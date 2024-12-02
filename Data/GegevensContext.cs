@@ -25,8 +25,8 @@ namespace WPR_project.Data
             modelBuilder.Entity<ParticulierHuurder>(entity =>
             {
                 entity.ToTable("ParticulierHuurders");
-                entity.HasKey(e => e.gebruikerId); // Primaire sleutel
-                entity.Property(e => e.naam).IsRequired(); // Verplichte kolom
+                entity.HasKey(e => e.ParticulierId); // Primaire sleutel
+                entity.Property(e => e.particulierNaam).IsRequired(); // Verplichte kolom
             });
 
             // ZakelijkHuurder Configuratie

@@ -2,6 +2,7 @@
 {
     public class MedewerkerDTO
     { 
-        public string medewerkerRol;
+        public int medewerkerId { get; set; }
+        public string medewerkerRol { get; set; }
     }
 }

@@ -2,7 +2,8 @@
 {
     public class ParticulierHuurderDTO
     {
-        public string particulierAdress { get; set; }
+        public int ParticulierId { get; set; }
+        public string particulierNaam { get; set; }
         public string particulierEmail { get; set; }
     }
 }

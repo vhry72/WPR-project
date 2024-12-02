@@ -2,6 +2,9 @@
 {
     public class WagenparkBeheerderDTO
     {
+        public int beheerderId { get; set; }   
+
+        public string beheerderNaam { get; set; }
         public string email { get; set; }
     }
 }
