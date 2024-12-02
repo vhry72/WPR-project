@@ -47,7 +47,7 @@ namespace WPR_project.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutParticulierHuurder(int id, ParticulierHuurder particulierHuurder)
         {
-            if (id != particulierHuurder.gebruikerId)
+            if (id != particulierHuurder.ParticulierId)
             {
                 return BadRequest();
             }
@@ -81,7 +81,7 @@ namespace WPR_project.Controllers
             _context.ParticulierHuurders.Add(particulierHuurder);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetParticulierHuurder", new { id = particulierHuurder.gebruikerId }, particulierHuurder);
+            return CreatedAtAction("GetParticulierHuurder", new { id = particulierHuurder.ParticulierId }, particulierHuurder);
         }
 
         // DELETE: api/ParticulierHuurders/5
@@ -102,7 +102,7 @@ namespace WPR_project.Controllers
 
         private bool ParticulierHuurderExists(int id)
         {
-            return _context.ParticulierHuurders.Any(e => e.gebruikerId == id);
+            return _context.ParticulierHuurders.Any(e => e.ParticulierId == id);
         }
     }
 }

@@ -2,6 +2,8 @@
 {
     public class Medewerker
     {
-        public int Id { get; set; } 
+        public int medewerkerId { get; set; } 
+
+        public string medewerkerRol { get; set; }
     }
 }

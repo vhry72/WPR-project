@@ -2,7 +2,7 @@
 {
     public class HuurVerzoekDTO
     {
-       
+        public string HuurderID { get; set; }
         public DateTime beginDate { get; set; }
         public DateTime endDate { get; set; }
 
