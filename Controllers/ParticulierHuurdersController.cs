@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 
 namespace WPR_project.Controllers
@@ -23,16 +22,31 @@ namespace WPR_project.Controllers
 
         // GET: api/ParticulierHuurders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ParticulierHuurder>>> GetParticulierHuurder()
+        public async Task<ActionResult<IEnumerable<ParticulierHuurderDTO>>> GetParticulierHuurder()
         {
-            return await _context.ParticulierHuurders.ToListAsync();
+            return await _context.ParticulierHuurders
+                .Select(ph => new ParticulierHuurderDTO
+                {
+                    ParticulierId = ph.ParticulierId,
+                    particulierNaam = ph.particulierNaam,
+                    particulierEmail = ph.particulierEmail
+                })
+                .ToListAsync();
         }
 
         // GET: api/ParticulierHuurders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ParticulierHuurder>> GetParticulierHuurder(int id)
+        public async Task<ActionResult<ParticulierHuurderDTO>> GetParticulierHuurder(int id)
         {
-            var particulierHuurder = await _context.ParticulierHuurders.FindAsync(id);
+            var particulierHuurder = await _context.ParticulierHuurders
+                .Where(ph => ph.ParticulierId == id)
+                .Select(ph => new ParticulierHuurderDTO
+                {
+                    ParticulierId = ph.ParticulierId,
+                    particulierNaam = ph.particulierNaam,
+                    particulierEmail = ph.particulierEmail
+                })
+                .FirstOrDefaultAsync();
 
             if (particulierHuurder == null)
             {
@@ -43,14 +57,22 @@ namespace WPR_project.Controllers
         }
 
         // PUT: api/ParticulierHuurders/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutParticulierHuurder(int id, ParticulierHuurder particulierHuurder)
+        public async Task<IActionResult> PutParticulierHuurder(int id, ParticulierHuurderDTO particulierHuurderDTO)
         {
-            if (id != particulierHuurder.ParticulierId)
+            if (id != particulierHuurderDTO.ParticulierId)
             {
                 return BadRequest();
             }
+
+            var particulierHuurder = await _context.ParticulierHuurders.FindAsync(id);
+            if (particulierHuurder == null)
+            {
+                return NotFound();
+            }
+
+            particulierHuurder.particulierNaam = particulierHuurderDTO.particulierNaam;
+            particulierHuurder.particulierEmail = particulierHuurderDTO.particulierEmail;
 
             _context.Entry(particulierHuurder).State = EntityState.Modified;
 
@@ -74,14 +96,21 @@ namespace WPR_project.Controllers
         }
 
         // POST: api/ParticulierHuurders
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<ParticulierHuurder>> PostParticulierHuurder(ParticulierHuurder particulierHuurder)
+        public async Task<ActionResult<ParticulierHuurderDTO>> PostParticulierHuurder(ParticulierHuurderDTO particulierHuurderDTO)
         {
+            var particulierHuurder = new ParticulierHuurder
+            {
+                particulierNaam = particulierHuurderDTO.particulierNaam,
+                particulierEmail = particulierHuurderDTO.particulierEmail
+            };
+
             _context.ParticulierHuurders.Add(particulierHuurder);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetParticulierHuurder", new { id = particulierHuurder.ParticulierId }, particulierHuurder);
+            particulierHuurderDTO.ParticulierId = particulierHuurder.ParticulierId;
+
+            return CreatedAtAction("GetParticulierHuurder", new { id = particulierHuurderDTO.ParticulierId }, particulierHuurderDTO);
         }
 
         // DELETE: api/ParticulierHuurders/5

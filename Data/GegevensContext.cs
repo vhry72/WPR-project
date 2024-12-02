@@ -29,13 +29,24 @@ namespace WPR_project.Data
                 entity.Property(e => e.particulierNaam).IsRequired(); // Verplichte kolom
             });
 
-            // ZakelijkHuurder Configuratie
+            //zakelijkHuurder configuratie
+
             modelBuilder.Entity<ZakelijkHuurder>(entity =>
             {
                 entity.ToTable("ZakelijkHuurders");
                 entity.HasKey(e => e.zakelijkeId);
                 entity.Property(e => e.bedrijfsNaam).IsRequired();
+
+                // Conversie voor MedewerkersEmails (opgeslagen als komma-gescheiden string)
+                entity.Property(e => e.MedewerkersEmails)
+                    .HasConversion(
+                        v => string.Join(',', v), // Opslaan als string
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() // Lezen als lijst
+                    )
+                    .HasColumnName("MedewerkersEmails") // Optioneel: expliciete naam in de database
+                    .IsRequired(false); // Optioneel: maak dit niet verplicht
             });
+
 
             // Voertuig Configuratie
             modelBuilder.Entity<Voertuig>(entity =>
