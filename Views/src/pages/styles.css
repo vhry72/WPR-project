@@ -1,0 +1,177 @@
+/* Algemene styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.index-container, .register-container, .login-container {
+    background: #ffffff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.options, .user-type-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Knoppen */
+.btn {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    text-align: center;
+    display: block;
+}
+
+.btn:hover {
+    background: #0056b3;
+}
+
+/* Tabs container */
+.tabs {
+    display: flex;
+    background-color: #de5bde; /* Dit is de standaard achtergrondkleur voor Particulier */
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+    transition: background-color 0.3s ease;
+}
+
+.tab {
+    flex: 1;
+    padding: 10px 0;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, font-weight 0.3s ease;
+}
+
+/* Hover effect voor tabs */
+.tab:hover {
+    background-color: #ffae00;
+}
+
+/* Actieve tab styling */
+.tab.active {
+    font-weight: bold;
+    color: #333; /* Zwart voor tekst van de geselecteerde tab */
+}
+
+/* Kleur van de tabs wanneer een specifieke tab geselecteerd is */
+.tabs.zakelijk {
+    background-color: #00e5ff; /* Rood voor Zakelijk */
+}
+
+.tabs.particulier {
+    background-color: #de5bde; /* Blauw voor Particulier */
+}
+
+.tabs.medewerker {
+    background-color: #5cb85c; /* Groen voor Medewerker */
+}
+
+/* Actieve tab donkerder maken */
+.tab.active[data-tab="zakelijk"] {
+    background-color: #4500e6; /* Donkerder rood voor geselecteerde Zakelijk */
+}
+
+.tab.active[data-tab="particulier"] {
+    background-color: #ad33cc; /* Donkerder blauw voor geselecteerde Particulier */
+}
+
+.tab.active[data-tab="medewerker"] {
+    background-color: #2e732d; /* Donkerder groen voor geselecteerde Medewerker */
+}
+/* Formulier styling */
+.form {
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+}
+
+.form label {
+    font-size: 14px;
+    color: #555;
+}
+
+.form input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.register-button {
+    background: #007bff;
+    color: #fff;
+    padding: 10px 20px; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.register-button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsieve verbeteringen */
+@media (max-width: 600px) {
+    .index-container, .register-container, .login-container {
+        padding: 15px;
+    }
+
+    .btn {
+        padding: 8px 15px;
+        font-size: 14px;
+    }
+
+    .tabs {
+        flex-direction: column;
+    }
+
+    .tab {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
+
+.login-button {
+    background: #007bff;
+    color: #fff;
+    padding: 10px 20px; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+}
+
