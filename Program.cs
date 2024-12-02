@@ -42,6 +42,6 @@ builder.Services.AddCors(options =>
 
     // Alle andere verzoeken naar React's index.html sturen
     app.MapFallbackToFile("index.html");
-
+// alsjeblieft vhry
     app.Run("https://localhost:5033");
  
