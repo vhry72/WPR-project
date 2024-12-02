@@ -2,24 +2,12 @@
 using System.Transactions;
 
 namespace WPR_project.Models { 
-    public class ParticulierHuurder //: Huurder
+    public class ParticulierHuurder : Huurder
     {
         public int particulierId { get; set; }
         public string particulierEmail { get; set; }
         public string particulierNaam { get; set; }
-
-
-
-        //public string BevestigingsMail()
-        //{
-        //    if (gebruikerMail != null)
-        //    {
-        //        return gebruikerMail;
-        //    }
-        //    else
-        //    {
-        //        return "Geen E-mail ingevoerd!";
-        //    }
-        //}
+        public string EmailBevestigingToken { get; set; }
+        public bool IsEmailBevestigd { get; set; } = false;
     }
 }
