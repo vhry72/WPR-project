@@ -1,6 +1,6 @@
 ﻿namespace WPR_project.Models
 {
-    public class Medewerker
+    public abstract class Medewerker
     {
         public int medewerkerId { get; set; } 
 

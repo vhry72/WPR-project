@@ -1,7 +1,7 @@
 ﻿namespace WPR_project.Models
 {
-    public class FrontofficeMedewerker
+    public class FrontofficeMedewerker : Medewerker
     {
-        public int frontofficeId {  get; set; }
+       
     }
 }

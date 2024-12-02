@@ -1,8 +1,8 @@
 ﻿namespace WPR_project.Models
 {
-    public class BackofficeMedewerker
+    public class BackofficeMedewerker : Medewerker
     {
-        public int backofficeId {  get; set; }
+        
 
     }
 }
