@@ -16,9 +16,11 @@ namespace WPR_project.Services
         }
 
         //weergeef alle gegevens van DTO
-        public IEnumerable<ParticulierHuurderDTO> GetAll() {
+        public IEnumerable<ParticulierHuurderDTO> GetAll()
+        {
             return _repository.GetAll().Select(h => new ParticulierHuurderDTO
             {
+                particulierId = h.particulierId,
                 particulierNaam = h.particulierNaam,
                 particulierEmail = h.particulierEmail
             });
@@ -33,8 +35,9 @@ namespace WPR_project.Services
             }
             return new ParticulierHuurderDTO
             {
-                particulierEmail = huurder.particulierEmail,
+                particulierId = huurder.particulierId,
                 particulierNaam = huurder.particulierNaam,
+                particulierEmail = huurder.particulierEmail
             };
         }
 
@@ -43,8 +46,9 @@ namespace WPR_project.Services
         {
             var huurder = new ParticulierHuurder
             {
-                particulierEmail = pdto.particulierEmail,
+                particulierId = pdto.particulierId,
                 particulierNaam = pdto.particulierNaam,
+                particulierEmail = pdto.particulierEmail
             };
             _repository.Add(huurder);
             _repository.Save();

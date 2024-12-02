@@ -2,10 +2,12 @@
 using System.Transactions;
 
 namespace WPR_project.Models { 
-    public class ParticulierHuurder : Huurder
-    { 
-        
-        
+    public class ParticulierHuurder //: Huurder
+    {
+        public int particulierId { get; set; }
+        public string particulierEmail { get; set; }
+        public string particulierNaam { get; set; }
+
 
 
         //public string BevestigingsMail()

@@ -25,7 +25,7 @@ namespace WPR_project.Data
             modelBuilder.Entity<ParticulierHuurder>(entity =>
             {
                 entity.ToTable("ParticulierHuurders");
-                entity.HasKey(e => e.ParticulierId); // Primaire sleutel
+                entity.HasKey(e => e.particulierId); // Primaire sleutel
                 entity.Property(e => e.particulierNaam).IsRequired(); // Verplichte kolom
             });
 

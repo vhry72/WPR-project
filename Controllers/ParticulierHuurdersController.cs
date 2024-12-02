@@ -27,7 +27,7 @@ namespace WPR_project.Controllers
             return await _context.ParticulierHuurders
                 .Select(ph => new ParticulierHuurderDTO
                 {
-                    ParticulierId = ph.ParticulierId,
+                    particulierId = ph.particulierId,
                     particulierNaam = ph.particulierNaam,
                     particulierEmail = ph.particulierEmail
                 })
@@ -39,10 +39,10 @@ namespace WPR_project.Controllers
         public async Task<ActionResult<ParticulierHuurderDTO>> GetParticulierHuurder(int id)
         {
             var particulierHuurder = await _context.ParticulierHuurders
-                .Where(ph => ph.ParticulierId == id)
+                .Where(ph => ph.particulierId == id)
                 .Select(ph => new ParticulierHuurderDTO
                 {
-                    ParticulierId = ph.ParticulierId,
+                    particulierId = ph.particulierId,
                     particulierNaam = ph.particulierNaam,
                     particulierEmail = ph.particulierEmail
                 })
@@ -60,7 +60,7 @@ namespace WPR_project.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutParticulierHuurder(int id, ParticulierHuurderDTO particulierHuurderDTO)
         {
-            if (id != particulierHuurderDTO.ParticulierId)
+            if (id != particulierHuurderDTO.particulierId)
             {
                 return BadRequest();
             }
@@ -108,9 +108,9 @@ namespace WPR_project.Controllers
             _context.ParticulierHuurders.Add(particulierHuurder);
             await _context.SaveChangesAsync();
 
-            particulierHuurderDTO.ParticulierId = particulierHuurder.ParticulierId;
+            particulierHuurderDTO.particulierId = particulierHuurder.particulierId;
 
-            return CreatedAtAction("GetParticulierHuurder", new { id = particulierHuurderDTO.ParticulierId }, particulierHuurderDTO);
+            return CreatedAtAction("GetParticulierHuurder", new { id = particulierHuurderDTO.particulierId }, particulierHuurderDTO);
         }
 
         // DELETE: api/ParticulierHuurders/5
@@ -131,7 +131,7 @@ namespace WPR_project.Controllers
 
         private bool ParticulierHuurderExists(int id)
         {
-            return _context.ParticulierHuurders.Any(e => e.ParticulierId == id);
+            return _context.ParticulierHuurders.Any(e => e.particulierId == id);
         }
     }
 }
