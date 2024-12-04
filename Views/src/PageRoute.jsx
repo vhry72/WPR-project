@@ -1,17 +1,18 @@
-import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
-import Home from "./pages/index";
 import Register from "./pages/register";
 import Login from "./pages/login";
+import Home from "./pages/Home";
+import Index from "./pages/Index";
 import "./pages/styles.css";
 
-function App() {
+function PageRoute() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
-                    <Route index element={<Home />} />
+                    <Route index element={<Index />}/>
+                    <Route path="Home" element={<Home />} />
                     <Route path="register" element={<Register />} />
                     <Route path="login" element={<Login />} />
                 </Route>
@@ -20,4 +21,4 @@ function App() {
     );
 }
 
-export default App;
+export default PageRoute;

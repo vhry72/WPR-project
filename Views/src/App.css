@@ -14,64 +14,37 @@ body {
 /* Stijl voor de navigatiebalk */
 nav {
     display: flex;
-    justify-content: space-between; /* Plaats het logo links en menu rechts */
-    align-items: center; /* Verticaal centreren */
-    padding: 20px 5%; /* Zorg voor wat padding aan de zijkanten */
-    background-color: #333;
+    justify-content: center;
+    padding: 20px; /* Vergroot de padding voor een grotere navigatiebalk */
+    background-color: #333; /* Optioneel: voeg een achtergrondkleur toe */
 }
 
+    /* Stijl voor de lijst in de navigatiebalk */
     nav ul {
-        display: flex;
         list-style: none;
+        padding: 0;
         margin: 0;
+        display: flex;
     }
 
+        /* Stijl voor de lijstitems in de navigatiebalk */
         nav ul li {
-            margin: 0 20px;
+            margin: 0 15px; /* Voeg ruimte toe tussen de items */
         }
 
+            /* Stijl voor de links in de navigatiebalk */
             nav ul li a {
-                color: white;
                 text-decoration: none;
-                font-size: 16px;
-                font-weight: 500;
+                color: white; /* Pas de kleur van de links aan */
+                font-size: 18px; /* Vergroot de tekst */
+                padding: 10px 15px; /* Voeg padding toe aan de links */
             }
 
+                /* Hover-effect voor de links in de navigatiebalk */
                 nav ul li a:hover {
-                    color: #646cff;
+                    background-color: #555; /* Optioneel: voeg een hover-effect toe */
+                    border-radius: 5px; /* Optioneel: voeg afgeronde hoeken toe */
                 }
-
-header .logo img {
-    max-height: 60px; /* Zorg dat het logo kleiner is */
-}
-
-
-/* Stijl voor de lijst in de navigatiebalk */
-nav ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-}
-
-    /* Stijl voor de lijstitems in de navigatiebalk */
-    nav ul li {
-        margin: 0 15px; /* Voeg ruimte toe tussen de items */
-    }
-
-        /* Stijl voor de links in de navigatiebalk */
-        nav ul li a {
-            text-decoration: none;
-            color: white; /* Pas de kleur van de links aan */
-            font-size: 18px; /* Vergroot de tekst */
-            padding: 10px 15px; /* Voeg padding toe aan de links */
-        }
-
-            /* Hover-effect voor de links in de navigatiebalk */
-            nav ul li a:hover {
-                background-color: #555; /* Optioneel: voeg een hover-effect toe */
-                border-radius: 5px; /* Optioneel: voeg afgeronde hoeken toe */
-            }
 
 /* Stijl voor de container */
 .container {
@@ -108,76 +81,3 @@ header {
                 text-decoration: none;
                 font-weight: bold;
             }
-
-/* Stijl voor de hero-sectie */
-.hero {
-    background-image: url('/path/to/your/image.jpg'); /* Zorg dat het pad klopt */
-    background-size: cover;
-    background-position: center;
-    height: 700px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-}
-
-    .hero h1 {
-        font-size: 3rem;
-        margin-bottom: 20px;
-    }
-
-    .hero p {
-        font-size: 1.2rem;
-        margin-bottom: 30px;
-    }
-
-/* Stijl voor de services-sectie */
-.services {
-    padding: 50px 0;
-    text-align: center;
-    background-color: #8c8ca7;
-}
-
-    /* Stijl voor de h2 in de services-sectie */
-    .services h2 {
-        margin-bottom: 40px;
-        font-size: 2.5rem;
-    }
-
-/* Stijl voor de lijst van services */
-.service-list {
-    display: flex;
-    justify-content: space-around;
-}
-
-/* Stijl voor individuele service-items */
-.service {
-    width: 22%;
-    background-color: #f4f4f4;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-    /* Stijl voor de afbeeldingen in de service-items */
-    .service img {
-        width: 200px;
-        margin-bottom: 20px;
-    }
-    object
-    /* Stijl voor de h3 in de service-items */
-    .service h3 {
-        font-size: 1.5rem;
-        margin-bottom: 15px;
-    }
-
-/* Stijl voor de footer */
-footer {
-    background-color: #333;
-    color: white;
-    text-align: center;
-    padding: 10px 0;
-    margin-top: 30px;
-}
