@@ -1,16 +1,62 @@
+/* Reset alle marges, padding en box-sizing voor alle elementen */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 /* Algemene styling */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #f4f4f4;
+}
+/*H1tekst van indexjsx margin veranderen*/
+/* Stijl voor de H1-tekst (centreren van de tekst) */
+.H1Tekst-Index {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    background-color: #f4f4f4;
+    padding: 0;
+    margin-top: 40px; /* Pas deze waarde aan om de afstand tussen de tekst en de knoppen te wijzigen */
 }
 
-.index-container, .register-container, .login-container {
+/* Containers */
+.index-container {
+    display: flex;
+    flex-direction: column; /* Dit zorgt ervoor dat de knoppen onder de tekst komen */
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    text-align: center;
+    padding: 20px; /* Je kunt hier padding toevoegen om de ruimte rondom de container aan te passen */
+    margin-top: 0px; /* Pas deze waarde aan om de afstand van de container tot de bovenkant van het scherm te wijzigen */
+}
+
+/* Knop stijlen */
+.btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: orangered;
+    border-radius: 4px;
+    text-align: center;
+    display: inline-block;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 10px 0; /* Pas deze waarde aan om de ruimte tussen de knoppen te wijzigen */
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+
+.register-container {
+
+}
+
+.login-container {
     background: #ffffff;
     padding: 20px 30px;
     border-radius: 8px;
@@ -20,19 +66,24 @@ body {
     text-align: center;
 }
 
+/* Tekststijlen */
 h1 {
     margin-bottom: 20px;
     color: #333;
 }
 
-.options, .user-type-toggle {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+h2 {
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
 }
 
 /* Knoppen */
-.btn {
+.btn, .register-button, .login-button {
     padding: 10px 20px;
     background: #007bff;
     color: white;
@@ -40,16 +91,17 @@ h1 {
     border-radius: 4px;
     text-align: center;
     display: block;
+    cursor: pointer;
 }
 
-.btn:hover {
-    background: #0056b3;
-}
+    .btn:hover, .register-button:hover, .login-button:hover {
+        background: #0056b3;
+    }
 
-/* Tabs container */
+/* Tabs */
 .tabs {
     display: flex;
-    background-color: #de5bde; /* Dit is de standaard achtergrondkleur voor Particulier */
+    background-color: #de5bde; /* Standaardkleur Particulier */
     border-radius: 4px 4px 0 0;
     overflow: hidden;
     transition: background-color 0.3s ease;
@@ -64,42 +116,39 @@ h1 {
     transition: background-color 0.3s ease, font-weight 0.3s ease;
 }
 
-/* Hover effect voor tabs */
-.tab:hover {
-    background-color: #ffae00;
-}
+    .tab:hover {
+        background-color: #ffae00;
+    }
 
-/* Actieve tab styling */
-.tab.active {
-    font-weight: bold;
-    color: #333; /* Zwart voor tekst van de geselecteerde tab */
-}
+    .tab.active {
+        font-weight: bold;
+        color: #333; /* Zwart voor geselecteerde tab */
+    }
 
-/* Kleur van de tabs wanneer een specifieke tab geselecteerd is */
 .tabs.zakelijk {
-    background-color: #00e5ff; /* Rood voor Zakelijk */
+    background-color: #00e5ff;
 }
 
 .tabs.particulier {
-    background-color: #de5bde; /* Blauw voor Particulier */
+    background-color: #de5bde;
 }
 
 .tabs.medewerker {
-    background-color: #5cb85c; /* Groen voor Medewerker */
+    background-color: #5cb85c;
 }
 
-/* Actieve tab donkerder maken */
 .tab.active[data-tab="zakelijk"] {
-    background-color: #4500e6; /* Donkerder rood voor geselecteerde Zakelijk */
+    background-color: #4500e6;
 }
 
 .tab.active[data-tab="particulier"] {
-    background-color: #ad33cc; /* Donkerder blauw voor geselecteerde Particulier */
+    background-color: #ad33cc;
 }
 
 .tab.active[data-tab="medewerker"] {
-    background-color: #2e732d; /* Donkerder groen voor geselecteerde Medewerker */
+    background-color: #2e732d;
 }
+
 /* Formulier styling */
 .form {
     padding: 20px;
@@ -109,37 +158,22 @@ h1 {
     border-radius: 0 0 8px 8px;
 }
 
-.form label {
-    font-size: 14px;
-    color: #555;
-}
+    .form label {
+        font-size: 14px;
+        color: #555;
+    }
 
-.form input {
-    width: 100%;
-    padding: 10px;
-    margin-top: 5px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-}
+    .form input {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+    }
 
-.register-button {
-    background: #007bff;
-    color: #fff;
-    padding: 10px 20px; 
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
-}
-
-.register-button:hover {
-    background-color: #0056b3;
-}
-
-/* Responsieve verbeteringen */
+/* Responsiviteit */
 @media (max-width: 600px) {
     .index-container, .register-container, .login-container {
         padding: 15px;
@@ -160,18 +194,134 @@ h1 {
     }
 }
 
-.login-button {
-    background: #007bff;
-    color: #fff;
-    padding: 10px 20px; 
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 10px;
+/* --- STIJLEN VOOR HOME.JSX --- */
+
+/* Navigatiebalk */
+nav {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background-color: #333;
 }
 
-.login-button:hover {
-    background-color: #0056b3;
+    nav ul {
+        list-style: none;
+        display: flex;
+        margin: 0;
+        padding: 0;
+    }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+            nav ul li a {
+                text-decoration: none;
+                color: white;
+                font-size: 18px;
+                padding: 10px 15px;
+            }
+
+                nav ul li a:hover {
+                    background-color: #555;
+                    border-radius: 5px;
+                }
+/* Style for the navigation bar */
+.navbar {
+    background-color: #333333;
+    padding: 20px;
 }
 
+/* Style for each navigation link */
+.nav-link {
+    color: #FFFFFF;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    padding: 10px 15px;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+.nav-link:hover {
+    background-color: #2c3e50;
+    border-radius: 5px;
+}
+
+/* Header */
+header {
+    background-color: #333;
+    padding: 10px 0;
+}
+
+    header .logo img {
+        width: 150px;
+    }
+
+/* Hero sectie */
+.hero {
+    background-image: url('../assets/20200108_CES_603.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    height: 700px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+    .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 20px;
+    }
+
+    .hero p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+    }
+
+    .hero .cta {
+        background-color: #000000;
+        color: white;
+        padding: 20px 20px;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .hero .cta:hover {
+            background-color: #555;
+        }
+
+/* Services */
+.services {
+    padding: 50px 0;
+    text-align: center;
+    background-color: #8c8ca7;
+}
+
+.service-list {
+    display: flex;
+    justify-content: space-around;
+}
+
+.service {
+    width: 22%;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+    .service img {
+        width: 200px;
+        margin-bottom: 20px;
+    }
+
+/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 30px;
+}
