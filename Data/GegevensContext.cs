@@ -16,7 +16,7 @@ namespace WPR_project.Data
         public DbSet<Voertuig> Voertuigen { get; set; }
         public DbSet<Abonnement> Abonnementen { get; set; }
         public DbSet<Huurverzoek> Huurverzoeken { get; set; }
-        public DbSet<WagenParkBeheerder> WagenParkBeheerders { get; set; }
+        public DbSet<WagenparkBeheerder> WagenparkBeheerders { get; set; }
         public DbSet<BackofficeMedewerker> BackofficeMedewerkers { get; set; }
         public DbSet<Bedrijf> Bedrijven { get; set; }
         public DbSet<BedrijfsMedewerkers> BedrijfsMedewerkers { get; set; }
@@ -74,7 +74,7 @@ namespace WPR_project.Data
                 .HasKey(h => h.HuurderID);
 
             // WagenParkBeheerder Configuratie
-            modelBuilder.Entity<WagenParkBeheerder>()
+            modelBuilder.Entity<WagenparkBeheerder>()
                 .HasKey(w => w.beheerderId);
 
 

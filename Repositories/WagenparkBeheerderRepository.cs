@@ -14,31 +14,31 @@ namespace WPR_project.Repositories
 
         public void AddWagenparkBeheerder(WagenparkBeheerder wagenparkBeheerder)
         {
-            _context.WagenParkBeheerders.Add(wagenparkBeheerder);
+            _context.WagenparkBeheerders.Add(wagenparkBeheerder);
         }
 
         public void DeleteWagenparkBeheerder(int id)
         {
-            var wagenparkBeheerder = _context.WagenParkBeheerders.Find(id);
+            var wagenparkBeheerder = _context.WagenparkBeheerders.Find(id);
             if (wagenparkBeheerder != null)
             {
-                _context.WagenParkBeheerders.Remove(wagenparkBeheerder);
+                _context.WagenparkBeheerders.Remove(wagenparkBeheerder);
             }
         }
 
         public IEnumerable<WagenparkBeheerder> GetWagenparkBeheerders()
         {
-            return _context.WagenParkBeheerders.ToList();
+            return _context.WagenparkBeheerders.ToList();
         }
 
         public WagenparkBeheerder GetBeheerderById(int id)
         {
-            return _context.WagenParkBeheerders.Find(id);
+            return _context.WagenparkBeheerders.Find(id);
         }
 
         public void UpdateWagenparkBeheerder(WagenparkBeheerder wagenparkBeheerder)
         {
-            var existingBeheerder = _context.WagenParkBeheerders.Find(wagenparkBeheerder.beheerderId);
+            var existingBeheerder = _context.WagenparkBeheerders.Find(wagenparkBeheerder.beheerderId);
             if (existingBeheerder != null)
             {
                 _context.Entry(existingBeheerder).CurrentValues.SetValues(wagenparkBeheerder);
