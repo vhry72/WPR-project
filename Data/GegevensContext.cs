@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using WPR_project.Models;
 
 namespace WPR_project.Data
@@ -15,73 +16,82 @@ namespace WPR_project.Data
         public DbSet<Voertuig> Voertuigen { get; set; }
         public DbSet<Abonnement> Abonnementen { get; set; }
         public DbSet<Huurverzoek> Huurverzoeken { get; set; }
-        public DbSet<Medewerker> Medewerkers { get; set; }
         public DbSet<WagenParkBeheerder> WagenParkBeheerders { get; set; }
+        public DbSet<BackofficeMedewerker> BackofficeMedewerkers { get; set; }
+        public DbSet<Bedrijf> Bedrijven { get; set; }
+        public DbSet<BedrijfsMedewerkers> BedrijfsMedewerkers { get; set; }
+        public DbSet<FrontofficeMedewerker> FrontofficeMedewerkers { get; set; }
+        
+        public DbSet<VoertuigStatus> VoertuigStatussen { get; set; }
 
         // Configuratie van de modellen en relaties
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // ParticulierHuurder Configuratie
-            modelBuilder.Entity<ParticulierHuurder>(entity =>
-            {
-                entity.ToTable("ParticulierHuurders");
-                entity.HasKey(e => e.particulierId); // Primaire sleutel
-                entity.Property(e => e.particulierNaam).IsRequired(); // Verplichte kolom
-            });
+            modelBuilder.Entity<Huurder>().ToTable("Huurders");
+            modelBuilder.Entity<ParticulierHuurder>().ToTable("ParticulierHuurders");
+            modelBuilder.Entity<ZakelijkHuurder>().ToTable("ZakelijkHuurders");
 
-            //zakelijkHuurder configuratie
+            modelBuilder.Entity<Huurder>()
+                .HasKey(v => v.HuurderId);
 
-            modelBuilder.Entity<ZakelijkHuurder>(entity =>
-            {
-                entity.ToTable("ZakelijkHuurders");
-                entity.HasKey(e => e.zakelijkeId);
-                entity.Property(e => e.bedrijfsNaam).IsRequired();
+            modelBuilder.Entity<ParticulierHuurder>()
+                .HasBaseType<Huurder>();
 
-                // Conversie voor MedewerkersEmails (opgeslagen als komma-gescheiden string)
-                entity.Property(e => e.MedewerkersEmails)
-                    .HasConversion(
-                        v => string.Join(',', v), // Opslaan als string
-                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList() // Lezen als lijst
-                    )
-                    .HasColumnName("MedewerkersEmails") // Optioneel: expliciete naam in de database
-                    .IsRequired(false); // Optioneel: maak dit niet verplicht
-            });
+
+            modelBuilder.Entity<ZakelijkHuurder>()
+                .HasBaseType<Huurder>();
+                
+
+            // TPT Configuratie voor Medewerkers
+            modelBuilder.Entity<Medewerker>().ToTable("Medewerkers");
+            modelBuilder.Entity<BackofficeMedewerker>().ToTable("BackofficeMedewerkers");
+            modelBuilder.Entity<FrontofficeMedewerker>().ToTable("FrontofficeMedewerkers");
+
+            modelBuilder.Entity<Medewerker>()
+                .HasKey(v => v.medewerkerId);
+
+            modelBuilder.Entity<BackofficeMedewerker>()
+                .HasBaseType<Medewerker>();
+
+
+            modelBuilder.Entity<FrontofficeMedewerker>()
+                .HasBaseType<Medewerker>();
+                
+
+
 
 
             // Voertuig Configuratie
-            modelBuilder.Entity<Voertuig>(entity =>
-            {
-                entity.ToTable("Voertuigen");
-                entity.HasKey(e => e.voertuigId); // Primaire sleutel
-                entity.Property(e => e.merk).IsRequired();
-                entity.Property(e => e.model).IsRequired();
-                entity.Property(e => e.prijsPerDag).HasColumnType("decimal(18,2)");
-            });
+            modelBuilder.Entity<Voertuig>()
+                .HasKey(v => v.voertuigId);
+
+            // Abonnement Configuratie
+            modelBuilder.Entity<Abonnement>()
+                .HasKey(a => a.AbonnementId);
 
             // Huurverzoek Configuratie
-            modelBuilder.Entity<Huurverzoek>(entity =>
-            {
-                entity.ToTable("Huurverzoeken");
-                entity.HasKey(e => e.HuurderID);
-
-                // < !!!!!!!!!!!!!!!!!!!!!> hier moeten de id's gecorrigeerd nog worden!
-
-                // Relatie: Huurverzoek -> Voertuig nog invullen
-               
-            });
+            modelBuilder.Entity<Huurverzoek>()
+                .HasKey(h => h.HuurderID);
 
             // WagenParkBeheerder Configuratie
-            modelBuilder.Entity<WagenParkBeheerder>(entity =>
-            {
-                entity.ToTable("WagenParkBeheerders");
-                entity.HasKey(e => e.beheerderId);
-                entity.Property(e => e.beheerderNaam).IsRequired();
-            });
+            modelBuilder.Entity<WagenParkBeheerder>()
+                .HasKey(w => w.beheerderId);
 
-            // Eventueel: andere entiteiten configureren
+
+            // Bedrijf Configuratie
+            modelBuilder.Entity<Bedrijf>()
+                .HasKey(b => b.BedrijfId);
+
+            // BedrijfsMedewerker Configuratie
+            modelBuilder.Entity<BedrijfsMedewerkers>()
+                .HasKey(b => b.BedrijfsMedewerkId);
+
+            // VoertuigStatus Configuratie
+            modelBuilder.Entity<VoertuigStatus>()
+                .HasKey(vs => vs.VoertuigStatusId);
+
+            base.OnModelCreating(modelBuilder);
         }
-
-        // Connection string voor SQL Server
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
