@@ -2,7 +2,7 @@
 {
     public abstract class Huurder
     {
-        public int Id { get; set; }
+        public int HuurderId { get; set; }
         public string adress { get; set; }
 
         public string naam { get; set; }

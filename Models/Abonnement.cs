@@ -2,7 +2,7 @@
 {
     public class Abonnement
     {
-        public int id { get; set; }
+        public int AbonnementId { get; set; }
         public string abonnementNaam { get; set; }
         public string price { get; set; }
 
