@@ -9,6 +9,7 @@ const Layout = () => {
                     <Link to="/Home" className="nav-link">Info Pagina</Link>&nbsp;
                     <Link to="/register" className="nav-link">Registreren</Link>&nbsp;
                     <Link to="/login" className="nav-link">Inloggen</Link>
+                    <Link to="/instellingen" className="nav-link">Instellingen</Link>
                 </nav>
             </header>
             <main>
