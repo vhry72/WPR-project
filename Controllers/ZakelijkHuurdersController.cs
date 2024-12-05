@@ -1,108 +1,138 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WPR_project.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using WPR_project.Models;
+using WPR_project.Services;
 
 namespace WPR_project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ZakelijkHuurdersController : ControllerBase
+    public class ZakelijkeHuurderController : ControllerBase
     {
-        private readonly GegevensContext _context;
+        private readonly ZakelijkeHuurderService _service;
 
-        public ZakelijkHuurdersController(GegevensContext context)
+        public ZakelijkeHuurderController(ZakelijkeHuurderService service)
         {
-            _context = context;
+            _service = service;
         }
 
-        // GET: api/ZakelijkHuurders
+        // GET: api/ZakelijkeHuurder
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ZakelijkHuurder>>> GetZakelijkHuurders()
+        public ActionResult<IEnumerable<ZakelijkHuurder>> GetAllZakelijkeHuurders()
         {
-            return await _context.ZakelijkHuurders.ToListAsync();
+            var huurders = _service.GetAllZakelijkHuurders();
+            return Ok(huurders);
         }
 
-        // GET: api/ZakelijkHuurders/5
+        // GET: api/ZakelijkeHuurder/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ZakelijkHuurder>> GetZakelijkHuurder(int id)
+        public ActionResult<ZakelijkHuurder> GetZakelijkHuurderById(int id)
         {
-            var zakelijkHuurder = await _context.ZakelijkHuurders.FindAsync(id);
+            var huurder = _service.GetZakelijkHuurderById(id);
+            if (huurder == null)
+            {
+                return NotFound("Zakelijke huurder niet gevonden.");
+            }
+            return Ok(huurder);
+        }
 
+        // POST: api/ZakelijkeHuurder
+        [HttpPost]
+        public ActionResult AddZakelijkeHuurder([FromBody] ZakelijkHuurder zakelijkHuurder)
+        {
             if (zakelijkHuurder == null)
             {
-                return NotFound();
+                return BadRequest("Ongeldige gegevens voor huurder.");
             }
 
-            return zakelijkHuurder;
+            _service.AddZakelijkHuurder(zakelijkHuurder);
+            return CreatedAtAction(nameof(GetZakelijkHuurderById), new { id = zakelijkHuurder.zakelijkeId }, zakelijkHuurder);
         }
 
-        // PUT: api/ZakelijkHuurders/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/ZakelijkeHuurder/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutZakelijkHuurder(int id, ZakelijkHuurder zakelijkHuurder)
+        public IActionResult UpdateZakelijkeHuurder(int id, [FromBody] ZakelijkHuurder zakelijkHuurder)
         {
-            if (id != zakelijkHuurder.zakelijkeId)
+            if (zakelijkHuurder == null || zakelijkHuurder.zakelijkeId != id)
             {
-                return BadRequest();
+                return BadRequest("ID komt niet overeen met de gegevens.");
             }
-
-            _context.Entry(zakelijkHuurder).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                _service.Update(id, zakelijkHuurder);
             }
-            catch (DbUpdateConcurrencyException)
+            catch (KeyNotFoundException)
             {
-                if (!ZakelijkHuurderExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound("Zakelijke huurder niet gevonden.");
             }
 
             return NoContent();
         }
 
-        // POST: api/ZakelijkHuurders
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<ZakelijkHuurder>> PostZakelijkHuurder(ZakelijkHuurder zakelijkHuurder)
-        {
-            _context.ZakelijkHuurders.Add(zakelijkHuurder);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetZakelijkHuurder", new { id = zakelijkHuurder.zakelijkeId }, zakelijkHuurder);
-        }
-
-        // DELETE: api/ZakelijkHuurders/5
+        // DELETE: api/ZakelijkeHuurder/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteZakelijkHuurder(int id)
+        public IActionResult DeleteZakelijkeHuurder(int id)
         {
-            var zakelijkHuurder = await _context.ZakelijkHuurders.FindAsync(id);
-            if (zakelijkHuurder == null)
+            try
             {
-                return NotFound();
+                _service.Delete(id);
             }
-
-            _context.ZakelijkHuurders.Remove(zakelijkHuurder);
-            await _context.SaveChangesAsync();
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Zakelijke huurder niet gevonden.");
+            }
 
             return NoContent();
         }
 
-        private bool ZakelijkHuurderExists(int id)
+        // POST: api/ZakelijkeHuurder/5/voegmedewerker
+        [HttpPost("{id}/voegmedewerker")]
+        public IActionResult VoegMedewerkerToe(int id, [FromBody] string medewerkerEmail)
         {
-            return _context.ZakelijkHuurders.Any(e => e.zakelijkeId == id);
+            if (string.IsNullOrEmpty(medewerkerEmail))
+            {
+                return BadRequest("E-mailadres is verplicht.");
+            }
+
+            try
+            {
+                _service.VoegMedewerkerToe(id, medewerkerEmail);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Zakelijke huurder niet gevonden.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/ZakelijkeHuurder/5/verwijdermedewerker
+        [HttpDelete("{id}/verwijdermedewerker")]
+        public IActionResult VerwijderMedewerker(int id, [FromBody] string medewerkerEmail)
+        {
+            if (string.IsNullOrEmpty(medewerkerEmail))
+            {
+                return BadRequest("E-mailadres is verplicht.");
+            }
+
+            try
+            {
+                _service.VerwijderMedewerker(id, medewerkerEmail);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound("Zakelijke huurder of medewerker niet gevonden.");
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message);
+            }
+
+            return NoContent();
         }
     }
 }

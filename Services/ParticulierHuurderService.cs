@@ -53,5 +53,36 @@ namespace WPR_project.Services
             _repository.Add(huurder);
             _repository.Save();
         }
+
+        public void Delete(int id)
+        {
+            var huurder = _repository.GetById(id);
+            if (huurder == null)
+            {
+                throw new KeyNotFoundException("Huurder niet gevonden.");
+            }
+
+            _repository.Delete(huurder);
+            _repository.Save(); // Zorgt ervoor dat de wijzigingen worden doorgevoerd in de database
+        }
+
+        public void Update(int id, ParticulierHuurderDTO dto)
+        {
+            var huurder = _repository.GetById(id);
+            if (huurder == null)
+            {
+                throw new KeyNotFoundException("Huurder niet gevonden.");
+            }
+
+            // Werk de gegevens bij
+            huurder.particulierNaam = dto.particulierNaam;
+            huurder.particulierEmail = dto.particulierEmail;
+
+            _repository.Update(huurder);
+            _repository.Save(); // Zorgt ervoor dat de wijzigingen worden opgeslagen
+        }
+
+
+
     }
 }

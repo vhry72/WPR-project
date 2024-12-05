@@ -141,7 +141,7 @@ namespace WPR_project.Migrations
                     b.ToTable("Voertuigen", (string)null);
                 });
 
-            modelBuilder.Entity("WPR_project.Models.WagenParkBeheerder", b =>
+            modelBuilder.Entity("WPR_project.Models.WagenparkBeheerder", b =>
                 {
                     b.Property<int>("beheerderId")
                         .ValueGeneratedOnAdd()

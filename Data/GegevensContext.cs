@@ -16,7 +16,7 @@ namespace WPR_project.Data
         public DbSet<Abonnement> Abonnementen { get; set; }
         public DbSet<Huurverzoek> Huurverzoeken { get; set; }
         public DbSet<Medewerker> Medewerkers { get; set; }
-        public DbSet<WagenParkBeheerder> WagenParkBeheerders { get; set; }
+        public DbSet<WagenparkBeheerder> WagenParkBeheerders { get; set; }
 
         // Configuratie van de modellen en relaties
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -70,8 +70,8 @@ namespace WPR_project.Data
                
             });
 
-            // WagenParkBeheerder Configuratie
-            modelBuilder.Entity<WagenParkBeheerder>(entity =>
+            // WagenparkBeheerder Configuratie
+            modelBuilder.Entity<WagenparkBeheerder>(entity =>
             {
                 entity.ToTable("WagenParkBeheerders");
                 entity.HasKey(e => e.beheerderId);
