@@ -259,45 +259,73 @@ header {
 
 /* Hero sectie */
 .hero {
-    background-image: url('../assets/20200108_CES_603.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: white;
-    height: 700px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    background-image: url('../assets/mqcueen.jpg');
+    background-size: cover; /* Zorgt ervoor dat de achtergrondafbeelding volledig wordt bedekt */
+    background-position: center; /* Centreert de afbeelding */
+    background-repeat: no-repeat; /* Voorkomt dat de afbeelding wordt herhaald */
+    color: white; /* Zet de tekstkleur op wit */
+    height: 700px; /* Hoogte van de hero-sectie */
+    display: flex; /* Maakt gebruik van flexbox */
+    align-items: center; /* Centreert inhoud verticaal */
+    justify-content: center; /* Centreert inhoud horizontaal */
+    text-align: center; /* Zorgt ervoor dat de tekst gecentreerd is */
+    flex-direction: column; /* Zorgt ervoor dat de elementen onder elkaar worden geplaatst */
 }
 
     .hero h1 {
-        font-size: 3rem;
-        margin-bottom: 20px;
+        font-size: 3rem; /* Grotere lettergrootte voor de hoofdtitel */
+        margin-bottom: 20px; /* Ruimte onder de titel */
     }
 
     .hero p {
-        font-size: 1.2rem;
-        margin-bottom: 30px;
+        font-size: 1.2rem; /* Lettergrootte voor de ondertitel */
+        margin-bottom: 30px; /* Ruimte onder de ondertitel */
     }
 
-    .hero .cta {
-        background-color: #000000;
-        color: white;
-        padding: 20px 20px;
-        text-decoration: none;
-        font-weight: bold;
+.hero-text-container {
+    display: inline-block; /* Zorgt ervoor dat de tekstcontainer niet 100% breed is */
+    padding: 20px; /* Binnenruimte in het witte blokje */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparante witte achtergrond */
+    border: 2px solid white; /* Witte rand */
+    border-radius: 15px; /* Ronde hoeken */
+    position: relative; /* Houdt positie binnen de parent */
+    z-index: 1; /* Zorgt dat het tekstblok boven de achtergrond verschijnt */
+}
+
+    .hero-text-container h1,
+    .hero-text-container p {
+        margin: 0; /* Verwijdert standaard marges */
+        color: #000; /* Zwarte tekstkleur voor leesbaarheid */
     }
 
-        .hero .cta:hover {
-            background-color: #555;
-        }
+.ontdek-btn {
+    display: block; /* Zorgt ervoor dat de knop onder het tekstblok verschijnt */
+    text-align: center; /* Centreert de knop */
+    margin-top: 20px; /* Ruimte boven de knop */
+}
+
+.hero .cta {
+    background-color: #000; /* Zwarte achtergrondkleur voor de knop */
+    color: white; /* Witte tekstkleur */
+    padding: 10px 20px; /* Binnenruimte in de knop */
+    text-decoration: none; /* Verwijdert onderstreping */
+    font-weight: bold; /* Vetgedrukte tekst */
+    border-radius: 5px; /* Ronde hoeken voor de knop */
+    display: inline-block; /* Zorgt ervoor dat de knop netjes om de tekst past */
+}
+
+    .hero .cta:hover {
+        background-color: #555; /* Donkergrijze achtergrondkleur bij hover */
+    }
+
+
 
 /* Services */
 .services {
     padding: 50px 0;
+    border-radius: 30px;
     text-align: center;
-    background-color: #8c8ca7;
+    background-color: #aabad0;
 }
 
 .service-list {
@@ -313,9 +341,10 @@ header {
 }
 
     .service img {
-        width: 200px;
+        width: 150px;
         margin-bottom: 20px;
     }
+
 
 /* Footer */
 footer {

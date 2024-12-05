@@ -13,22 +13,25 @@ const Home = () => {
             <header>
                 <div className="container">
                     <a href="#" className="logo">
-                        <img src="/path-to-logo.png" alt="Website Logo" />
                     </a>
                     
                 </div>
             </header>
 
-            {/* Hero Section */}
-            <section className="hero" id="home">
-                <div>
+            <div className="hero" id="home">
+                <div className="hero-text-container">
                     <h1>Welkom bij Onze Website</h1>
                     <p>Ontdek de beste diensten die we aanbieden!</p>
+                </div>
+
+                <div className="ontdek-btn">
                     <a href="#services" className="cta">
                         Ontdek Meer
                     </a>
                 </div>
-            </section>
+            </div>
+
+
 
             {/* Services Section */}
             <section className="services" id="services">
@@ -36,23 +39,30 @@ const Home = () => {
                 <div className="service-list">
                     {[
                         {
-                            id: 1,
-                            imgSrc: "/path-to-service1.jpg",
+                            
+                            imgSrc: "src/assets/mercedes-indesx.jpg",
                             title: "Service 1",
                             description: "Beschrijving van Service 1.",
                         },
                         {
-                            id: 2,
-                            imgSrc: "/path-to-service2.jpg",
+                           
+                            imgSrc: "src/assets/camper-index.png",
                             title: "Service 2",
                             description: "Beschrijving van Service 2.",
                         },
                         {
-                            id: 3,
-                            imgSrc: "/path-to-service3.jpg",
+                            
+                            imgSrc: "src/assets/caravans-index.jpg",
                             title: "Service 3",
                             description: "Beschrijving van Service 3.",
                         },
+                        {
+
+                            imgSrc: "src/assets/z&p-index.png",
+                            title: "Service 4",
+                            description: "Beschrijving van Service 2.",
+                        },
+
                     ].map((service) => (
                         <div className="service" key={service.id}>
                             <img src={service.imgSrc} alt={service.title} />
