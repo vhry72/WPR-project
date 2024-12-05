@@ -1,4 +1,6 @@
-﻿namespace WPR_project.DTO_s
+﻿using WPR_project.Models;
+
+namespace WPR_project.DTO_s
 {
     public class WagenparkBeheerderDTO
     {
@@ -6,5 +8,6 @@
 
         public string beheerderNaam { get; set; }
         public string email { get; set; }
+
     }
 }

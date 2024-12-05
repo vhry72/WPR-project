@@ -26,6 +26,11 @@ namespace WPR_project.Repositories
             }
         }
 
+        public void Delete(ParticulierHuurder huurder)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<ParticulierHuurder> GetAll()
         {
             throw new NotImplementedException();

@@ -11,5 +11,6 @@ namespace WPR_project.Repositories
         void Update(ParticulierHuurder particulierHuurder);
         void Delete(int id);
         void Save();
+        void Delete(ParticulierHuurder huurder);
     }
 }
