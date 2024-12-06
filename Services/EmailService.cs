@@ -1,33 +1,48 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net;
 using System.Net.Mail;
 
 namespace WPR_project.Services.Email
 {
     public class EmailService : IEmailService
     {
-        private readonly string _smtpServer = "smtp.example.com";
-        private readonly int _smtpPort = 587;
-        private readonly string _smtpUser = "noreply@example.com";
-        private readonly string _smtpPass = "yourpassword";
+        private readonly string _smtpServer;
+        private readonly int _smtpPort;
+        private readonly string _smtpUser;
+        private readonly string _smtpPass;
+        private readonly string _senderEmail;
+        private readonly string _senderName;
 
-        public void SendEmail(string naar, string subject, string body)
+        public EmailService(IConfiguration configuration)
         {
-            var client = new SmtpClient(_smtpServer, _smtpPort)
+            // Haal waarden op uit appsettings.json
+            _smtpServer = configuration["EmailSettings:SmtpServer"];
+            _smtpPort = int.Parse(configuration["EmailSettings:SmtpPort"]);
+            _smtpUser = configuration["EmailSettings:SmtpUser"];
+            _smtpPass = configuration["EmailSettings:SmtpPass"];
+            _senderEmail = configuration["EmailSettings:SenderEmail"];
+            _senderName = configuration["EmailSettings:SenderName"];
+        }
+
+        public void SendEmail(string naarGebruiker, string subject, string body)
+        {
+            using (var client = new SmtpClient(_smtpServer, _smtpPort)
             {
                 Credentials = new NetworkCredential(_smtpUser, _smtpPass),
-                EnableSsl = true
-            };
-
-            var mailMessage = new MailMessage
+                EnableSsl = true // Gebruik SSL/TLS voor een veilige verbinding
+            })
             {
-                From = new MailAddress(_smtpUser),
-                Subject = subject,
-                Body = body,
-                IsBodyHtml = false,
-            };
-            mailMessage.To.Add(naar);
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(_senderEmail, _senderName), // Gebruik herkenbare afzender
+                    Subject = subject,
+                    Body = body,
+                    IsBodyHtml = true // Zet op true als je HTML-e-mails verstuurt
+                };
+                mailMessage.To.Add(naarGebruiker);
 
-            client.Send(mailMessage);
+                client.Send(mailMessage); // Verstuur de e-mail
+            }
         }
     }
 }

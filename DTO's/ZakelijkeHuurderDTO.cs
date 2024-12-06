@@ -2,7 +2,7 @@
 
 namespace WPR_project.DTO_s
 {
-    public class ZakelijkeHuurderDTO : HuurderDTO
+    public class ZakelijkeHuurderDTO
     {
         public int zakelijkeId { get; set; }
         public string adres { get; set; }

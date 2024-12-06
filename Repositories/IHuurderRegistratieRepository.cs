@@ -7,6 +7,7 @@ namespace WPR_project.Repositories
     {
         IEnumerable<ParticulierHuurder> GetAll();
         ParticulierHuurder GetById(int id);
+        ParticulierHuurder GetByToken(string token);
         void Add(ParticulierHuurder particulierHuurder);
         void Update(ParticulierHuurder particulierHuurder);
         void Delete(int id);

@@ -1,47 +1,60 @@
 using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
+using WPR_project.Repositories;
+using WPR_project.Services;
+using WPR_project.Services.Email;
 
+var builder = WebApplication.CreateBuilder(args);
 
- var builder = WebApplication.CreateBuilder(args);
-
-//react : 
-
+// React CORS-configuratie
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",
-        builder => builder.WithOrigins("http://localhost:5173")
-        .AllowAnyMethod()
-        .AllowAnyHeader());
+        policy => policy.WithOrigins("http://localhost:5173")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
 });
 
+// Database setup
+builder.Services.AddDbContext<GegevensContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-    // Database setup
-    builder.Services.AddDbContext<GegevensContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+// Dependency Injection voor repositories
+builder.Services.AddScoped<IHuurderRegistratieRepository, HuurderRegistratieRepository>();
+builder.Services.AddScoped<IZakelijkeHuurderRepository, ZakelijkeHuurderRepository>();
+builder.Services.AddScoped<IWagenparkBeheerderRepository, WagenparkBeheerderRepository>();
 
-    // Add services to the container
-    builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+// Dependency Injection voor services
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<ParticulierHuurderService>();
+builder.Services.AddScoped<ZakelijkeHuurderService>();
+builder.Services.AddScoped<WagenparkBeheerderService>();
+builder.Services.AddScoped<VoertuigService>();
 
-    var app = builder.Build();
+// Controllers en Swagger
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
-    // Configure the HTTP request pipeline
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
+var app = builder.Build();
 
-    app.UseHttpsRedirection();
-    app.UseStaticFiles(); // Zorgt ervoor dat wwwroot-bestanden geserveerd worden
-    app.UseRouting();
+// Configureer de HTTP-aanvraagpipeline
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-    // Route API-aanroepen naar controllers
-    app.MapControllers();
+app.UseHttpsRedirection();
+app.UseStaticFiles(); // Zorgt ervoor dat bestanden in wwwroot worden geserveerd
+app.UseRouting();
+app.UseCors("AllowLocalhost");
 
-    // Alle andere verzoeken naar React's index.html sturen
-    app.MapFallbackToFile("index.html");
-// alsjeblieft vhry
-    app.Run("https://localhost:5033");
- 
+// Configureer routes
+app.MapControllers();
+
+// Fallback voor React-routering
+app.MapFallbackToFile("index.html");
+
+// Start de applicatie op een specifieke poort
+app.Run("https://localhost:5033");

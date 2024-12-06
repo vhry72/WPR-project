@@ -15,6 +15,37 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
+        // POST: api/ZakelijkeHuurder/register
+        [HttpPost("register")]
+        public ActionResult RegisterZakelijkeHuurder([FromBody] ZakelijkHuurder zakelijkHuurder)
+        {
+            if (zakelijkHuurder == null || string.IsNullOrEmpty(zakelijkHuurder.email))
+            {
+                return BadRequest("Ongeldige gegevens voor registratie.");
+            }
+
+            _service.RegisterZakelijkeHuurder(zakelijkHuurder);
+            return Ok("Registratie succesvol. Controleer je e-mail voor de verificatielink.");
+        }
+
+        // GET: api/ZakelijkeHuurder/verify?token={token}
+        [HttpGet("verify")]
+        public IActionResult VerifyEmail(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                return BadRequest("Verificatie token is verplicht.");
+            }
+
+            var result = _service.VerifyEmail(token);
+            if (!result)
+            {
+                return NotFound("Verificatie mislukt. Token is ongeldig of verlopen.");
+            }
+
+            return Ok("Je e-mail is succesvol bevestigd. Je kunt nu inloggen.");
+        }
+
         // GET: api/ZakelijkeHuurder
         [HttpGet]
         public ActionResult<IEnumerable<ZakelijkHuurder>> GetAllZakelijkeHuurders()
@@ -23,7 +54,7 @@ namespace WPR_project.Controllers
             return Ok(huurders);
         }
 
-        // GET: api/ZakelijkeHuurder/5
+        // GET: api/ZakelijkeHuurder/{id}
         [HttpGet("{id}")]
         public ActionResult<ZakelijkHuurder> GetZakelijkHuurderById(int id)
         {
@@ -48,7 +79,7 @@ namespace WPR_project.Controllers
             return CreatedAtAction(nameof(GetZakelijkHuurderById), new { id = zakelijkHuurder.zakelijkeId }, zakelijkHuurder);
         }
 
-        // PUT: api/ZakelijkeHuurder/5
+        // PUT: api/ZakelijkeHuurder/{id}
         [HttpPut("{id}")]
         public IActionResult UpdateZakelijkeHuurder(int id, [FromBody] ZakelijkHuurder zakelijkHuurder)
         {
@@ -69,7 +100,7 @@ namespace WPR_project.Controllers
             return NoContent();
         }
 
-        // DELETE: api/ZakelijkeHuurder/5
+        // DELETE: api/ZakelijkeHuurder/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteZakelijkeHuurder(int id)
         {
@@ -85,7 +116,7 @@ namespace WPR_project.Controllers
             return NoContent();
         }
 
-        // POST: api/ZakelijkeHuurder/5/voegmedewerker
+        // POST: api/ZakelijkeHuurder/{id}/voegmedewerker
         [HttpPost("{id}/voegmedewerker")]
         public IActionResult VoegMedewerkerToe(int id, [FromBody] string medewerkerEmail)
         {
@@ -110,7 +141,7 @@ namespace WPR_project.Controllers
             return NoContent();
         }
 
-        // DELETE: api/ZakelijkeHuurder/5/verwijdermedewerker
+        // DELETE: api/ZakelijkeHuurder/{id}/verwijdermedewerker
         [HttpDelete("{id}/verwijdermedewerker")]
         public IActionResult VerwijderMedewerker(int id, [FromBody] string medewerkerEmail)
         {
