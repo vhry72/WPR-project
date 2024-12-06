@@ -27,20 +27,6 @@ namespace WPR_project.Data
         // Configuratie van de modellen en relaties
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Huurder>().ToTable("Huurders");
-            modelBuilder.Entity<ParticulierHuurder>().ToTable("ParticulierHuurders");
-            modelBuilder.Entity<ZakelijkHuurder>().ToTable("ZakelijkHuurders");
-
-            modelBuilder.Entity<Huurder>()
-                .HasKey(v => v.HuurderId);
-
-            modelBuilder.Entity<ParticulierHuurder>()
-                .HasBaseType<Huurder>();
-
-
-            modelBuilder.Entity<ZakelijkHuurder>()
-                .HasBaseType<Huurder>();
-
 
             // TPT Configuratie voor Medewerkers
             modelBuilder.Entity<Medewerker>().ToTable("Medewerkers");
@@ -89,6 +75,14 @@ namespace WPR_project.Data
             // VoertuigStatus Configuratie
             modelBuilder.Entity<VoertuigStatus>()
                 .HasKey(vs => vs.VoertuigStatusId);
+
+            // ZakelijkHuurder Configuratie
+            modelBuilder.Entity<ZakelijkHuurder>()
+                .HasKey(z => z.zakelijkeId);
+
+            // ParticulierHuurder Configuratie
+            modelBuilder.Entity<ParticulierHuurder>()
+                .HasKey(p => p.particulierId);
 
             base.OnModelCreating(modelBuilder);
         }

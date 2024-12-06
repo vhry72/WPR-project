@@ -98,40 +98,6 @@ namespace WPR_project.Migrations
                     b.ToTable("BedrijfsMedewerkers");
                 });
 
-            modelBuilder.Entity("WPR_project.Models.Huurder", b =>
-                {
-                    b.Property<int>("HuurderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HuurderId"));
-
-                    b.Property<string>("adress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("naam")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("telefoonNr")
-                        .HasColumnType("int");
-
-                    b.Property<string>("wachtwoord")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("HuurderId");
-
-                    b.ToTable("Huurders", (string)null);
-
-                    b.UseTptMappingStrategy();
-                });
-
             modelBuilder.Entity("WPR_project.Models.Huurverzoek", b =>
                 {
                     b.Property<string>("HuurderID")
@@ -180,6 +146,38 @@ namespace WPR_project.Migrations
                     b.ToTable("Medewerkers", (string)null);
 
                     b.UseTptMappingStrategy();
+                });
+
+            modelBuilder.Entity("WPR_project.Models.ParticulierHuurder", b =>
+                {
+                    b.Property<int>("particulierId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("particulierId"));
+
+                    b.Property<string>("EmailBevestigingToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsEmailBevestigd")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("particulierEmail")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("particulierNaam")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("wachtwoord")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("particulierId");
+
+                    b.ToTable("ParticulierHuurders");
                 });
 
             modelBuilder.Entity("WPR_project.Models.Voertuig", b =>
@@ -257,34 +255,13 @@ namespace WPR_project.Migrations
                     b.ToTable("WagenparkBeheerders");
                 });
 
-            modelBuilder.Entity("WPR_project.Models.ParticulierHuurder", b =>
-                {
-                    b.HasBaseType("WPR_project.Models.Huurder");
-
-                    b.Property<string>("EmailBevestigingToken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsEmailBevestigd")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("particulierEmail")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("particulierId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("particulierNaam")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable("ParticulierHuurders", (string)null);
-                });
-
             modelBuilder.Entity("WPR_project.Models.ZakelijkHuurder", b =>
                 {
-                    b.HasBaseType("WPR_project.Models.Huurder");
+                    b.Property<int>("zakelijkeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("zakelijkeId"));
 
                     b.Property<string>("EmailBevestigingToken")
                         .IsRequired()
@@ -308,13 +285,20 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("telNummer")
                         .HasColumnType("int");
 
-                    b.Property<int>("zakelijkeId")
-                        .HasColumnType("int");
+                    b.Property<string>("wachtwoord")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("ZakelijkHuurders", (string)null);
+                    b.HasKey("zakelijkeId");
+
+                    b.ToTable("ZakelijkHuurders");
                 });
 
             modelBuilder.Entity("WPR_project.Models.BackofficeMedewerker", b =>
@@ -329,24 +313,6 @@ namespace WPR_project.Migrations
                     b.HasBaseType("WPR_project.Models.Medewerker");
 
                     b.ToTable("FrontofficeMedewerkers", (string)null);
-                });
-
-            modelBuilder.Entity("WPR_project.Models.ParticulierHuurder", b =>
-                {
-                    b.HasOne("WPR_project.Models.Huurder", null)
-                        .WithOne()
-                        .HasForeignKey("WPR_project.Models.ParticulierHuurder", "HuurderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WPR_project.Models.ZakelijkHuurder", b =>
-                {
-                    b.HasOne("WPR_project.Models.Huurder", null)
-                        .WithOne()
-                        .HasForeignKey("WPR_project.Models.ZakelijkHuurder", "HuurderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("WPR_project.Models.BackofficeMedewerker", b =>
