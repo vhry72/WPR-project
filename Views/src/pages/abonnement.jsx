@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom"; // Gebruik React Router voor navigatie
+import "./styles.css"; // Zorg ervoor dat dit pad correct is
 
 function Abonnement() {
     const [selectedOption, setSelectedOption] = useState(null);
