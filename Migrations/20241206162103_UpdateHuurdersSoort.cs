@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WPR_project.Migrations
 {
     /// <inheritdoc />
-    public partial class test1 : Migration
+    public partial class UpdateHuurdersSoort : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -58,22 +58,6 @@ namespace WPR_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Huurders",
-                columns: table => new
-                {
-                    HuurderId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    adress = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    naam = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    telefoonNr = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Huurders", x => x.HuurderId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Huurverzoeken",
                 columns: table => new
                 {
@@ -101,6 +85,23 @@ namespace WPR_project.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Medewerkers", x => x.medewerkerId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ParticulierHuurders",
+                columns: table => new
+                {
+                    particulierId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    particulierEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    particulierNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailBevestigingToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsEmailBevestigd = table.Column<bool>(type: "bit", nullable: false),
+                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ParticulierHuurders", x => x.particulierId);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,50 +151,24 @@ namespace WPR_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ParticulierHuurders",
-                columns: table => new
-                {
-                    HuurderId = table.Column<int>(type: "int", nullable: false),
-                    particulierId = table.Column<int>(type: "int", nullable: false),
-                    particulierEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    particulierNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailBevestigingToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    IsEmailBevestigd = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ParticulierHuurders", x => x.HuurderId);
-                    table.ForeignKey(
-                        name: "FK_ParticulierHuurders_Huurders_HuurderId",
-                        column: x => x.HuurderId,
-                        principalTable: "Huurders",
-                        principalColumn: "HuurderId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ZakelijkHuurders",
                 columns: table => new
                 {
-                    HuurderId = table.Column<int>(type: "int", nullable: false),
-                    zakelijkeId = table.Column<int>(type: "int", nullable: false),
+                    zakelijkeId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     adres = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     KVKNummer = table.Column<int>(type: "int", nullable: false),
+                    email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EmailBevestigingToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsEmailBevestigd = table.Column<bool>(type: "bit", nullable: false),
                     telNummer = table.Column<int>(type: "int", nullable: false),
                     bedrijfsNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MedewerkersEmails = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ZakelijkHuurders", x => x.HuurderId);
-                    table.ForeignKey(
-                        name: "FK_ZakelijkHuurders_Huurders_HuurderId",
-                        column: x => x.HuurderId,
-                        principalTable: "Huurders",
-                        principalColumn: "HuurderId",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_ZakelijkHuurders", x => x.zakelijkeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -269,9 +244,6 @@ namespace WPR_project.Migrations
 
             migrationBuilder.DropTable(
                 name: "Medewerkers");
-
-            migrationBuilder.DropTable(
-                name: "Huurders");
         }
     }
 }
