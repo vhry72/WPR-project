@@ -9,5 +9,7 @@
 
         public string email { get; set; }
         public int telefoonNr { get; set; }
+
+        public string wachtwoord { get; set; }
     }
 }
