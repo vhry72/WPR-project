@@ -4,6 +4,8 @@ import Register from "./pages/register";
 import Login from "./pages/instellingen";
 import Home from "./pages/Home";
 import Index from "./pages/Index";
+import Abonnement from "./pages/abonnement"; // Nieuwe import
+import Payment from "./pages/payment"; // Nieuwe import
 import "./pages/styles.css";
 
 function PageRoute() {
@@ -11,10 +13,12 @@ function PageRoute() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Layout />}>
-                    <Route index element={<Index />}/>
+                    <Route index element={<Index />} />
                     <Route path="Home" element={<Home />} />
                     <Route path="register" element={<Register />} />
                     <Route path="login" element={<Login />} />
+                    <Route path="abonnement" element={<Abonnement />} />
+                    <Route path="payment" element={<Payment />} /> {/* Nieuwe route */}
                 </Route>
             </Routes>
         </BrowserRouter>
