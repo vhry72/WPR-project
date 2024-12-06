@@ -27,7 +27,7 @@ const Register = () => {
             </div>
             {/* Particulier Formulier */}
             {activeTab === "particulier" && (
-                <form className="form">
+                <form id="ParticulierForm" className="form">
                     <label htmlFor="email">E-mail</label>
                     <input type="email" id="email" required />
                     <label htmlFor="voornaam">Voornaam</label>
@@ -47,7 +47,7 @@ const Register = () => {
             )}
             {/* Zakelijk Formulier */}
             {activeTab === "zakelijk" && (
-                <form className="form">
+                <form id="ZakelijkForm" className="form" action="/abonnement" method="get">
                     <label htmlFor="email-zakelijk">E-mail</label>
                     <input type="email" id="email-zakelijk" required />
                     <label htmlFor="wachtwoord-zakelijk">Wachtwoord</label>
