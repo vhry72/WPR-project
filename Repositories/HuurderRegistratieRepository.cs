@@ -20,7 +20,7 @@ namespace WPR_project.Repositories
         public void Delete(int id)
         {
             var particulierHuurder = _context.ParticulierHuurders.Find(id);
-            if (particulierHuurder!= null)
+            if (particulierHuurder != null)
             {
                 _context.ParticulierHuurders.Remove(particulierHuurder);
             }
@@ -28,17 +28,22 @@ namespace WPR_project.Repositories
 
         public void Delete(ParticulierHuurder huurder)
         {
-            throw new NotImplementedException();
+            _context.ParticulierHuurders.Remove(huurder);
         }
 
         public IEnumerable<ParticulierHuurder> GetAll()
         {
-            throw new NotImplementedException();
+            return _context.ParticulierHuurders.ToList();
         }
 
         public ParticulierHuurder GetById(int id)
         {
             return _context.ParticulierHuurders.Find(id);
+        }
+
+        public ParticulierHuurder GetByToken(string token)
+        {
+            return _context.ParticulierHuurders.FirstOrDefault(h => h.EmailBevestigingToken == token);
         }
 
         public void Save()

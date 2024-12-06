@@ -12,38 +12,50 @@ namespace WPR_project.Repositories
             _context = context;
         }
 
+        // Voeg een nieuwe zakelijke huurder toe
         public void AddZakelijkHuurder(ZakelijkHuurder zakelijkHuurder)
         {
             _context.ZakelijkHuurders.Add(zakelijkHuurder);
         }
 
+        // Verwijder een zakelijke huurder via ID
         public void DeleteZakelijkHuurder(int id)
         {
-            var zakelijkeHuurder = _context.ZakelijkHuurders.Find(id);
+            var zakelijkeHuurder = GetZakelijkHuurderById(id);
             if (zakelijkeHuurder != null)
             {
                 _context.ZakelijkHuurders.Remove(zakelijkeHuurder);
             }
         }
 
+        // Haal alle zakelijke huurders op
         public IEnumerable<ZakelijkHuurder> GetAllZakelijkHuurders()
         {
             return _context.ZakelijkHuurders.ToList();
         }
 
+        // Haal een specifieke zakelijke huurder op via ID
         public ZakelijkHuurder GetZakelijkHuurderById(int id)
         {
-            return _context.ZakelijkHuurders.Find(id);
+            return _context.ZakelijkHuurders.FirstOrDefault(h => h.zakelijkeId == id);
         }
 
-        public void Save()
+        // Haal een zakelijke huurder op via verificatietoken
+        public ZakelijkHuurder GetZakelijkHuurderByToken(string token)
         {
-            _context.SaveChanges();
+            return _context.ZakelijkHuurders.FirstOrDefault(h => h.EmailBevestigingToken == token);
         }
 
+        // Werk een bestaande zakelijke huurder bij
         public void UpdateZakelijkHuurder(ZakelijkHuurder zakelijkHuurder)
         {
             _context.ZakelijkHuurders.Update(zakelijkHuurder);
+        }
+
+        // Sla wijzigingen in de database op
+        public void Save()
+        {
+            _context.SaveChanges();
         }
     }
 }
