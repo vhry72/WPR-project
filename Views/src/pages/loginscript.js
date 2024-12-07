@@ -42,11 +42,11 @@ loginButtons.forEach(button => {
 
         // Controleer welke tab actief is en stuur door naar het juiste dashboard
         if (document.querySelector('.tab[data-tab="particulier"]').classList.contains('active')) {
-            window.location.href = 'partdashboard.html'; // Particulier dashboard
+            window.location.href = '/partdashboard'; // Particulier dashboard
         } else if (document.querySelector('.tab[data-tab="zakelijk"]').classList.contains('active')) {
-            window.location.href = 'zaakdashboard.html'; // Zakelijk dashboard
+            window.location.href = '/zaakdashboard'; // Zakelijk dashboard
         } else if (document.querySelector('.tab[data-tab="medewerker"]').classList.contains('active')) {
-            window.location.href = 'mededashboard.html'; // Medewerker dashboard
+            window.location.href = '/mededashboard'; // Medewerker dashboard
         }
     });
 });
