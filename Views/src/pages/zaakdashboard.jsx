@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import "./styles.css"; // Zorg ervoor dat dit pad correct is
 
-const instellingen = () => {
-    console.log("instellingen component wordt gerenderd");
+const zaakdashboard = () => {
+    console.log("zaakdashboard component wordt gerenderd");
 
     return (
         <>
@@ -11,11 +11,11 @@ const instellingen = () => {
             </header>
             <div className="index-container">
                 <div className="options">
-                    <Link to="/accountbeheer" className="btn">
-                        Beheer Account
+                    <Link to="/wagenparklogin" className="btn">
+                        Beheerder login
                     </Link>
-                    <Link to="/verwijder" className="btn">
-                        Verwijder account
+                    <Link to="/zakelijkverwijder" className="btn">
+                        Verwijder bedrijf
                     </Link>
                 </div>
             </div>
@@ -23,4 +23,4 @@ const instellingen = () => {
     );
 };
 
-export default instellingen;
+export default zaakdashboard;
