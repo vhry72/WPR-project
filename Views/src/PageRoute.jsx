@@ -6,7 +6,8 @@ import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Abonnement from "./pages/abonnement"; // Nieuwe import
 import Payment from "./pages/payment"; // Nieuwe import
-import "./pages/styles.css";
+import "../src/styles/styles.css";
+import TestPage from "./pages/testPage";
 
 function PageRoute() {
     return (
@@ -18,7 +19,8 @@ function PageRoute() {
                     <Route path="register" element={<Register />} />
                     <Route path="login" element={<Login />} />
                     <Route path="abonnement" element={<Abonnement />} />
-                    <Route path="payment" element={<Payment />} /> {/* Nieuwe route */}
+                    <Route path="payment" element={<Payment />} />
+                    <Route path="test" element={<TestPage />} /> 
                 </Route>
             </Routes>
         </BrowserRouter>

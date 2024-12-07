@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import "./styles.css"; // Zorg ervoor dat dit pad correct is
+import "../styles/styles.css";
+
 
 const PartDashboard = () => {
     console.log("PartDashboard component wordt gerenderd");
