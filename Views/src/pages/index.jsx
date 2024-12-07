@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import "./styles.css"; // Ensure this path is correct
+import "../styles/styles.css";
 
 const Index = () => {
     console.log("Index component wordt gerenderd");

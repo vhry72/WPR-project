@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Gebruik voor navigatie in React Router
-import "./styles.css"; // Zorg ervoor dat je de CSS koppelt
+import "../styles/styles.css"; 
 
 function Betaling() {
     const navigate = useNavigate();

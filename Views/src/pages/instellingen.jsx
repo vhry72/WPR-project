@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
-import "./styles.css"; // Zorg ervoor dat dit pad correct is
+import "../styles/styles.css";
+
 
 const instellingen = () => {
     console.log("instellingen component wordt gerenderd");

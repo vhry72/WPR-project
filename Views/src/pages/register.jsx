@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "./styles.css";
+import "../styles/styles.css";
+
 
 const Register = () => {
     const [activeTab, setActiveTab] = useState("particulier");
@@ -7,6 +8,11 @@ const Register = () => {
     const handleTabClick = (tab) => {
         setActiveTab(tab);
     };
+
+    function doSomething() {
+        window.console.log("Text voor de bevestiging");
+    }
+    
 
     return (
         <div className="register-container">
@@ -40,7 +46,7 @@ const Register = () => {
                     <input type="text" id="adres" required />
                     <label htmlFor="wachtwoord">Wachtwoord</label>
                     <input type="password" id="wachtwoord" required />
-                    <button type="submit" className="register-button">
+                    <button type="submit" className="register-button" onClick= {doSomething}>
                         Registreren
                     </button>
                 </form>

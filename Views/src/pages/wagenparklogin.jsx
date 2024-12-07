@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState } from "react";
-import "./styles.css";
+import "../styles/styles.css";
 
 const wagenparkLogin = () => {
     return (
