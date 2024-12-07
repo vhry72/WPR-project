@@ -27,7 +27,7 @@ function Betaling() {
                 Om je betaling af te ronden, vul de benodigde gegevens in en klik op
                 'Betalen'.
             </p>
-            <form onSubmit={handleSubmit} className="payment-form">
+            <form id="Payment" className="form" action="/zaakdashboard" method="get">
                 <div>
                     <label htmlFor="iban">IBAN</label>
                     <input

@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import "../styles/styles.css";
 
 
-const PartDashboard = () => {
-    console.log("PartDashboard component wordt gerenderd");
+const instellingen = () => {
+    console.log("instellingen component wordt gerenderd");
 
     return (
         <>
@@ -24,4 +24,4 @@ const PartDashboard = () => {
     );
 };
 
-export default PartDashboard;
+export default instellingen;
