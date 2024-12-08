@@ -17,6 +17,7 @@ const Layout = () => {
                     <Link to="/wagenbeheer" className="nav-link">Wagen Beheer</Link>
                     <Link to="/toevoegen" className="nav-link">Toevoegen</Link>
                     <Link to="/verwijderen" className="nav-link">Verwijderen</Link>
+                    <Link to="/testPage" className="nav-link">TestPage</Link>
                 </nav>
             </header>
             <main>
