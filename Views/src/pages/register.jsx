@@ -68,6 +68,7 @@ const Register = () => {
             } else if (error.request) {
                 setErrorMessage("Geen antwoord van de server. Controleer je verbinding.");
             } else {
+
                 setErrorMessage(`Onbekende fout: ${error.message}`);
             }
         } finally {
