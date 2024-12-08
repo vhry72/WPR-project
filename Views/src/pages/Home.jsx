@@ -21,7 +21,7 @@ const Home = () => {
 
             <div className="hero" id="home">
                 <div className="hero-text-container">
-                    <h1>Welkom bij Onze Website</h1>
+                    <h1>Welkom bij CarAndAll!</h1>
                     <p>Ontdek de beste diensten die we aanbieden!</p>
                 </div>
 

@@ -48,8 +48,8 @@ namespace WPR_project.Services
             // Stuur een bevestigingsmail
             StuurBevestigingsEmail(huurder, nieuwAbonnement);
         }
-
-        private DateTime BerekenVolgendePeriode()
+        
+        public DateTime BerekenVolgendePeriode()
         {
             // Stel de startdatum van de volgende abonnementsperiode in
             var huidigeDatum = DateTime.Now;

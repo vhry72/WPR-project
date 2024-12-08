@@ -2,7 +2,7 @@
 {
     public abstract class MedewerkerDTO
     { 
-        public int medewerkerId { get; set; }
+        public Guid medewerkerId { get; set; }
         
     }
 }
