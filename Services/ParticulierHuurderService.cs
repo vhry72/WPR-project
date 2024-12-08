@@ -1,4 +1,5 @@
-﻿using WPR_project.DTO_s;
+﻿using Microsoft.EntityFrameworkCore;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
@@ -39,16 +40,23 @@ namespace WPR_project.Services
             };
         }
 
-        public void Register(ParticulierHuurderDTO pdto)
+        public void Register(ParticulierHuurder pdto)
         {
             var huurder = new ParticulierHuurder
             {
-                particulierNaam = pdto.particulierNaam,
                 particulierEmail = pdto.particulierEmail,
-                
+                particulierNaam = pdto.particulierNaam,
+                wachtwoord = pdto.wachtwoord,
+                adress = pdto.adress,
+                postcode = pdto.postcode,
+                woonplaats = pdto.woonplaats,
+                telefoonnummer = pdto.telefoonnummer,
                 EmailBevestigingToken = Guid.NewGuid().ToString(), // Genereer verificatietoken
-                IsEmailBevestigd = false
+                IsEmailBevestigd = false,
             };
+
+            Console.WriteLine(huurder);
+
 
             _repository.Add(huurder);
             _repository.Save();

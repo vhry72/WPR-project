@@ -12,7 +12,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowLocalhost",
         policy => policy.WithOrigins("http://localhost:5173")
                         .AllowAnyMethod()
-                        .AllowAnyHeader());
+                        .AllowAnyHeader()
+                        .AllowCredentials());
 });
 
 // Database setup
@@ -49,6 +50,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles(); // Zorgt ervoor dat bestanden in wwwroot worden geserveerd
 app.UseRouting();
 app.UseCors("AllowLocalhost");
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configureer routes
 app.MapControllers();

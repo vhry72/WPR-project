@@ -1,6 +1,7 @@
 ﻿/* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
-import "./styles.css"; // Zorg ervoor dat dit pad juist is 
+import "../styles/styles.css";
+
 
 const Home = () => {
     useEffect(() => {

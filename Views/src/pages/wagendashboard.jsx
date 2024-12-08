@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import "./styles.css"; // Zorg ervoor dat dit pad correct is
+import "../styles/styles.css";
 
 const wagendashboard = () => {
     console.log("wagendashboard component wordt gerenderd");
