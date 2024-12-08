@@ -1,4 +1,5 @@
-﻿using WPR_project.DTO_s;
+﻿using System.ComponentModel.DataAnnotations;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
@@ -31,28 +32,36 @@ namespace WPR_project.Services
         // Registreer een nieuwe zakelijke huurder met e-mailverificatie
         public void RegisterZakelijkeHuurder(ZakelijkHuurder huurder)
         {
-            // Genereer een unieke verificatietoken
+            var validationContext = new ValidationContext(huurder);
+            var validationResults = new List<ValidationResult>();
+
+            if(!Validator.TryValidateObject(huurder, validationContext, validationResults, true))
+            {
+                var errors = validationResults.Select(vr => vr.ErrorMessage).ToList();
+                throw new ArgumentException($"Validatie mislukt: {string.Join(", ", errors)}");
+            }
+
             huurder.EmailBevestigingToken = Guid.NewGuid().ToString();
             huurder.IsEmailBevestigd = false;
 
-            // Sla de huurder op in de database
+            
             _repository.AddZakelijkHuurder(huurder);
             _repository.Save();
 
-            // Stuur een verificatiemail
+            
             var verificatieUrl = $"https://localhost:5033/api/ZakelijkeHuurder/verify?token={huurder.EmailBevestigingToken}";
             var emailBody = $"Beste {huurder.bedrijfsNaam},<br><br>Klik op de volgende link om je e-mailadres te bevestigen:<br><a href='{verificatieUrl}'>Bevestig e-mail</a>";
             _emailService.SendEmail(huurder.email, "Bevestig je registratie", emailBody);
         }
 
-        // Verifieer de e-mail van een zakelijke huurder
+        
         public bool VerifyEmail(string token)
         {
-            // Zoek de huurder op basis van het verificatietoken
+           
             var huurder = _repository.GetZakelijkHuurderByToken(token);
             if (huurder == null || huurder.IsEmailBevestigd)
             {
-                return false; // Token ongeldig of al geverifieerd
+                return false; // Token ongeldig 
             }
 
             // Update verificatiestatus

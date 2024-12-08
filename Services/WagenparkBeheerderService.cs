@@ -35,7 +35,7 @@ namespace WPR_project.Services
             {
                 existingBeheerder.beheerderNaam = beheerder.beheerderNaam;
                 existingBeheerder.email = beheerder.email;
-                existingBeheerder.telNummer = beheerder.telNummer;
+                existingBeheerder.telefoonNummer = beheerder.telefoonNummer;
 
                 _repository.UpdateWagenparkBeheerder(existingBeheerder);
                 _repository.Save();

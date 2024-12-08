@@ -265,7 +265,7 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("telNummer")
+                    b.Property<int>("telefoonNummer")
                         .HasColumnType("int");
 
                     b.HasKey("beheerderId");
@@ -307,7 +307,7 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("telNummer")
+                    b.Property<int>("telefoonNummer")
                         .HasColumnType("int");
 
                     b.Property<string>("wachtwoord")

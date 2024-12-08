@@ -10,7 +10,7 @@ const Home = () => {
 
     return (
         <>
-            {/* Header Section */}
+            {/* Header*/}
             <header>
                 <div className="container">
                     <a href="#" className="logo">
@@ -32,34 +32,34 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* Services Section */}
+            {/*Services*/}
             <section className="services" id="services">
                 <h2>Onze Diensten</h2>
                 <div className="service-list">
                     {[
                         {
-                            id: 1, // Toegevoegd
+                            id: 1, 
                             imgSrc: "src/assets/mercedes-indesx.jpg",
-                            title: "Service 1",
-                            description: "Beschrijving van Service 1.",
+                            title: "Auto's",
+                            description: "Een ruim aanbod aan auto voertuigen!",
                         },
                         {
-                            id: 2, // Toegevoegd
+                            id: 2, 
                             imgSrc: "src/assets/camper-index.png",
-                            title: "Service 2",
-                            description: "Beschrijving van Service 2.",
+                            title: "Campers",
+                            description: "Elk soort camper beschikbaar die je maar kunt wensen!",
                         },
                         {
-                            id: 3, // Toegevoegd
+                            id: 3, 
                             imgSrc: "src/assets/caravans-index.jpg",
-                            title: "Service 3",
-                            description: "Beschrijving van Service 3.",
+                            title: "Caravans",
+                            description: "De droom caravan speciaal naar wens geleverd!",
                         },
                         {
-                            id: 4, // Toegevoegd
+                            id: 4, 
                             imgSrc: "src/assets/z&p-index.png",
-                            title: "Service 4",
-                            description: "Beschrijving van Service 4.",
+                            title: "Abonnement Opties",
+                            description: "De Beste abonnement opties beschikbaar voor bedrijfen!",
                         },
                     ].map((service) => (
                         <div className="service" key={service.id}>
@@ -71,12 +71,13 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Footer Section */}
+            {/*Footer*/}
             <footer>
-                <p>&copy; 2024 Mijn Applicatie. Alle rechten voorbehouden.</p>
+                <p>&copy; 2024 WPR Project. Alle rechten voorbehouden.</p>
             </footer>
         </>
     );
 };
 
 export default Home;
+    

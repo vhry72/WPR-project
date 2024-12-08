@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Xunit.Sdk;
 
 namespace WPR_project.Models
 {
@@ -13,7 +14,7 @@ namespace WPR_project.Models
         public string particulierEmail { get; set; }
 
         [Required(ErrorMessage = "Naam is verplicht.")]
-        [StringLength(100, ErrorMessage = "Naam mag niet langer zijn dan 100 tekens.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "Naam mag niet langer zijn dan 100 tekens.")]
         public string particulierNaam { get; set; }
 
         [StringLength(255, ErrorMessage = "Email bevestiging token mag niet langer zijn dan 255 tekens.")]

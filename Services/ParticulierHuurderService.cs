@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
@@ -44,11 +45,17 @@ namespace WPR_project.Services
 
         public void Register(ParticulierHuurder particulierH)
         {
-            if (string.IsNullOrWhiteSpace(particulierH.particulierEmail) || string.IsNullOrWhiteSpace(particulierH.wachtwoord))
+            
+            var validationContext = new ValidationContext(particulierH);
+            var validationResults = new List<ValidationResult>();
+
+            if (!Validator.TryValidateObject(particulierH, validationContext, validationResults, true))
             {
-                throw new ArgumentException("E-mailadres en wachtwoord zijn verplicht.");
+                var errors = validationResults.Select(vr => vr.ErrorMessage).ToList();
+                throw new ArgumentException($"Validatie mislukt: {string.Join(", ", errors)}");
             }
 
+            // Maak een nieuwe huurder
             var huurder = new ParticulierHuurder
             {
                 particulierId = Guid.NewGuid(),
@@ -71,6 +78,7 @@ namespace WPR_project.Services
             var emailBody = $"Beste {huurder.particulierNaam},<br><br>Klik op de volgende link om je e-mailadres te bevestigen:<br><a href='{verificatieUrl}'>Bevestig je e-mail</a>";
             _emailService.SendEmail(huurder.particulierEmail, "Bevestig je registratie", emailBody);
         }
+
 
         public bool VerifyEmail(string token)
         {
