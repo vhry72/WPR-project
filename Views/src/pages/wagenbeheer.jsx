@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
 import "../styles/styles.css";
 import "../styles/Wagenparkbeheerder.css";
+import "../styles/Notificatie.css";
 
 const WagenbeheerDashboard = () => {
     console.log("wagendashboard component wordt gerenderd");
@@ -12,6 +13,7 @@ const WagenbeheerDashboard = () => {
         email: "",
         wachtwoord: "",
     });
+    const [notificatie, setNotificatie] = useState("");
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -24,11 +26,16 @@ const WagenbeheerDashboard = () => {
             return;
         }
         setMedewerkers((prev) => [...prev, nieuweMedewerker]);
+        setNotificatie(`Toegevoegd: ${nieuweMedewerker.naam}`);
+        setTimeout(() => setNotificatie(""), 5000); // Verwijdert notificatie na 3 seconden
         setNieuweMedewerker({ naam: "", email: "", wachtwoord: "" });
     };
 
     const verwijderMedewerker = (email) => {
+        const medewerker = medewerkers.find((m) => m.email === email);
         setMedewerkers((prev) => prev.filter((m) => m.email !== email));
+        setNotificatie(`Verwijderd: ${medewerker.naam}`);
+        setTimeout(() => setNotificatie(""), 5000); // Verwijdert notificatie na 3 seconden
     };
 
     return (
@@ -76,6 +83,11 @@ const WagenbeheerDashboard = () => {
                         ))}
                     </ul>
                 </div>
+                {notificatie && (
+                    <div className="notificatie-box">
+                        {notificatie}
+                    </div>
+                )}
             </div>
         </>
     );
