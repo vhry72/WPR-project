@@ -6,12 +6,12 @@ namespace WPR_project.Repositories
     {
         // Functions for ZakelijkHuurder
         IEnumerable<ZakelijkHuurder> GetAllZakelijkHuurders();
-        ZakelijkHuurder GetZakelijkHuurderById(int id);
+        ZakelijkHuurder GetZakelijkHuurderById(Guid id);
         ZakelijkHuurder GetZakelijkHuurderByToken(string token);
 
         void AddZakelijkHuurder(ZakelijkHuurder zakelijkHuurder);
         void UpdateZakelijkHuurder(ZakelijkHuurder zakelijkHuurder);
-        void DeleteZakelijkHuurder(int id);
+        void DeleteZakelijkHuurder(Guid id);
 
         // Standard save
         void Save();

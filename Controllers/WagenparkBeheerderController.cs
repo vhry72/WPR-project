@@ -29,7 +29,7 @@ namespace WPR_project.Controllers
         /// Haalt een wagenparkbeheerder op via ID
         /// </summary>
         [HttpGet("{id}")]
-        public ActionResult<WagenparkBeheerder> GetBeheerderById(int id)
+        public ActionResult<WagenparkBeheerder> GetBeheerderById(Guid id)
         {
             var beheerder = _service.GetBeheerderById(id);
             if (beheerder == null)
@@ -58,7 +58,7 @@ namespace WPR_project.Controllers
         /// Wijzigt een bestaande wagenparkbeheerder
         /// </summary>
         [HttpPut("{id}")]
-        public ActionResult UpdateBeheerder(int id, [FromBody] WagenparkBeheerder beheerder)
+        public ActionResult UpdateBeheerder(Guid id, [FromBody] WagenparkBeheerder beheerder)
         {
             if (!ModelState.IsValid)
             {
@@ -80,7 +80,7 @@ namespace WPR_project.Controllers
         /// Verwijdert een wagenparkbeheerder via ID
         /// </summary>
         [HttpDelete("{id}")]
-        public ActionResult DeleteBeheerder(int id)
+        public ActionResult DeleteBeheerder(Guid id)
         {
             try
             {
@@ -96,7 +96,7 @@ namespace WPR_project.Controllers
         /// Voegt een medewerker toe aan een wagenparkbeheerder
         /// </summary>
         [HttpPost("{beheerderId}/voegmedewerker")]
-        public IActionResult VoegMedewerkerToe(int beheerderId, [FromBody] BedrijfsMedewerkers medewerker)
+        public IActionResult VoegMedewerkerToe(Guid beheerderId, [FromBody] BedrijfsMedewerkers medewerker)
         {
             if (!ModelState.IsValid)
             {
@@ -122,7 +122,7 @@ namespace WPR_project.Controllers
         /// Verwijdert een medewerker van een wagenparkbeheerder
         /// </summary>
         [HttpDelete("{beheerderId}/verwijdermedewerker/{medewerkerId}")]
-        public IActionResult VerwijderMedewerker(int beheerderId, int medewerkerId)
+        public IActionResult VerwijderMedewerker(Guid beheerderId, int medewerkerId)
         {
             try
             {

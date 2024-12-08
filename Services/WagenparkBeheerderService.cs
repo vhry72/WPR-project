@@ -17,7 +17,7 @@ namespace WPR_project.Services
             return _repository.GetWagenparkBeheerders();
         }
 
-        public WagenparkBeheerder GetBeheerderById(int id)
+        public WagenparkBeheerder GetBeheerderById(Guid id)
         {
             return _repository.getBeheerderById(id);
         }
@@ -28,7 +28,7 @@ namespace WPR_project.Services
             _repository.Save();
         }
 
-        public void UpdateWagenparkBeheerder(int id, WagenparkBeheerder beheerder)
+        public void UpdateWagenparkBeheerder(Guid id, WagenparkBeheerder beheerder)
         {
             var existingBeheerder = _repository.getBeheerderById(id);
             if (existingBeheerder != null)
@@ -46,7 +46,7 @@ namespace WPR_project.Services
             }
         }
 
-        public void DeleteWagenparkBeheerder(int id)
+        public void DeleteWagenparkBeheerder(Guid id)
         {
             var beheerder = _repository.getBeheerderById(id);
             if (beheerder != null)
@@ -60,7 +60,7 @@ namespace WPR_project.Services
             }
         }
 
-        public void VoegMedewerkerToe(int beheerderId, BedrijfsMedewerkers medewerker)
+        public void VoegMedewerkerToe(Guid beheerderId, BedrijfsMedewerkers medewerker)
         {
             var beheerder = _repository.getBeheerderById(beheerderId);
             if (beheerder == null)
@@ -78,7 +78,7 @@ namespace WPR_project.Services
             _repository.Save();
         }
 
-        public void VerwijderMedewerker(int beheerderId, int medewerkerId)
+        public void VerwijderMedewerker(Guid beheerderId, int medewerkerId)
         {
             var beheerder = _repository.getBeheerderById(beheerderId);
             if (beheerder == null)

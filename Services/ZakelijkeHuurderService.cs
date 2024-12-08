@@ -23,7 +23,7 @@ namespace WPR_project.Services
         }
 
         // Haal een specifieke zakelijke huurder op via ID
-        public ZakelijkHuurder GetZakelijkHuurderById(int id)
+        public ZakelijkHuurder GetZakelijkHuurderById(Guid id)
         {
             return _repository.GetZakelijkHuurderById(id);
         }
@@ -70,7 +70,7 @@ namespace WPR_project.Services
         }
 
         // Werk een zakelijke huurder bij
-        public void Update(int id, ZakelijkHuurder updatedHuurder)
+        public void Update(Guid id, ZakelijkHuurder updatedHuurder)
         {
             var bestaandeHuurder = _repository.GetZakelijkHuurderById(id);
             if (bestaandeHuurder == null)
@@ -89,7 +89,7 @@ namespace WPR_project.Services
         }
 
         // Verwijder een zakelijke huurder
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var huurder = _repository.GetZakelijkHuurderById(id);
             if (huurder == null)
@@ -102,9 +102,9 @@ namespace WPR_project.Services
         }
 
         // Voeg een medewerker toe aan een zakelijke huurder
-        public void VoegMedewerkerToe(int zakelijkeHuurderId, string medewerkerEmail)
+        public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerEmail)
         {
-            var huurder = _repository.GetZakelijkHuurderById(zakelijkeHuurderId);
+            var huurder = _repository.GetZakelijkHuurderById(zakelijkeId);
             if (huurder == null)
             {
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
@@ -125,9 +125,9 @@ namespace WPR_project.Services
         }
 
         // Verwijder een medewerker van een zakelijke huurder
-        public void VerwijderMedewerker(int zakelijkeHuurderId, string medewerkerEmail)
+        public void VerwijderMedewerker(Guid zakelijkeId, string medewerkerEmail)
         {
-            var huurder = _repository.GetZakelijkHuurderById(zakelijkeHuurderId);
+            var huurder = _repository.GetZakelijkHuurderById(zakelijkeId);
             if (huurder == null)
             {
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");

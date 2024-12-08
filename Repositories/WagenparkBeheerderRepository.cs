@@ -17,7 +17,7 @@ namespace WPR_project.Repositories
             _context.WagenparkBeheerders.Add(wagenparkBeheerder);
         }
 
-        public void DeleteWagenparkBeheerder(int id)
+        public void DeleteWagenparkBeheerder(Guid id)
         {
             var wagenparkBeheerder = _context.WagenparkBeheerders.Find(id);
             if (wagenparkBeheerder != null)
@@ -31,7 +31,7 @@ namespace WPR_project.Repositories
             return _context.WagenparkBeheerders.ToList();
         }
 
-        public WagenparkBeheerder GetBeheerderById(int id)
+        public WagenparkBeheerder GetBeheerderById(Guid id)
         {
             return _context.WagenparkBeheerders.Find(id);
         }
@@ -50,13 +50,13 @@ namespace WPR_project.Repositories
             _context.SaveChanges();
         }
 
-        public WagenparkBeheerder getBeheerderById(int id)
+        public WagenparkBeheerder getBeheerderById(Guid id)
         {
             throw new NotImplementedException();
         }
 
         // de 2de updatewagenparkbeheerder is nodig voor de interface om te implementeren, vragen voor hulp zaterdag!
-        public void UpdateWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder, int id)
+        public void UpdateWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder, Guid id)
         {
             throw new NotImplementedException();
         }

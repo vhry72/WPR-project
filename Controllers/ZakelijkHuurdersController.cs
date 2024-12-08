@@ -56,7 +56,7 @@ namespace WPR_project.Controllers
 
         // GET: api/ZakelijkeHuurder/{id}
         [HttpGet("{id}")]
-        public ActionResult<ZakelijkHuurder> GetZakelijkHuurderById(int id)
+        public ActionResult<ZakelijkHuurder> GetZakelijkHuurderById(Guid id)
         {
             var huurder = _service.GetZakelijkHuurderById(id);
             if (huurder == null)
@@ -81,7 +81,7 @@ namespace WPR_project.Controllers
 
         // PUT: api/ZakelijkeHuurder/{id}
         [HttpPut("{id}")]
-        public IActionResult UpdateZakelijkeHuurder(int id, [FromBody] ZakelijkHuurder zakelijkHuurder)
+        public IActionResult UpdateZakelijkeHuurder(Guid id, [FromBody] ZakelijkHuurder zakelijkHuurder)
         {
             if (zakelijkHuurder == null || zakelijkHuurder.zakelijkeId != id)
             {
@@ -102,7 +102,7 @@ namespace WPR_project.Controllers
 
         // DELETE: api/ZakelijkeHuurder/{id}
         [HttpDelete("{id}")]
-        public IActionResult DeleteZakelijkeHuurder(int id)
+        public IActionResult DeleteZakelijkeHuurder(Guid id)
         {
             try
             {
@@ -118,7 +118,7 @@ namespace WPR_project.Controllers
 
         // POST: api/ZakelijkeHuurder/{id}/voegmedewerker
         [HttpPost("{id}/voegmedewerker")]
-        public IActionResult VoegMedewerkerToe(int id, [FromBody] string medewerkerEmail)
+        public IActionResult VoegMedewerkerToe(Guid id, [FromBody] string medewerkerEmail)
         {
             if (string.IsNullOrEmpty(medewerkerEmail))
             {
@@ -143,7 +143,7 @@ namespace WPR_project.Controllers
 
         // DELETE: api/ZakelijkeHuurder/{id}/verwijdermedewerker
         [HttpDelete("{id}/verwijdermedewerker")]
-        public IActionResult VerwijderMedewerker(int id, [FromBody] string medewerkerEmail)
+        public IActionResult VerwijderMedewerker(Guid id, [FromBody] string medewerkerEmail)
         {
             if (string.IsNullOrEmpty(medewerkerEmail))
             {
