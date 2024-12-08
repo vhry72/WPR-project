@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import "../styles/styles.css";
+import "./styles.css"; // Zorg ervoor dat dit pad correct is
 
 const wagendashboard = () => {
     console.log("wagendashboard component wordt gerenderd");
@@ -12,12 +12,13 @@ const wagendashboard = () => {
             </header>
             <div className="index-container">
                 <div className="options">
-                    <Link to="/wagenbeheer" className="btn">
-                        Beheer medewerkers
+                    <Link to="/toevoegen" className="btn">
+                        voeg medewerkers toe
                     </Link>
-                    <Link to="/abbonementupdate" className="btn">
-                         beheer abonnement
+                    <Link to="/verwijderen" className="btn">
+                        verwijder medewerkers
                     </Link>
+
                 </div>
             </div>
         </>
