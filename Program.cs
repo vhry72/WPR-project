@@ -51,6 +51,9 @@ app.UseStaticFiles(); // Zorgt ervoor dat bestanden in wwwroot worden geserveerd
 app.UseRouting();
 app.UseCors("AllowLocalhost");
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Configureer routes
 app.MapControllers();
 

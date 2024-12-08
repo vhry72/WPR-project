@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WPR_project.DTO_s;
 using WPR_project.Services;
+using WPR_project.Models;
 
 namespace WPR_project.Controllers
 {
@@ -44,14 +45,14 @@ namespace WPR_project.Controllers
         /// Registreert een nieuwe particuliere huurder en verstuurt een verificatiemail.
         /// </summary>
         [HttpPost("register")]
-        public IActionResult Register([FromBody] ParticulierHuurderDTO dto)
+        public IActionResult Register([FromBody] ParticulierHuurder pHuurder)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            //if (!ModelState.IsValid)
+            //{
+            //    return BadRequest(ModelState);
+            //}
 
-            _service.Register(dto);
+            _service.Register(pHuurder);
             return Ok(new { Message = "Registratie succesvol. Controleer je e-mail voor verificatie." });
         }
 
