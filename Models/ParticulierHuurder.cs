@@ -12,5 +12,11 @@ namespace WPR_project.Models
         public bool IsEmailBevestigd { get; set; } = false;
 
         public string wachtwoord { get; set; }
+
+        public string adress { get; set; }
+        public string postcode { get; set; }
+        public string woonplaats { get; set; }
+
+        public string telefoonnummer { get; set; }
     }
 }

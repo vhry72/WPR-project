@@ -27,9 +27,8 @@ function PageRoute() {
                     <Route path="zaakdashboard" element={<Zaakdashboard />} /> {/* Nieuwe route */}
                     <Route path="wagenparklogin" element={<Wagenparklogin />} /> {/* Nieuwe route */}                
                     <Route path="wagendashboard" element={<Wagendashboard />} /> {/* Nieuwe route */}
-
                     <Route path="payment" element={<Payment />} />
-                    <Route path="test" element={<TestPage />} /> 
+                    <Route path="testPage" element={<TestPage />} /> 
                 </Route>
             </Routes>
         </BrowserRouter>
