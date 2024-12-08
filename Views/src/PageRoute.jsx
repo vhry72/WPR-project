@@ -9,8 +9,7 @@ import Payment from "./pages/payment"; // Nieuwe import
 import Zaakdashboard from "./pages/zaakdashboard"; // Nieuwe import
 import Wagenparklogin from "./pages/wagenparklogin"; // Nieuwe import
 import Wagendashboard from "./pages/wagendashboard"; // Nieuwe import
-import "../src/styles/styles.css";
-import TestPage from "./pages/testPage";
+
 
 
 function PageRoute() {
@@ -27,8 +26,7 @@ function PageRoute() {
                     <Route path="zaakdashboard" element={<Zaakdashboard />} /> {/* Nieuwe route */}
                     <Route path="wagenparklogin" element={<Wagenparklogin />} /> {/* Nieuwe route */}                
                     <Route path="wagendashboard" element={<Wagendashboard />} /> {/* Nieuwe route */}
-                    <Route path="payment" element={<Payment />} />
-                    <Route path="testPage" element={<TestPage />} /> 
+                    
                 </Route>
             </Routes>
         </BrowserRouter>
