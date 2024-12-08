@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/styles.css";
 import particulierHuurdersRequestService from "../services/requests/ParticulierHuurderRequestService";
+import { v4 as uuidv4 } from 'uuid';
 
 const Register = () => {
     const [activeTab, setActiveTab] = useState("particulier");
@@ -41,7 +42,7 @@ const Register = () => {
 
             // Maak payload
             const payload = {
-                particulierId: '100',
+                particulierId: uuidv4(),
                 particulierEmail: formData.particulierEmail,
                 particulierNaam: formData.particulierNaam,
                 EmailBevestigingToken: '6asdadwq',
