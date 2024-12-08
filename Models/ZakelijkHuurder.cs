@@ -21,7 +21,7 @@ namespace WPR_project.Models
         [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
         public string email { get; set; }
 
-        [StringLength(255, ErrorMessage = "Email bevestiging token mag niet langer zijn dan 255 tekens.")]
+        [StringLength(255, ErrorMessage = "E-mail bevestiging token mag niet langer zijn dan 255 tekens.")]
         public string EmailBevestigingToken { get; set; }
 
         public bool IsEmailBevestigd { get; set; } = false;
@@ -38,8 +38,16 @@ namespace WPR_project.Models
         [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
         public string wachtwoord { get; set; }
 
-        //[Required(ErrorMessage = "Medewerkers-e-mails zijn verplicht.")]
-        //[MinLength(1, ErrorMessage = "Er moet minimaal één medewerker e-mailadres worden opgegeven.")]
+        // Relatie abonnement (huidige abonnement)
+        public Guid AbonnementId { get; set; }
+        public Abonnement HuidigAbonnement { get; set; }
+
+        // Eigenschappen wijzigingen in abonnement
+        public Guid NieuwAbonnementId { get; set; }
+        public Abonnement NieuwAbonnement { get; set; }
+        public DateTime IngangsdatumNieuwAbonnement { get; set; }
+
+        // Lijst van e-mailadressen van medewerkers
         public List<string> MedewerkersEmails { get; set; } = new List<string>();
     }
 }

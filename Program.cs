@@ -24,6 +24,8 @@ builder.Services.AddDbContext<GegevensContext>(options =>
 builder.Services.AddScoped<IHuurderRegistratieRepository, HuurderRegistratieRepository>();
 builder.Services.AddScoped<IZakelijkeHuurderRepository, ZakelijkeHuurderRepository>();
 builder.Services.AddScoped<IWagenparkBeheerderRepository, WagenparkBeheerderRepository>();
+builder.Services.AddScoped<IVoertuigRepository, VoertuigRepository>();
+
 
 // Dependency Injection voor services
 builder.Services.AddScoped<IEmailService, EmailService>();
@@ -31,6 +33,7 @@ builder.Services.AddScoped<ParticulierHuurderService>();
 builder.Services.AddScoped<ZakelijkeHuurderService>();
 builder.Services.AddScoped<WagenparkBeheerderService>();
 builder.Services.AddScoped<VoertuigService>();
+
 
 // Controllers en Swagger
 builder.Services.AddControllers();
