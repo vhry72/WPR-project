@@ -12,8 +12,8 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    [Migration("20241208115029_updateuserTel")]
-    partial class updateuserTel
+    [Migration("20241208163226_voeruitgUpdate")]
+    partial class voeruitgUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -153,22 +153,22 @@ namespace WPR_project.Migrations
 
             modelBuilder.Entity("WPR_project.Models.ParticulierHuurder", b =>
                 {
-                    b.Property<int>("particulierId")
+                    b.Property<Guid>("particulierId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("particulierId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("EmailBevestigingToken")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
 
                     b.Property<string>("adress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("particulierEmail")
                         .IsRequired()
@@ -176,7 +176,8 @@ namespace WPR_project.Migrations
 
                     b.Property<string>("particulierNaam")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("postcode")
                         .IsRequired()
@@ -192,7 +193,8 @@ namespace WPR_project.Migrations
 
                     b.Property<string>("woonplaats")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("particulierId");
 
@@ -252,11 +254,9 @@ namespace WPR_project.Migrations
 
             modelBuilder.Entity("WPR_project.Models.WagenparkBeheerder", b =>
                 {
-                    b.Property<int>("beheerderId")
+                    b.Property<Guid>("beheerderId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("beheerderId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("beheerderNaam")
                         .IsRequired()
@@ -276,15 +276,14 @@ namespace WPR_project.Migrations
 
             modelBuilder.Entity("WPR_project.Models.ZakelijkHuurder", b =>
                 {
-                    b.Property<int>("zakelijkeId")
+                    b.Property<Guid>("zakelijkeId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("zakelijkeId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("EmailBevestigingToken")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
@@ -298,18 +297,21 @@ namespace WPR_project.Migrations
 
                     b.Property<string>("adres")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("bedrijfsNaam")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("telNummer")
-                        .HasColumnType("int");
+                    b.Property<string>("telNummer")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("wachtwoord")
                         .IsRequired()

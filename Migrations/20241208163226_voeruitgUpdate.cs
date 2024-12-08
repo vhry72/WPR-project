@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WPR_project.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateHuurdersSoort : Migration
+    public partial class voeruitgUpdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -91,13 +91,16 @@ namespace WPR_project.Migrations
                 name: "ParticulierHuurders",
                 columns: table => new
                 {
-                    particulierId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    particulierId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     particulierEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    particulierNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailBevestigingToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    particulierNaam = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    EmailBevestigingToken = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     IsEmailBevestigd = table.Column<bool>(type: "bit", nullable: false),
-                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    adress = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    postcode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    woonplaats = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    telefoonnummer = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -139,8 +142,7 @@ namespace WPR_project.Migrations
                 name: "WagenparkBeheerders",
                 columns: table => new
                 {
-                    beheerderId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    beheerderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     beheerderNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     telNummer = table.Column<int>(type: "int", nullable: false)
@@ -154,15 +156,14 @@ namespace WPR_project.Migrations
                 name: "ZakelijkHuurders",
                 columns: table => new
                 {
-                    zakelijkeId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    adres = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    zakelijkeId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    adres = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     KVKNummer = table.Column<int>(type: "int", nullable: false),
                     email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailBevestigingToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailBevestigingToken = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     IsEmailBevestigd = table.Column<bool>(type: "bit", nullable: false),
-                    telNummer = table.Column<int>(type: "int", nullable: false),
-                    bedrijfsNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    telNummer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    bedrijfsNaam = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MedewerkersEmails = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },

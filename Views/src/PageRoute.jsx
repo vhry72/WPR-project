@@ -12,7 +12,7 @@ import Wagendashboard from "./pages/wagendashboard"; // Nieuwe import
 
 import Wagenbeheer from "./pages/wagenbeheer"; // Nieuwe import
 import Toevoegen from "./pages/toevoegen"; // Nieuwe import
-import Verwijderen from "./pages/verwijderen"; // Nieuwe import
+import Verwijderen from "./pages/verwijder"; // Nieuwe import
 import "../src/styles/styles.css";
 import TestPage from "./pages/testPage";
 
