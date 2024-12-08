@@ -2,7 +2,7 @@
 {
     public class WagenparkBeheerder
     {
-        public int beheerderId { get; set; }
+        public Guid beheerderId { get; set; }
         public string beheerderNaam { get; set; }
         public string email { get; set; }
         public int telNummer { get; set; }

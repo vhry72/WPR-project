@@ -5,10 +5,10 @@ namespace WPR_project.Repositories
     public interface IWagenparkBeheerderRepository
     {
         IEnumerable<WagenparkBeheerder> GetWagenparkBeheerders();
-        WagenparkBeheerder getBeheerderById(int id); 
+        WagenparkBeheerder getBeheerderById(Guid id); 
         void AddWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder);
-        void UpdateWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder, int id);
-        void DeleteWagenparkBeheerder(int id);
+        void UpdateWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder, Guid id);
+        void DeleteWagenparkBeheerder(Guid id);
 
         //sla op 
         void Save();

@@ -23,11 +23,12 @@ namespace WPR_project.Services
             {
                 particulierId = h.particulierId,
                 particulierNaam = h.particulierNaam,
-                particulierEmail = h.particulierEmail
+                particulierEmail = h.particulierEmail,
+                IsEmailBevestigd = h.IsEmailBevestigd
             });
         }
 
-        public ParticulierHuurderDTO GetById(int id)
+        public ParticulierHuurderDTO GetById(Guid id)
         {
             var huurder = _repository.GetById(id);
             if (huurder == null) return null;
@@ -36,33 +37,37 @@ namespace WPR_project.Services
             {
                 particulierId = huurder.particulierId,
                 particulierNaam = huurder.particulierNaam,
-                particulierEmail = huurder.particulierEmail
+                particulierEmail = huurder.particulierEmail,
+                IsEmailBevestigd = huurder.IsEmailBevestigd
             };
         }
 
-        public void Register(ParticulierHuurder pdto)
+        public void Register(ParticulierHuurder particulierH)
         {
+            if (string.IsNullOrWhiteSpace(particulierH.particulierEmail) || string.IsNullOrWhiteSpace(particulierH.wachtwoord))
+            {
+                throw new ArgumentException("E-mailadres en wachtwoord zijn verplicht.");
+            }
+
             var huurder = new ParticulierHuurder
             {
-                particulierEmail = pdto.particulierEmail,
-                particulierNaam = pdto.particulierNaam,
-                wachtwoord = pdto.wachtwoord,
-                adress = pdto.adress,
-                postcode = pdto.postcode,
-                woonplaats = pdto.woonplaats,
-                telefoonnummer = pdto.telefoonnummer,
-                EmailBevestigingToken = Guid.NewGuid().ToString(), // Genereer verificatietoken
+                particulierId = Guid.NewGuid(),
+                particulierEmail = particulierH.particulierEmail,
+                particulierNaam = particulierH.particulierNaam,
+                wachtwoord = particulierH.wachtwoord,
+                adress = particulierH.adress,
+                postcode = particulierH.postcode,
+                woonplaats = particulierH.woonplaats,
+                telefoonnummer = particulierH.telefoonnummer,
+                EmailBevestigingToken = Guid.NewGuid().ToString(),
                 IsEmailBevestigd = false,
             };
-
-            Console.WriteLine(huurder);
-
 
             _repository.Add(huurder);
             _repository.Save();
 
-            // Stuur een verificatiemail
-            var verificatieUrl = $"https://jouwdomein.com/api/ParticulierHuurder/verify?token={huurder.EmailBevestigingToken}";
+            // Verificatiemail
+            var verificatieUrl = $"https://localhost:5033/api/ParticulierHuurder/verify?token={huurder.EmailBevestigingToken}";
             var emailBody = $"Beste {huurder.particulierNaam},<br><br>Klik op de volgende link om je e-mailadres te bevestigen:<br><a href='{verificatieUrl}'>Bevestig je e-mail</a>";
             _emailService.SendEmail(huurder.particulierEmail, "Bevestig je registratie", emailBody);
         }
@@ -78,7 +83,7 @@ namespace WPR_project.Services
             return true;
         }
 
-        public void Update(int id, ParticulierHuurderDTO dto)
+        public void Update(Guid id, ParticulierHuurderDTO dto)
         {
             var huurder = _repository.GetById(id);
             if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");
@@ -90,7 +95,7 @@ namespace WPR_project.Services
             _repository.Save();
         }
 
-        public void Delete(int id)
+        public void Delete(Guid id)
         {
             var huurder = _repository.GetById(id);
             if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");

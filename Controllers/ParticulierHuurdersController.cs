@@ -30,7 +30,7 @@ namespace WPR_project.Controllers
         /// Haalt een specifieke particuliere huurder op via ID.
         /// </summary>
         [HttpGet("{id}")]
-        public ActionResult<ParticulierHuurderDTO> GetById(int id)
+        public ActionResult<ParticulierHuurderDTO> GetById(Guid id)
         {
             var huurder = _service.GetById(id);
             if (huurder == null)
@@ -47,14 +47,30 @@ namespace WPR_project.Controllers
         [HttpPost("register")]
         public IActionResult Register([FromBody] ParticulierHuurder pHuurder)
         {
-            //if (!ModelState.IsValid)
-            //{
-            //    return BadRequest(ModelState);
-            //}
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new
+                {
+                    Message = "Validatiefout",
+                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
+                });
+            }
 
-            _service.Register(pHuurder);
-            return Ok(new { Message = "Registratie succesvol. Controleer je e-mail voor verificatie." });
+            try
+            {
+                _service.Register(pHuurder);
+                return Ok(new { Message = "Registratie succesvol. Controleer je e-mail voor verificatie." });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Interne serverfout.", Error = ex.Message });
+            }
         }
+
 
         /// <summary>
         /// Verifieert de e-mail van een particuliere huurder met een token.
@@ -80,7 +96,7 @@ namespace WPR_project.Controllers
         /// Werkt de gegevens van een bestaande particuliere huurder bij.
         /// </summary>
         [HttpPut("{id}")]
-        public IActionResult UpdateHuurder(int id, [FromBody] ParticulierHuurderDTO dto)
+        public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderDTO dto)
         {
             if (!ModelState.IsValid)
             {
@@ -107,7 +123,7 @@ namespace WPR_project.Controllers
         /// Verwijdert een particuliere huurder op basis van ID.
         /// </summary>
         [HttpDelete("{id}")]
-        public IActionResult DeleteHuurder(int id)
+        public IActionResult DeleteHuurder(Guid id)
         {
             try
             {
@@ -124,7 +140,7 @@ namespace WPR_project.Controllers
         /// Controleert of de e-mail van een huurder is geverifieerd.
         /// </summary>
         [HttpGet("{id}/isVerified")]
-        public IActionResult IsEmailVerified(int id)
+        public IActionResult IsEmailVerified(Guid id)
         {
             var huurder = _service.GetById(id);
             if (huurder == null)
@@ -134,5 +150,7 @@ namespace WPR_project.Controllers
 
             return Ok(new { IsEmailVerified = huurder.IsEmailBevestigd });
         }
+
+
     }
 }

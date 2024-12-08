@@ -19,7 +19,7 @@ namespace WPR_project.Repositories
         }
 
         // Verwijder een zakelijke huurder via ID
-        public void DeleteZakelijkHuurder(int id)
+        public void DeleteZakelijkHuurder(Guid id)
         {
             var zakelijkeHuurder = GetZakelijkHuurderById(id);
             if (zakelijkeHuurder != null)
@@ -35,7 +35,7 @@ namespace WPR_project.Repositories
         }
 
         // Haal een specifieke zakelijke huurder op via ID
-        public ZakelijkHuurder GetZakelijkHuurderById(int id)
+        public ZakelijkHuurder GetZakelijkHuurderById(Guid id)
         {
             return _context.ZakelijkHuurders.FirstOrDefault(h => h.zakelijkeId == id);
         }
