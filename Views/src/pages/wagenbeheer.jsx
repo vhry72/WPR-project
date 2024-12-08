@@ -12,12 +12,13 @@ const wagendashboard = () => {
             </header>
             <div className="index-container">
                 <div className="options">
-                    <Link to="/wagenbeheer" className="btn">
-                        Beheer medewerkers
+                    <Link to="/toevoegen" className="btn">
+                        voeg medewerkers toe
                     </Link>
-                    <Link to="/abbonementupdate" className="btn">
-                         beheer abonnement
+                    <Link to="/verwijderen" className="btn">
+                        verwijder medewerkers
                     </Link>
+
                 </div>
             </div>
         </>
