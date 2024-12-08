@@ -60,5 +60,7 @@ app.MapControllers();
 // Fallback voor React-routering
 app.MapFallbackToFile("index.html");
 
+app.UseHttpsRedirection();
+
 // Start de applicatie op een specifieke poort
 app.Run("https://localhost:5033");
