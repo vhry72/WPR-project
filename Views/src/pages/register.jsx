@@ -41,8 +41,11 @@ const Register = () => {
 
             // Maak payload
             const payload = {
+                particulierId: '100',
                 particulierEmail: formData.particulierEmail,
                 particulierNaam: formData.particulierNaam,
+                EmailBevestigingToken: '6asdadwq',
+                IsEmailBevestigd: false,
                 wachtwoord: formData.wachtwoord,
                 adress: formData.adress,
                 postcode: formData.postcode,
