@@ -40,9 +40,5 @@
 		<Folder Include="Views\src\Utils\" />
 	</ItemGroup>
 
-	<!-- Voeg een verwijzing naar het testproject toe -->
-	<ItemGroup>
-		<ProjectReference Include="..\WPR-Project_Tests\WPR-Project_Tests.csproj" />
-	</ItemGroup>
-
+	
 </Project>

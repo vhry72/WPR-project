@@ -6,12 +6,26 @@ namespace WPR_project.Services
     public class WagenparkBeheerderService
     {
         private readonly IWagenparkBeheerderRepository _repository;
+        private readonly IZakelijkeHuurderRepository _zakelijkeHuurderRepository;
+        private readonly IBedrijfsMedewerkersRepository _bedrijfsMedewerkersRepository;
+        private IWagenparkBeheerderRepository @object;
 
-        public WagenparkBeheerderService(IWagenparkBeheerderRepository repository)
+        public WagenparkBeheerderService(
+            IWagenparkBeheerderRepository repository,
+            IZakelijkeHuurderRepository zakelijkeHuurderRepository,
+            IBedrijfsMedewerkersRepository bedrijfsMedewerkersRepository)
         {
             _repository = repository;
+            _zakelijkeHuurderRepository = zakelijkeHuurderRepository;
+            _bedrijfsMedewerkersRepository = bedrijfsMedewerkersRepository;
+            
         }
-        //save
+
+        public WagenparkBeheerderService(IWagenparkBeheerderRepository @object)
+        {
+            this.@object = @object;
+        }
+
         public IEnumerable<WagenparkBeheerder> GetWagenparkBeheerders()
         {
             return _repository.GetWagenparkBeheerders();
@@ -60,41 +74,42 @@ namespace WPR_project.Services
             }
         }
 
-        public void VoegMedewerkerToe(Guid beheerderId, BedrijfsMedewerkers medewerker)
+        public void VoegMedewerkerToe(Guid zakelijkeHuurderId, BedrijfsMedewerkers medewerker)
         {
-            var beheerder = _repository.getBeheerderById(beheerderId);
-            if (beheerder == null)
+            var zakelijkeHuurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeHuurderId);
+            if (zakelijkeHuurder == null)
             {
-                throw new KeyNotFoundException("Beheerder niet gevonden.");
+                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
             }
 
-            if (beheerder.MedewerkerLijst.Any(m => m.BedrijfsMedewerkId == medewerker.BedrijfsMedewerkId))
+            if (!medewerker.medewerkerEmail.EndsWith("@bedrijf.nl"))
             {
-                throw new InvalidOperationException("Medewerker is al gekoppeld aan deze beheerder.");
+                throw new InvalidOperationException("Medewerker moet een bedrijfs-e-mailadres hebben.");
             }
 
-            beheerder.MedewerkerLijst.Add(medewerker);
-            _repository.UpdateWagenparkBeheerder(beheerder);
-            _repository.Save();
+            _bedrijfsMedewerkersRepository.Add(medewerker);
+            _bedrijfsMedewerkersRepository.Save();
+     
         }
 
-        public void VerwijderMedewerker(Guid beheerderId, int medewerkerId)
+        public void VerwijderMedewerker(Guid zakelijkeHuurderId, int medewerkerId)
         {
-            var beheerder = _repository.getBeheerderById(beheerderId);
-            if (beheerder == null)
+            var zakelijkeHuurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeHuurderId);
+            if (zakelijkeHuurder == null)
             {
-                throw new KeyNotFoundException("Beheerder niet gevonden.");
+                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
             }
 
-            var medewerker = beheerder.MedewerkerLijst.FirstOrDefault(m => m.BedrijfsMedewerkId == medewerkerId);
+            var medewerker = _bedrijfsMedewerkersRepository.GetMedewerkerById(medewerkerId);
             if (medewerker == null)
             {
                 throw new KeyNotFoundException("Medewerker niet gevonden.");
             }
 
-            beheerder.MedewerkerLijst.Remove(medewerker);
-            _repository.UpdateWagenparkBeheerder(beheerder);
-            _repository.Save();
+            _bedrijfsMedewerkersRepository.Delete(medewerkerId);
+            _bedrijfsMedewerkersRepository.Save();
+
+            
         }
     }
 }

@@ -29,7 +29,7 @@ namespace WPR_project.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            // TPT Configuratie voor Medewerkers
+            //Configuratie voor Medewerkers
             modelBuilder.Entity<Medewerker>().ToTable("Medewerkers");
             modelBuilder.Entity<BackofficeMedewerker>().ToTable("BackofficeMedewerkers");
             modelBuilder.Entity<FrontofficeMedewerker>().ToTable("FrontofficeMedewerkers");
@@ -43,10 +43,6 @@ namespace WPR_project.Data
 
             modelBuilder.Entity<FrontofficeMedewerker>()
                 .HasBaseType<Medewerker>();
-
-
-
-
 
             // Voertuig Configuratie
             modelBuilder.Entity<Voertuig>()

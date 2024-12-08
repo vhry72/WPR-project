@@ -7,7 +7,7 @@ using WPR_project.Services;
 using Moq;
 using WPR_project.Repositories;
 
-namespace WPR_project.TemporaryTests
+namespace WPR_project.Tests
 {
     public class WagenparkBeheerderTests
     {
