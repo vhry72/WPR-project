@@ -12,7 +12,7 @@ const instellingen = () => {
             </header>
             <div className="index-container">
                 <div className="options">
-                    <Link to="/accountbeheer" className="btn">
+                    <Link to="/accountwijzigingHuurders" className="btn">
                         Beheer Account
                     </Link>
                     <Link to="/verwijder" className="btn">
