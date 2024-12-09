@@ -14,14 +14,14 @@ namespace WPR_project.Services
             _voertuigRepository = voertuigRepository;
         }
 
-        public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType, DateTime? startDatum, DateTime? eindDatum, string sorteerOptie)
+        public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType,/*DateTime? startDatum, DateTime? eindDatum,*/ string sorteerOptie)
         {
-            if (startDatum.HasValue && eindDatum.HasValue && startDatum > eindDatum)
-            {
-                throw new ArgumentException("Startdatum mag niet later zijn dan de einddatum.");
-            }
+            //if (startDatum.HasValue && eindDatum.HasValue && startDatum > eindDatum)
+            //{
+            //    throw new ArgumentException("Startdatum mag niet later zijn dan de einddatum.");
+            //}
 
-            return _voertuigRepository.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, sorteerOptie);
+            return _voertuigRepository.GetFilteredVoertuigen(voertuigType/* startDatum, eindDatum*/, sorteerOptie);
         }
 
         public Voertuig GetVoertuigDetails(int id)

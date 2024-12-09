@@ -1,0 +1,50 @@
+﻿.particulier-voertuig-tonen {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+.filters {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+    .filters label {
+        font-size: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .filters input {
+        padding: 5px;
+        font-size: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+
+.voertuigen-lijst {
+    list-style: none;
+    padding: 0;
+}
+
+.voertuig-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+    .voertuig-item h2 {
+        margin: 0;
+        color: #444;
+    }
+
+    .voertuig-item p {
+        margin: 5px 0;
+    }

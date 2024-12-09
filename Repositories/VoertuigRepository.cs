@@ -22,7 +22,7 @@ namespace WPR_project.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType, DateTime? startDatum, DateTime? eindDatum, string sorteerOptie)
+        public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType/*, DateTime? startDatum, DateTime? eindDatum*/, string sorteerOptie)
         {
             var query = _context.Voertuigen.AsQueryable();
 
@@ -33,13 +33,13 @@ namespace WPR_project.Repositories
             }
 
             // Filter op beschikbaarheid (voorbeeld: niet-gehuurde voertuigen in de geselecteerde periode)
-            if (startDatum.HasValue && eindDatum.HasValue)
-            {
-                // Beschikbaarheid filteren; dit vereist een relatie met een huurmodel
-                query = query.Where(v => !_context.Reserveringen.Any(r =>
-                    r.VoertuigId == v.voertuigId &&
-                    ((r.StartDatum <= eindDatum && r.EindDatum >= startDatum))));
-            }
+            //if (startDatum.HasValue && eindDatum.HasValue)
+            //{
+            //    // Beschikbaarheid filteren; dit vereist een relatie met een huurmodel
+            //    query = query.Where(v => !_context.Reserveringen.Any(r =>
+            //        r.VoertuigId == v.voertuigId &&
+            //        ((r.StartDatum <= eindDatum && r.EindDatum >= startDatum))));
+            //}
 
             // Sorteren
             query = sorteerOptie?.ToLower() switch
