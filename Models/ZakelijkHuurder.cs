@@ -38,14 +38,14 @@ namespace WPR_project.Models
         [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
         public string wachtwoord { get; set; }
 
-        // Relatie abonnement (huidige abonnement)
-        public Guid AbonnementId { get; set; }
-        public Abonnement HuidigAbonnement { get; set; }
+        //// Relatie abonnement (huidige abonnement)
+        //public Guid AbonnementId { get; set; }
+        //public Abonnement HuidigAbonnement { get; set; }
 
-        // Eigenschappen wijzigingen in abonnement
-        public Guid NieuwAbonnementId { get; set; }
-        public Abonnement NieuwAbonnement { get; set; }
-        public DateTime IngangsdatumNieuwAbonnement { get; set; }
+        //// Eigenschappen wijzigingen in abonnement
+        //public Guid NieuwAbonnementId { get; set; }
+        //public Abonnement NieuwAbonnement { get; set; }
+        //public DateTime IngangsdatumNieuwAbonnement { get; set; }
 
         // Lijst van e-mailadressen van medewerkers
         public List<string> MedewerkersEmails { get; set; } = new List<string>();

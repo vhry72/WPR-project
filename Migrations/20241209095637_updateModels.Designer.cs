@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WPR_project.Data;
 
@@ -11,9 +12,11 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    partial class GegevensContextModelSnapshot : ModelSnapshot
+    [Migration("20241209095637_updateModels")]
+    partial class updateModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,17 +234,6 @@ namespace WPR_project.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("voertuigId"));
-
-                    b.Property<int>("bouwjaar")
-                        .HasColumnType("int");
-
-                    b.Property<string>("kenteken")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("kleur")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("merk")
                         .IsRequired()
