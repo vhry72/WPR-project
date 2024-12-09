@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/styles.css";
+import zakelijkeHuurderRequestService from "../services/requests/ZakelijkeHuurderRequestService"; 
 import particulierHuurdersRequestService from "../services/requests/ParticulierHuurderRequestService";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -13,6 +14,13 @@ const Register = () => {
         postcode: "",
         woonplaats: "",
         telefoonnummer: "",
+        Zakelijkemail: "",
+        Zakelijkwachtwoord: "",
+        bedrijfsnaam: "",
+        kantoorAdres: "",
+        zakelijkTelefoonnummer: "",
+        kvkNummer: "",
+
     });
 
     const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +35,7 @@ const Register = () => {
         setFormData((prev) => ({ ...prev, [id]: value }));
     };
 
-    const handlePost = async (event) => {
+    const handlePostParticulier = async (event) => {
         event.preventDefault();
         setIsLoading(true);
         setErrorMessage("");
@@ -76,6 +84,55 @@ const Register = () => {
         }
     };
 
+    const handlePostZakelijk = async (event) => {
+        event.preventDefault();
+        setIsLoading(true);
+        setErrorMessage("");
+
+        try {
+            // Valideer verplichte velden
+            if (!formData.Zakelijkemail || !formData.Zakelijkwachtwoord) {
+                setErrorMessage("Vul alle verplichte velden in!");
+                setIsLoading(false);
+                return;
+            }
+
+            // Maak payload
+            const payload = {
+                zakelijkeId: uuidv4(),
+                adres: formData.kantoorAdres,
+                KVKNummer: formData.kvkNummer,
+                email: formData.Zakelijkemail,
+                EmailBevestigingToken: '6asdadwq',
+                IsEmailBevestigd: false,
+                telNummer: formData.zakelijkTelefoonnummer,
+                bedrijfsnaam: formData.bedrijfsnaam,
+                wachtwoord: formData.Zakelijkwachtwoord,
+                MedewerkersEmails:["hello"]
+            };
+
+            console.log("Verstuurde payload:", payload);
+
+            // Verzoek naar backend
+            const response = await zakelijkeHuurderRequestService.register(payload);
+            alert("Gebruiker succesvol geregistreerd!");
+            console.log("User registered successfully:", response.data);
+
+        } catch (error) {
+            // Foutafhandeling
+            if (error.response) {
+                setErrorMessage(error.response.data?.message || "Serverfout, probeer later opnieuw.");
+            } else if (error.request) {
+                setErrorMessage("Geen antwoord van de server. Controleer je verbinding.");
+            } else {
+
+                setErrorMessage(`Onbekende fout: ${error.message}`);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="register-container">
             <h1>Registreren</h1>
@@ -95,7 +152,7 @@ const Register = () => {
             </div>
 
             {activeTab === "particulier" && (
-                <form id="ParticulierForm" className="form" onSubmit={handlePost}>
+                <form id="ParticulierForm" className="form" onSubmit={handlePostParticulier}>
                     <label htmlFor="particulierEmail">E-mail</label>
                     <input
                         type="email"
@@ -166,17 +223,60 @@ const Register = () => {
             )}
             {/* Zakelijk Formulier */}
             {activeTab === "zakelijk" && (
-                <form id="ZakelijkForm" className="form" action="/abonnement" method="get">
-                    <label htmlFor="email-zakelijk">E-mail</label>
-                    <input type="email" id="email-zakelijk" name="email" required />
-                    <label htmlFor="wachtwoord-zakelijk">Wachtwoord</label>
-                    <input type="password" id="wachtwoord-zakelijk" name="wachtwoord" required />
+                <form id="ZakelijkForm" className="form" onSubmit={handlePostZakelijk}>
+                    <label htmlFor="Zakelijkemail">Email</label>
+                    <input
+                        type="text"
+                        id="Zakelijkemail"
+                        name="Zakelijkemail"
+                        value={formData.Zakelijkemail}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="Zakelijkwachtwoord">Wachtwoord</label>
+                    <input
+                        type="text"
+                        id="Zakelijkwachtwoord"
+                        name="Zakelijkwachtwoord"
+                        value={formData.Zakelijkwachtwoord}
+                        onChange={handleChange}
+                        required
+                    />
                     <label htmlFor="bedrijfsnaam">Bedrijfsnaam</label>
-                    <input type="text" id="bedrijfsnaam" name="bedrijfsnaam" required />
-                    <label htmlFor="adres-zakelijk">Adres</label>
-                    <input type="text" id="adres-zakelijk" name="adres" required />
-                    <label htmlFor="kvk-nummer">KVK-nummer</label>
-                    <input type="text" id="kvk-nummer" name="kvk-nummer" required />
+                    <input
+                        type="text"
+                        id="bedrijfsnaam"
+                        name="bedrijfsnaam"
+                        value={formData.bedrijfsnaam}
+                        onChange={handleChange}
+                        required
+                        />
+                    <label htmlFor="kantoorAdres">Kantoor Adres</label>
+                    <input
+                        type="text"
+                        id="kantoorAdres"
+                        name="kantoorAdres"
+                        value={formData.kantoorAdres}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="zakelijkTelefoonnummer">Telefoonnummer</label>
+                    <input
+                        type="text"
+                        id="zakelijkTelefoonnummer"
+                        name="zakelijkTelefoonnummer"
+                        value={formData.zakelijkTelefoonnummer}
+                        onChange={handleChange}
+                        required
+                    />
+                    <label htmlFor="kvkNummer">KVK-nummer</label>
+                    <input
+                        type="text"
+                        id="kvkNummer"
+                        name="kvkNummer"
+                        value={formData.kvkNummer}
+                        onChange={handleChange}
+                        required />
                     <button type="submit" className="register-button">
                         Registreren
                     </button>
