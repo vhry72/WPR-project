@@ -9,6 +9,7 @@ import Payment from "./pages/payment"; // Nieuwe import
 import Zaakdashboard from "./pages/zaakdashboard"; // Nieuwe import
 import Wagenparklogin from "./pages/wagenparklogin"; // Nieuwe import
 import Wagendashboard from "./pages/wagendashboard"; // Nieuwe import
+import ZakelijkAutoTonen from "./pages/ZakelijkAutoTonen";//nieuwe import
 
 import Wagenbeheer from "./pages/wagenbeheer"; // Nieuwe import
 import Toevoegen from "./pages/toevoegen"; // Nieuwe import
@@ -32,12 +33,13 @@ function PageRoute() {
                     <Route path="zaakdashboard" element={<Zaakdashboard />} /> {/* Nieuwe route */}
                     <Route path="wagenparklogin" element={<Wagenparklogin />} /> {/* Nieuwe route */}                
                     <Route path="wagendashboard" element={<Wagendashboard />} /> {/* Nieuwe route */}
-
+                    <Route path="zakelijkeautotonen" element={<ZakelijkAutoTonen />} /> {/*Nieuwe route */ }
                     <Route path="wagenbeheer" element={<Wagenbeheer />} /> {/* Nieuwe route */}
                     <Route path="toevoegen" element={<Toevoegen />} /> {/* Nieuwe route */}
                     <Route path="verwijderen" element={<Verwijderen />} /> {/* Nieuwe route */}
                     <Route path="payment" element={<Payment />} />
                     <Route path="testPage" element={<TestPage />} /> 
+               
                 </Route>
             </Routes>
         </BrowserRouter>
