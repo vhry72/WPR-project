@@ -2,7 +2,7 @@
 
 namespace WPR_project.Models
 {
-    public class BedrijfsMedewerkers : ZakelijkHuurder
+    public class BedrijfsMedewerkers 
     {
         [Key]
         public int BedrijfsMedewerkId { get; set; }
@@ -20,7 +20,7 @@ namespace WPR_project.Models
         [RegularExpression(@"^(?=.*[A-Z])(?=.*[!@#$&*]).+$", ErrorMessage = "Wachtwoord moet minstens één hoofdletter en één uniek teken bevatten.")]
         public string Wachtwoord { get; set; }
 
-        public Guid ZakelijkeHuurderId { get; set; }
-        public ZakelijkHuurder ZakelijkeHuurder { get; set; } // Relatie met zakelijke huurders
+        //public Guid ZakelijkeHuurderId { get; set; }
+        //public ZakelijkHuurder ZakelijkeHuurder { get; set; } // Relatie met zakelijke huurders
     }
 }

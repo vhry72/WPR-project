@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using WPR_project.Models;
 
 public class Abonnement
@@ -12,6 +13,7 @@ public class Abonnement
 
     [Required(ErrorMessage = "Kosten zijn verplicht.")]
     [Range(0, double.MaxValue, ErrorMessage = "Kosten moeten positief zijn.")]
+    [Precision(18, 2)]
     public decimal Kosten { get; set; }
 
     [StringLength(500, ErrorMessage = "Beschrijving mag niet langer zijn dan 500 tekens.")]

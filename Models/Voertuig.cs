@@ -12,5 +12,11 @@ namespace WPR_project.Models
         public decimal prijsPerDag { get; set; }
         public string voertuigType { get; set; }
 
+        public int bouwjaar { get; set; }
+
+        public string kenteken { get; set; }
+
+        public string kleur { get; set; }
+
     }
 }
