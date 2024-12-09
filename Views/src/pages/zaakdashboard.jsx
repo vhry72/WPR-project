@@ -12,6 +12,10 @@ const zaakdashboard = () => {
             </header>
             <div className="index-container">
                 <div className="options">
+                    <Link to="/zakelijkeautotonen" className="btn">
+                        Huur Auto
+                    </Link>
+
                     <Link to="/wagenparklogin" className="btn">
                         Beheerder login
                     </Link>

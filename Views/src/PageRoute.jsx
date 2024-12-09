@@ -9,9 +9,9 @@ import Payment from "./pages/payment"; // Nieuwe import
 import Zaakdashboard from "./pages/zaakdashboard"; // Nieuwe import
 import Wagenparklogin from "./pages/wagenparklogin"; // Nieuwe import
 import Wagendashboard from "./pages/wagendashboard"; // Nieuwe import
+import ZakelijkAutoTonen from "./pages/ZakelijkAutoTonen";//nieuwe import
 import AccountwijzigingHuurder from "./pages/accountwijzigingHuurders"; //nieuwe import
 import Instellingen from "./pages/instellingen"; // nieuwe import
-
 import Wagenbeheer from "./pages/wagenbeheer"; // Nieuwe import
 import Toevoegen from "./pages/toevoegen"; // Nieuwe import
 import Verwijderen from "./pages/verwijder"; // Nieuwe import
@@ -30,18 +30,18 @@ function PageRoute() {
                     <Route path="register" element={<Register />} />
                     <Route path="login" element={<Login />} />
                     <Route path="abonnement" element={<Abonnement />} />
-                    <Route path="payment" element={<Payment />} /> {/* Nieuwe route */}
-                    <Route path="zaakdashboard" element={<Zaakdashboard />} /> {/* Nieuwe route */}
-                    <Route path="wagenparklogin" element={<Wagenparklogin />} /> {/* Nieuwe route */}                
-                    <Route path="wagendashboard" element={<Wagendashboard />} /> {/* Nieuwe route */}
-
-                    <Route path="wagenbeheer" element={<Wagenbeheer />} /> {/* Nieuwe route */}
-                    <Route path="toevoegen" element={<Toevoegen />} /> {/* Nieuwe route */}
-                    <Route path="verwijderen" element={<Verwijderen />} /> {/* Nieuwe route */}
+                    <Route path="payment" element={<Payment />} /> 
+                    <Route path="zaakdashboard" element={<Zaakdashboard />} /> 
+                    <Route path="wagenparklogin" element={<Wagenparklogin />} />           
+                    <Route path="wagendashboard" element={<Wagendashboard />} /> 
+                    <Route path="zakelijkeautotonen" element={<ZakelijkAutoTonen />} /> 
+                    <Route path="wagenbeheer" element={<Wagenbeheer />} /> 
+                    <Route path="toevoegen" element={<Toevoegen />} />
+                    <Route path="verwijderen" element={<Verwijderen />} />
                     <Route path="payment" element={<Payment />} />
                     <Route path="testPage" element={<TestPage />} /> 
-                    <Route path="instellingen" element={<Instellingen />} />{/*Nieuwe route */}
-                    <Route path="accountbeheer" element={<AccountwijzigingHuurder />} />{/*nieuwe route */ }
+                    <Route path="instellingen" element={<Instellingen />} />
+                    <Route path="accountbeheer" element={<AccountwijzigingHuurder />} />
                 </Route>
             </Routes>
         </BrowserRouter>
