@@ -1,12 +1,21 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from "react";
+import React from "react";
 import "../styles/styles.css";
+import { useNavigate } from "react-router-dom";
 
-const wagenparkLogin = () => {
+function wagenparkLogin() {
+    const navigate = useNavigate();
+
+    const handleLogin = (event) => {
+        event.preventDefault(); // Voorkomt dat de pagina opnieuw wordt geladen
+        // Hier kun je login-logica toevoegen (zoals validatie, API-aanroepen, etc.)
+        navigate("/wagendashboard");
+    };
+
     return (
         <div className="login-container">
             <h1>Wagenpark Login</h1>
-            <form id="wagenpark" className="form" action="/wagendashboard" method="get">
+            <form id="wagenpark" className="form">
                 <label htmlFor="username">Gebruikersnaam</label>
                 <input
                     type="text"
@@ -21,12 +30,13 @@ const wagenparkLogin = () => {
                     name="password"
                     required
                 />
-                <button type="submit" className="login-button">
+                <button onClick={handleLogin} type="button" className="login-button">
                     Inloggen
                 </button>
             </form>
         </div>
     );
-};
+}
 
 export default wagenparkLogin;
+
