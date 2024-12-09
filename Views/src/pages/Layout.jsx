@@ -7,16 +7,10 @@ const Layout = () => {
                 <nav className="navbar">
                     <Link to="/" className="nav-link">Startup</Link>&nbsp;
                     <Link to="/Home" className="nav-link">Info Pagina</Link>&nbsp;
-                    <Link to="/register" className="nav-link">Registreren</Link>&nbsp;
-                    <Link to="/login" className="nav-link">Inloggen</Link>
                     <Link to="/instellingen" className="nav-link">Instellingen</Link>
                     <Link to="/abonnement" className="nav-link">Abonnement</Link>
                     <Link to="/zaakdashboard" className="nav-link">Zaak Dashboard</Link>
                     <Link to="/wagenparklogin" className="nav-link">Wagenpark Login</Link>
-                    <Link to="/wagendashboard" className="nav-link">Wagen Dashboard</Link>
-                    <Link to="/wagenbeheer" className="nav-link">Wagen Beheer</Link>
-                    <Link to="/toevoegen" className="nav-link">Toevoegen</Link>
-                    <Link to="/verwijderen" className="nav-link">Verwijderen</Link>
                     <Link to="/testPage" className="nav-link">TestPage</Link>
                 </nav>
             </header>
