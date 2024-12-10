@@ -1,44 +1,67 @@
-import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import "../styles/ParticulierVoertuigTonen.css";
 import VoertuigRequestService from "../services/requests/VoertuigRequestService";
 
 const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
-    const [sortCriteria, setSortCriteria] = useState("prijs");
-    const [searchTerm, setSearchTerm] = useState("");
 
     const handleChange = (event) => {
-        setFilterType(event.target.value); // Bijwerken van de filterType waarde
+        setFilterType(event.target.value);
     };
 
     const handleVoertuigType = async () => {
         try {
             console.log("Voertuigen worden opgevraagd");
-            await VoertuigRequestService.getAll(filterType)
-        } catch {
-            console.error("Het is niet gelukt om de voertuigtype op te halen", error)
+            const response = await VoertuigRequestService.getAll(filterType);
+            setVoertuigen(response);
+        } catch (error) {
+            console.error("Het is niet gelukt om de voertuigtype op te halen", error);
         }
     };
 
-
     return (
-        <div style={{ marginBottom: '20px' }}>
-            <input
-                type="text"
-                placeholder="Enter VoertuigType"
-                value={filterType}
-                onChange={ handleChange }
-            />
-            <button onClick={handleVoertuigType}>Voer voertuigType in</button>
+        <div className="container">
+            <div className="input-container">
+                <input
+                    type="text"
+                    placeholder="Enter VoertuigType"
+                    value={filterType}
+                    onChange={handleChange}
+                    className="input-field"
+                />
+                <button onClick={handleVoertuigType} className="button">
+                    Voer voertuigType in
+                </button>
+            </div>
+            <table className="styled-table">
+                <thead>
+                    <tr>
+                        <th>Merk</th>
+                        <th>Model</th>
+                        <th>Prijs Per Dag</th>
+                        <th>Voertuig Type</th>
+                        <th>Bouwjaar</th>
+                        <th>Kenteken</th>
+                        <th>Kleur</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {voertuigen.map((voertuig, index) => (
+                        <tr key={index}>
+                            <td>{voertuig.merk}</td>
+                            <td>{voertuig.model}</td>
+                            <td>{voertuig.prijsPerDag}</td>
+                            <td>{voertuig.voertuigType}</td>
+                            <td>{voertuig.bouwjaar}</td>
+                            <td>{voertuig.kenteken}</td>
+                            <td>{voertuig.kleur}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
         </div>
-        );
-    };
-
-
-
-
-
+    );
+};
 
 export default ParticulierVoertuigTonen;

@@ -1,50 +1,63 @@
-﻿.particulier-voertuig-tonen {
+﻿.container {
+    padding: 20px;
     font-family: Arial, sans-serif;
-    margin: 20px;
 }
 
-h1 {
-    color: #333;
-}
-
-.filters {
+.input-container {
     margin-bottom: 20px;
     display: flex;
-    gap: 20px;
     align-items: center;
+    gap: 10px;
 }
 
-    .filters label {
-        font-size: 1rem;
-        display: flex;
-        flex-direction: column;
+.input-field {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .button:hover {
+        background-color: #218838;
     }
 
-    .filters input {
-        padding: 5px;
-        font-size: 1rem;
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+    .styled-table thead tr {
+        background-color: #4CAF50;
+        color: white;
+        text-align: left;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
         border: 1px solid #ddd;
-        border-radius: 5px;
     }
 
-.voertuigen-lijst {
-    list-style: none;
-    padding: 0;
-}
-
-.voertuig-item {
-    border: 1px solid #ddd;
-    padding: 15px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-    .voertuig-item h2 {
-        margin: 0;
-        color: #444;
+    .styled-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
     }
 
-    .voertuig-item p {
-        margin: 5px 0;
+    .styled-table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .styled-table tbody tr:last-of-type {
+        border-bottom: 2px solid #4CAF50;
     }
