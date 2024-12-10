@@ -2,9 +2,9 @@ import apiService from '../apiService';
 
 const VoertuigRequestService = {
     // Haal alle voertuigen op
-    getAll: async (filterParams = {}) => {
+    getAll: async (filter) => {
         try {
-            const response = await apiService.get('/Voertuig/filter', { params: filterParams });
+            const response = await apiService.get(`/Voertuig/filter?voertuigType=${filter}`);
             console.log('GET All Voertuigen:', response.data);
             return response.data; // Zorg dat het data retourneert
         } catch (error) {
@@ -12,6 +12,7 @@ const VoertuigRequestService = {
             throw error; // Gooi fout opnieuw voor debugging
         }
     },
+
 
     // Haal details op van een specifiek voertuig op basis van ID
     getById: async (id) => {
@@ -24,6 +25,7 @@ const VoertuigRequestService = {
             throw error; // Gooi fout opnieuw voor debugging
         }
     },
+
 
     // Maak een nieuw voertuig aan
     create: async (voertuigData) => {

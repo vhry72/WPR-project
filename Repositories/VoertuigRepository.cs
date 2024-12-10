@@ -22,14 +22,14 @@ namespace WPR_project.Repositories
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType/*, DateTime? startDatum, DateTime? eindDatum*/, string sorteerOptie)
+        public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType/*, DateTime? startDatum, DateTime? eindDatum, string sorteerOptie*/)
         {
             var query = _context.Voertuigen.AsQueryable();
 
             // Filter op voertuigtype
             if (!string.IsNullOrEmpty(voertuigType))
             {
-                query = query.Where(v => v.voertuigType.Equals(voertuigType, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(v => v.voertuigType.Equals(voertuigType));
             }
 
             // Filter op beschikbaarheid (voorbeeld: niet-gehuurde voertuigen in de geselecteerde periode)
@@ -42,13 +42,13 @@ namespace WPR_project.Repositories
             //}
 
             // Sorteren
-            query = sorteerOptie?.ToLower() switch
-            {
-                "prijs" => query.OrderBy(v => v.prijsPerDag),
-                "merk" => query.OrderBy(v => v.merk),
-                "beschikbaarheid" => query, // Beschikbaarheid vereist complexere logica
-                _ => query
-            };
+            //query = sorteerOptie?.ToLower() switch
+            //{
+            //    "prijs" => query.OrderBy(v => v.prijsPerDag),
+            //    "merk" => query.OrderBy(v => v.merk),
+            //    "beschikbaarheid" => query, // Beschikbaarheid vereist complexere logica
+            //    _ => query
+            //};
 
             return query.ToList();
         }
