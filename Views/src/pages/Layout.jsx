@@ -12,6 +12,8 @@ const Layout = () => {
                     <Link to="/zaakdashboard" className="nav-link">Zaak Dashboard</Link>
                     <Link to="/wagenparklogin" className="nav-link">Wagenpark Login</Link>
                     <Link to="/testPage" className="nav-link">TestPage</Link>
+                    <Link to="/wagendashboard" className="nav-link">Wagen Dashboard</Link>
+                    <Link to="/particulierVoertuigTonen" className="nav-link">Particulier Voertuig Tonen</Link>"
                 </nav>
             </header>
             <main>

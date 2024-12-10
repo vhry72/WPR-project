@@ -18,11 +18,11 @@ namespace WPR_project.Controllers
         }
 
         [HttpGet("filter")]
-        public IActionResult GetFilteredVoertuigen([FromQuery] string voertuigType, [FromQuery] DateTime? startDatum, [FromQuery] DateTime? eindDatum, [FromQuery] string sorteerOptie)
+        public IActionResult GetFilteredVoertuigen([FromQuery] string voertuigType/*, [FromQuery] string sorteerOptie*/)
         {
             try
             {
-                var voertuigen = _voertuigService.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, sorteerOptie);
+                var voertuigen = _voertuigService.GetFilteredVoertuigen(voertuigType/*, sorteerOptie*/);
                 return Ok(voertuigen);
             }
             catch (Exception ex)

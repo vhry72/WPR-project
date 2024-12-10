@@ -7,7 +7,7 @@ namespace WPR_project.Repositories
         IEnumerable<Voertuig> GetAvailableVoertuigen(string voertuigType = null);
         Voertuig GetVoertuigById(int id);
 
-        IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType, DateTime? startDatum, DateTime? eindDatum, string sorteerOptie);
+        IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType/*, DateTime? startDatum, DateTime? eindDatum*//*, string sorteerOptie*/);
         Voertuig GetFilteredVoertuigById(int id);
 
     }

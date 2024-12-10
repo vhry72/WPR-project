@@ -13,6 +13,7 @@ import ZakelijkAutoTonen from "./pages/ZakelijkAutoTonen";//nieuwe import
 import accountwijzigingHuurders from "./pages/accountwijzigingHuurders"; //nieuwe import
 import Instellingen from "./pages/instellingen"; // nieuwe import
 import Wagenbeheer from "./pages/wagenbeheer"; // Nieuwe import
+import ParticulierVoertuigTonen from "./pages/particulierVoertuigTonen"; // Nieuwe import
 import "../src/styles/styles.css";
 import TestPage from "./pages/testPage";
 
@@ -38,6 +39,7 @@ function PageRoute() {
                     <Route path="testPage" element={<TestPage />} /> 
                     <Route path="instellingen" element={<Instellingen />} />
                     <Route path="accountwijzigingHuurders" element={<accountwijzigingHuurders />} />
+                    <Route path="particulierVoertuigTonen" element={<ParticulierVoertuigTonen />} />
 
                 </Route>
             </Routes>
