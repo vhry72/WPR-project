@@ -92,11 +92,12 @@ namespace WPR_project.Controllers
                 return NotFound(new { Message = ex.Message });
             }
         }
+
         /// <summary>
-        /// Voegt een medewerker toe aan een wagenparkbeheerder
+        /// Voegt een medewerker toe aan een zakelijke huurder
         /// </summary>
-        [HttpPost("{beheerderId}/voegmedewerker")]
-        public IActionResult VoegMedewerkerToe(Guid beheerderId, [FromBody] BedrijfsMedewerkers medewerker)
+        [HttpPost("{zakelijkeId}/voegmedewerker")]
+        public IActionResult VoegMedewerkerToe(Guid zakelijkeId, [FromBody] BedrijfsMedewerkers medewerker)
         {
             if (!ModelState.IsValid)
             {
@@ -105,7 +106,7 @@ namespace WPR_project.Controllers
 
             try
             {
-                _service.VoegMedewerkerToe(beheerderId, medewerker);
+                _service.VoegMedewerkerToe(zakelijkeId, medewerker.medewerkerNaam, medewerker.medewerkerEmail);
                 return Ok(new { Message = "Medewerker succesvol toegevoegd." });
             }
             catch (KeyNotFoundException ex)
@@ -119,14 +120,14 @@ namespace WPR_project.Controllers
         }
 
         /// <summary>
-        /// Verwijdert een medewerker van een wagenparkbeheerder
+        /// Verwijdert een medewerker van een zakelijke huurder
         /// </summary>
-        [HttpDelete("{beheerderId}/verwijdermedewerker/{medewerkerId}")]
-        public IActionResult VerwijderMedewerker(Guid beheerderId, int medewerkerId)
+        [HttpDelete("{zakelijkeId}/verwijdermedewerker/{medewerkerId}")]
+        public IActionResult VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
         {
             try
             {
-                _service.VerwijderMedewerker(beheerderId, medewerkerId);
+                _service.VerwijderMedewerker(zakelijkeId, medewerkerId);
                 return Ok(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException ex)

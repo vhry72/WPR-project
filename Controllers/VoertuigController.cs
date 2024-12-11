@@ -18,11 +18,11 @@ namespace WPR_project.Controllers
         }
 
         [HttpGet("filter")]
-        public IActionResult GetFilteredVoertuigen([FromQuery] string voertuigType/*, [FromQuery] string sorteerOptie*/)
+        public IActionResult GetFilteredVoertuigen([FromQuery] string voertuigType, DateTime? startDatum, DateTime? eindDatum, [FromQuery] string sorteerOptie)
         {
             try
             {
-                var voertuigen = _voertuigService.GetFilteredVoertuigen(voertuigType/*, sorteerOptie*/);
+                var voertuigen = _voertuigService.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, sorteerOptie);
                 return Ok(voertuigen);
             }
             catch (Exception ex)
@@ -38,6 +38,20 @@ namespace WPR_project.Controllers
             {
                 var voertuig = _voertuigService.GetVoertuigDetails(id);
                 return Ok(voertuig);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}/status")]
+        public IActionResult GetVoertuigStatus(int id)
+        {
+            try
+            {
+                var status = _voertuigService.GetVoertuigStatus(id);
+                return Ok(status);
             }
             catch (Exception ex)
             {

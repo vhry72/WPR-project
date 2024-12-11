@@ -46,7 +46,10 @@ namespace WPR_project.Data
 
             // Voertuig Configuratie
             modelBuilder.Entity<Voertuig>()
-                .HasKey(v => v.voertuigId);
+            .HasMany(v => v.voertuigstatus)
+            .WithOne()
+            .HasForeignKey(vs => vs.VoertuigStatusId);
+
 
             // Abonnement Configuratie
             modelBuilder.Entity<Abonnement>()

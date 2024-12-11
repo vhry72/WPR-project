@@ -6,6 +6,7 @@ using WPR_project.Services.Email;
 
 namespace WPR_project.Services
 {
+    
     public class AbonnementService
     {
         private readonly IAbonnementRepository _abonnementRepository;
@@ -81,24 +82,29 @@ namespace WPR_project.Services
         /// <summary>
         /// Verwerkt een betaling voor een Pay-as-you-go abonnement.
         /// </summary>
-        public void VerwerkPayAsYouGoBetaling(ZakelijkHuurder huurder, decimal kosten)
+        public void VerwerkPayAsYouGoBetaling(Guid zakelijkeId, decimal bedrag)
         {
-            if (huurder == null) throw new ArgumentNullException(nameof(huurder));
+            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
+            if (huurder == null)
+                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
 
-            string factuurDetails = $@"
-            Beste {huurder.bedrijfsNaam},
+            if (huurder.AbonnementType != AbonnementType.PayAsYouGo)
+                throw new InvalidOperationException("Eenmalige betaling is alleen toegestaan voor Pay-As-You-Go abonnementen.");
 
-            U heeft gebruik gemaakt van onze pay-as-you-go service.
-            Hier zijn de details van uw factuur:
+            // Hier voeg je de logica toe voor eenmalige betaling, zoals het registreren van de transactie.
+            string bericht = $@"
+    Beste {huurder.bedrijfsNaam},
 
-            Bedrag: €{kosten:F2}
-            Datum: {DateTime.Now:dd-MM-yyyy}
+    Uw eenmalige betaling van €{bedrag:F2} is succesvol verwerkt.
 
-            Met vriendelijke groet,
-            CarAndAll";
+    Datum: {DateTime.Now:dd-MM-yyyy}
 
-            _emailService.SendEmail(huurder.bedrijsEmail, "Factuur voor Pay-as-you-go gebruik", factuurDetails);
+    Met vriendelijke groet,
+    Het Team";
+
+            _emailService.SendEmail(huurder.bedrijsEmail, "Betaling bevestigd", bericht);
         }
+
 
         /// <summary>
         /// Verwerkt een betaling voor een prepaid abonnement.

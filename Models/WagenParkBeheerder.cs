@@ -15,13 +15,13 @@ namespace WPR_project.Models
 
         [Required(ErrorMessage = "E-mailadres is verplicht.")]
         [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
-        public string email { get; set; }
+        public string bedrijfsEmail { get; set; }
 
         [Required(ErrorMessage = "Telefoonnummer is verplicht.")]
         [RegularExpression(@"^(+31|0)[1-9]\d{8}$", ErrorMessage = "Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.")]
         public string telefoonNummer { get; set; }
 
         [Required(ErrorMessage = "De lijst van medewerkers mag niet leeg zijn.")]
-        public List<ZakelijkHuurder> MedewerkerLijst { get; set; } = new List<ZakelijkHuurder>();
+        public List<BedrijfsMedewerkers> MedewerkerLijst { get; set; } = new List<BedrijfsMedewerkers>();
     }
 }

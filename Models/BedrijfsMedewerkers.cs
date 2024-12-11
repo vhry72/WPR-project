@@ -5,7 +5,6 @@ namespace WPR_project.Models
     public class BedrijfsMedewerkers
     {
         [Key]
-        // de bedrijfsmedewerkerId is hetzelfde als de zakelijkeHuurderId
         public Guid BedrijfsMedewerkId { get; set; }
 
         [Required(ErrorMessage = "Naam van medewerker is verplicht.")]
@@ -18,10 +17,10 @@ namespace WPR_project.Models
 
         [Required(ErrorMessage = "Wachtwoord is verplicht.")]
         [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
-        [RegularExpression(@"^(?=.[A-Z])(?=.[!@#$&*]).+$", ErrorMessage = "Wachtwoord moet minstens één hoofdletter en één uniek teken bevatten.")]
+        [RegularExpression(@"^(?=.*[A-Z])(?=.*[!@#$&*]).+$", ErrorMessage = "Wachtwoord moet minstens één hoofdletter en één uniek teken bevatten.")]
         public string Wachtwoord { get; set; }
 
         public Guid ZakelijkeHuurderId { get; set; }
-        public ZakelijkHuurder ZakelijkeHuurder { get; set; } // Relatie met zakelijke huurders
+        public ZakelijkHuurder ZakelijkeHuurder { get; set; }
     }
 }

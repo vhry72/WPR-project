@@ -7,17 +7,12 @@ public class Abonnement
     [Key]
     public Guid AbonnementId { get; set; }
 
-    [Required(ErrorMessage = "Naam is verplicht.")]
-    [StringLength(100, ErrorMessage = "Naam mag niet langer zijn dan 100 tekens.")]
+    [Required]
     public string Naam { get; set; }
 
-    [Required(ErrorMessage = "Kosten zijn verplicht.")]
-    [Range(0, double.MaxValue, ErrorMessage = "Kosten moeten positief zijn.")]
-    [Precision(18, 2)]
     public decimal Kosten { get; set; }
 
-    [StringLength(500, ErrorMessage = "Beschrijving mag niet langer zijn dan 500 tekens.")]
-    public string Beschrijving { get; set; }
+    public ICollection<ZakelijkHuurder> ZakelijkeHuurders { get; set; } = new List<ZakelijkHuurder>();
 
-    public List<ZakelijkHuurder> ZakelijkeHuurders { get; set; } = new List<ZakelijkHuurder>();
+    public ICollection<BedrijfsMedewerkers> Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();
 }

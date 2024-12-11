@@ -297,7 +297,7 @@ namespace WPR_project.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("email")
+                    b.Property<string>("bedrijfsEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -344,7 +344,7 @@ namespace WPR_project.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("email")
+                    b.Property<string>("bedrijfsEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 

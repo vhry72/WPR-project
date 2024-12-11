@@ -44,6 +44,21 @@ namespace WPR_project.Controllers
             }
         }
 
+        [HttpPost("{zakelijkeId}/eenmalig/betalen")]
+        public IActionResult EenmaligeBetaling(Guid zakelijkeId, [FromBody] decimal bedrag)
+        {
+            try
+            {
+                _service.VerwerkPayAsYouGoBetaling(zakelijkeId, bedrag);
+                return Ok(new { Message = "Betaling succesvol verwerkt." });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    
+
         [HttpPost("{zakelijkeId}/medewerker/toevoegen")]
         public IActionResult VoegMedewerkerToe(Guid zakelijkeId, [FromBody] string medewerkerEmail, string medewerkerNaam)
         {

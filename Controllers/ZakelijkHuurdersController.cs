@@ -4,8 +4,8 @@ using WPR_project.Services;
 
 namespace WPR_project.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ZakelijkeHuurderController : ControllerBase
     {
         private readonly ZakelijkeHuurderService _service;
@@ -15,7 +15,9 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-        // POST: api/ZakelijkeHuurder/register
+        /// <summary>
+        /// Registreert een nieuwe zakelijke huurder
+        /// </summary>
         [HttpPost("register")]
         public ActionResult RegisterZakelijkeHuurder([FromBody] ZakelijkHuurder zakelijkHuurder)
         {
@@ -28,7 +30,9 @@ namespace WPR_project.Controllers
             return Ok("Registratie succesvol. Controleer je e-mail voor de verificatielink.");
         }
 
-        // GET: api/ZakelijkeHuurder/verify?token={token}
+        /// <summary>
+        /// Verifieert een e-mailadres
+        /// </summary>
         [HttpGet("verify")]
         public IActionResult VerifyEmail(string token)
         {
@@ -46,7 +50,9 @@ namespace WPR_project.Controllers
             return Ok("Je e-mail is succesvol bevestigd. Je kunt nu inloggen.");
         }
 
-        // GET: api/ZakelijkeHuurder
+        /// <summary>
+        /// Haalt alle zakelijke huurders op
+        /// </summary>
         [HttpGet]
         public ActionResult<IEnumerable<ZakelijkHuurder>> GetAllZakelijkeHuurders()
         {
@@ -54,7 +60,9 @@ namespace WPR_project.Controllers
             return Ok(huurders);
         }
 
-        // GET: api/ZakelijkeHuurder/{id}
+        /// <summary>
+        /// Haalt een specifieke zakelijke huurder op via ID
+        /// </summary>
         [HttpGet("{id}")]
         public ActionResult<ZakelijkHuurder> GetZakelijkHuurderById(Guid id)
         {
@@ -66,7 +74,9 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-        // POST: api/ZakelijkeHuurder
+        /// <summary>
+        /// Voegt een nieuwe zakelijke huurder toe
+        /// </summary>
         [HttpPost]
         public ActionResult AddZakelijkeHuurder([FromBody] ZakelijkHuurder zakelijkHuurder)
         {
@@ -75,11 +85,13 @@ namespace WPR_project.Controllers
                 return BadRequest("Ongeldige gegevens voor huurder.");
             }
 
-            _service.AddZakelijkHuurder(zakelijkHuurder);
+            _service.AddZakelijkeHuurder(zakelijkHuurder);
             return CreatedAtAction(nameof(GetZakelijkHuurderById), new { id = zakelijkHuurder.zakelijkeId }, zakelijkHuurder);
         }
 
-        // PUT: api/ZakelijkeHuurder/{id}
+        /// <summary>
+        /// Wijzigt een bestaande zakelijke huurder
+        /// </summary>
         [HttpPut("{id}")]
         public IActionResult UpdateZakelijkeHuurder(Guid id, [FromBody] ZakelijkHuurder zakelijkHuurder)
         {
@@ -100,7 +112,9 @@ namespace WPR_project.Controllers
             return NoContent();
         }
 
-        // DELETE: api/ZakelijkeHuurder/{id}
+        /// <summary>
+        /// Verwijdert een zakelijke huurder via ID
+        /// </summary>
         [HttpDelete("{id}")]
         public IActionResult DeleteZakelijkeHuurder(Guid id)
         {
@@ -116,18 +130,21 @@ namespace WPR_project.Controllers
             return NoContent();
         }
 
-        // POST: api/ZakelijkeHuurder/{id}/voegmedewerker
+        /// <summary>
+        /// Voegt een medewerker toe aan een zakelijke huurder
+        /// </summary>
         [HttpPost("{id}/voegmedewerker")]
-        public IActionResult VoegMedewerkerToe(Guid id, [FromBody] string medewerkerEmail)
+        public IActionResult VoegMedewerkerToe(Guid id, [FromBody] BedrijfsMedewerkers medewerker)
         {
-            if (string.IsNullOrEmpty(medewerkerEmail))
+            if (string.IsNullOrEmpty(medewerker.medewerkerEmail))
             {
                 return BadRequest("E-mailadres is verplicht.");
             }
 
             try
             {
-                _service.VoegMedewerkerToe(id, medewerkerEmail);
+                _service.VoegMedewerkerToe(id, medewerker.medewerkerNaam, medewerker.medewerkerEmail);
+                return Ok(new { Message = "Medewerker succesvol toegevoegd." });
             }
             catch (KeyNotFoundException)
             {
@@ -137,11 +154,11 @@ namespace WPR_project.Controllers
             {
                 return Conflict(ex.Message);
             }
-
-            return NoContent();
         }
 
-        // DELETE: api/ZakelijkeHuurder/{id}/verwijdermedewerker
+        /// <summary>
+        /// Verwijdert een medewerker van een zakelijke huurder
+        /// </summary>
         [HttpDelete("{id}/verwijdermedewerker")]
         public IActionResult VerwijderMedewerker(Guid id, [FromBody] string medewerkerEmail)
         {
@@ -153,6 +170,7 @@ namespace WPR_project.Controllers
             try
             {
                 _service.VerwijderMedewerker(id, medewerkerEmail);
+                return Ok(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException)
             {
@@ -162,8 +180,38 @@ namespace WPR_project.Controllers
             {
                 return Conflict(ex.Message);
             }
+        }
 
-            return NoContent();
+        /// <summary>
+        /// Voegt een wagenparkbeheerder toe
+        /// </summary>
+        [HttpPost("{zakelijkeHuurderId}/wagenparkbeheerder")]
+        public IActionResult AddWagenparkBeheerder(Guid zakelijkeHuurderId, [FromBody] WagenparkBeheerder beheerder)
+        {
+            try
+            {
+                var zakelijkeHuurder = _service.GetZakelijkHuurderById(zakelijkeHuurderId);
+                if (zakelijkeHuurder == null)
+                {
+                    return BadRequest("Zakelijke huurder niet gevonden. Een wagenparkbeheerder kan alleen worden toegevoegd aan een bestaande zakelijke huurder.");
+                }
+
+                if (!beheerder.bedrijfsEmail.EndsWith($"@{zakelijkeHuurder.domein}"))
+                {
+                    return BadRequest("E-mailadres van de wagenparkbeheerder moet overeenkomen met het domein van de zakelijke huurder.");
+                }
+
+                _service.AddWagenparkBeheerder(zakelijkeHuurderId, beheerder);
+                return CreatedAtAction(nameof(GetZakelijkHuurderById), new { id = beheerder.beheerderId }, beheerder);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(new { Message = ex.Message });
+            }
         }
     }
 }

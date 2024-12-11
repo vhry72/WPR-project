@@ -25,6 +25,8 @@ builder.Services.AddScoped<IHuurderRegistratieRepository, HuurderRegistratieRepo
 builder.Services.AddScoped<IZakelijkeHuurderRepository, ZakelijkeHuurderRepository>();
 builder.Services.AddScoped<IWagenparkBeheerderRepository, WagenparkBeheerderRepository>();
 builder.Services.AddScoped<IVoertuigRepository, VoertuigRepository>();
+builder.Services.AddScoped<IAbonnementRepository, AbonnementRepository>(); 
+
 
 
 // Dependency Injection voor services
@@ -32,6 +34,7 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<ParticulierHuurderService>();
 builder.Services.AddScoped<ZakelijkeHuurderService>();
 builder.Services.AddScoped<WagenparkBeheerderService>();
+builder.Services.AddScoped<AbonnementService>();
 builder.Services.AddScoped<VoertuigService>();
 
 

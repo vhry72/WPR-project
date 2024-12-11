@@ -1,10 +1,13 @@
-﻿namespace WPR_project.Models
+﻿using System.ComponentModel.DataAnnotations;
+namespace WPR_project.Models
 {
     public class VoertuigStatus
     {
-        public int VoertuigStatusId { get; set; }
+        [Key]
+        public Guid VoertuigStatusId { get; set; }
         public bool verhuurd { get; set; }
         public bool schade { get; set; }
         public bool onderhoud { get; set; }
+
     }
 }

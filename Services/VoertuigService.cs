@@ -14,14 +14,14 @@ namespace WPR_project.Services
             _voertuigRepository = voertuigRepository;
         }
 
-        public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType/*DateTime? startDatum, DateTime? eindDatum,string sorteerOptie*/)
+        public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType, DateTime? startDatum, DateTime? eindDatum, string sorteerOptie)
         {
-            //if (startDatum.HasValue && eindDatum.HasValue && startDatum > eindDatum)
-            //{
-            //    throw new ArgumentException("Startdatum mag niet later zijn dan de einddatum.");
-            //}
+            if (startDatum.HasValue && eindDatum.HasValue && startDatum >= eindDatum)
+            {
+                throw new ArgumentException("Startdatum mag niet later of gelijk zijn aan de einddatum.");
+            }
 
-            return _voertuigRepository.GetFilteredVoertuigen(voertuigType/* startDatum, eindDatum*//*, sorteerOptie*/);
+            return _voertuigRepository.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, sorteerOptie);
         }
 
         public Voertuig GetVoertuigDetails(int id)
@@ -33,6 +33,11 @@ namespace WPR_project.Services
             }
 
             return voertuig;
+        }
+
+        public VoertuigStatus GetVoertuigStatus(int voertuigId)
+        {
+            return _voertuigRepository.GetVoertuigStatus(voertuigId);
         }
     }
 }
