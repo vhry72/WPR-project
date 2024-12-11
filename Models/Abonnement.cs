@@ -10,6 +10,7 @@ public class Abonnement
     [Required]
     public string Naam { get; set; }
 
+    [Precision(18, 2)]
     public decimal Kosten { get; set; }
 
     public ICollection<ZakelijkHuurder> ZakelijkeHuurders { get; set; } = new List<ZakelijkHuurder>();

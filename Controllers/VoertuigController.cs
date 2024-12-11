@@ -32,7 +32,7 @@ namespace WPR_project.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetVoertuigDetails(int id)
+        public IActionResult GetVoertuigDetails(Guid id)
         {
             try
             {
@@ -46,7 +46,7 @@ namespace WPR_project.Controllers
         }
 
         [HttpGet("{id}/status")]
-        public IActionResult GetVoertuigStatus(int id)
+        public IActionResult GetVoertuigStatus(Guid id)
         {
             try
             {

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using WPR_project.Models;
 using Xunit.Sdk;
 
@@ -44,6 +45,8 @@ public class ZakelijkHuurder
     public DateTime updateDatumAbonnement { get; set; }
 
     public AbonnementType AbonnementType { get; set; }
+
+    [Precision(18, 2)]
     public decimal PrepaidSaldo { get; set; } = 0;
 
     public List<BedrijfsMedewerkers> Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();

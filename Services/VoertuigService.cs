@@ -24,7 +24,7 @@ namespace WPR_project.Services
             return _voertuigRepository.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, sorteerOptie);
         }
 
-        public Voertuig GetVoertuigDetails(int id)
+        public Voertuig GetVoertuigDetails(Guid id)
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);
             if (voertuig == null)
@@ -35,7 +35,7 @@ namespace WPR_project.Services
             return voertuig;
         }
 
-        public VoertuigStatus GetVoertuigStatus(int voertuigId)
+        public VoertuigStatus GetVoertuigStatus(Guid voertuigId)
         {
             return _voertuigRepository.GetVoertuigStatus(voertuigId);
         }

@@ -14,7 +14,6 @@ namespace WPR_project.Data
         public DbSet<ParticulierHuurder> ParticulierHuurders { get; set; }
         public DbSet<ZakelijkHuurder> ZakelijkHuurders { get; set; }
         public DbSet<Voertuig> Voertuigen { get; set; }
-        public DbSet<Reservering> Reserveringen { get; set; }
         public DbSet<Abonnement> Abonnementen { get; set; }
         public DbSet<Huurverzoek> Huurverzoeken { get; set; }
         public DbSet<WagenparkBeheerder> WagenparkBeheerders { get; set; }
