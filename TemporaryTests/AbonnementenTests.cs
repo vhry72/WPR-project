@@ -28,6 +28,7 @@
 //                _emailServiceMock.Object
 //            );
 //        }
+
 //        [Fact]
 //        public void WijzigAbonnement_SuccesvolWijzigen_VoegtAbonnementToe()
 //        {
@@ -41,7 +42,7 @@
 //                zakelijkeId = zakelijkeId,
 //                AbonnementId = huidigAbonnement.AbonnementId,
 //                HuidigAbonnement = huidigAbonnement,
-//                email = "bedrijf@example.com",
+//                bedrijsEmail = "bedrijf@example.com",
 //                bedrijfsNaam = "Test Bedrijf"
 //            };
 
@@ -61,8 +62,8 @@
 //            Assert.NotNull(zakelijkeHuurder.IngangsdatumNieuwAbonnement);
 
 //            _emailServiceMock.Verify(
-//                email => email.SendEmail(
-//                    zakelijkeHuurder.email,
+//                bedrijsEmail => bedrijsEmail.SendEmail(
+//                    zakelijkeHuurder.bedrijsEmail,
 //                    It.Is<string>(s => s.Contains("Bevestiging van uw abonnementswijziging")),
 //                    It.Is<string>(b => b.Contains("Per kwartaal"))
 //                ),
@@ -97,7 +98,7 @@
 //            Assert.Equal("Abonnement niet gevonden.", exception.Message);
 
 //            _zakelijkeHuurderRepositoryMock.Verify(repo => repo.UpdateZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Never);
-//            _emailServiceMock.Verify(email => email.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+//            _emailServiceMock.Verify(bedrijsEmail => bedrijsEmail.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 //        }
 
 //        [Fact]
@@ -122,7 +123,7 @@
 //            // Assert
 //            Assert.Equal(huidigAbonnement.AbonnementId, zakelijkeHuurder.AbonnementId);
 //            _zakelijkeHuurderRepositoryMock.Verify(repo => repo.UpdateZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Never);
-//            _emailServiceMock.Verify(email => email.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+//            _emailServiceMock.Verify(bedrijsEmail => bedrijsEmail.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
 //        }
 //    }
 //}

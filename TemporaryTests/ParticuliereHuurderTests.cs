@@ -9,7 +9,7 @@ using WPR_project.Services.Email;
 
 namespace WPR_project.TemporaryTests
 {
-    public class ParticulierHuurderTests 
+    public class ParticulierHuurderTests
     {
         private readonly Mock<IHuurderRegistratieRepository> _mockRepository;
         private readonly Mock<IEmailService> _mockEmailService;
@@ -56,7 +56,7 @@ namespace WPR_project.TemporaryTests
             // Arrange
             var huurder = new ParticulierHuurder
             {
-                particulierEmail = "invalid-email", // Ongeldig e-mailadres
+                particulierEmail = "invalid-bedrijsEmail", // Ongeldig e-mailadres
                 particulierNaam = "John Doe",
                 wachtwoord = "Password123!",
                 adress = "Weimarstraat 24b",

@@ -18,10 +18,10 @@ namespace WPR_project.Models
         public string email { get; set; }
 
         [Required(ErrorMessage = "Telefoonnummer is verplicht.")]
-        [RegularExpression(@"^(\+31|0)[1-9]\d{8}$", ErrorMessage = "Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.")]
+        [RegularExpression(@"^(+31|0)[1-9]\d{8}$", ErrorMessage = "Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.")]
         public string telefoonNummer { get; set; }
 
         [Required(ErrorMessage = "De lijst van medewerkers mag niet leeg zijn.")]
-        public List<BedrijfsMedewerkers> MedewerkerLijst { get; set; } = new List<BedrijfsMedewerkers>();
+        public List<ZakelijkHuurder> MedewerkerLijst { get; set; } = new List<ZakelijkHuurder>();
     }
 }

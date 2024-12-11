@@ -19,7 +19,8 @@ namespace WPR_project.Models
 
         [Required(ErrorMessage = "E-mailadres is verplicht.")]
         [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
-        public string email { get; set; }
+        public string bedrijsEmail { get; set; }
+        public string domein => bedrijsEmail.Split('@')[1]; // Automatisch het domein uit de e-mail halen
 
         [StringLength(255, ErrorMessage = "E-mail bevestiging token mag niet langer zijn dan 255 tekens.")]
         public string EmailBevestigingToken { get; set; }
@@ -38,16 +39,20 @@ namespace WPR_project.Models
         [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
         public string wachtwoord { get; set; }
 
-        //// Relatie abonnement (huidige abonnement)
-        //public Guid AbonnementId { get; set; }
-        //public Abonnement HuidigAbonnement { get; set; }
+        // Relatie abonnement (huidige abonnement)
+        public Guid AbonnementId { get; set; }
+        public Abonnement HuidigAbonnement { get; set; }
 
-        //// Eigenschappen wijzigingen in abonnement
-        //public Guid NieuwAbonnementId { get; set; }
-        //public Abonnement NieuwAbonnement { get; set; }
-        //public DateTime IngangsdatumNieuwAbonnement { get; set; }
+        // Eigenschappen wijzigingen in abonnement
 
-        // Lijst van e-mailadressen van medewerkers
-        public List<string> MedewerkersEmails { get; set; } = new List<string>();
+        public DateTime updateDatumAbonnement { get; set; }
+
+        // abonnement types voor betaling
+        public AbonnementType AbonnementType { get; set; }
+        public decimal PrepaidSaldo { get; set; } = 0; // start saldo
+
+
+        // Lijst  van medewerkers die toegevoegd zijn aan het abonnement
+        public List<BedrijfsMedewerkers> Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();
     }
 }

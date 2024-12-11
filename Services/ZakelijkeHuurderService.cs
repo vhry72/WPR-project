@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
@@ -51,7 +52,7 @@ namespace WPR_project.Services
 
             var verificatieUrl = $"https://localhost:5033/api/ZakelijkeHuurder/verify?token={huurder.EmailBevestigingToken}";
             var emailBody = $"Beste {huurder.bedrijfsNaam},<br><br>Klik op de volgende link om je e-mailadres te bevestigen:<br><a href='{verificatieUrl}'>Bevestig e-mail</a>";
-            _emailService.SendEmail(huurder.email, "Bevestig je registratie", emailBody);
+            _emailService.SendEmail(huurder.bedrijsEmail, "Bevestig je registratie", emailBody);
         }
 
 
@@ -91,7 +92,7 @@ namespace WPR_project.Services
             bestaandeHuurder.adres = updatedHuurder.adres;
             bestaandeHuurder.KVKNummer = updatedHuurder.KVKNummer;
             bestaandeHuurder.telNummer = updatedHuurder.telNummer;
-            bestaandeHuurder.email = updatedHuurder.email;
+            bestaandeHuurder.bedrijsEmail = updatedHuurder.bedrijsEmail;
 
             _repository.UpdateZakelijkHuurder(bestaandeHuurder);
             _repository.Save();
@@ -111,48 +112,89 @@ namespace WPR_project.Services
         }
 
         // Voeg een medewerker toe aan een zakelijke huurder
-        public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerEmail)
+        public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerNaam, string medewerkerEmail)
         {
+            // Controleer of het e-mailadres geldig is
+            if (string.IsNullOrWhiteSpace(medewerkerEmail) || !medewerkerEmail.Contains("@"))
+            {
+                throw new ArgumentException("Ongeldig e-mailadres.");
+            }
+
+            // Haal de zakelijke huurder op
             var huurder = _repository.GetZakelijkHuurderById(zakelijkeId);
             if (huurder == null)
             {
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
             }
 
-            if (huurder.MedewerkersEmails.Contains(medewerkerEmail))
+            // Controleer of de medewerker al bestaat op basis van het e-mailadres
+            if (huurder.Medewerkers.Any(m => m.medewerkerEmail == medewerkerEmail))
             {
-                throw new InvalidOperationException("Medewerker bestaat al.");
+                throw new InvalidOperationException("Deze medewerker bestaat al.");
             }
 
-            huurder.MedewerkersEmails.Add(medewerkerEmail);
+            // Maak een nieuwe medewerker aan
+            var nieuweMedewerker = new BedrijfsMedewerkers
+            {
+                BedrijfsMedewerkId = Guid.NewGuid(),
+                medewerkerNaam = medewerkerNaam,
+                medewerkerEmail = medewerkerEmail,
+                ZakelijkeHuurderId = huurder.zakelijkeId
+            };
+
+            // Voeg de medewerker toe aan de lijst van medewerkers
+            huurder.Medewerkers.Add(nieuweMedewerker);
+
+            // Update de huurder in de repository
             _repository.UpdateZakelijkHuurder(huurder);
             _repository.Save();
 
-            // Stuur notificatie naar de medewerker
-            var emailBody = $"Beste medewerker,<br><br>U bent toegevoegd aan het bedrijfsaccount van {huurder.bedrijfsNaam}.";
+            // Stuur een notificatie naar de medewerker
+            var emailBody = $@"
+            Beste {medewerkerNaam},
+
+            U bent toegevoegd aan het bedrijfsaccount van {huurder.bedrijfsNaam}.
+            U kunt nu gebruik maken van de voordelen van het bedrijfsabonnement.
+
+            Met vriendelijke groet,
+            Het Bedrijfsteam";
             _emailService.SendEmail(medewerkerEmail, "Medewerker Toegevoegd", emailBody);
         }
+
 
         // Verwijder een medewerker van een zakelijke huurder
         public void VerwijderMedewerker(Guid zakelijkeId, string medewerkerEmail)
         {
+            // Haal de zakelijke huurder op
             var huurder = _repository.GetZakelijkHuurderById(zakelijkeId);
             if (huurder == null)
             {
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
             }
 
-            if (!huurder.MedewerkersEmails.Contains(medewerkerEmail))
+            // Controleer of de medewerker bestaat op basis van e-mail
+            var medewerker = huurder.Medewerkers.FirstOrDefault(m => m.medewerkerEmail == medewerkerEmail);
+            if (medewerker == null)
             {
                 throw new InvalidOperationException("Medewerker niet gevonden.");
             }
 
-            huurder.MedewerkersEmails.Remove(medewerkerEmail);
+            // Verwijder de medewerker uit de lijst
+            huurder.Medewerkers.Remove(medewerker);
+
+            // Update de huurder in de repository
             _repository.UpdateZakelijkHuurder(huurder);
             _repository.Save();
 
-            // Stuur notificatie naar de medewerker
-            var emailBody = $"Beste medewerker,<br><br>U bent verwijderd uit het bedrijfsaccount van {huurder.bedrijfsNaam}.";
+            // Stuur een notificatie naar de medewerker
+            var emailBody = $@"
+Beste {medewerker.medewerkerNaam},
+
+U bent verwijderd uit het bedrijfsaccount van {huurder.bedrijfsNaam}.
+U kunt niet langer gebruik maken van de voordelen van het bedrijfsabonnement.
+
+Met vriendelijke groet,
+Het Bedrijfsteam";
             _emailService.SendEmail(medewerkerEmail, "Medewerker Verwijderd", emailBody);
         }
     }

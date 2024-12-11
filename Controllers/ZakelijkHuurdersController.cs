@@ -19,7 +19,7 @@ namespace WPR_project.Controllers
         [HttpPost("register")]
         public ActionResult RegisterZakelijkeHuurder([FromBody] ZakelijkHuurder zakelijkHuurder)
         {
-            if (zakelijkHuurder == null || string.IsNullOrEmpty(zakelijkHuurder.email))
+            if (zakelijkHuurder == null || string.IsNullOrEmpty(zakelijkHuurder.bedrijsEmail))
             {
                 return BadRequest("Ongeldige gegevens voor registratie.");
             }

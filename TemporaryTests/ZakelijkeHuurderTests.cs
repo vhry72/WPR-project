@@ -30,7 +30,7 @@ namespace WPR_project.TemporaryTests
             {
                 bedrijfsNaam = "Test Bedrijf",
                 adres = "Weimarstraat 24b",
-                email = "testbedrijf@gmail.com",
+                bedrijsEmail = "testbedrijf@gmail.com",
                 KVKNummer = 12345678,
                 wachtwoord = "Password123!",
                 telNummer = "+31612345678"
@@ -57,7 +57,7 @@ namespace WPR_project.TemporaryTests
             {
                 bedrijfsNaam = "Test Bedrijf",
                 adres = "Weimarstraat 24b",
-                email = "invalid-email", // Ongeldig e-mailadres
+                bedrijsEmail = "invalid-bedrijsEmail", // Ongeldig e-mailadres
                 KVKNummer = 12345678,
                 wachtwoord = "Password123!",
                 telNummer = "+31612345678"
@@ -78,7 +78,7 @@ namespace WPR_project.TemporaryTests
             {
                 bedrijfsNaam = "Test Bedrijf",
                 adres = "Weimarstraat 24b",
-                email = "testbedrijf@gmail.com",
+                bedrijsEmail = "testbedrijf@gmail.com",
                 KVKNummer = 123, // Ongeldig KVK-nummer
                 wachtwoord = "Password123!",
                 telNummer = "+31612345678"
@@ -99,7 +99,7 @@ namespace WPR_project.TemporaryTests
             {
                 bedrijfsNaam = "Test Bedrijf",
                 adres = "Weimarstraat 24b",
-                email = "testbedrijf@gmail.com",
+                bedrijsEmail = "testbedrijf@gmail.com",
                 KVKNummer = 12345678,
                 wachtwoord = "123", // Ongeldig wachtwoord
                 telNummer = "+31612345678"
@@ -120,7 +120,7 @@ namespace WPR_project.TemporaryTests
             {
                 bedrijfsNaam = "", // Lege bedrijfsnaam
                 adres = "Weimarstraat 24b",
-                email = "testbedrijf@gmail.com",
+                bedrijsEmail = "testbedrijf@gmail.com",
                 KVKNummer = 12345678,
                 wachtwoord = "Password123!",
                 telNummer = "+31612345678"
