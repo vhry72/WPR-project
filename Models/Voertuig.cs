@@ -18,6 +18,6 @@ namespace WPR_project.Models
         public DateTime eindDatum { get; set; }
         public bool voertuigBeschikbaar { get; set; }
 
-        public List<VoertuigStatus> voertuigstatus = new(); // VoertuigStatus is een aparte klasse
+        public VoertuigStatus voertuigstatus { get; set; }
     }
 }

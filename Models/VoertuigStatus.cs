@@ -9,5 +9,6 @@ namespace WPR_project.Models
         public bool schade { get; set; }
         public bool onderhoud { get; set; }
 
+        public Guid voertuigId { get; set; } //relatie met Voertuig klasse
     }
 }

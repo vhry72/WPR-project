@@ -55,7 +55,7 @@ namespace WPR_project.Repositories
                 throw new KeyNotFoundException("Voertuig of status niet gevonden.");
             }
 
-            return voertuig.voertuigstatus.FirstOrDefault();
+            return voertuig.voertuigstatus;
         }
     }
 }
