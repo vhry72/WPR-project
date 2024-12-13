@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WPR_project.Migrations
 {
     /// <inheritdoc />
-    public partial class updateVoertuigen : Migration
+    public partial class updateVoertuigenAnnotaties : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -194,14 +194,15 @@ namespace WPR_project.Migrations
                     VoertuigStatusId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     verhuurd = table.Column<bool>(type: "bit", nullable: false),
                     schade = table.Column<bool>(type: "bit", nullable: false),
-                    onderhoud = table.Column<bool>(type: "bit", nullable: false)
+                    onderhoud = table.Column<bool>(type: "bit", nullable: false),
+                    voertuigId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VoertuigStatussen", x => x.VoertuigStatusId);
                     table.ForeignKey(
-                        name: "FK_VoertuigStatussen_Voertuigen_VoertuigStatusId",
-                        column: x => x.VoertuigStatusId,
+                        name: "FK_VoertuigStatussen_Voertuigen_voertuigId",
+                        column: x => x.voertuigId,
                         principalTable: "Voertuigen",
                         principalColumn: "voertuigId",
                         onDelete: ReferentialAction.Cascade);
@@ -254,6 +255,12 @@ namespace WPR_project.Migrations
                 name: "IX_BedrijfsMedewerkers_ZakelijkeHuurderId",
                 table: "BedrijfsMedewerkers",
                 column: "ZakelijkeHuurderId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VoertuigStatussen_voertuigId",
+                table: "VoertuigStatussen",
+                column: "voertuigId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ZakelijkHuurders_AbonnementId",

@@ -12,8 +12,8 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    [Migration("20241211213151_updateVoertuigen")]
-    partial class updateVoertuigen
+    [Migration("20241212131457_updateVoertuigenAnnotaties")]
+    partial class updateVoertuigenAnnotaties
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -257,6 +257,7 @@ namespace WPR_project.Migrations
             modelBuilder.Entity("WPR_project.Models.VoertuigStatus", b =>
                 {
                     b.Property<Guid>("VoertuigStatusId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("onderhoud")
@@ -268,7 +269,13 @@ namespace WPR_project.Migrations
                     b.Property<bool>("verhuurd")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("voertuigId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("VoertuigStatusId");
+
+                    b.HasIndex("voertuigId")
+                        .IsUnique();
 
                     b.ToTable("VoertuigStatussen");
                 });
@@ -392,8 +399,8 @@ namespace WPR_project.Migrations
             modelBuilder.Entity("WPR_project.Models.VoertuigStatus", b =>
                 {
                     b.HasOne("WPR_project.Models.Voertuig", null)
-                        .WithMany("voertuigstatus")
-                        .HasForeignKey("VoertuigStatusId")
+                        .WithOne("voertuigstatus")
+                        .HasForeignKey("WPR_project.Models.VoertuigStatus", "voertuigId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -436,7 +443,8 @@ namespace WPR_project.Migrations
 
             modelBuilder.Entity("WPR_project.Models.Voertuig", b =>
                 {
-                    b.Navigation("voertuigstatus");
+                    b.Navigation("voertuigstatus")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("WPR_project.Models.WagenparkBeheerder", b =>
