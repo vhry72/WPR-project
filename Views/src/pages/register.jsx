@@ -99,12 +99,9 @@ const Register = () => {
 
             // Maak payload
             const payload = {
-                zakelijkeId: uuidv4(),
                 adres: formData.kantoorAdres,
                 kvkNummer: formData.kvkNummer,
-                bedrijsEmail: formData.Zakelijkemail,
-                emailBevestigingToken: 'string',
-                isEmailBevestigd: false,
+                bedrijfsEmail: formData.Zakelijkemail,
                 telNummer: formData.zakelijkTelefoonnummer,
                 bedrijfsnaam: formData.bedrijfsnaam,
                 wachtwoord: formData.Zakelijkwachtwoord,
