@@ -4,7 +4,7 @@ const VoertuigRequestService = {
     // Haal alle voertuigen op
     getAll: async (filter) => {
         try {
-            const response = await apiService.get(`/Voertuig/filter?voertuigType=${filter}`);
+            const response = await apiService.get(`/Voertuig/VoertuigType?voertuigType=${filter}`);
             console.log('GET All Voertuigen:', response.data);
             return response.data; // Zorg dat het data retourneert
         } catch (error) {

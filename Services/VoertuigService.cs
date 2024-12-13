@@ -35,6 +35,12 @@ namespace WPR_project.Services
             return voertuig;
         }
 
+        public IEnumerable<Voertuig> GetVoertuigTypeVoertuigen(string voertuigType)
+        { 
+
+            return _voertuigRepository.GetVoertuigTypeVoertuigen(voertuigType);
+        }
+
         public VoertuigStatus GetVoertuigStatus(Guid voertuigId)
         {
             return _voertuigRepository.GetVoertuigStatus(voertuigId);

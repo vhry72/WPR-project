@@ -44,6 +44,19 @@ namespace WPR_project.Repositories
             return _context.Voertuigen.FirstOrDefault(v => v.voertuigId == id);
         }
 
+        public IEnumerable<Voertuig> GetVoertuigTypeVoertuigen(string voertuigType)
+        {
+            var query = _context.Voertuigen.AsQueryable();
+
+            // Filter op voertuigtype
+            if (!string.IsNullOrEmpty(voertuigType))
+            {
+                query = query.Where(v => v.voertuigType.Equals(voertuigType));
+            }
+
+            return query.ToList();
+        }
+
         public VoertuigStatus GetVoertuigStatus(Guid voertuigId)
         {
             var voertuig = _context.Voertuigen
