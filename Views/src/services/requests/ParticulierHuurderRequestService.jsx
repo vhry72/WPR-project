@@ -4,7 +4,7 @@ import apiService from '../apiService';
 const ParticulierHuurdersRequestService = {
     getAll: async () => {
         try {
-            const response = await apiService.get('/api/ParticulierHuurders');
+            const response = await apiService.get('/ParticulierHuurders');
             console.log('GET All:', response.data);
         } catch (error) {
             console.error('Error fetching all huurders:', error);
@@ -13,7 +13,7 @@ const ParticulierHuurdersRequestService = {
 
     getById: async (id) => {
         try {
-            const response = await apiService.get(`/api/ParticulierHuurders/${id}`);
+            const response = await apiService.get(`/ParticulierHuurders/${id}`);
             console.log('GET by ID:', response.data);
         } catch (error) {
             console.error(`Error fetching huurder with ID ${id}:`, error);
@@ -33,7 +33,7 @@ const ParticulierHuurdersRequestService = {
 
     verifyEmail: async (token) => {
         try {
-            const response = await apiService.get(`/api/ParticulierHuurders/verify`, {
+            const response = await apiService.get(`/ParticulierHuurders/verify`, {
                 params: { token },
             });
             console.log('GET Verify Email:', response.data);
@@ -44,7 +44,7 @@ const ParticulierHuurdersRequestService = {
 
     update: async (id, updatedHuurder) => {
         try {
-            await apiService.put(`/api/ParticulierHuurders/${id}`, updatedHuurder);
+            await apiService.put(`/ParticulierHuurders/${id}`, updatedHuurder);
             console.log('PUT Update: Success');
         } catch (error) {
             console.error(`Error updating huurder with ID ${id}:`, error);
@@ -53,7 +53,7 @@ const ParticulierHuurdersRequestService = {
 
     delete: async (id) => {
         try {
-            await apiService.delete(`/api/ParticulierHuurders/${id}`);
+            await apiService.delete(`/ParticulierHuurders/${id}`);
             console.log('DELETE: Success');
         } catch (error) {
             console.error(`Error deleting huurder with ID ${id}:`, error);
@@ -62,7 +62,7 @@ const ParticulierHuurdersRequestService = {
 
     isEmailVerified: async (id) => {
         try {
-            const response = await apiService.get(`/api/ParticulierHuurders/${id}/isVerified`);
+            const response = await apiService.get(`/ParticulierHuurders/${id}/isVerified`);
             console.log('GET Is Email Verified:', response.data);
         } catch (error) {
             console.error(`Error checking email verification for huurder with ID ${id}:`, error);
