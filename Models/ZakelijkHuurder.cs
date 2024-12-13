@@ -39,8 +39,8 @@ public class ZakelijkHuurder
     [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
     public string wachtwoord { get; set; }
 
-    public Guid AbonnementId { get; set; }
-    public Abonnement HuidigAbonnement { get; set; }
+    public Guid? AbonnementId { get; set; }
+    public Abonnement? HuidigAbonnement { get; set; }
 
     public DateTime updateDatumAbonnement { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Services;
 
@@ -15,20 +16,30 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-        /// <summary>
-        /// Registreert een nieuwe zakelijke huurder
-        /// </summary>
-        [HttpPost("register")]
-        public ActionResult RegisterZakelijkeHuurder([FromBody] ZakelijkHuurder zakelijkHuurder)
+        [HttpPost("registerDTO")]
+        public ActionResult RegisterZakelijkeHuurder([FromBody] ZakelijkeHuurderDTO dto)
         {
-            if (zakelijkHuurder == null || string.IsNullOrEmpty(zakelijkHuurder.bedrijsEmail))
+            if (dto == null || string.IsNullOrEmpty(dto.bedrijfsEmail))
             {
                 return BadRequest("Ongeldige gegevens voor registratie.");
             }
 
+            var zakelijkHuurder = new ZakelijkHuurder
+            {
+                zakelijkeId = Guid.NewGuid(),
+                adres = dto.adres,
+                KVKNummer = dto.KVKNummer,
+                bedrijsEmail = dto.bedrijfsEmail,
+                telNummer = dto.telNummer,
+                bedrijfsNaam = dto.bedrijfsNaam,
+                wachtwoord = dto.wachtwoord,
+                updateDatumAbonnement = DateTime.UtcNow
+            };
+
             _service.RegisterZakelijkeHuurder(zakelijkHuurder);
             return Ok("Registratie succesvol. Controleer je e-mail voor de verificatielink.");
         }
+
 
         /// <summary>
         /// Verifieert een e-mailadres
