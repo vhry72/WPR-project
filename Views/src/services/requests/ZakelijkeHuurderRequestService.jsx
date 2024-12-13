@@ -22,7 +22,8 @@ const ZakelijkeHuurderRequestService = {
 
     register: async (data) => {
         try {
-            const response = await apiService.post('/ZakelijkeHuurder/register', { body: data });
+            console.log({body: data})
+            const response = await apiService.post('/ZakelijkeHuurder/registerDTO', { body: data });
             return response; // Zorg dat dit een geldig object is
         } catch (error) {
             console.error("API Error:", error);
