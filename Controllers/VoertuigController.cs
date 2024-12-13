@@ -31,6 +31,21 @@ namespace WPR_project.Controllers
             }
         }
 
+        [HttpGet("VoertuigType")]
+        public IActionResult GetVoertuigTypeVoertuigen([FromQuery] string voertuigType)
+        {
+            try
+            {
+                var voertuigen = _voertuigService.GetVoertuigTypeVoertuigen(voertuigType);
+                return Ok(voertuigen);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpGet("{id}")]
         public IActionResult GetVoertuigDetails(Guid id)
         {
