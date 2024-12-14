@@ -17,6 +17,7 @@ import ParticulierVoertuigTonen from "./pages/particulierVoertuigTonen"; // Nieu
 import LoginVoorWijziging from "./pages/LoginVoorWijziging";
 import "../src/styles/styles.css";
 import TestPage from "./pages/testPage";
+import HuurZakelijkVoertuig from "./pages/huurzakelijkvoertuig";
 
 
 
@@ -41,6 +42,7 @@ function PageRoute() {
                     <Route path="instellingen" element={<Instellingen />} />
                     <Route path="accountwijzigingHuurders" element={<AccountwijzigingHuurders />} />
                     <Route path="particulierVoertuigTonen" element={<ParticulierVoertuigTonen />} />
+                    <Route path="huurzakelijkvoertuig" element={<HuurZakelijkVoertuig /> }/>
                     <Route path="LoginVoorWijziging" element={<LoginVoorWijziging />} />
                 </Route>
             </Routes>
