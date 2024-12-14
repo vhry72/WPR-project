@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WPR_project.Models;
 using WPR_project.Services;
+using WPR_project.DTO_s;
+using WPR_project.Services.Email;
 
 namespace WPR_project.Controllers
 {
@@ -9,6 +11,7 @@ namespace WPR_project.Controllers
     public class WagenparkBeheerderController : ControllerBase
     {
         private readonly WagenparkBeheerderService _service;
+        private readonly EmailService _emailService;
 
         public WagenparkBeheerderController(WagenparkBeheerderService service)
         {
@@ -42,13 +45,21 @@ namespace WPR_project.Controllers
         /// <summary>
         /// Voegt een nieuwe wagenparkbeheerder toe
         /// </summary>
-        [HttpPost]
-        public ActionResult AddBeheerder([FromBody] WagenparkBeheerder beheerder)
+        [HttpPost("registerWagenparkDTO")]
+        public ActionResult AddBeheerder([FromBody] WagenparkBeheerderDTO beheerderDTO)
         {
-            if (!ModelState.IsValid)
+            if (beheerderDTO == null || string.IsNullOrEmpty(beheerderDTO.beheerderEmail))
             {
-                return BadRequest(ModelState);
+                return BadRequest("Ongeldige gegevens voor registratie");
             }
+
+            var beheerder = new WagenparkBeheerder
+            {
+                beheerderId = Guid.NewGuid(),
+                beheerderNaam = beheerderDTO.beheerderNaam,
+                bedrijfsEmail = beheerderDTO.beheerderEmail,
+                wachtwoord = beheerderDTO.wachtwoord
+            };
 
             _service.AddWagenparkBeheerder(beheerder);
             return CreatedAtAction(nameof(GetBeheerderById), new { id = beheerder.beheerderId }, beheerder);
@@ -106,8 +117,28 @@ namespace WPR_project.Controllers
 
             try
             {
+                // Voeg medewerker toe via de service
                 _service.VoegMedewerkerToe(zakelijkeId, medewerker.medewerkerNaam, medewerker.medewerkerEmail);
-                return Ok(new { Message = "Medewerker succesvol toegevoegd." });
+
+                // Verstuur bevestigingsmail naar de medewerker
+                _emailService.SendEmail(
+                    medewerker.medewerkerEmail,
+                    "Welkom bij het systeem",
+                    $"Hallo {medewerker.medewerkerNaam},\n\nJe bent succesvol toegevoegd als medewerker. Gebruik je geregistreerde e-mailadres om in te loggen."
+                );
+
+                // Verstuur notificatie naar wagenparkbeheerder
+                var beheerderEmail = _service.GetBeheerderEmailById(zakelijkeId); // Zorg dat deze service beschikbaar is
+                if (!string.IsNullOrEmpty(beheerderEmail))
+                {
+                    _emailService.SendEmail(
+                        beheerderEmail,
+                        "Nieuwe Medewerker Toegevoegd",
+                        $"Een nieuwe medewerker ({medewerker.medewerkerNaam}) is toegevoegd aan uw account."
+                    );
+                }
+
+                return Ok(new { Message = "Medewerker succesvol toegevoegd. Bevestigingsmail verzonden." });
             }
             catch (KeyNotFoundException ex)
             {
@@ -125,9 +156,34 @@ namespace WPR_project.Controllers
         [HttpDelete("{zakelijkeId}/verwijdermedewerker/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
+                
+                var medewerker = _service.GetMedewerkerById(medewerkerId);
+                if (medewerker == null)
+                {
+                    return NotFound(new { Message = "Medewerker niet gevonden." });
+                }
+
+                // Verwijder de medewerker via de service
                 _service.VerwijderMedewerker(zakelijkeId, medewerkerId);
+
+                // Verstuur notificatie naar wagenparkbeheerder
+                var beheerderEmail = _service.GetBeheerderEmailById(zakelijkeId); // Zorg dat deze service beschikbaar is
+                if (!string.IsNullOrEmpty(beheerderEmail))
+                {
+                    _emailService.SendEmail(
+                        beheerderEmail,
+                        "Medewerker Verwijderd",
+                        $"De medewerker ({medewerker.medewerkerNaam}) is verwijderd van uw account."
+                    );
+                }
+
                 return Ok(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException ex)

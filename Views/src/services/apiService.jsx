@@ -1,5 +1,4 @@
-﻿import axios from 'axios';//terugzien in de documentatie
-//actiepunt 1. retro eind van de dag reeele planning
+﻿import axios from 'axios';
 
 const API_URL = 'https://localhost:5033/api'; // TODO: Make this a config variable
 

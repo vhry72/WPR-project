@@ -5,7 +5,7 @@ const Layout = () => {
         <>
             <header>
                 <nav className="navbar">
-                    <Link to="/" className="nav-link">Startup</Link>&nbsp;
+                    <Link to="/" className="nav-link">Aanmelden</Link>&nbsp;
                     <Link to="/Home" className="nav-link">Info Pagina</Link>&nbsp;
                     <Link to="/instellingen" className="nav-link">Instellingen</Link>
                     <Link to="/abonnement" className="nav-link">Abonnement</Link>
@@ -13,7 +13,8 @@ const Layout = () => {
                     <Link to="/wagenparklogin" className="nav-link">Wagenpark Login</Link>
                     <Link to="/testPage" className="nav-link">TestPage</Link>
                     <Link to="/wagendashboard" className="nav-link">Wagen Dashboard</Link>
-                    <Link to="/particulierVoertuigTonen" className="nav-link">Particulier Voertuig Tonen</Link>"
+                    <Link to="/wagenbeheer" className="nav-link">Wagen beheer</Link>
+                    <Link to="/particulierVoertuigTonen" className="nav-link">Particulier Voertuig Tonen</Link>
                 </nav>
             </header>
             <main>

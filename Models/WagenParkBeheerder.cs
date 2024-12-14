@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -17,11 +18,32 @@ namespace WPR_project.Models
         [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
         public string bedrijfsEmail { get; set; }
 
+        [Required(ErrorMessage = "Adres is verplicht.")]
+        [StringLength(200, ErrorMessage = "Adres mag niet langer zijn dan 200 tekens.")]
+        public string Adres { get; set; }
+
+        [Required(ErrorMessage = "KVK-nummer is verplicht.")]
+        [RegularExpression(@"^\d{8}$", ErrorMessage = "KVK-nummer moet een 8-cijferig getal zijn.")]
+        public string KVKNummer { get; set; }
+
+
         [Required(ErrorMessage = "Telefoonnummer is verplicht.")]
         [RegularExpression(@"^(+31|0)[1-9]\d{8}$", ErrorMessage = "Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.")]
         public string telefoonNummer { get; set; }
 
-        [Required(ErrorMessage = "De lijst van medewerkers mag niet leeg zijn.")]
-        public List<BedrijfsMedewerkers> MedewerkerLijst { get; set; } = new List<BedrijfsMedewerkers>();
+        [Required(ErrorMessage = "Wachtwoord is verplicht.")]
+        [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
+        public string wachtwoord { get; set; }
+
+        public Guid? AbonnementId { get; set; }
+        public Abonnement? HuidigAbonnement { get; set; }
+
+        public DateTime? updateDatumAbonnement { get; set; }
+
+        public AbonnementType? AbonnementType { get; set; }
+
+        [Precision(18, 2)]
+        public decimal? PrepaidSaldo { get; set; } = 0;
+        public List<BedrijfsMedewerkers>? MedewerkerLijst { get; set; } = new List<BedrijfsMedewerkers>();
     }
 }

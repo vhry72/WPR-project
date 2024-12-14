@@ -7,9 +7,6 @@ const wagendashboard = () => {
 
     return (
         <>
-            <header>
-                <h1 className="H1Tekst-Index"></h1>
-            </header>
             <div className="index-container">
                 <div className="options">
                     <Link to="/wagenbeheer" className="btn">

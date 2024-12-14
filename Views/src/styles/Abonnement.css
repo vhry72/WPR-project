@@ -1,0 +1,178 @@
+﻿/* Footer */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 30px;
+}
+
+.subscription-container h1 {
+    text-align: center;
+    margin: 20px;
+    font-family: Arial, sans-serif;
+    color: black
+}
+
+.subscription-options {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.option {
+    padding: 15px 25px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+    .option:hover {
+        background-color: black; /* Zwarte achtergrond bij hover */
+        color: white; /* Witte tekst bij hover */
+    }
+
+    .option.selected {
+        background-color: #007BFF; /* Blauw als geselecteerd */
+        color: white; /* Witte tekst als geselecteerd */
+        border-color: #0056b3;
+    }
+
+.subscription-button {
+    margin-top: 20px;
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+    .subscription-button:hover {
+        background-color: #0056b3; /* Donkerder blauw bij hover */
+    }
+.bedrijf-abonnement-container h1 {
+    display: flex;
+   
+    align-items: center;
+    justify-content: center;
+    height: 10vh;
+    text-align: center;
+    color: black;
+}
+.bedrijf-abonnement-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.abonnement-type-selector {
+    margin: 20px 0;
+}
+
+.abonnement-button {
+    background-color: green;
+    color: white;
+    margin: 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .abonnement-button.selected {
+        background-color: blue;
+    }
+
+    .abonnement-button:hover {
+        background-color: darkblue;
+    }
+
+.create-subscription-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    .create-subscription-button:hover {
+        background-color: darkgreen;
+    }
+
+.payment-container h1 {
+    color: black;
+}
+
+.medewerkers-dashboard h1 {
+    color: black;
+}
+
+.medewerkers-dashboard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 20px;
+}
+
+    .medewerkers-dashboard input {
+        margin: 5px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        width: 250px;
+    }
+
+    .medewerkers-dashboard button {
+        margin: 10px;
+        padding: 10px 20px;
+        background-color: green;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .medewerkers-dashboard button:hover {
+            background-color: dodgerblue;
+        }
+
+.verwijder-knop {
+    margin-left: 10px;
+    background-color: powderblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 10px;
+    transition: background-color 0.3s ease;
+}
+
+    .verwijder-knop:hover {
+        background-color: darkred;
+    }
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    margin: 10px 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
