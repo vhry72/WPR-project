@@ -13,10 +13,32 @@ const ParticulierHuurdersRequestService = {
 
     getById: async (id) => {
         try {
-            const response = await apiService.get(`/ParticulierHuurders/${id}`);
-            console.log('GET by ID:', response.data);
+            const response = await apiService.get(`/ParticulierHuurder/${id}`);
+            return response; // Response wordt teruggegeven aan de aanroepende functie
         } catch (error) {
             console.error(`Error fetching huurder with ID ${id}:`, error);
+            throw error; // Error opnieuw gooien om af te handelen in de frontend
+        }
+    },
+
+    update: async (id, payload) => {
+        try {
+            const response = await apiService.put(`/ParticulierHuurder/${id}`, { body: payload });
+            console.log(payload)
+            return response; // Response wordt teruggegeven voor succescontrole
+        } catch (error) {
+            console.error(`Error updating huurder with ID ${id}:`, error);
+            throw error; // Error opnieuw gooien om af te handelen in de frontend
+        }
+    },
+
+    login: async (credentials) => {
+        try {
+            const response = await apiService.post('/ParticulierHuurder/login', { body: credentials });
+            return response; // Zorg dat dit een geldig object is
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error; // Gooi de fout opnieuw als het misgaat
         }
     },
 
@@ -39,15 +61,6 @@ const ParticulierHuurdersRequestService = {
             console.log('GET Verify Email:', response.data);
         } catch (error) {
             console.error('Error verifying email:', error);
-        }
-    },
-
-    update: async (id, updatedHuurder) => {
-        try {
-            await apiService.put(`/ParticulierHuurders/${id}`, updatedHuurder);
-            console.log('PUT Update: Success');
-        } catch (error) {
-            console.error(`Error updating huurder with ID ${id}:`, error);
         }
     },
 

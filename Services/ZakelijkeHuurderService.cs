@@ -45,9 +45,6 @@ namespace WPR_project.Services
                 throw new ArgumentException($"Validatie mislukt: {string.Join(", ", errors)}");
             }
 
-            huurder.EmailBevestigingToken = Guid.NewGuid().ToString();
-            huurder.IsEmailBevestigd = false;
-
             _repository.AddZakelijkHuurder(huurder);
             _repository.Save();
 

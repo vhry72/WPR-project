@@ -30,6 +30,8 @@ namespace WPR_project.Controllers
                 adres = dto.adres,
                 KVKNummer = dto.KVKNummer,
                 bedrijsEmail = dto.bedrijfsEmail,
+                EmailBevestigingToken = Guid.NewGuid().ToString(),
+                IsEmailBevestigd = false,
                 telNummer = dto.telNummer,
                 bedrijfsNaam = dto.bedrijfsNaam,
                 wachtwoord = dto.wachtwoord

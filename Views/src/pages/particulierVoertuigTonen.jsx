@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/ParticulierVoertuigTonen.css";
 import VoertuigRequestService from "../services/requests/VoertuigRequestService";
 
 const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
+    const navigate = useNavigate();
 
     const handleChange = (event) => {
         setFilterType(event.target.value);
@@ -20,19 +22,36 @@ const ParticulierVoertuigTonen = () => {
         }
     };
 
+    const handleSort = (criteria) => {
+        const sortedVoertuigen = [...voertuigen].sort((a, b) => {
+            if (a[criteria] < b[criteria]) return -1;
+            if (a[criteria] > b[criteria]) return 1;
+            return 0;
+        });
+        setVoertuigen(sortedVoertuigen);
+    };
+
+    const handleVoertuigClick = (kenteken) => {
+        navigate(`/voertuig/${kenteken}`);
+    };
+
     return (
         <div className="container">
             <div className="input-container">
-                <input
-                    type="text"
-                    placeholder="Enter VoertuigType"
-                    value={filterType}
-                    onChange={handleChange}
-                    className="input-field"
-                />
+                <select value={filterType} onChange={handleChange} className="input-field">
+                    <option value="auto">Auto</option>
+                    <option value="camper">Camper</option>
+                    <option value="caravan">Caravan</option>
+                </select>
                 <button onClick={handleVoertuigType} className="button">
                     Voer voertuigType in
                 </button>
+            </div>
+            <div className="button-container">
+                <button onClick={() => handleSort("merk")} className="sort-button">Sorteer op Merk</button>
+                <button onClick={() => handleSort("model")} className="sort-button">Sorteer op Model</button>
+                <button onClick={() => handleSort("prijsPerDag")} className="sort-button">Sorteer op Prijs</button>
+                <button onClick={() => handleSort("bouwjaar")} className="sort-button">Sorteer op Bouwjaar</button>
             </div>
             <table className="styled-table">
                 <thead>
@@ -49,7 +68,7 @@ const ParticulierVoertuigTonen = () => {
                 <tbody>
                     {voertuigen.map((voertuig, index) => (
                         <tr key={index}>
-                            <td>{voertuig.merk}</td>
+                            <td onClick={() => handleVoertuigClick(voertuig.kenteken)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>{voertuig.merk}</td>
                             <td>{voertuig.model}</td>
                             <td>{voertuig.prijsPerDag}</td>
                             <td>{voertuig.voertuigType}</td>

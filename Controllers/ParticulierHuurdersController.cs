@@ -100,8 +100,12 @@ namespace WPR_project.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+                Console.WriteLine($"ModelState Errors: {string.Join(", ", errors)}");
                 return BadRequest(ModelState);
             }
+
+            Console.WriteLine($"Route ID: {id}, DTO ID: {dto.particulierId}");
 
             if (id != dto.particulierId)
             {
@@ -118,6 +122,7 @@ namespace WPR_project.Controllers
                 return NotFound(new { Message = "Huurder niet gevonden." });
             }
         }
+
 
         /// <summary>
         /// Verwijdert een particuliere huurder op basis van ID.
@@ -150,6 +155,30 @@ namespace WPR_project.Controllers
 
             return Ok(new { IsEmailVerified = huurder.IsEmailBevestigd });
         }
+
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginDTO loginDto)
+        {
+            if (string.IsNullOrEmpty(loginDto.email) || string.IsNullOrEmpty(loginDto.wachtwoord))
+            {
+                return BadRequest(new { Message = "E-mail en wachtwoord zijn verplicht." });
+            }
+
+            var huurder = _service.GetByEmailAndPassword(loginDto.email, loginDto.wachtwoord);
+            if (huurder == null)
+            {
+                return Unauthorized(new { Message = "Ongeldige e-mail of wachtwoord." });
+            }
+
+            return Ok(new
+            {
+                Id = huurder.particulierId,
+                IsEmailVerified = huurder.IsEmailBevestigd,
+                Message = "Login succesvol."
+            });
+        }
+
+
 
 
     }
