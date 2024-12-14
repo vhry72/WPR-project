@@ -99,16 +99,12 @@ const Register = () => {
 
             // Maak payload
             const payload = {
-                zakelijkeId: uuidv4(),
                 adres: formData.kantoorAdres,
-                KVKNummer: formData.kvkNummer,
-                email: formData.Zakelijkemail,
-                EmailBevestigingToken: '6asdadwq',
-                IsEmailBevestigd: false,
+                kvkNummer: formData.kvkNummer,
+                bedrijfsEmail: formData.Zakelijkemail,
                 telNummer: formData.zakelijkTelefoonnummer,
                 bedrijfsnaam: formData.bedrijfsnaam,
                 wachtwoord: formData.Zakelijkwachtwoord,
-                MedewerkersEmails:["hello"]
             };
 
             console.log("Verstuurde payload:", payload);
@@ -224,33 +220,6 @@ const Register = () => {
             {/* Zakelijk Formulier */}
             {activeTab === "zakelijk" && (
                 <form id="ZakelijkForm" className="form" onSubmit={handlePostZakelijk}>
-                    <label htmlFor="Zakelijkemail">Email</label>
-                    <input
-                        type="text"
-                        id="Zakelijkemail"
-                        name="Zakelijkemail"
-                        value={formData.Zakelijkemail}
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="Zakelijkwachtwoord">Wachtwoord</label>
-                    <input
-                        type="text"
-                        id="Zakelijkwachtwoord"
-                        name="Zakelijkwachtwoord"
-                        value={formData.Zakelijkwachtwoord}
-                        onChange={handleChange}
-                        required
-                    />
-                    <label htmlFor="bedrijfsnaam">Bedrijfsnaam</label>
-                    <input
-                        type="text"
-                        id="bedrijfsnaam"
-                        name="bedrijfsnaam"
-                        value={formData.bedrijfsnaam}
-                        onChange={handleChange}
-                        required
-                        />
                     <label htmlFor="kantoorAdres">Kantoor Adres</label>
                     <input
                         type="text"
@@ -260,6 +229,27 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
+
+                    <label htmlFor="kvkNummer">KVK-nummer</label>
+                    <input
+                        type="text"
+                        id="kvkNummer"
+                        name="kvkNummer"
+                        value={formData.kvkNummer}
+                        onChange={handleChange}
+                        required
+                    />
+
+                    <label htmlFor="Zakelijkemail">Email</label>
+                    <input
+                        type="text"
+                        id="Zakelijkemail"
+                        name="Zakelijkemail"
+                        value={formData.Zakelijkemail}
+                        onChange={handleChange}
+                        required
+                    />
+
                     <label htmlFor="zakelijkTelefoonnummer">Telefoonnummer</label>
                     <input
                         type="text"
@@ -269,14 +259,27 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
-                    <label htmlFor="kvkNummer">KVK-nummer</label>
+
+                    <label htmlFor="bedrijfsnaam">Bedrijfsnaam</label>
                     <input
                         type="text"
-                        id="kvkNummer"
-                        name="kvkNummer"
-                        value={formData.kvkNummer}
+                        id="bedrijfsnaam"
+                        name="bedrijfsnaam"
+                        value={formData.bedrijfsnaam}
                         onChange={handleChange}
-                        required />
+                        required
+                    />
+
+                    <label htmlFor="Zakelijkwachtwoord">Wachtwoord</label>
+                    <input
+                        type="text"
+                        id="Zakelijkwachtwoord"
+                        name="Zakelijkwachtwoord"
+                        value={formData.Zakelijkwachtwoord}
+                        onChange={handleChange}
+                        required
+                    />
+
                     <button type="submit" className="register-button">
                         Registreren
                     </button>

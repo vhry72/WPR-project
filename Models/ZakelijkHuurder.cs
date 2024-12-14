@@ -39,15 +39,15 @@ public class ZakelijkHuurder
     [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
     public string wachtwoord { get; set; }
 
-    public Guid AbonnementId { get; set; }
-    public Abonnement HuidigAbonnement { get; set; }
+    public Guid? AbonnementId { get; set; }
+    public Abonnement? HuidigAbonnement { get; set; }
 
-    public DateTime updateDatumAbonnement { get; set; }
+    public DateTime? updateDatumAbonnement { get; set; }
 
-    public AbonnementType AbonnementType { get; set; }
+    public AbonnementType? AbonnementType { get; set; }
 
     [Precision(18, 2)]
-    public decimal PrepaidSaldo { get; set; } = 0;
+    public decimal? PrepaidSaldo { get; set; } = 0;
 
-    public List<BedrijfsMedewerkers> Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();
+    public List<BedrijfsMedewerkers>? Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();
 }

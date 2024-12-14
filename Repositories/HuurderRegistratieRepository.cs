@@ -46,7 +46,14 @@
                 return _context.ParticulierHuurders.Find(id);
             }
 
-            public ParticulierHuurder GetByToken(string token)
+        public ParticulierHuurder GetByEmailAndPassword(string email, string password)
+        {
+            return _context.ParticulierHuurders
+                           .FirstOrDefault(h => h.particulierEmail == email && h.wachtwoord == password);
+        }
+
+
+        public ParticulierHuurder GetByToken(string token)
             {
                 return _context.ParticulierHuurders.FirstOrDefault(h => h.EmailBevestigingToken == token);
             }

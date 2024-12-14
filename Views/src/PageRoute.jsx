@@ -10,10 +10,11 @@ import Zaakdashboard from "./pages/zaakdashboard"; // Nieuwe import
 import Wagenparklogin from "./pages/wagenparklogin"; // Nieuwe import
 import Wagendashboard from "./pages/wagendashboard"; // Nieuwe import
 import ZakelijkAutoTonen from "./pages/ZakelijkAutoTonen";//nieuwe import
-import accountwijzigingHuurders from "./pages/accountwijzigingHuurders"; //nieuwe import
+import AccountwijzigingHuurders from "./pages/accountwijzigingHuurders"; //nieuwe import
 import Instellingen from "./pages/instellingen"; // nieuwe import
 import Wagenbeheer from "./pages/wagenbeheer"; // Nieuwe import
 import ParticulierVoertuigTonen from "./pages/particulierVoertuigTonen"; // Nieuwe import
+import LoginVoorWijziging from "./pages/LoginVoorWijziging";
 import "../src/styles/styles.css";
 import TestPage from "./pages/testPage";
 import HuurZakelijkVoertuig from "./pages/huurzakelijkvoertuig";
@@ -39,10 +40,10 @@ function PageRoute() {
                     <Route path="payment" element={<Payment />} />
                     <Route path="testPage" element={<TestPage />} /> 
                     <Route path="instellingen" element={<Instellingen />} />
-                    <Route path="accountwijzigingHuurders" element={<accountwijzigingHuurders />} />
+                    <Route path="accountwijzigingHuurders" element={<AccountwijzigingHuurders />} />
                     <Route path="particulierVoertuigTonen" element={<ParticulierVoertuigTonen />} />
                     <Route path="huurzakelijkvoertuig" element={<HuurZakelijkVoertuig /> }/>
-
+                    <Route path="LoginVoorWijziging" element={<LoginVoorWijziging />} />
                 </Route>
             </Routes>
         </BrowserRouter>

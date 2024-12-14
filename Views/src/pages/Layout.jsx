@@ -13,7 +13,8 @@ const Layout = () => {
                     <Link to="/wagenparklogin" className="nav-link">Wagenpark Login</Link>
                     <Link to="/testPage" className="nav-link">TestPage</Link>
                     <Link to="/wagendashboard" className="nav-link">Wagen Dashboard</Link>
-                    <Link to="/particulierVoertuigTonen" className="nav-link">Particulier Voertuig Tonen</Link>"
+                    <Link to="/particulierVoertuigTonen" className="nav-link">Particulier Voertuig Tonen</Link>
+                    <Link to="/LoginVoorWijziging" className="nav-link">AccountWijziging</Link>
                 </nav>
             </header>
             <main>
