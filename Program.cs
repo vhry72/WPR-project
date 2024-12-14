@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",
-        policy => policy.WithOrigins("http://localhost:5174")
+        policy => policy.WithOrigins("http://localhost:5176")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());

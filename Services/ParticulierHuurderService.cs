@@ -43,6 +43,22 @@ namespace WPR_project.Services
             };
         }
 
+        public ParticulierHuurderDTO GetByEmailAndPassword(string particulierEmail , string wachtwoord)
+        {
+            var huurder = _repository.GetByEmailAndPassword(particulierEmail, wachtwoord);
+            if (huurder == null) return null;
+
+            return new ParticulierHuurderDTO
+            {
+                particulierId = huurder.particulierId,
+                particulierNaam = huurder.particulierNaam,
+                particulierEmail = huurder.particulierEmail,
+                IsEmailBevestigd = huurder.IsEmailBevestigd
+            };
+        }
+
+
+
         public void Register(ParticulierHuurder particulierH)
         {
 
@@ -98,6 +114,11 @@ namespace WPR_project.Services
 
             huurder.particulierNaam = dto.particulierNaam;
             huurder.particulierEmail = dto.particulierEmail;
+
+            if (!string.IsNullOrWhiteSpace(dto.wachtwoord))
+            {
+                huurder.wachtwoord = dto.wachtwoord;
+            }
 
             _repository.Update(huurder);
             _repository.Save();
