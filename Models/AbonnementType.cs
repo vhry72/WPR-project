@@ -3,6 +3,6 @@
     public enum AbonnementType
     {
         PayAsYouGo,
-        Prepaid
+        PrepaidSaldo
     }
 }

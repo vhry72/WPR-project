@@ -10,14 +10,7 @@ const Home = () => {
 
     return (
         <>
-            {/* Header Section */}
-            <header>
-                <div className="container">
-                    <a href="#" className="logo">
-                    </a>
-
-                </div>
-            </header>
+           
 
             <div className="hero" id="home">
                 <div className="hero-text-container">
@@ -73,7 +66,7 @@ const Home = () => {
 
             {/* Footer Section */}
             <footer>
-                <p>&copy; 2024 Mijn Applicatie. Alle rechten voorbehouden.</p>
+                <p>&copy; 2024 CarAndAll. Alle rechten voorbehouden.</p>
             </footer>
         </>
     );

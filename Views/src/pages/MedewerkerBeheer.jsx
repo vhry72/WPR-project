@@ -61,7 +61,7 @@ function MedewerkerBeheer() {
                         {medewerker.naam} - {medewerker.email}
                         <button onClick={() => verwijderMedewerker(medewerker.email)}>
                             Verwijderen
-                        </button>
+                        </button> 
                     </li>
                 ))}
             </ul>

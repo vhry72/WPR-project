@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import Index from "./pages/Index";
 import Abonnement from "./pages/abonnement"; // Nieuwe import
 import Payment from "./pages/payment"; // Nieuwe import
+import BedrijfsAbonnement from "./pages/bedrijfsabonnement"; // Nieuwe import
+import MedewerkerAbonnementDashboard from "./pages/medewerkerAbonnementDashboard"; // Nieuwe import
 import Zaakdashboard from "./pages/zaakdashboard"; // Nieuwe import
 import Wagenparklogin from "./pages/wagenparklogin"; // Nieuwe import
 import Wagendashboard from "./pages/wagendashboard"; // Nieuwe import
@@ -21,6 +23,7 @@ import HuurZakelijkVoertuig from "./pages/huurzakelijkvoertuig";
 
 
 
+
 function PageRoute() {
     return (
         <BrowserRouter>
@@ -31,8 +34,10 @@ function PageRoute() {
                     <Route path="register" element={<Register />} />
                     <Route path="login" element={<Login />} />
                     <Route path="abonnement" element={<Abonnement />} />
+                    <Route path="bedrijfsabonnement" element={<BedrijfsAbonnement />} />
                     <Route path="payment" element={<Payment />} /> 
                     <Route path="zaakdashboard" element={<Zaakdashboard />} /> 
+                    <Route path="medewerkerAbonnementDashboard" element={<MedewerkerAbonnementDashboard />} />
                     <Route path="wagenparklogin" element={<Wagenparklogin />} />           
                     <Route path="wagendashboard" element={<Wagendashboard />} /> 
                     <Route path="zakelijkeautotonen" element={<ZakelijkAutoTonen />} /> 

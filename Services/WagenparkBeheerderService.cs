@@ -1,4 +1,6 @@
-﻿using WPR_project.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using WPR_project.Data;
+using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
 
@@ -10,16 +12,19 @@ namespace WPR_project.Services
         private readonly IZakelijkeHuurderRepository _zakelijkeHuurderRepository;
         private readonly IAbonnementRepository _abonnementRepository;
         private readonly IEmailService _emailService;
+        private readonly GegevensContext _context;
 
         public WagenparkBeheerderService(
             IWagenparkBeheerderRepository repository,
             IZakelijkeHuurderRepository zakelijkeHuurderRepository,
             IAbonnementRepository abonnementRepository,
+            GegevensContext context,
             IEmailService emailService)
         {
             _repository = repository;
             _zakelijkeHuurderRepository = zakelijkeHuurderRepository;
             _abonnementRepository = abonnementRepository;
+            _context = context;
             _emailService = emailService;
         }
 
@@ -116,6 +121,18 @@ namespace WPR_project.Services
             _emailService.SendEmail(medewerker.medewerkerEmail, "Medewerker verwijderd", bericht);
         }
 
+        public string GetBeheerderEmailById(Guid zakelijkeId)
+        {
+            var beheerder = _context.WagenparkBeheerders.FirstOrDefault(b => b.beheerderId == zakelijkeId);
+            return beheerder?.bedrijfsEmail;
+        }
+
+        public BedrijfsMedewerkers? GetMedewerkerById(Guid medewerkerId)
+        {
+            return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.BedrijfsMedewerkId == medewerkerId);
+        }
+
+
         // Voeg een medewerker toe aan een abonnement
         public void VoegMedewerkerAanAbonnementToe(Guid zakelijkeId, Guid medewerkerId, Guid abonnementId)
         {
@@ -153,13 +170,13 @@ namespace WPR_project.Services
         }
 
         // Haal alle abonnementen van een zakelijke huurder op
-        public IEnumerable<Abonnement> GetAbonnementen(Guid zakelijkeId)
+        public IEnumerable<Abonnement> GetAbonnementen(Guid beheerderId)
         {
-            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
+            var huurder = _repository.getBeheerderById(beheerderId);
             if (huurder == null)
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
 
-            return _abonnementRepository.GetAllAbonnementen().Where(a => a.ZakelijkeHuurders.Contains(huurder));
+            return _abonnementRepository.GetAllAbonnementen().Where(a => a.WagenparkBeheerders.Contains(huurder));
         }
     }
 }

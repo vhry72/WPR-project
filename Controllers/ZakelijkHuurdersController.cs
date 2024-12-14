@@ -34,8 +34,7 @@ namespace WPR_project.Controllers
                 IsEmailBevestigd = false,
                 telNummer = dto.telNummer,
                 bedrijfsNaam = dto.bedrijfsNaam,
-                wachtwoord = dto.wachtwoord,
-                updateDatumAbonnement = DateTime.UtcNow
+                wachtwoord = dto.wachtwoord
             };
 
             _service.RegisterZakelijkeHuurder(zakelijkHuurder);

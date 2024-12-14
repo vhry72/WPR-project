@@ -11,15 +11,18 @@ namespace WPR_project.Services
     {
         private readonly IAbonnementRepository _abonnementRepository;
         private readonly IZakelijkeHuurderRepository _zakelijkeHuurderRepository;
+        private readonly IWagenparkBeheerderRepository _wagenparkBeheerderRepository;
         private readonly IEmailService _emailService;
 
         public AbonnementService(
             IAbonnementRepository abonnementRepository,
             IZakelijkeHuurderRepository zakelijkeHuurderRepository,
+            IWagenparkBeheerderRepository wagenparkBeheerderRepository,
             IEmailService emailService)
         {
             _abonnementRepository = abonnementRepository;
             _zakelijkeHuurderRepository = zakelijkeHuurderRepository;
+            _wagenparkBeheerderRepository = wagenparkBeheerderRepository;
             _emailService = emailService;
         }
 
@@ -30,16 +33,16 @@ namespace WPR_project.Services
         {
             return _abonnementRepository.GetAllAbonnementen();
         }
-        public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerNaam, string medewerkerEmail)
+        public void VoegMedewerkerToe(Guid bedrijfsId, string medewerkerNaam, string medewerkerEmail)
         {
             // Controleer of het e-mailadres geldig is
             if (string.IsNullOrWhiteSpace(medewerkerEmail) || !medewerkerEmail.Contains("@"))
                 throw new ArgumentException("Ongeldig e-mailadres.");
 
-            // Haal de zakelijke huurder op
-            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
+            // Haal de zakelijke beheerder op
+            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(bedrijfsId);
             if (huurder == null)
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
+                throw new KeyNotFoundException("Zakelijke beheerder niet gevonden.");
 
             // Controleer of het e-maildomein overeenkomt
             var bedrijfDomein = huurder.domein;
@@ -64,7 +67,7 @@ namespace WPR_project.Services
             // Voeg de medewerker toe
             huurder.Medewerkers.Add(medewerker);
 
-            // Update de huurder in de repository
+            // Update de beheerder in de repository
             _zakelijkeHuurderRepository.UpdateZakelijkHuurder(huurder);
             _zakelijkeHuurderRepository.Save();
 
@@ -79,21 +82,23 @@ namespace WPR_project.Services
         }
 
 
+
+
         /// <summary>
         /// Verwerkt een betaling voor een Pay-as-you-go abonnement.
         /// </summary>
-        public void VerwerkPayAsYouGoBetaling(Guid zakelijkeId, decimal bedrag)
+        public void VerwerkPayAsYouGoBetaling(Guid beheerderId, decimal bedrag)
         {
-            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
+            var huurder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
             if (huurder == null)
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
+                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
 
             if (huurder.AbonnementType != AbonnementType.PayAsYouGo)
                 throw new InvalidOperationException("Eenmalige betaling is alleen toegestaan voor Pay-As-You-Go abonnementen.");
 
             // Hier voeg je de logica toe voor eenmalige betaling, zoals het registreren van de transactie.
             string bericht = $@"
-    Beste {huurder.bedrijfsNaam},
+    Beste {huurder.beheerderNaam},
 
     Uw eenmalige betaling van €{bedrag:F2} is succesvol verwerkt.
 
@@ -102,98 +107,105 @@ namespace WPR_project.Services
     Met vriendelijke groet,
     Het Team";
 
-            _emailService.SendEmail(huurder.bedrijsEmail, "Betaling bevestigd", bericht);
+            _emailService.SendEmail(huurder.bedrijfsEmail, "Betaling bevestigd", bericht);
         }
 
 
         /// <summary>
         /// Verwerkt een betaling voor een prepaid abonnement.
         /// </summary>
-        public void VerwerkPrepaidBetaling(ZakelijkHuurder huurder, decimal kosten)
+        public void VerwerkPrepaidBetaling(WagenparkBeheerder beheerder, decimal kosten)
         {
-            if (huurder == null) throw new ArgumentNullException(nameof(huurder));
+            if (beheerder == null) throw new ArgumentNullException(nameof(beheerder));
 
-            if (huurder.PrepaidSaldo < kosten)
+            if (beheerder.PrepaidSaldo < kosten)
                 throw new InvalidOperationException("Onvoldoende saldo om deze transactie te voltooien.");
 
-            huurder.PrepaidSaldo -= kosten;
-            _zakelijkeHuurderRepository.UpdateZakelijkHuurder(huurder);
+            beheerder.PrepaidSaldo -= kosten;
+            _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
             _zakelijkeHuurderRepository.Save();
 
             string bericht = $@"
-            Beste {huurder.bedrijfsNaam},
+            Beste {beheerder.beheerderNaam},
 
             Uw prepaid saldo is aangepast.
             Bedrag afgetrokken: €{kosten:F2}
-            Nieuw saldo: €{huurder.PrepaidSaldo:F2}
+            Nieuw saldo: €{beheerder.PrepaidSaldo:F2}
 
             Datum: {DateTime.Now:dd-MM-yyyy}
 
             Met vriendelijke groet,
             CarAndAll";
 
-            _emailService.SendEmail(huurder.bedrijsEmail, "Saldo update voor uw prepaid-account", bericht);
+            _emailService.SendEmail(beheerder.bedrijfsEmail, "Saldo update voor uw prepaid-account", bericht);
         }
 
         /// <summary>
-        /// Laadt prepaid saldo op voor een zakelijke huurder.
+        /// Laadt prepaid saldo op voor een zakelijke beheerder.
         /// </summary>
-        public void LaadPrepaidSaldoOp(Guid zakelijkeId, decimal bedrag)
+        public void LaadPrepaidSaldoOp(Guid beheerderId, decimal bedrag)
         {
-            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
-            if (huurder == null)
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
+            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            if (beheerder == null)
+                throw new KeyNotFoundException("Zakelijke beheerder niet gevonden.");
 
-            huurder.PrepaidSaldo += bedrag;
-            _zakelijkeHuurderRepository.UpdateZakelijkHuurder(huurder);
-            _zakelijkeHuurderRepository.Save();
+            beheerder.PrepaidSaldo += bedrag;
+            _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
+            _wagenparkBeheerderRepository.Save();
 
             string bericht = $@"
-            Beste {huurder.bedrijfsNaam},
+            Beste {beheerder.beheerderNaam},
 
             Uw prepaid saldo is succesvol opgewaardeerd.
             Bedrag toegevoegd: €{bedrag:F2}
-            Nieuw saldo: €{huurder.PrepaidSaldo:F2}
+            Nieuw saldo: €{beheerder.PrepaidSaldo:F2}
 
             Datum: {DateTime.Now:dd-MM-yyyy}
 
             Met vriendelijke groet,
             CarAndAll";
 
-            _emailService.SendEmail(huurder.bedrijsEmail, "Prepaid saldo opgewaardeerd", bericht);
+            _emailService.SendEmail(beheerder.bedrijfsEmail, "Prepaid saldo opgewaardeerd", bericht);
         }
 
         /// <summary>
-        /// Wijzigt het abonnement van een zakelijke huurder.
+        /// Wijzigt het abonnement van een zakelijke beheerder.
         /// </summary>
-        public void WijzigAbonnement(Guid zakelijkeId, Guid abonnementId)
+        public void WijzigAbonnement(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
         {
-            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
-            if (huurder == null)
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
+            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            if (beheerder == null)
+                throw new KeyNotFoundException("Zakelijke beheerder niet gevonden.");
 
             var nieuwAbonnement = _abonnementRepository.GetAbonnementById(abonnementId);
             if (nieuwAbonnement == null)
                 throw new KeyNotFoundException("Abonnement niet gevonden.");
 
-            if (huurder.HuidigAbonnement != null)
+            // Controleer of het abonnementstype overeenkomt
+            if (nieuwAbonnement.AbonnementType != abonnementType)
+                throw new InvalidOperationException("Abonnementstype komt niet overeen met het geselecteerde type.");
+
+            if (beheerder.HuidigAbonnement != null)
             {
-                var huidigAbonnement = huurder.HuidigAbonnement;
-                huidigAbonnement.ZakelijkeHuurders.Remove(huurder);
+                var huidigAbonnement = beheerder.HuidigAbonnement;
+                huidigAbonnement.WagenparkBeheerders.Remove(beheerder);
                 _abonnementRepository.UpdateAbonnement(huidigAbonnement);
             }
 
-            huurder.HuidigAbonnement = nieuwAbonnement;
-            huurder.AbonnementId = nieuwAbonnement.AbonnementId;
-            huurder.updateDatumAbonnement = DateTime.Now;
-            nieuwAbonnement.ZakelijkeHuurders.Add(huurder);
+            beheerder.HuidigAbonnement = nieuwAbonnement;
+            beheerder.AbonnementId = nieuwAbonnement.AbonnementId;
+            beheerder.AbonnementType = abonnementType; // Stel het type abonnement in
+            beheerder.updateDatumAbonnement = DateTime.Now;
+
+            nieuwAbonnement.WagenparkBeheerders.Add(beheerder);
 
             _abonnementRepository.UpdateAbonnement(nieuwAbonnement);
-            _zakelijkeHuurderRepository.UpdateZakelijkHuurder(huurder);
-            _zakelijkeHuurderRepository.Save();
+            _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
+            _wagenparkBeheerderRepository.Save();
 
-            StuurBevestigingsEmail(huurder, nieuwAbonnement);
+            StuurBevestigingsEmail(beheerder, nieuwAbonnement);
         }
+
 
         /// <summary>
         /// Bereken de startdatum van de volgende abonnementsperiode.
@@ -204,24 +216,24 @@ namespace WPR_project.Services
             return new DateTime(huidigeDatum.Year, huidigeDatum.Month, 1).AddMonths(1);
         }
 
-        private void StuurBevestigingsEmail(ZakelijkHuurder huurder, Abonnement nieuwAbonnement)
+        private void StuurBevestigingsEmail(WagenparkBeheerder beheerder, Abonnement nieuwAbonnement)
         {
-            if (huurder == null || nieuwAbonnement == null) throw new ArgumentNullException();
+            if (beheerder == null || nieuwAbonnement == null) throw new ArgumentNullException();
 
             string subject = "Bevestiging van uw abonnementswijziging";
             string body = $@"
-            Beste {huurder.bedrijfsNaam},
+            Beste {beheerder.beheerderNaam},
 
             Uw abonnementswijziging is geregistreerd.
 
             Nieuw abonnement: {nieuwAbonnement.Naam}
             Kosten: €{nieuwAbonnement.Kosten:F2} per maand
-            Ingangsdatum: {huurder.updateDatumAbonnement:dd-MM-yyyy}
+            Ingangsdatum: {beheerder.updateDatumAbonnement:dd-MM-yyyy}
 
             Met vriendelijke groet,
             CarAndAll";
 
-            _emailService.SendEmail(huurder.bedrijsEmail, subject, body);
+            _emailService.SendEmail(beheerder.bedrijfsEmail, subject, body);
         }
     }
 }

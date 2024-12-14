@@ -12,8 +12,9 @@ public class Abonnement
 
     [Precision(18, 2)]
     public decimal Kosten { get; set; }
+    public AbonnementType AbonnementType { get; set; }
 
-    public ICollection<ZakelijkHuurder> ZakelijkeHuurders { get; set; } = new List<ZakelijkHuurder>();
+    public ICollection<WagenparkBeheerder> WagenparkBeheerders { get; set; } = new List<WagenparkBeheerder>();
 
     public ICollection<BedrijfsMedewerkers> Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();
 }

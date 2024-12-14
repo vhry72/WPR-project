@@ -17,23 +17,26 @@ header {
 h1 {
     font-size: 2rem;
     margin: 0;
-    color: #fff; /* Witte tekst */
+    color: #fff; 
 }
 
 /* Container styling */
 .index-container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
-    background: #fff; /* Witte achtergrond */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    padding: 67px;
+    background: #fff; 
+    box-shadow: 0px 0px 6px #fff;
+    border-radius: 10px;
 }
 
-/* Styling voor formuliervelden */
+.medewerker-form {
+    margin-top: 150px;
+}
+
 .options h2, .options h3 {
     font-size: 1.5rem;
-    color: #333;
+    color: #000;
     margin-bottom: 15px;
 }
 

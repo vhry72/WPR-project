@@ -1,66 +1,36 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // Gebruik voor navigatie in React Router
-import "../styles/styles.css"; 
+import { useLocation, useNavigate } from "react-router-dom";
+import "../styles/Abonnement.css";
 
 function Betaling() {
+    const location = useLocation();
     const navigate = useNavigate();
+    const abonnement = location.state?.abonnement;
+    const betaalMethode = location.state?.betaalMethode;
 
     const handleSubmit = (event) => {
-        event.preventDefault(); // Voorkom standaard formuliergedrag
-
-        // Haal gegevens op uit het formulier
-        const formData = new FormData(event.target);
-        const data = Object.fromEntries(formData.entries());
-
-        console.log("Betalingsgegevens:", data);
-
-        // Hier kun je een API-aanroep toevoegen om de betaling te verwerken
-
-        // Navigeren naar de "Home" pagina na succesvolle verwerking
-        navigate("/Home");
+        event.preventDefault();
+        console.log("Betaling succesvol afgerond.");
+        navigate("/medewerkerAbonnementDashboard", { state: { abonnement } });
     };
 
     return (
         <div className="payment-container">
             <h1>Vul je Betalingsgegevens in</h1>
-            <p>
-                Om je betaling af te ronden, vul de benodigde gegevens in en klik op
-                'Betalen'.
-            </p>
-            <form id="Payment" className="form" action="/zaakdashboard" method="get">
+            <br></br>
+            <hr></hr>
+            <h3>Abonnement: {abonnement?.naam} - {abonnement?.prijs}</h3>
+            <h3>Betaalmethode: {betaalMethode}</h3>
+            <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="iban">IBAN</label>
-                    <input
-                        type="text"
-                        id="iban"
-                        name="iban"
-                        required
-                        placeholder="Vul je IBAN in"
-                    />
+                    <input type="text" id="iban" name="iban" required />
                 </div>
                 <div>
                     <label htmlFor="bank-name">Bank Naam</label>
-                    <input
-                        type="text"
-                        id="bank-name"
-                        name="bank-name"
-                        required
-                        placeholder="Vul de naam van je bank in"
-                    />
+                    <input type="text" id="bank-name" name="bank-name" required />
                 </div>
-                <div>
-                    <label htmlFor="account-holder">Rekeninghouder</label>
-                    <input
-                        type="text"
-                        id="account-holder"
-                        name="account-holder"
-                        required
-                        placeholder="Vul de naam van de rekeninghouder in"
-                    />
-                </div>
-                <button type="submit" className="payment-button">
-                    Betalen
-                </button>
+                <button type="submit" className="payment-button">Betalen</button>
             </form>
         </div>
     );

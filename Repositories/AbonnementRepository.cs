@@ -15,6 +15,12 @@ namespace WPR_project.Repositories
             _context = context;
         }
 
+        public BedrijfsMedewerkers GetMedewerkerById(Guid medewerkerId)
+        {
+            return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.BedrijfsMedewerkId == medewerkerId);
+        }
+
+
         public IEnumerable<Abonnement> GetAllAbonnementen()
         {
             return _context.Abonnementen.ToList();
