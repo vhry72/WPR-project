@@ -1,8 +1,8 @@
 ﻿namespace WPR_project.Models
 {
-    public class Huurverzoek
+    public class HuurVerzoek
     {
-        public string HuurderID { get; set; }
+        public Guid HuurderID { get; set; }
         public string voertuigId { get; set; }
         public DateTime beginDate { get; set; }
         public DateTime endDate { get; set; }
