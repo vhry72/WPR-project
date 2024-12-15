@@ -254,7 +254,7 @@ namespace WPR_project.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BedrijfsMedewerkers_ZakelijkeHuurderId",
                 table: "BedrijfsMedewerkers",
-                column: "ZakelijkeHuurderId");
+                column: "zakelijkeHuurderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VoertuigStatussen_voertuigId",

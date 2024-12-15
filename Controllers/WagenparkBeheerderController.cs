@@ -11,11 +11,12 @@ namespace WPR_project.Controllers
     public class WagenparkBeheerderController : ControllerBase
     {
         private readonly WagenparkBeheerderService _service;
-        private readonly EmailService _emailService;
+        private readonly IEmailService _emailService;
 
-        public WagenparkBeheerderController(WagenparkBeheerderService service)
+        public WagenparkBeheerderController(WagenparkBeheerderService service, IEmailService emailService)
         {
             _service = service;
+            _emailService = emailService;
         }
 
         /// <summary>
@@ -45,12 +46,16 @@ namespace WPR_project.Controllers
         /// <summary>
         /// Voegt een nieuwe wagenparkbeheerder toe
         /// </summary>
-        [HttpPost("registerWagenparkDTO")]
+        [HttpPost]
         public ActionResult AddBeheerder([FromBody] WagenparkBeheerderDTO beheerderDTO)
         {
-            if (beheerderDTO == null || string.IsNullOrEmpty(beheerderDTO.beheerderEmail))
+            if (!ModelState.IsValid)
             {
-                return BadRequest("Ongeldige gegevens voor registratie");
+                return BadRequest(new
+                {
+                    Message = "Ongeldige invoer.",
+                    Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)
+                });
             }
 
             var beheerder = new WagenparkBeheerder
@@ -104,41 +109,39 @@ namespace WPR_project.Controllers
             }
         }
 
-        /// <summary>
-        /// Voegt een medewerker toe aan een zakelijke huurder
-        /// </summary>
+
+        // voeg een medewerker aan een zakelijke Huurder toe
         [HttpPost("{zakelijkeId}/voegmedewerker")]
         public IActionResult VoegMedewerkerToe(Guid zakelijkeId, [FromBody] BedrijfsMedewerkers medewerker)
         {
+            if (medewerker == null)
+            {
+                return BadRequest(new { Message = "De medewerkergegevens zijn vereist." });
+            }
+
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(new
+                {
+                    Message = "Ongeldige invoer.",
+                    Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)
+                });
             }
 
             try
             {
-                // Voeg medewerker toe via de service
-                _service.VoegMedewerkerToe(zakelijkeId, medewerker.medewerkerNaam, medewerker.medewerkerEmail);
+                // Service-aanroep om medewerker toe te voegen
+                _service.VoegMedewerkerToe(zakelijkeId, medewerker.medewerkerNaam, medewerker.medewerkerEmail, medewerker.wachtwoord);
 
-                // Verstuur bevestigingsmail naar de medewerker
-                _emailService.SendEmail(
-                    medewerker.medewerkerEmail,
-                    "Welkom bij het systeem",
-                    $"Hallo {medewerker.medewerkerNaam},\n\nJe bent succesvol toegevoegd als medewerker. Gebruik je geregistreerde e-mailadres om in te loggen."
-                );
-
-                // Verstuur notificatie naar wagenparkbeheerder
-                var beheerderEmail = _service.GetBeheerderEmailById(zakelijkeId); // Zorg dat deze service beschikbaar is
-                if (!string.IsNullOrEmpty(beheerderEmail))
+                return Ok(new
                 {
-                    _emailService.SendEmail(
-                        beheerderEmail,
-                        "Nieuwe Medewerker Toegevoegd",
-                        $"Een nieuwe medewerker ({medewerker.medewerkerNaam}) is toegevoegd aan uw account."
-                    );
-                }
-
-                return Ok(new { Message = "Medewerker succesvol toegevoegd. Bevestigingsmail verzonden." });
+                    Message = "Medewerker succesvol toegevoegd.",
+                    Medewerker = new
+                    {
+                        medewerker.medewerkerNaam,
+                        medewerker.medewerkerEmail
+                    }
+                });
             }
             catch (KeyNotFoundException ex)
             {
@@ -148,7 +151,20 @@ namespace WPR_project.Controllers
             {
                 return Conflict(new { Message = ex.Message });
             }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Fout: {ex.Message}");
+                return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
+            }
         }
+
+        //test endpoint
+        [HttpPost("test")]
+        public IActionResult Test([FromBody] object body)
+        {
+            return Ok(body);
+        }
+
 
         /// <summary>
         /// Verwijdert een medewerker van een zakelijke huurder
@@ -156,39 +172,26 @@ namespace WPR_project.Controllers
         [HttpDelete("{zakelijkeId}/verwijdermedewerker/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
-                
                 var medewerker = _service.GetMedewerkerById(medewerkerId);
                 if (medewerker == null)
                 {
                     return NotFound(new { Message = "Medewerker niet gevonden." });
                 }
 
-                // Verwijder de medewerker via de service
                 _service.VerwijderMedewerker(zakelijkeId, medewerkerId);
-
-                // Verstuur notificatie naar wagenparkbeheerder
-                var beheerderEmail = _service.GetBeheerderEmailById(zakelijkeId); // Zorg dat deze service beschikbaar is
-                if (!string.IsNullOrEmpty(beheerderEmail))
-                {
-                    _emailService.SendEmail(
-                        beheerderEmail,
-                        "Medewerker Verwijderd",
-                        $"De medewerker ({medewerker.medewerkerNaam}) is verwijderd van uw account."
-                    );
-                }
 
                 return Ok(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Fout: {ex.Message}");
+                return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
             }
         }
     }

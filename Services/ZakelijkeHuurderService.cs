@@ -159,10 +159,10 @@ namespace WPR_project.Services
             // Maak een nieuwe medewerker aan
             var nieuweMedewerker = new BedrijfsMedewerkers
             {
-                BedrijfsMedewerkId = Guid.NewGuid(),
+                bedrijfsMedewerkerId = Guid.NewGuid(),
                 medewerkerNaam = medewerkerNaam,
                 medewerkerEmail = medewerkerEmail,
-                ZakelijkeHuurderId = huurder.zakelijkeId
+                zakelijkeHuurderId = huurder.zakelijkeId
             };
 
             // Voeg de medewerker toe aan de lijst van medewerkers

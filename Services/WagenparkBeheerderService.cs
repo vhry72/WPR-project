@@ -77,30 +77,40 @@ namespace WPR_project.Services
         }
 
         // Voeg een medewerker toe aan een zakelijke huurder
-        public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerNaam, string medewerkerEmail)
+        public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerNaam, string medewerkerEmail, string wachtwoord)
         {
+            // Controleer of de huurder bestaat
             var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
             if (huurder == null)
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
 
-            if (huurder.Medewerkers.Any(m => m.medewerkerEmail == medewerkerEmail))
+            // Controleer of de medewerker al bestaat
+            if (huurder.Medewerkers.Any(m => m.medewerkerEmail.Equals(medewerkerEmail, StringComparison.OrdinalIgnoreCase)))
                 throw new InvalidOperationException("Deze medewerker bestaat al.");
 
+            // Maak een nieuwe medewerker aan
             var medewerker = new BedrijfsMedewerkers
             {
-                BedrijfsMedewerkId = Guid.NewGuid(),
+                bedrijfsMedewerkerId = Guid.NewGuid(),
                 medewerkerNaam = medewerkerNaam,
                 medewerkerEmail = medewerkerEmail,
-                ZakelijkeHuurderId = zakelijkeId
+                wachtwoord = wachtwoord, // Sla dit veilig op (versleutel bijvoorbeeld)
+                zakelijkeHuurderId = zakelijkeId
             };
 
+            // Voeg de medewerker toe aan de huurder
             huurder.Medewerkers.Add(medewerker);
+
+            // Update de huurder in de repository
             _zakelijkeHuurderRepository.UpdateZakelijkHuurder(huurder);
             _zakelijkeHuurderRepository.Save();
 
+            // Verstuur een e-mail naar de nieuwe medewerker
             string bericht = $"Beste {medewerkerNaam},\n\nU bent toegevoegd aan het bedrijfsaccount van {huurder.bedrijfsNaam}.";
             _emailService.SendEmail(medewerkerEmail, "Welkom bij het bedrijfsaccount", bericht);
         }
+
+
 
         // Verwijder een medewerker van een zakelijke huurder
         public void VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
@@ -109,7 +119,7 @@ namespace WPR_project.Services
             if (huurder == null)
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
 
-            var medewerker = huurder.Medewerkers.FirstOrDefault(m => m.BedrijfsMedewerkId == medewerkerId);
+            var medewerker = huurder.Medewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
             if (medewerker == null)
                 throw new KeyNotFoundException("Medewerker niet gevonden.");
 
@@ -129,7 +139,7 @@ namespace WPR_project.Services
 
         public BedrijfsMedewerkers? GetMedewerkerById(Guid medewerkerId)
         {
-            return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.BedrijfsMedewerkId == medewerkerId);
+            return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
         }
 
 
@@ -140,7 +150,7 @@ namespace WPR_project.Services
             if (huurder == null)
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
 
-            var medewerker = huurder.Medewerkers.FirstOrDefault(m => m.BedrijfsMedewerkId == medewerkerId);
+            var medewerker = huurder.Medewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
             if (medewerker == null)
                 throw new KeyNotFoundException("Medewerker niet gevonden.");
 

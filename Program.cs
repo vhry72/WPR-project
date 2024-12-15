@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 using WPR_project.Data;
 using WPR_project.Repositories;
 using WPR_project.Services;
@@ -40,7 +41,11 @@ builder.Services.AddScoped<VoertuigService>();
 
 
 // Controllers en Swagger
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

@@ -70,21 +70,21 @@ namespace WPR_project.Migrations
 
             modelBuilder.Entity("WPR_project.Models.BedrijfsMedewerkers", b =>
                 {
-                    b.Property<Guid>("BedrijfsMedewerkId")
+                    b.Property<Guid>("bedrijfsMedewerkerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("AbonnementId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Wachtwoord")
+                    b.Property<string>("wachtwoord")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("WagenparkBeheerderbeheerderId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ZakelijkeHuurderId")
+                    b.Property<Guid>("zakelijkeHuurderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("medewerkerEmail")
@@ -96,13 +96,13 @@ namespace WPR_project.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("BedrijfsMedewerkId");
+                    b.HasKey("bedrijfsMedewerkerId");
 
                     b.HasIndex("AbonnementId");
 
                     b.HasIndex("WagenparkBeheerderbeheerderId");
 
-                    b.HasIndex("ZakelijkeHuurderId");
+                    b.HasIndex("zakelijkeHuurderId");
 
                     b.ToTable("BedrijfsMedewerkers");
                 });
@@ -389,7 +389,7 @@ namespace WPR_project.Migrations
 
                     b.HasOne("ZakelijkHuurder", "ZakelijkeHuurder")
                         .WithMany("Medewerkers")
-                        .HasForeignKey("ZakelijkeHuurderId")
+                        .HasForeignKey("zakelijkeHuurderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

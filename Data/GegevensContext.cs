@@ -70,7 +70,7 @@ namespace WPR_project.Data
 
             // BedrijfsMedewerker Configuratie
             modelBuilder.Entity<BedrijfsMedewerkers>()
-                .HasKey(b => b.BedrijfsMedewerkId);
+                .HasKey(b => b.bedrijfsMedewerkerId);
 
             // VoertuigStatus Configuratie
             modelBuilder.Entity<VoertuigStatus>()

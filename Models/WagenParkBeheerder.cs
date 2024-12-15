@@ -31,8 +31,8 @@ namespace WPR_project.Models
         [RegularExpression(@"^(+31|0)[1-9]\d{8}$", ErrorMessage = "Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.")]
         public string telefoonNummer { get; set; }
 
-        [Required(ErrorMessage = "Wachtwoord is verplicht.")]
-        [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
+        [Required(ErrorMessage = "wachtwoord is verplicht.")]
+        [MinLength(8, ErrorMessage = "wachtwoord moet minimaal 8 tekens bevatten.")]
         public string wachtwoord { get; set; }
 
         public Guid? AbonnementId { get; set; }

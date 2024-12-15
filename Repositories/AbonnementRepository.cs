@@ -17,7 +17,7 @@ namespace WPR_project.Repositories
 
         public BedrijfsMedewerkers GetMedewerkerById(Guid medewerkerId)
         {
-            return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.BedrijfsMedewerkId == medewerkerId);
+            return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
         }
 
 

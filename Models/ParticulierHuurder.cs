@@ -22,8 +22,8 @@ namespace WPR_project.Models
 
         public bool IsEmailBevestigd { get; set; } = false;
 
-        [Required(ErrorMessage = "Wachtwoord is verplicht.")]
-        [MinLength(8, ErrorMessage = "Wachtwoord moet minimaal 8 tekens bevatten.")]
+        [Required(ErrorMessage = "wachtwoord is verplicht.")]
+        [MinLength(8, ErrorMessage = "wachtwoord moet minimaal 8 tekens bevatten.")]
         public string wachtwoord { get; set; }
 
         [Required(ErrorMessage = "Adres is verplicht.")]
