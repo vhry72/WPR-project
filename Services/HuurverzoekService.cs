@@ -1,9 +1,15 @@
+
 ﻿using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
+﻿using NuGet.Protocol.Core.Types;
+using System;
+using System.Collections.Generic;
 
 public class HuurVerzoekService
-{
+
+namespace WPR_project.Services
+
     private readonly IHuurVerzoekRepository _repository;
     private readonly IBedrijfsMedewerkersRepository _zakelijkRepository;
     private readonly IHuurderRegistratieRepository _particulierRepository;
@@ -106,6 +112,38 @@ public class HuurVerzoekService
             {
                 Console.WriteLine($"Fout bij het versturen van een herinneringsmail: {ex.Message}");
             }
+
+        public HuurverzoekService(IHuurVerzoekRepository _repository)
+        {
+            _repository = huurVerzoekRepository;
+        }
+
+        public IEnumerable<HuurVerzoek> GetAllHuurVerzoeken()
+        {
+            return _repository.GetAllHuurVerzoeken();
+        }
+        public HuurVerzoekDTO GetById(Guid id)
+        {
+            var huurder = _repository.GetByID(id);
+            if (huurder == null) { return null; }
+
+            return new HuurVerzoekDTO
+            {
+                HuurderID = id,
+                beginDate = huurder.beginDate,
+                endDate = huurder.endDate,
+                approved = huurder.approved
+            };
+        }
+        public void Update(Guid id, HuurVerzoekDTO dto)
+        {
+            var huurder = _repository.GetByID(id);
+            if (huurder == null) throw new KeyNotFoundException("Huurverzoek niet gevonden.");
+
+            huurder.approved = dto.approved;
+
+            _repository.Update(huurder);
+
         }
     }
 }

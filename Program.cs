@@ -47,6 +47,7 @@ builder.Services.AddScoped<HuurVerzoekService>();
 builder.Services.AddHostedService<HuurverzoekReminderService>();
 
 
+
 // Controllers en Swagger
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

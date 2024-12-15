@@ -23,6 +23,11 @@ import HuurVoertuig from "./pages/huurVoertuig";
 import ZakelijkHuurderDashBoard from "./pages/zakelijkHuurderDashboard";
 import ParticulierHuurderDashBoard from "./pages/particulierHuurderDashboard";
 import BevestigingHuur from "./pages/bevestigingHuur";
+import HuurZakelijkVoertuig from "./pages/huurzakelijkvoertuig";
+import BackOfficeMedewerker from "./pages/BackOfficeMedewerker/BackOfficeMedewerker";
+import BackOfficeVerhuurAanvragen from "./pages/BackOfficeMedewerker/BackOfficeVerhuurAanvragen";
+import VerhuurGegevens from "./pages/BackOfficeMedewerker/VerhuurGegevens";
+import SchadeMeldingen from "./pages/BackOfficeMedewerker/SchadeMeldingen";
 
 
 
@@ -55,7 +60,10 @@ function PageRoute() {
                     <Route path="zakelijkHuurderDashBoard" element={<ZakelijkHuurderDashBoard />} />
                     <Route path="particulierHuurderDashBoard" element={<ParticulierHuurderDashBoard />} />
                     <Route path="bevestigingHuur" element={<BevestigingHuur />} />
-
+                    <Route path="BackOfficeMedewerker" element={<BackOfficeMedewerker />} />
+                    <Route path="BackOfficeVerhuurAanvragen" element={<BackOfficeVerhuurAanvragen />} />
+                    <Route path="VerhuurGegevens" element={<VerhuurGegevens />} />
+                    <Route path="SchadeMeldingen" element={<SchadeMeldingen/> }/>
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -30,5 +30,29 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         return _context.Huurverzoeken
             .Where(h => h.beginDate <= reminderTime && h.beginDate > DateTime.Now)
             .ToList();
+      }
+
+     public HuurVerzoekRepository(GegevensContext context)
+     {
+                _context = context;
+      }
+
+      public IEnumerable<HuurVerzoek> GetAllHuurVerzoeken()
+      {
+                return _context.Huurverzoeken.ToList();
+       }
+       
+        public HuurVerzoek GetByID(Guid id)
+      {
+          return _context.Huurverzoeken.Find(id);
+      }
+        public void Update(HuurVerzoek huurVerzoek)
+        {
+            _context.Huurverzoeken.Update(huurVerzoek);
+       }
+
     }
-}
+
+    }
+
+
