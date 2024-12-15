@@ -130,12 +130,32 @@ namespace WPR_project.Controllers
 
             try
             {
-                // Service-aanroep om medewerker toe te voegen
+                // aanroep om medewerker toe te voegen
                 _service.VoegMedewerkerToe(zakelijkeId, medewerker.medewerkerNaam, medewerker.medewerkerEmail, medewerker.wachtwoord);
+
+                // Verstuur bevestigingsmail naar de medewerker
+                string emailBody = $@"
+            <h2>Welkom bij ons systeem, {medewerker.medewerkerNaam}</h2>
+            <p>U bent succesvol toegevoegd aan het bedrijfsabonnement.</p>
+            <p>Uw inloggegevens zijn:</p>
+            <ul>
+                <li><strong>E-mail:</strong> {medewerker.medewerkerEmail}</li>
+                <li><strong>Wachtwoord:</strong> {medewerker.wachtwoord}</li>
+            </ul>
+            <p>Gebruik deze gegevens om in te loggen op ons systeem.</p>
+            <br/>
+            <p>Met vriendelijke groet,</p>
+            <p>Het supportteam</p>";
+
+                _emailService.SendEmail(
+                    medewerker.medewerkerEmail,
+                    "Welkom bij het systeem - Bevestigingsmail",
+                    emailBody
+                );
 
                 return Ok(new
                 {
-                    Message = "Medewerker succesvol toegevoegd.",
+                    Message = "Medewerker succesvol toegevoegd en bevestigingsmail verzonden.",
                     Medewerker = new
                     {
                         medewerker.medewerkerNaam,

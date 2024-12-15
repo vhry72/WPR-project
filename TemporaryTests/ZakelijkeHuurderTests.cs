@@ -1,192 +1,188 @@
-//using System;
-//using System.Collections.Generic;
-//using Xunit;
-//using WPR_project.Models;
-//using WPR_project.Services;
-//using Moq;
-//using WPR_project.Repositories;
-//using WPR_project.Services.Email;
+using System;
+using System.Collections.Generic;
+using Xunit;
+using WPR_project.Models;
+using WPR_project.Services;
+using Moq;
+using WPR_project.Repositories;
+using WPR_project.Services.Email;
+using System.Linq;
 
-//namespace WPR_project.TemporaryTests
-//{
-//    public class ZakelijkeHuurderTests
-//    {
-//        private readonly Mock<IZakelijkeHuurderRepository> _mockRepository;
-//        private readonly Mock<IEmailService> _mockEmailService;
-//        private readonly ZakelijkeHuurderService _service;
+namespace WPR_project.Tests
+{
+    public class ZakelijkeHuurderTests
+    {
+        private readonly Mock<IZakelijkeHuurderRepository> _mockRepository;
+        private readonly Mock<IEmailService> _mockEmailService;
+        private readonly ZakelijkeHuurderService _service;
 
-//        public ZakelijkeHuurderTests()
-//        {
-//            _mockRepository = new Mock<IZakelijkeHuurderRepository>();
-//            _mockEmailService = new Mock<IEmailService>();
-//            _service = new ZakelijkeHuurderService(_mockRepository.Object, _mockEmailService.Object);
-//        }
+        public ZakelijkeHuurderTests()
+        {
+            _mockRepository = new Mock<IZakelijkeHuurderRepository>();
+            _mockEmailService = new Mock<IEmailService>();
+            _service = new ZakelijkeHuurderService(_mockRepository.Object, null, _mockEmailService.Object);
+        }
 
-//        [Fact]
-//        public void RegisterZakelijkeHuurder_GeldigeHuurder_ShouldRegisterAndSendEmail()
-//        {
-//            // Arrange
-//            var huurder = new ZakelijkHuurder
-//            {
-//                bedrijfsNaam = "Test Bedrijf",
-//                adres = "Weimarstraat 24b",
-//                bedrijsEmail = "testbedrijf@gmail.com",
-//                KVKNummer = 12345678,
-//                wachtwoord = "Password123!",
-//                telNummer = "+31612345678"
-//            };
+        /// <summary>
+        /// Test voor succesvol registreren van een zakelijke huurder.
+        /// </summary>
+        [Fact]
+        public void RegisterZakelijkeHuurder_ValidHuurder_ShouldRegisterAndSendEmail()
+        {
+            // Arrange
+            var huurder = new ZakelijkHuurder
+            {
+                zakelijkeId = Guid.NewGuid(),
+                bedrijfsNaam = "Test Bedrijf",
+                adres = "Weimarstraat 24b",
+                bedrijsEmail = "testbedrijf@bedrijf.nl",
+                KVKNummer = 12345678,
+                wachtwoord = "Password123!",
+                telNummer = "+31612345678",
+                EmailBevestigingToken = Guid.NewGuid().ToString()
+            };
 
-//            // Act
-//            _service.RegisterZakelijkeHuurder(huurder);
+            // Act
+            _service.RegisterZakelijkeHuurder(huurder);
 
-//            // Assert
-//            _mockRepository.Verify(r => r.AddZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Once);
-//            _mockRepository.Verify(r => r.Save(), Times.Once);
-//            _mockEmailService.Verify(e => e.SendEmail(
-//                "testbedrijf@gmail.com",
-//                "Bevestig je registratie",
-//                It.Is<string>(body => body.Contains("Beste Test Bedrijf"))
-//            ), Times.Once);
-//        }
+            // Assert
+            _mockRepository.Verify(r => r.AddZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Once);
+            _mockRepository.Verify(r => r.Save(), Times.Once);
+            _mockEmailService.Verify(e => e.SendEmail(
+                huurder.bedrijsEmail,
+                "Bevestig je registratie",
+                It.Is<string>(body => body.Contains("Klik op de volgende link om je e-mailadres te bevestigen"))
+            ), Times.Once);
+        }
 
-//        [Fact]
-//        public void RegisterZakelijkeHuurder_OngeldigEmail_ShouldThrowException()
-//        {
-//            // Arrange
-//            var huurder = new ZakelijkHuurder
-//            {
-//                bedrijfsNaam = "Test Bedrijf",
-//                adres = "Weimarstraat 24b",
-//                bedrijsEmail = "invalid-bedrijsEmail", // Ongeldig e-mailadres
-//                KVKNummer = 12345678,
-//                wachtwoord = "Password123!",
-//                telNummer = "+31612345678"
-//            };
+        /// <summary>
+        /// Test voor registreren van een zakelijke huurder met ongeldig e-mailadres.
+        /// </summary>
+        [Fact]
+        public void RegisterZakelijkeHuurder_InvalidEmail_ShouldThrowException()
+        {
+            // Arrange
+            var huurder = new ZakelijkHuurder
+            {
+                bedrijfsNaam = "Test Bedrijf",
+                adres = "Weimarstraat 24b",
+                bedrijsEmail = "ongeldigemail", // Ongeldig e-mailadres
+                KVKNummer = 12345678,
+                wachtwoord = "Password123!",
+                telNummer = "+31612345678"
+            };
 
-//            // Act
-//            var ex = Assert.Throws<ArgumentException>(() => _service.RegisterZakelijkeHuurder(huurder));
+            // Act & Assert
+            var exception = Assert.Throws<ArgumentException>(() => _service.RegisterZakelijkeHuurder(huurder));
 
-//            // Assert
-//            Assert.Contains("Ongeldig e-mailadres.", ex.Message);
-//        }
+            Assert.Contains("Validatie mislukt", exception.Message);
+            _mockRepository.Verify(r => r.AddZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Never);
+            _mockEmailService.Verify(e => e.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
 
-//        [Fact]
-//        public void RegisterZakelijkeHuurder_OngeldigKVK_ShouldThrowException()
-//        {
-//            // Arrange
-//            var huurder = new ZakelijkHuurder
-//            {
-//                bedrijfsNaam = "Test Bedrijf",
-//                adres = "Weimarstraat 24b",
-//                bedrijsEmail = "testbedrijf@gmail.com",
-//                KVKNummer = 123, // Ongeldig KVK-nummer
-//                wachtwoord = "Password123!",
-//                telNummer = "+31612345678"
-//            };
+        /// <summary>
+        /// Test voor succesvol toevoegen van een medewerker aan een zakelijke huurder.
+        /// </summary>
+        [Fact]
+        public void VoegMedewerkerToe_ValidData_ShouldAddMedewerkerAndSendEmail()
+        {
+            // Arrange
+            var huurderId = Guid.NewGuid();
+            var huurder = new ZakelijkHuurder
+            {
+                zakelijkeId = huurderId,
+                bedrijfsNaam = "Test Bedrijf",
+                Medewerkers = new List<BedrijfsMedewerkers>()
+            };
 
-//            // Act
-//            var ex = Assert.Throws<ArgumentException>(() => _service.RegisterZakelijkeHuurder(huurder));
+            var medewerkerEmail = "medewerker@bedrijf.nl";
+            var medewerkerNaam = "John Doe";
 
-//            // Assert
-//            Assert.Contains("KVK-nummer moet een 8-cijferig getal zijn.", ex.Message);
-//        }
+            _mockRepository.Setup(r => r.GetZakelijkHuurderById(huurderId)).Returns(huurder);
 
-//        [Fact]
-//        public void RegisterZakelijkeHuurder_OngeldigPassword_ShouldThrowException()
-//        {
-//            // Arrange
-//            var huurder = new ZakelijkHuurder
-//            {
-//                bedrijfsNaam = "Test Bedrijf",
-//                adres = "Weimarstraat 24b",
-//                bedrijsEmail = "testbedrijf@gmail.com",
-//                KVKNummer = 12345678,
-//                wachtwoord = "123", // Ongeldig wachtwoord
-//                telNummer = "+31612345678"
-//            };
+            // Act
+            _service.VoegMedewerkerToe(huurderId, medewerkerNaam, medewerkerEmail);
 
-//            // Act
-//            var ex = Assert.Throws<ArgumentException>(() => _service.RegisterZakelijkeHuurder(huurder));
+            // Assert
+            Assert.Single(huurder.Medewerkers);
+            Assert.Equal(medewerkerEmail, huurder.Medewerkers.First().medewerkerEmail);
+            _mockRepository.Verify(r => r.UpdateZakelijkHuurder(huurder), Times.Once);
+            _mockRepository.Verify(r => r.Save(), Times.Once);
+            _mockEmailService.Verify(e => e.SendEmail(
+                medewerkerEmail,
+                "Medewerker Toegevoegd",
+                It.Is<string>(body => body.Contains("U bent toegevoegd aan het bedrijfsaccount van Test Bedrijf"))
+            ), Times.Once);
+        }
 
-//            // Assert
-//            Assert.Contains("Wachtwoord moet minimaal 8 tekens bevatten.", ex.Message);
-//        }
+        /// <summary>
+        /// Test voor het verwijderen van een medewerker uit een zakelijke huurder.
+        /// </summary>
+        [Fact]
+        public void VerwijderMedewerker_ValidEmail_ShouldRemoveMedewerkerAndSendEmail()
+        {
+            // Arrange
+            var huurderId = Guid.NewGuid();
+            var medewerkerEmail = "medewerker@bedrijf.nl";
 
-//        [Fact]
-//        public void RegisterZakelijkeHuurder_Legevelden_IsThrowException()
-//        {
-//            // Arrange
-//            var huurder = new ZakelijkHuurder
-//            {
-//                bedrijfsNaam = "", // Lege bedrijfsnaam
-//                adres = "Weimarstraat 24b",
-//                bedrijsEmail = "testbedrijf@gmail.com",
-//                KVKNummer = 12345678,
-//                wachtwoord = "Password123!",
-//                telNummer = "+31612345678"
-//            };
+            var medewerker = new BedrijfsMedewerkers
+            {
+                bedrijfsMedewerkerId = Guid.NewGuid(),
+                medewerkerNaam = "John Doe",
+                medewerkerEmail = medewerkerEmail
+            };
 
-//            // Act
-//            var ex = Assert.Throws<ArgumentException>(() => _service.RegisterZakelijkeHuurder(huurder));
+            var huurder = new ZakelijkHuurder
+            {
+                zakelijkeId = huurderId,
+                bedrijfsNaam = "Test Bedrijf",
+                Medewerkers = new List<BedrijfsMedewerkers> { medewerker }
+            };
 
-//            // Assert
-//            Assert.Contains("Bedrijfsnaam is verplicht.", ex.Message);
-//        }
+            _mockRepository.Setup(r => r.GetZakelijkHuurderById(huurderId)).Returns(huurder);
 
-//        [Fact]
-//        public void VoegMedewerkerToe_Is_ShouldAddMedewerker()
-//        {
-//            // Arrange
-//            var huurder = new ZakelijkHuurder
-//            {
-//                zakelijkeId = Guid.NewGuid(),
-//                bedrijfsNaam = "Test Bedrijf",
-//                Medewerkers = new List<BedrijfsMedewerkers>()
-//            };
-//            var medewerkerEmail = "medewerker@testbedrijf.com";
+            // Act
+            _service.VerwijderMedewerker(huurderId, medewerkerEmail);
 
-//            _mockRepository.Setup(r => r.GetZakelijkHuurderById(huurder.zakelijkeId)).Returns(huurder);
+            // Assert
+            Assert.Empty(huurder.Medewerkers);
+            _mockRepository.Verify(r => r.UpdateZakelijkHuurder(huurder), Times.Once);
+            _mockRepository.Verify(r => r.Save(), Times.Once);
+            _mockEmailService.Verify(e => e.SendEmail(
+                medewerkerEmail,
+                "Medewerker Verwijderd",
+                It.Is<string>(body => body.Contains("U bent verwijderd uit het bedrijfsaccount van Test Bedrijf"))
+            ), Times.Once);
+        }
 
-//            // Act
-//            _service.VoegMedewerkerToe(huurder.zakelijkeId, medewerkerEmail);
+        /// <summary>
+        /// Test voor het verwijderen van een medewerker die niet bestaat.
+        /// </summary>
+        [Fact]
+        public void VerwijderMedewerker_MedewerkerNotFound_ShouldThrowException()
+        {
+            // Arrange
+            var huurderId = Guid.NewGuid();
+            var medewerkerEmail = "nietbestaand@bedrijf.nl";
 
-//            // Assert
-//            Assert.Contains(medewerkerEmail, huurder.MedewerkersEmails);
-//            _mockRepository.Verify(r => r.UpdateZakelijkHuurder(huurder), Times.Once);
-//            _mockRepository.Verify(r => r.Save(), Times.Once);
-//            _mockEmailService.Verify(e => e.SendEmail(
-//                medewerkerEmail,
-//                "Medewerker Toegevoegd",
-//                It.Is<string>(body => body.Contains("U bent toegevoegd aan het bedrijfsaccount van Test Bedrijf."))
-//            ), Times.Once);
-//        }
+            var huurder = new ZakelijkHuurder
+            {
+                zakelijkeId = huurderId,
+                bedrijfsNaam = "Test Bedrijf",
+                Medewerkers = new List<BedrijfsMedewerkers>()
+            };
 
-//        [Fact]
-//        public void VerwijderMedewerker_Is_ShouldRemoveMedewerker()
-//        {
-//            // Arrange
-//            var huurder = new ZakelijkHuurder
-//            {
-//                zakelijkeId = Guid.NewGuid(),
-//                bedrijfsNaam = "Test Bedrijf",
-//                MedewerkersEmails = new List<string> { "medewerker@testbedrijf.com" }
-//            };
-//            var medewerkerEmail = "medewerker@testbedrijf.com";
+            _mockRepository.Setup(r => r.GetZakelijkHuurderById(huurderId)).Returns(huurder);
 
-//            _mockRepository.Setup(r => r.GetZakelijkHuurderById(huurder.zakelijkeId)).Returns(huurder);
+            // Act & Assert
+            var exception = Assert.Throws<InvalidOperationException>(() =>
+                _service.VerwijderMedewerker(huurderId, medewerkerEmail)
+            );
 
-//            // Act
-//            _service.VerwijderMedewerker(huurder.zakelijkeId, medewerkerEmail);
-
-//            // Assert
-//            Assert.DoesNotContain(medewerkerEmail, huurder.MedewerkersEmails);
-//            _mockRepository.Verify(r => r.UpdateZakelijkHuurder(huurder), Times.Once);
-//            _mockRepository.Verify(r => r.Save(), Times.Once);
-//            _mockEmailService.Verify(e => e.SendEmail(
-//                medewerkerEmail,
-//                "Medewerker Verwijderd",
-//                It.Is<string>(body => body.Contains("U bent verwijderd uit het bedrijfsaccount van Test Bedrijf."))
-//            ), Times.Once);
-//        }
-//    }
-//}
+            Assert.Contains("Medewerker niet gevonden.", exception.Message);
+            _mockRepository.Verify(r => r.UpdateZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Never);
+            _mockRepository.Verify(r => r.Save(), Times.Never);
+            _mockEmailService.Verify(e => e.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
+    }
+}

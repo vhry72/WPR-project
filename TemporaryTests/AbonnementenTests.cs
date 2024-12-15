@@ -1,129 +1,130 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using Xunit;
-//using Moq;
-//using WPR_project.Models;
-//using WPR_project.Repositories;
-//using WPR_project.Services;
-//using WPR_project.Services.Email;
+﻿using System;
+using System.Collections.Generic;
+using Xunit;
+using Moq;
+using WPR_project.Models;
+using WPR_project.Repositories;
+using WPR_project.Services;
+using WPR_project.Services.Email;
 
-//namespace WPR_project.TemporaryTests
-//{
-//    public class AbonnementenTests
-//    {
-//        private readonly Mock<IAbonnementRepository> _abonnementRepositoryMock;
-//        private readonly Mock<IZakelijkeHuurderRepository> _zakelijkeHuurderRepositoryMock;
-//        private readonly Mock<IEmailService> _emailServiceMock;
-//        private readonly AbonnementService _abonnementService;
+namespace WPR_project.TemporaryTests
+{
+    public class AbonnementenTests
+    {
+        private readonly Mock<IAbonnementRepository> _abonnementRepositoryMock;
+        private readonly Mock<IWagenparkBeheerderRepository> _wagenparkBeheerderRepositoryMock;
+        private readonly Mock<IEmailService> _emailServiceMock;
+        private readonly AbonnementService _abonnementService;
 
-//        public AbonnementenTests()
-//        {
-//            _abonnementRepositoryMock = new Mock<IAbonnementRepository>();
-//            _zakelijkeHuurderRepositoryMock = new Mock<IZakelijkeHuurderRepository>();
-//            _emailServiceMock = new Mock<IEmailService>();
+        public AbonnementenTests()
+        {
+            _abonnementRepositoryMock = new Mock<IAbonnementRepository>();
+            _wagenparkBeheerderRepositoryMock = new Mock<IWagenparkBeheerderRepository>();
+            _emailServiceMock = new Mock<IEmailService>();
 
-//            _abonnementService = new AbonnementService(
-//                _abonnementRepositoryMock.Object,
-//                _zakelijkeHuurderRepositoryMock.Object,
-//                _emailServiceMock.Object
-//            );
-//        }
+            _abonnementService = new AbonnementService(
+                _abonnementRepositoryMock.Object,
+                null,
+                _wagenparkBeheerderRepositoryMock.Object,
+                _emailServiceMock.Object
+            );
+        }
 
-//        [Fact]
-//        public void WijzigAbonnement_SuccesvolWijzigen_VoegtAbonnementToe()
-//        {
-//            // Arrange
-//            var zakelijkeId = Guid.NewGuid();
-//            var nieuwAbonnementId = Guid.NewGuid();
-//            var huidigAbonnement = new Abonnement { AbonnementId = Guid.NewGuid(), Naam = "Maandelijks", Kosten = 10 };
-//            var nieuwAbonnement = new Abonnement { AbonnementId = nieuwAbonnementId, Naam = "Per kwartaal", Kosten = 25 };
-//            var zakelijkeHuurder = new ZakelijkHuurder
-//            {
-//                zakelijkeId = zakelijkeId,
-//                AbonnementId = huidigAbonnement.AbonnementId,
-//                HuidigAbonnement = huidigAbonnement,
-//                bedrijsEmail = "bedrijf@example.com",
-//                bedrijfsNaam = "Test Bedrijf"
-//            };
+        [Fact]
+        public void WijzigAbonnement_SuccesvolWijzigen_VoegtAbonnementToe()
+        {
+            // Arrange
+            var beheerderId = Guid.NewGuid();
+            var nieuwAbonnementId = Guid.NewGuid();
+            var huidigAbonnement = new Abonnement { AbonnementId = Guid.NewGuid(), Naam = "Maandelijks", Kosten = 10 };
+            var nieuwAbonnement = new Abonnement { AbonnementId = nieuwAbonnementId, Naam = "Jaarlijks", Kosten = 100 };
 
-//            _zakelijkeHuurderRepositoryMock
-//                .Setup(repo => repo.GetZakelijkHuurderById(zakelijkeId))
-//                .Returns(zakelijkeHuurder);
+            var wagenparkBeheerder = new WagenparkBeheerder
+            {
+                beheerderId = beheerderId,
+                beheerderNaam = "Jan Janssen",
+                bedrijfsEmail = "jan.janssen@bedrijf.nl",
+                HuidigAbonnement = huidigAbonnement
+            };
 
-//            _abonnementRepositoryMock
-//                .Setup(repo => repo.GetAbonnementById(nieuwAbonnementId))
-//                .Returns(nieuwAbonnement);
+            _wagenparkBeheerderRepositoryMock
+                .Setup(repo => repo.getBeheerderById(beheerderId))
+                .Returns(wagenparkBeheerder);
 
-//            // Act
-//            _abonnementService.WijzigAbonnement(zakelijkeId, nieuwAbonnementId);
+            _abonnementRepositoryMock
+                .Setup(repo => repo.GetAbonnementById(nieuwAbonnementId))
+                .Returns(nieuwAbonnement);
 
-//            // Assert
-//            Assert.Equal(nieuwAbonnementId, zakelijkeHuurder.NieuwAbonnementId);
-//            Assert.NotNull(zakelijkeHuurder.IngangsdatumNieuwAbonnement);
+            // Act
+            _abonnementService.WijzigAbonnement(beheerderId, nieuwAbonnementId, AbonnementType.PrepaidSaldo);
 
-//            _emailServiceMock.Verify(
-//                bedrijsEmail => bedrijsEmail.SendEmail(
-//                    zakelijkeHuurder.bedrijsEmail,
-//                    It.Is<string>(s => s.Contains("Bevestiging van uw abonnementswijziging")),
-//                    It.Is<string>(b => b.Contains("Per kwartaal"))
-//                ),
-//                Times.Once
-//            );
+            // Assert
+            Assert.Equal(nieuwAbonnement, wagenparkBeheerder.HuidigAbonnement);
+            Assert.Equal(AbonnementType.PrepaidSaldo, wagenparkBeheerder.AbonnementType);
+            Assert.NotNull(wagenparkBeheerder.updateDatumAbonnement);
 
-//            _zakelijkeHuurderRepositoryMock.Verify(repo => repo.UpdateZakelijkHuurder(zakelijkeHuurder), Times.Once);
-//            _zakelijkeHuurderRepositoryMock.Verify(repo => repo.Save(), Times.Once);
-//        }
+            _wagenparkBeheerderRepositoryMock.Verify(repo => repo.UpdateWagenparkBeheerder(wagenparkBeheerder), Times.Once);
+            _wagenparkBeheerderRepositoryMock.Verify(repo => repo.Save(), Times.Once);
 
-//        [Fact]
-//        public void WijzigAbonnement_FoutAbonnementNietBeschikbaar_GooitException()
-//        {
-//            // Arrange
-//            var zakelijkeId = Guid.NewGuid();
-//            var nietBeschikbaarAbonnementId = Guid.NewGuid();
-//            var zakelijkeHuurder = new ZakelijkHuurder { zakelijkeId = zakelijkeId };
+            _emailServiceMock.Verify(e => e.SendEmail(
+                wagenparkBeheerder.bedrijfsEmail,
+                "Bevestiging van uw abonnementswijziging",
+                It.Is<string>(body => body.Contains("Jaarlijks"))
+            ), Times.Once);
+        }
 
-//            _zakelijkeHuurderRepositoryMock
-//                .Setup(repo => repo.GetZakelijkHuurderById(zakelijkeId))
-//                .Returns(zakelijkeHuurder);
+        [Fact]
+        public void WijzigAbonnement_FoutAbonnementNietBeschikbaar_GooitException()
+        {
+            // Arrange
+            var beheerderId = Guid.NewGuid();
+            var nietBeschikbaarAbonnementId = Guid.NewGuid();
 
-//            _abonnementRepositoryMock
-//                .Setup(repo => repo.GetAbonnementById(nietBeschikbaarAbonnementId))
-//                .Returns((Abonnement)null); // Abonnement bestaat niet
+            var wagenparkBeheerder = new WagenparkBeheerder
+            {
+                beheerderId = beheerderId,
+                beheerderNaam = "Jan Janssen"
+            };
 
-//            // Act & Assert
-//            var exception = Assert.Throws<KeyNotFoundException>(() =>
-//                _abonnementService.WijzigAbonnement(zakelijkeId, nietBeschikbaarAbonnementId)
-//            );
+            _wagenparkBeheerderRepositoryMock
+                .Setup(repo => repo.getBeheerderById(beheerderId))
+                .Returns(wagenparkBeheerder);
 
-//            Assert.Equal("Abonnement niet gevonden.", exception.Message);
+            _abonnementRepositoryMock
+                .Setup(repo => repo.GetAbonnementById(nietBeschikbaarAbonnementId))
+                .Returns((Abonnement)null);
 
-//            _zakelijkeHuurderRepositoryMock.Verify(repo => repo.UpdateZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Never);
-//            _emailServiceMock.Verify(bedrijsEmail => bedrijsEmail.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-//        }
+            // Act & Assert
+            var ex = Assert.Throws<KeyNotFoundException>(() =>
+                _abonnementService.WijzigAbonnement(beheerderId, nietBeschikbaarAbonnementId, AbonnementType.PrepaidSaldo)
+            );
 
-//        [Fact]
-//        public void WijzigAbonnement_GebruikerAnnuleertWijziging_GeenWijzigingOpgeslagen()
-//        {
-//            // Arrange
-//            var zakelijkeId = Guid.NewGuid();
-//            var huidigAbonnement = new Abonnement { AbonnementId = Guid.NewGuid(), Naam = "Maandelijks", Kosten = 10 };
-//            var zakelijkeHuurder = new ZakelijkHuurder
-//            {
-//                zakelijkeId = zakelijkeId,
-//                AbonnementId = huidigAbonnement.AbonnementId,
-//                HuidigAbonnement = huidigAbonnement
-//            };
+            Assert.Equal("Abonnement niet gevonden.", ex.Message);
 
-//            _zakelijkeHuurderRepositoryMock
-//                .Setup(repo => repo.GetZakelijkHuurderById(zakelijkeId))
-//                .Returns(zakelijkeHuurder);
+            _wagenparkBeheerderRepositoryMock.Verify(repo => repo.UpdateWagenparkBeheerder(It.IsAny<WagenparkBeheerder>()), Times.Never);
+            _emailServiceMock.Verify(e => e.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        }
 
-//            //Act leeg frontend cancel
+        [Fact]
+        public void WijzigAbonnement_NietBestaandeBeheerder_GooitException()
+        {
+            // Arrange
+            var beheerderId = Guid.NewGuid();
+            var nieuwAbonnementId = Guid.NewGuid();
 
-//            // Assert
-//            Assert.Equal(huidigAbonnement.AbonnementId, zakelijkeHuurder.AbonnementId);
-//            _zakelijkeHuurderRepositoryMock.Verify(repo => repo.UpdateZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Never);
-//            _emailServiceMock.Verify(bedrijsEmail => bedrijsEmail.SendEmail(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-//        }
-//    }
-//}
+            _wagenparkBeheerderRepositoryMock
+                .Setup(repo => repo.getBeheerderById(beheerderId))
+                .Returns((WagenparkBeheerder)null);
+
+            // Act & Assert
+            var ex = Assert.Throws<KeyNotFoundException>(() =>
+                _abonnementService.WijzigAbonnement(beheerderId, nieuwAbonnementId, AbonnementType.PayAsYouGo)
+            );
+
+            Assert.Equal("Wagenparkbeheerder niet gevonden.", ex.Message);
+
+            _abonnementRepositoryMock.Verify(repo => repo.GetAbonnementById(It.IsAny<Guid>()), Times.Never);
+            _wagenparkBeheerderRepositoryMock.Verify(repo => repo.UpdateWagenparkBeheerder(It.IsAny<WagenparkBeheerder>()), Times.Never);
+        }
+    }
+}
