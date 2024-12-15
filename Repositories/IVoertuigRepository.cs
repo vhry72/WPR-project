@@ -14,5 +14,7 @@ namespace WPR_project.Repositories
 
         Voertuig GetVoertuigById(Guid id);
         VoertuigStatus GetVoertuigStatus(Guid voertuigId);
+
+        void updateVoertuig(Voertuig voertuig);
     }
 }

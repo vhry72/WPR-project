@@ -3,10 +3,9 @@
     public class HuurVerzoek
     {
         public Guid HuurderID { get; set; }
-        public string voertuigId { get; set; }
+        public Guid voertuigId { get; set; }
         public DateTime beginDate { get; set; }
         public DateTime endDate { get; set; }
-
         public bool approved { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using WPR_project.Models;
 using WPR_project.Services;
+using WPR_project.DTO_s;
 
 namespace WPR_project.Controllers
 {
@@ -73,5 +74,24 @@ namespace WPR_project.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateVoertuig(Guid id, [FromBody] VoertuigDTO DTO)
+        {
+            try
+            {
+                _voertuigService.UpdateVoertuig(id, DTO);
+                return Ok(new { Message = "Voertuiggegevens succesvol bijgewerkt." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
     }
 }

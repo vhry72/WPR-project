@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace WPR_project.Migrations
 {
     /// <inheritdoc />
-    public partial class updateVoertuigenAnnotaties : Migration
+    public partial class updateGuid : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,8 @@ namespace WPR_project.Migrations
                 {
                     AbonnementId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Naam = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Kosten = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                    Kosten = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    AbonnementType = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,8 +44,8 @@ namespace WPR_project.Migrations
                 name: "Huurverzoeken",
                 columns: table => new
                 {
-                    HuurderID = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    voertuigId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HuurderID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    voertuigId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     beginDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     endDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     approved = table.Column<bool>(type: "bit", nullable: false)
@@ -101,27 +102,13 @@ namespace WPR_project.Migrations
                     voertuigType = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     bouwjaar = table.Column<int>(type: "int", nullable: false),
                     kenteken = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    startDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    eindDatum = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    startDatum = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    eindDatum = table.Column<DateTime>(type: "datetime2", nullable: true),
                     voertuigBeschikbaar = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Voertuigen", x => x.voertuigId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WagenparkBeheerders",
-                columns: table => new
-                {
-                    beheerderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    beheerderNaam = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    bedrijfsEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    telefoonNummer = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WagenparkBeheerders", x => x.beheerderId);
                 });
 
             migrationBuilder.CreateTable(
@@ -136,21 +123,37 @@ namespace WPR_project.Migrations
                     IsEmailBevestigd = table.Column<bool>(type: "bit", nullable: false),
                     telNummer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     bedrijfsNaam = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AbonnementId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    updateDatumAbonnement = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AbonnementType = table.Column<int>(type: "int", nullable: false),
-                    PrepaidSaldo = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false)
+                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ZakelijkHuurders", x => x.zakelijkeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "WagenparkBeheerders",
+                columns: table => new
+                {
+                    beheerderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    beheerderNaam = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    bedrijfsEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Adres = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    KVKNummer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    telefoonNummer = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AbonnementId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    updateDatumAbonnement = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AbonnementType = table.Column<int>(type: "int", nullable: true),
+                    PrepaidSaldo = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WagenparkBeheerders", x => x.beheerderId);
                     table.ForeignKey(
-                        name: "FK_ZakelijkHuurders_Abonnementen_AbonnementId",
+                        name: "FK_WagenparkBeheerders_Abonnementen_AbonnementId",
                         column: x => x.AbonnementId,
                         principalTable: "Abonnementen",
-                        principalColumn: "AbonnementId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "AbonnementId");
                 });
 
             migrationBuilder.CreateTable(
@@ -212,17 +215,17 @@ namespace WPR_project.Migrations
                 name: "BedrijfsMedewerkers",
                 columns: table => new
                 {
-                    BedrijfsMedewerkId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    bedrijfsMedewerkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     medewerkerNaam = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     medewerkerEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ZakelijkeHuurderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    zakelijkeHuurderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     AbonnementId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     WagenparkBeheerderbeheerderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BedrijfsMedewerkers", x => x.BedrijfsMedewerkId);
+                    table.PrimaryKey("PK_BedrijfsMedewerkers", x => x.bedrijfsMedewerkerId);
                     table.ForeignKey(
                         name: "FK_BedrijfsMedewerkers_Abonnementen_AbonnementId",
                         column: x => x.AbonnementId,
@@ -234,8 +237,8 @@ namespace WPR_project.Migrations
                         principalTable: "WagenparkBeheerders",
                         principalColumn: "beheerderId");
                     table.ForeignKey(
-                        name: "FK_BedrijfsMedewerkers_ZakelijkHuurders_ZakelijkeHuurderId",
-                        column: x => x.ZakelijkeHuurderId,
+                        name: "FK_BedrijfsMedewerkers_ZakelijkHuurders_zakelijkeHuurderId",
+                        column: x => x.zakelijkeHuurderId,
                         principalTable: "ZakelijkHuurders",
                         principalColumn: "zakelijkeId",
                         onDelete: ReferentialAction.Cascade);
@@ -252,7 +255,7 @@ namespace WPR_project.Migrations
                 column: "WagenparkBeheerderbeheerderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BedrijfsMedewerkers_ZakelijkeHuurderId",
+                name: "IX_BedrijfsMedewerkers_zakelijkeHuurderId",
                 table: "BedrijfsMedewerkers",
                 column: "zakelijkeHuurderId");
 
@@ -263,8 +266,8 @@ namespace WPR_project.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ZakelijkHuurders_AbonnementId",
-                table: "ZakelijkHuurders",
+                name: "IX_WagenparkBeheerders_AbonnementId",
+                table: "WagenparkBeheerders",
                 column: "AbonnementId");
         }
 

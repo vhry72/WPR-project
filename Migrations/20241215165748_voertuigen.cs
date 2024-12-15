@@ -1,13 +1,11 @@
-﻿using Microsoft.CodeAnalysis.Elfie.Serialization;
-using Microsoft.EntityFrameworkCore.Migrations;
-using WPR_project.Models;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace WPR_project.Migrations
 {
     /// <inheritdoc />
-    public partial class InsertVoertuigen : Migration
+    public partial class voertuigen : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

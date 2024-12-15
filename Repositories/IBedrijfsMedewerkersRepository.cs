@@ -7,8 +7,11 @@ namespace WPR_project.Repositories
     {
         void AddMedewerker(BedrijfsMedewerkers medewerker);
         void Delete(Guid medewerkerId); // Gebruik Guid voor ID
+        BedrijfsMedewerkers GetByEmailAndPassword(string email, string password);
         BedrijfsMedewerkers GetMedewerkerById(Guid medewerkerId); // Gebruik Guid voor ID
         IEnumerable<BedrijfsMedewerkers> GetAll();
+
+        void Update(BedrijfsMedewerkers bedrijfsMedewerkers);
         void Save();
     }
 }

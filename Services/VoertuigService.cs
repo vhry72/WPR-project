@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using WPR_project.Models;
 using WPR_project.Repositories;
+using WPR_project.DTO_s;
 
 namespace WPR_project.Services
 {
@@ -45,5 +46,23 @@ namespace WPR_project.Services
         {
             return _voertuigRepository.GetVoertuigStatus(voertuigId);
         }
+
+        public void UpdateVoertuig(Guid id, VoertuigDTO DTO)
+        {
+            var voertuig = _voertuigRepository.GetVoertuigById(id);
+            if (voertuig == null)
+            {
+                throw new KeyNotFoundException("Voertuig niet gevonden.");
+            }
+
+            // Pas alleen de velden aan die in de DTO zijn opgenomen
+            voertuig.startDatum = DTO.StartDatum;
+            voertuig.eindDatum = DTO.EindDatum;
+            voertuig.voertuigBeschikbaar = DTO.VoertuigBeschikbaar;
+
+            // Sla de wijzigingen op
+            _voertuigRepository.updateVoertuig(voertuig);
+        }
+
     }
 }

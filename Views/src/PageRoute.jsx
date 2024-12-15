@@ -19,6 +19,10 @@ import ParticulierVoertuigTonen from "./pages/particulierVoertuigTonen"; // Nieu
 import LoginVoorWijziging from "./pages/LoginVoorWijziging";
 import "../src/styles/styles.css";
 import TestPage from "./pages/testPage";
+import HuurVoertuig from "./pages/huurVoertuig";
+import ZakelijkHuurderDashBoard from "./pages/zakelijkHuurderDashboard";
+import ParticulierHuurderDashBoard from "./pages/particulierHuurderDashboard";
+import BevestigingHuur from "./pages/bevestigingHuur";
 import HuurZakelijkVoertuig from "./pages/huurzakelijkvoertuig";
 import BackOfficeMedewerker from "./pages/BackOfficeMedewerker/BackOfficeMedewerker";
 import BackOfficeVerhuurAanvragen from "./pages/BackOfficeMedewerker/BackOfficeVerhuurAanvragen";
@@ -51,8 +55,11 @@ function PageRoute() {
                     <Route path="instellingen" element={<Instellingen />} />
                     <Route path="accountwijzigingHuurders" element={<AccountwijzigingHuurders />} />
                     <Route path="particulierVoertuigTonen" element={<ParticulierVoertuigTonen />} />
-                    <Route path="huurzakelijkvoertuig" element={<HuurZakelijkVoertuig /> }/>
+                    <Route path="huurVoertuig" element={<HuurVoertuig /> }/>
                     <Route path="LoginVoorWijziging" element={<LoginVoorWijziging />} />
+                    <Route path="zakelijkHuurderDashBoard" element={<ZakelijkHuurderDashBoard />} />
+                    <Route path="particulierHuurderDashBoard" element={<ParticulierHuurderDashBoard />} />
+                    <Route path="bevestigingHuur" element={<BevestigingHuur />} />
                     <Route path="BackOfficeMedewerker" element={<BackOfficeMedewerker />} />
                     <Route path="BackOfficeVerhuurAanvragen" element={<BackOfficeVerhuurAanvragen />} />
                     <Route path="VerhuurGegevens" element={<VerhuurGegevens />} />

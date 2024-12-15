@@ -7,6 +7,7 @@ const ZakelijkAutoTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
     const navigate = useNavigate();
+    const HuurderId = new URLSearchParams(location.search).get("HuurderID");
 
     useEffect(() => {
         const fetchVoertuigen = async () => {
@@ -32,7 +33,7 @@ const ZakelijkAutoTonen = () => {
     };
 
     const handleVoertuigClick = (kenteken) => {
-        navigate(`/huurzakelijkvoertuig/${kenteken}`);
+        navigate(`/huurVoertuig?kenteken=${kenteken}&VoertuigID=${voertuig.voertuigId}&HuurderID=${HuurderID}&SoortHuurder=Zakelijk`);
     };
 
     return (
@@ -42,6 +43,7 @@ const ZakelijkAutoTonen = () => {
                 <button onClick={() => handleSort("model")} className="sort-button">Sorteer op Model</button>
                 <button onClick={() => handleSort("prijsPerDag")} className="sort-button">Sorteer op Prijs</button>
                 <button onClick={() => handleSort("bouwjaar")} className="sort-button">Sorteer op Bouwjaar</button>
+                <button onClick={() => handleSort("BeschikbaarHeid")} className="sort-button">Sorteer op Bouwjaar</button>
             </div>
             <table className="styled-table">
                 <thead>
@@ -53,6 +55,7 @@ const ZakelijkAutoTonen = () => {
                         <th>Bouwjaar</th>
                         <th>Kenteken</th>
                         <th>Kleur</th>
+                        <th>Beschikbaar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,6 +68,7 @@ const ZakelijkAutoTonen = () => {
                             <td>{voertuig.bouwjaar}</td>
                             <td>{voertuig.kenteken}</td>
                             <td>{voertuig.kleur}</td>
+                            <td>{voertuig.beschikbaar ? "Nee" : "Ja"}</td>
                         </tr>
                     ))}
                 </tbody>

@@ -20,6 +20,16 @@ const ZakelijkeHuurderRequestService = {
         }
     },
 
+    login: async (credentials) => {
+        try {
+            const response = await apiService.post('/ZakelijkeHuurder/login', { body: credentials });
+            return response; // Zorg dat dit een geldig object is
+        } catch (error) {
+            console.error("API Error:", error);
+            throw error; // Gooi de fout opnieuw als het misgaat
+        }
+    },
+
     register: async (data) => {
         try {
             console.log({body: data})
