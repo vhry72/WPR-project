@@ -70,5 +70,12 @@ namespace WPR_project.Repositories
 
             return voertuig.voertuigstatus;
         }
+
+        public void updateVoertuig(Voertuig voertuig)
+        {
+            _context.Voertuigen.Update(voertuig);
+            _context.SaveChanges();
+        }
+
     }
 }

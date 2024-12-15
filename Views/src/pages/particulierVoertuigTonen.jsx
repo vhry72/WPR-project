@@ -7,6 +7,7 @@ const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
     const navigate = useNavigate();
+    const HuurderId = new URLSearchParams(location.search).get("HuurderID");
 
     const handleChange = (event) => {
         setFilterType(event.target.value);
@@ -31,8 +32,9 @@ const ParticulierVoertuigTonen = () => {
         setVoertuigen(sortedVoertuigen);
     };
 
-    const handleVoertuigClick = (kenteken) => {
-        navigate(`/voertuig/${kenteken}`);
+    const handleVoertuigClick = (voertuig) => {
+        navigate(`/huurVoertuig?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}&HuurderID=${HuurderId}&SoortHuurder=Particulier`);
+;
     };
 
     return (
@@ -63,18 +65,20 @@ const ParticulierVoertuigTonen = () => {
                         <th>Bouwjaar</th>
                         <th>Kenteken</th>
                         <th>Kleur</th>
+                        <th>Beschikbaar</th>
                     </tr>
                 </thead>
                 <tbody>
                     {voertuigen.map((voertuig, index) => (
                         <tr key={index}>
-                            <td onClick={() => handleVoertuigClick(voertuig.kenteken)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>{voertuig.merk}</td>
+                            <td onClick={() => handleVoertuigClick(voertuig)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>{voertuig.merk}</td>
                             <td>{voertuig.model}</td>
                             <td>{voertuig.prijsPerDag}</td>
                             <td>{voertuig.voertuigType}</td>
                             <td>{voertuig.bouwjaar}</td>
                             <td>{voertuig.kenteken}</td>
                             <td>{voertuig.kleur}</td>
+                            <td>{voertuig.beschikbaar ? "Nee" : "Ja"}</td>
                         </tr>
                     ))}
                 </tbody>

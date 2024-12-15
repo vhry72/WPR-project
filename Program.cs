@@ -27,7 +27,9 @@ builder.Services.AddScoped<IHuurderRegistratieRepository, HuurderRegistratieRepo
 builder.Services.AddScoped<IZakelijkeHuurderRepository, ZakelijkeHuurderRepository>();
 builder.Services.AddScoped<IWagenparkBeheerderRepository, WagenparkBeheerderRepository>();
 builder.Services.AddScoped<IVoertuigRepository, VoertuigRepository>();
-builder.Services.AddScoped<IAbonnementRepository, AbonnementRepository>(); 
+builder.Services.AddScoped<IAbonnementRepository, AbonnementRepository>();
+builder.Services.AddScoped<IBedrijfsMedewerkersRepository, BedrijfsMedewerkersRepository>();
+builder.Services.AddScoped<IHuurVerzoekRepository, HuurVerzoekRepository>();
 
 
 
@@ -38,6 +40,11 @@ builder.Services.AddScoped<ZakelijkeHuurderService>();
 builder.Services.AddScoped<WagenparkBeheerderService>();
 builder.Services.AddScoped<AbonnementService>();
 builder.Services.AddScoped<VoertuigService>();
+builder.Services.AddScoped<BedrijfsMedewerkersService>();
+builder.Services.AddScoped<HuurVerzoekService>();
+
+//Voor de 24-uurs reminder service
+builder.Services.AddHostedService<HuurverzoekReminderService>();
 
 
 // Controllers en Swagger
