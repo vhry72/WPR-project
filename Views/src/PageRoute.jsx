@@ -23,7 +23,6 @@ import HuurVoertuig from "./pages/huurVoertuig";
 import ZakelijkHuurderDashBoard from "./pages/zakelijkHuurderDashboard";
 import ParticulierHuurderDashBoard from "./pages/particulierHuurderDashboard";
 import BevestigingHuur from "./pages/bevestigingHuur";
-import HuurZakelijkVoertuig from "./pages/huurzakelijkvoertuig";
 import BackOfficeMedewerker from "./pages/BackOfficeMedewerker/BackOfficeMedewerker";
 import BackOfficeVerhuurAanvragen from "./pages/BackOfficeMedewerker/BackOfficeVerhuurAanvragen";
 import VerhuurGegevens from "./pages/BackOfficeMedewerker/VerhuurGegevens";

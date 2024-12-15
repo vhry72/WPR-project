@@ -1,14 +1,16 @@
-
-﻿using WPR_project.Models;
+using WPR_project.DTO_s;
+using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
 ﻿using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
 
-public class HuurVerzoekService
+namespace WPR_project.Services;
 
-namespace WPR_project.Services
+public class HuurVerzoekService
+{ 
+
 
     private readonly IHuurVerzoekRepository _repository;
     private readonly IBedrijfsMedewerkersRepository _zakelijkRepository;
@@ -71,24 +73,25 @@ namespace WPR_project.Services
                   Met vriendelijke groet,<br/>Het Team";
     }
 
-    public void Add(Huurverzoek huurverzoek)
+    public void Add(Huurverzoek huurVerzoek)
     {
-        if (huurverzoek.beginDate >= huurverzoek.endDate)
+        if (huurVerzoek.beginDate >= huurVerzoek.endDate)
         {
             throw new ArgumentException("De begindatum kan niet na de einddatum liggen.");
         }
 
-        var actieveHuurverzoeken = _repository.GetActiveHuurverzoekenByHuurderId(huurverzoek.HuurderID);
+        var actieveHuurverzoeken = _repository.GetActiveHuurverzoekenByHuurderId(huurVerzoek.HuurderID);
         if (actieveHuurverzoeken.Any())
         {
             throw new ArgumentException("De huurder heeft al een actief huurverzoek.");
         }
 
-        _repository.Add(huurverzoek);
+        _repository.Add(huurVerzoek);
+        
 
-        var email = GetEmailByHuurderId(huurverzoek.HuurderID);
+        var email = GetEmailByHuurderId(huurVerzoek.HuurderID);
         var subject = "Bevestiging van uw huurverzoek";
-        var body = GenerateEmailBody(huurverzoek.beginDate, "bevestiging");
+        var body = GenerateEmailBody(huurVerzoek.beginDate, "bevestiging");
 
         _emailService.SendEmail(email, subject, body);
     }
@@ -112,13 +115,10 @@ namespace WPR_project.Services
             {
                 Console.WriteLine($"Fout bij het versturen van een herinneringsmail: {ex.Message}");
             }
-
-        public HuurverzoekService(IHuurVerzoekRepository _repository)
-        {
-            _repository = huurVerzoekRepository;
         }
+    }
 
-        public IEnumerable<HuurVerzoek> GetAllHuurVerzoeken()
+        public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
         {
             return _repository.GetAllHuurVerzoeken();
         }
@@ -146,4 +146,5 @@ namespace WPR_project.Services
 
         }
     }
-}
+
+

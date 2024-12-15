@@ -12,10 +12,10 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public void Add(Huurverzoek huurverzoek)
+    public void Add(Huurverzoek huurVerzoek)
     {
-        _context.Huurverzoeken.Add(huurverzoek);
-        _context.SaveChanges(); // Zorg ervoor dat wijzigingen worden opgeslagen
+        _context.Huurverzoeken.Add(huurVerzoek);
+        _context.SaveChanges();
     }
 
     public IEnumerable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId)
@@ -30,29 +30,24 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         return _context.Huurverzoeken
             .Where(h => h.beginDate <= reminderTime && h.beginDate > DateTime.Now)
             .ToList();
-      }
+    }
 
-     public HuurVerzoekRepository(GegevensContext context)
-     {
-                _context = context;
-      }
-
-      public IEnumerable<HuurVerzoek> GetAllHuurVerzoeken()
+      public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
       {
                 return _context.Huurverzoeken.ToList();
        }
        
-        public HuurVerzoek GetByID(Guid id)
+        public Huurverzoek GetByID(Guid id)
       {
           return _context.Huurverzoeken.Find(id);
       }
-        public void Update(HuurVerzoek huurVerzoek)
+
+        public void Update(Huurverzoek huurVerzoek)
         {
             _context.Huurverzoeken.Update(huurVerzoek);
-       }
+        }
 
     }
 
-    }
 
 

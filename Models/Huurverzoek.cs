@@ -1,6 +1,6 @@
 ﻿namespace WPR_project.Models
 {
-    public class HuurVerzoek
+    public class Huurverzoek
     {
         public Guid HuurderID { get; set; }
         public Guid voertuigId { get; set; }
