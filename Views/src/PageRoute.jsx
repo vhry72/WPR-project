@@ -20,6 +20,10 @@ import LoginVoorWijziging from "./pages/LoginVoorWijziging";
 import "../src/styles/styles.css";
 import TestPage from "./pages/testPage";
 import HuurZakelijkVoertuig from "./pages/huurzakelijkvoertuig";
+import BackOfficeMedewerker from "./pages/BackOfficeMedewerker/BackOfficeMedewerker";
+import BackOfficeVerhuurAanvragen from "./pages/BackOfficeMedewerker/BackOfficeVerhuurAanvragen";
+import VerhuurGegevens from "./pages/BackOfficeMedewerker/VerhuurGegevens";
+import SchadeMeldingen from "./pages/BackOfficeMedewerker/SchadeMeldingen";
 
 
 
@@ -49,6 +53,10 @@ function PageRoute() {
                     <Route path="particulierVoertuigTonen" element={<ParticulierVoertuigTonen />} />
                     <Route path="huurzakelijkvoertuig" element={<HuurZakelijkVoertuig /> }/>
                     <Route path="LoginVoorWijziging" element={<LoginVoorWijziging />} />
+                    <Route path="BackOfficeMedewerker" element={<BackOfficeMedewerker />} />
+                    <Route path="BackOfficeVerhuurAanvragen" element={<BackOfficeVerhuurAanvragen />} />
+                    <Route path="VerhuurGegevens" element={<VerhuurGegevens />} />
+                    <Route path="SchadeMeldingen" element={<SchadeMeldingen/> }/>
                 </Route>
             </Routes>
         </BrowserRouter>
