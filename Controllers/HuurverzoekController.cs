@@ -8,10 +8,10 @@ using WPR_project.Services.Email;
 [ApiController]
 public class HuurverzoekController : ControllerBase
 {
-    private readonly HuurVerzoekService _service;
+    private readonly HuurverzoekService _service;
     private readonly IEmailService _emailService;
 
-    public HuurverzoekController(HuurVerzoekService service, IEmailService emailService)
+    public HuurverzoekController(HuurverzoekService service, IEmailService emailService)
     {
         _service = service;
         _emailService = emailService;
