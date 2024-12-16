@@ -187,8 +187,7 @@ namespace WPR_project.Controllers
 
 
         /// <summary>
-        /// Verwijdert een medewerker van een zakelijke huurder
-        /// </summary>
+        /// verwijderen van een medewerker van een zakelijke huurder
         [HttpDelete("{zakelijkeId}/verwijdermedewerker/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
         {
@@ -197,21 +196,28 @@ namespace WPR_project.Controllers
                 var medewerker = _service.GetMedewerkerById(medewerkerId);
                 if (medewerker == null)
                 {
-                    return NotFound(new { Message = "Medewerker niet gevonden." });
+                    // Gebruik expliciet NotFoundObjectResult
+                    return new NotFoundObjectResult(new { Message = "Medewerker niet gevonden." });
                 }
 
                 _service.VerwijderMedewerker(zakelijkeId, medewerkerId);
 
-                return Ok(new { Message = "Medewerker succesvol verwijderd." });
+                // Gebruik expliciet OkObjectResult
+                return new OkObjectResult(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException ex)
             {
-                return NotFound(new { Message = ex.Message });
+                // Gebruik expliciet NotFoundObjectResult
+                return new NotFoundObjectResult(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Fout: {ex.Message}");
-                return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
+                // Gebruik expliciet ObjectResult met StatusCode 500
+                return new ObjectResult(new { Message = "Er is een interne fout opgetreden.", Details = ex.Message })
+                {
+                    StatusCode = 500
+                };
             }
         }
     }

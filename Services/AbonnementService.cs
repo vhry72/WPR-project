@@ -42,7 +42,7 @@ namespace WPR_project.Services
             // Haal de zakelijke beheerder op
             var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(bedrijfsId);
             if (huurder == null)
-                throw new KeyNotFoundException("Zakelijke beheerder niet gevonden.");
+                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden");
 
             // Controleer of het e-maildomein overeenkomt
             var bedrijfDomein = huurder.domein;
@@ -175,14 +175,14 @@ namespace WPR_project.Services
         {
             var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
             if (beheerder == null)
-                throw new KeyNotFoundException("Zakelijke beheerder niet gevonden.");
+                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden");
 
             var nieuwAbonnement = _abonnementRepository.GetAbonnementById(abonnementId);
             if (nieuwAbonnement == null)
                 throw new KeyNotFoundException("Abonnement niet gevonden.");
 
             // Controleer of het abonnementstype overeenkomt
-            if (nieuwAbonnement.AbonnementType != abonnementType)
+            if (nieuwAbonnement.AbonnementType != abonnementType)               
                 throw new InvalidOperationException("Abonnementstype komt niet overeen met het geselecteerde type.");
 
             if (beheerder.HuidigAbonnement != null)

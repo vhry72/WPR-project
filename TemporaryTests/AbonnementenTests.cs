@@ -36,8 +36,20 @@ namespace WPR_project.TemporaryTests
             // Arrange
             var beheerderId = Guid.NewGuid();
             var nieuwAbonnementId = Guid.NewGuid();
-            var huidigAbonnement = new Abonnement { AbonnementId = Guid.NewGuid(), Naam = "Maandelijks", Kosten = 10 };
-            var nieuwAbonnement = new Abonnement { AbonnementId = nieuwAbonnementId, Naam = "Jaarlijks", Kosten = 100 };
+            var huidigAbonnement = new Abonnement
+            {
+                AbonnementId = Guid.NewGuid(),
+                Naam = "Maandelijks",
+                Kosten = 10,
+                AbonnementType = AbonnementType.PayAsYouGo
+            };
+            var nieuwAbonnement = new Abonnement
+            {
+                AbonnementId = nieuwAbonnementId,
+                Naam = "Jaarlijks",
+                Kosten = 100,
+                AbonnementType = AbonnementType.PrepaidSaldo // Stel het type in
+            };
 
             var wagenparkBeheerder = new WagenparkBeheerder
             {
@@ -116,12 +128,13 @@ namespace WPR_project.TemporaryTests
                 .Setup(repo => repo.getBeheerderById(beheerderId))
                 .Returns((WagenparkBeheerder)null);
 
-            // Act & Assert
+            // Act
             var ex = Assert.Throws<KeyNotFoundException>(() =>
                 _abonnementService.WijzigAbonnement(beheerderId, nieuwAbonnementId, AbonnementType.PayAsYouGo)
             );
 
-            Assert.Equal("Wagenparkbeheerder niet gevonden.", ex.Message);
+            // Assert
+            Assert.Equal("Wagenparkbeheerder niet gevonden", ex.Message);
 
             _abonnementRepositoryMock.Verify(repo => repo.GetAbonnementById(It.IsAny<Guid>()), Times.Never);
             _wagenparkBeheerderRepositoryMock.Verify(repo => repo.UpdateWagenparkBeheerder(It.IsAny<WagenparkBeheerder>()), Times.Never);

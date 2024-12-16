@@ -8,7 +8,7 @@ using WPR_project.Repositories;
 using WPR_project.Services.Email;
 using System.Linq;
 
-namespace WPR_project.Tests
+namespace WPR_project.TemporaryTests
 {
     public class ZakelijkeHuurderTests
     {
