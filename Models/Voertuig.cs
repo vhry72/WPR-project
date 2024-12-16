@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace WPR_project.Models
 {
@@ -41,5 +42,9 @@ namespace WPR_project.Models
         public bool voertuigBeschikbaar { get; set; }
 
         public VoertuigStatus voertuigstatus { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Schademelding> Schademeldingen { get; set; }
+
     }
 }

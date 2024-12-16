@@ -1,60 +1,84 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 
-// Dummy data voor schademeldingen met status en opmerkingen
-const initialSchadeMeldingen = [
-    {
-        id: 1,
-        foto: 'https://via.placeholder.com/150',
-        beschrijving: 'Deuk aan de zijkant van de auto, veroorzaakt door een botsing met een paaltje.',
-        datum: '2024-12-01',
-        status: 'Nieuw', // Initiale status
-        opmerkingen: '', // Leeg veld voor opmerkingen
-    },
-    {
-        id: 2,
-        foto: 'https://via.placeholder.com/150',
-        beschrijving: 'Gebroken achterlicht door een achteraanrijding.',
-        datum: '2024-12-05',
-        status: 'Nieuw',
-        opmerkingen: '',
-    },
-    {
-        id: 3,
-        foto: 'https://via.placeholder.com/150',
-        beschrijving: 'Kras over de motorkap na een mislukte poging om een bocht te nemen.',
-        datum: '2024-12-10',
-        status: 'Nieuw',
-        opmerkingen: '',
-    },
-    {
-        id: 4,
-        foto: 'https://via.placeholder.com/150',
-        beschrijving: 'Schade aan de bumper door een aanrijding met een ander voertuig op de parkeerplaats.',
-        datum: '2024-12-12',
-        status: 'Nieuw',
-        opmerkingen: '',
-    },
-];
+const SchademeldingenList = () => {
+    const [schademeldingen, setSchademeldingen] = useState([]);
+    const [error, setError] = useState(null);
+    const [editedOpmerkingen, setEditedOpmerkingen] = useState({});
 
-const SchademeldingenLijst = () => {
-    const [schadeMeldingen, setSchadeMeldingen] = useState(initialSchadeMeldingen);
+    // Dummy lijst van schademeldingen (voor als er een fout optreedt)
+    const dummySchademeldingen = [
+        {
+            schademeldingId: '1',
+            beschrijving: 'Kras op de deur',
+            status: 'Open',
+            opmerkingen: 'Moet nog worden gerepareerd',
+            voertuig: { naam: 'Auto 1' },
+            datum: new Date().toISOString(),
+            fotoUrl: 'https://example.com/image1.jpg', // Dummy afbeelding
+        },
+        {
+            schademeldingId: '2',
+            beschrijving: 'Schade aan voorruit',
+            status: 'Afgehandeld',
+            opmerkingen: 'Verzekering heeft betaald',
+            voertuig: { naam: 'Auto 2' },
+            datum: new Date().toISOString(),
+            fotoUrl: 'https://example.com/image2.jpg', // Dummy afbeelding
+        },
+        {
+            schademeldingId: '3',
+            beschrijving: 'Deuk in de bumper',
+            status: 'In behandeling',
+            opmerkingen: 'Wachten op onderdelen',
+            voertuig: { naam: 'Auto 3' },
+            datum: new Date().toISOString(),
+            fotoUrl: 'https://example.com/image3.jpg', // Dummy afbeelding
+        },
+    ];
 
-    // Functie om de status naar "In reparatie" te veranderen en opmerkingen toe te voegen
-    const setInReparatie = (id, opmerkingen) => {
-        setSchadeMeldingen(
-            schadeMeldingen.map((melding) =>
-                melding.id === id
-                    ? { ...melding, status: 'In reparatie', opmerkingen: opmerkingen }
+    useEffect(() => {
+        fetch('https://localhost:5033/api/schademeldingen')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Netwerk reactie was niet ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setSchademeldingen(data); // Zet de opgehaalde data
+            })
+            .catch((error) => {
+                setError('Er is een fout opgetreden bij het ophalen van de schademeldingen.');
+                setSchademeldingen(dummySchademeldingen); // Zet de dummy lijst bij fout
+            });
+    }, []);
+
+    // Functie om de status van een schademelding te veranderen naar 'In reparatie'
+    const updateStatus = (id) => {
+        setSchademeldingen((prevSchademeldingen) =>
+            prevSchademeldingen.map((melding) =>
+                melding.schademeldingId === id
+                    ? { ...melding, status: 'In reparatie' }
                     : melding
             )
         );
     };
 
-    // Functie om de opmerkingen bij te werken
-    const handleOpmerkingChange = (id, value) => {
-        setSchadeMeldingen(
-            schadeMeldingen.map((melding) =>
-                melding.id === id ? { ...melding, opmerkingen: value } : melding
+    // Functie om opmerkingen aan te passen
+    const handleOpmerkingenChange = (id, newOpmerkingen) => {
+        setEditedOpmerkingen((prev) => ({
+            ...prev,
+            [id]: newOpmerkingen,
+        }));
+    };
+
+    // Functie om de gewijzigde opmerkingen op te slaan
+    const saveOpmerkingen = (id) => {
+        setSchademeldingen((prevSchademeldingen) =>
+            prevSchademeldingen.map((melding) =>
+                melding.schademeldingId === id
+                    ? { ...melding, opmerkingen: editedOpmerkingen[id] || melding.opmerkingen }
+                    : melding
             )
         );
     };
@@ -62,61 +86,34 @@ const SchademeldingenLijst = () => {
     return (
         <div>
             <h1>Schademeldingen</h1>
+            {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
             <ul>
-                {schadeMeldingen.map((melding) => (
-                    <li key={melding.id} style={{ marginBottom: '20px' }}>
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                            {/* Foto van de schade */}
-                            <img
-                                src={melding.foto}
-                                alt={`Schade ${melding.id}`}
-                                style={{ width: '150px', height: '150px', marginRight: '20px' }}
+                {schademeldingen.map((schademelding) => (
+                    <li key={schademelding.schademeldingId}>
+                        <h3>{schademelding.beschrijving}</h3>
+                        <p>Status: {schademelding.status}</p>
+                        <p>Voertuig: {schademelding.voertuig ? schademelding.voertuig.naam : 'Onbekend'}</p>
+                        <p>Datum: {new Date(schademelding.datum).toLocaleDateString()}</p>
+
+                        {/* Toon de afbeelding van de schademelding */}
+                        {schademelding.fotoUrl && <img src={schademelding.fotoUrl} alt="Schade" width="200" />}
+
+                        {/* Bewerken van opmerkingen */}
+                        <div>
+                            <input
+                                type="text"
+                                value={editedOpmerkingen[schademelding.schademeldingId] || schademelding.opmerkingen}
+                                onChange={(e) => handleOpmerkingenChange(schademelding.schademeldingId, e.target.value)}
                             />
-                            {/* Beschrijving, datum en status */}
-                            <div>
-                                <p>
-                                    <strong>Beschrijving:</strong> {melding.beschrijving}
-                                </p>
-                                <p>
-                                    <strong>Datum:</strong> {melding.datum}
-                                </p>
-                                <p>
-                                    <strong>Status:</strong> {melding.status}
-                                </p>
-
-                                {/* Invoerveld voor opmerkingen */}
-                                {melding.status === 'Nieuw' && (
-                                    <div>
-                                        <label htmlFor={`opmerking-${melding.id}`} style={{ marginRight: '10px' }}>
-                                            Opmerkingen:
-                                        </label>
-                                        <input
-                                            id={`opmerking-${melding.id}`}
-                                            type="text"
-                                            value={melding.opmerkingen}
-                                            onChange={(e) => handleOpmerkingChange(melding.id, e.target.value)}
-                                            placeholder="Voer een opmerking in"
-                                            style={{
-                                                padding: '5px',
-                                                width: '250px',
-                                                marginBottom: '10px',
-                                                display: 'block',
-                                            }}
-                                        />
-                                    </div>
-                                )}
-
-                                {/* Knop om de status naar "In reparatie" te veranderen */}
-                                {melding.status !== 'In reparatie' && melding.opmerkingen && (
-                                    <button
-                                        onClick={() => setInReparatie(melding.id, melding.opmerkingen)}
-                                        style={{ marginTop: '10px', backgroundColor: 'blue', color: 'white' }}
-                                    >
-                                        Zet in reparatie
-                                    </button>
-                                )}
-                            </div>
+                            <button onClick={() => saveOpmerkingen(schademelding.schademeldingId)}>
+                                Opslaan opmerkingen
+                            </button>
                         </div>
+
+                        {/* Knop om de status te wijzigen naar "In reparatie" */}
+                        <button onClick={() => updateStatus(schademelding.schademeldingId)}>
+                            Zet op "In reparatie"
+                        </button>
                     </li>
                 ))}
             </ul>
@@ -124,4 +121,5 @@ const SchademeldingenLijst = () => {
     );
 };
 
-export default SchademeldingenLijst;
+export default SchademeldingenList;
+
