@@ -17,13 +17,19 @@ namespace WPR_project.Services
 
         public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType, DateTime? startDatum, DateTime? eindDatum, string sorteerOptie)
         {
-            if (startDatum.HasValue && eindDatum.HasValue && startDatum >= eindDatum)
+            if (!startDatum.HasValue || !eindDatum.HasValue)
+            {
+                throw new ArgumentException("Startdatum en einddatum moeten beide ingevuld zijn.");
+            }
+
+            if (startDatum >= eindDatum)
             {
                 throw new ArgumentException("Startdatum mag niet later of gelijk zijn aan de einddatum.");
             }
 
             return _voertuigRepository.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, sorteerOptie);
         }
+
 
         public Voertuig GetVoertuigDetails(Guid id)
         {
