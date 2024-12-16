@@ -21,7 +21,7 @@ namespace WPR_project.Data
         public DbSet<Bedrijf> Bedrijven { get; set; }
         public DbSet<BedrijfsMedewerkers> BedrijfsMedewerkers { get; set; }
         public DbSet<FrontofficeMedewerker> FrontofficeMedewerkers { get; set; }
-
+        public DbSet<Schademelding> Schademeldingen { get; set; }
         public DbSet<VoertuigStatus> VoertuigStatussen { get; set; }
 
         // Configuratie van de modellen en relaties
@@ -83,6 +83,13 @@ namespace WPR_project.Data
             // ParticulierHuurder Configuratie
             modelBuilder.Entity<ParticulierHuurder>()
                 .HasKey(p => p.particulierId);
+
+            //SchadeMelding Configuratie
+            modelBuilder.Entity<Schademelding>()
+                .HasOne(s => s.Voertuig)
+                .WithMany(v => v.Schademeldingen)
+                .HasForeignKey(s => s.VoertuigId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             base.OnModelCreating(modelBuilder);
         }

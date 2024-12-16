@@ -58,6 +58,35 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+ void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                // Je kunt hier globale JSON-opties instellen als dat nodig is
+            });
+}
+
+ void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+    if (env.IsDevelopment())
+    {
+        app.UseDeveloperExceptionPage();
+    }
+    else
+    {
+        app.UseExceptionHandler("/Home/Error");
+        app.UseHsts();
+    }
+
+    app.UseRouting();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+}
+
 
 // Configureer de HTTP-aanvraagpipeline
 if (app.Environment.IsDevelopment())
