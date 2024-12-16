@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace WPR_project.Services;
 
-public class HuurVerzoekService
+public class HuurverzoekService
 { 
 
 
@@ -20,7 +20,7 @@ public class HuurVerzoekService
     // Voeg de standaard ophaallocatie toe
     private const string OphaalLocatie = "Johanna Westerdijkplein 75, 2521 EP Den Haag";
 
-    public HuurVerzoekService(
+    public HuurverzoekService(
         IHuurVerzoekRepository repository,
         IBedrijfsMedewerkersRepository zakelijkRepository,
         IHuurderRegistratieRepository particulierRepository,

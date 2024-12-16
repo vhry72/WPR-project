@@ -23,7 +23,7 @@ public class HuurverzoekReminderService : BackgroundService
                 using (var scope = _scopeFactory.CreateScope())
                 {
                     // Haal de scoped service op binnen een nieuw scope
-                    var huurVerzoekService = scope.ServiceProvider.GetRequiredService<HuurVerzoekService>();
+                    var huurVerzoekService = scope.ServiceProvider.GetRequiredService<HuurverzoekService>();
 
                     // Voer de herinneringslogica uit
                     huurVerzoekService.SendReminders();

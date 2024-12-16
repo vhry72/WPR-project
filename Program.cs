@@ -41,7 +41,7 @@ builder.Services.AddScoped<WagenparkBeheerderService>();
 builder.Services.AddScoped<AbonnementService>();
 builder.Services.AddScoped<VoertuigService>();
 builder.Services.AddScoped<BedrijfsMedewerkersService>();
-builder.Services.AddScoped<HuurVerzoekService>();
+builder.Services.AddScoped<HuurverzoekService>();
 
 //Voor de 24-uurs reminder service
 builder.Services.AddHostedService<HuurverzoekReminderService>();

@@ -78,7 +78,7 @@ const ParticulierVoertuigTonen = () => {
                             <td>{voertuig.bouwjaar}</td>
                             <td>{voertuig.kenteken}</td>
                             <td>{voertuig.kleur}</td>
-                            <td>{voertuig.beschikbaar ? "Nee" : "Ja"}</td>
+                            <td>{voertuig.voertuigBeschikbaar ? "Ja" : "Nee"}</td>
                         </tr>
                     ))}
                 </tbody>
