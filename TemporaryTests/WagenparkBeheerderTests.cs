@@ -6,25 +6,31 @@ using WPR_project.Models;
 using WPR_project.Services;
 using Moq;
 using WPR_project.Repositories;
+using WPR_project.Services.Email;
 
-namespace WPR_project.Tests
+namespace WPR_project.TemporaryTests
 {
     public class WagenparkBeheerderTests
     {
         private readonly Mock<IWagenparkBeheerderRepository> _mockRepository;
         private readonly Mock<IZakelijkeHuurderRepository> _mockZakelijkeRepository;
+        private readonly Mock<IAbonnementRepository> _mockAbonnementRepository;
+        private readonly Mock<IEmailService> _mockEmailService;
         private readonly WagenparkBeheerderService _service;
 
         public WagenparkBeheerderTests()
         {
             _mockRepository = new Mock<IWagenparkBeheerderRepository>();
             _mockZakelijkeRepository = new Mock<IZakelijkeHuurderRepository>();
+            _mockAbonnementRepository = new Mock<IAbonnementRepository>();
+            _mockEmailService = new Mock<IEmailService>();
+
             _service = new WagenparkBeheerderService(
                 _mockRepository.Object,
                 _mockZakelijkeRepository.Object,
-                null, // Mock voor IAbonnementRepository
-                null, // Mock voor DbContext
-                null  // Mock voor IEmailService
+                _mockAbonnementRepository.Object,
+                null, // DbContext mock is hier niet nodig
+                _mockEmailService.Object
             );
         }
 
@@ -100,6 +106,7 @@ namespace WPR_project.Tests
             var huurder = new ZakelijkHuurder
             {
                 zakelijkeId = zakelijkeId,
+                bedrijfsNaam = "Test Bedrijf",
                 Medewerkers = new List<BedrijfsMedewerkers> { medewerker }
             };
 
@@ -112,6 +119,11 @@ namespace WPR_project.Tests
             Assert.Empty(huurder.Medewerkers);
             _mockZakelijkeRepository.Verify(r => r.UpdateZakelijkHuurder(huurder), Times.Once);
             _mockZakelijkeRepository.Verify(r => r.Save(), Times.Once);
+            _mockEmailService.Verify(e => e.SendEmail(
+                medewerker.medewerkerEmail,
+                "Medewerker verwijderd",
+                It.Is<string>(s => s.Contains("U bent verwijderd"))
+            ), Times.Once);
         }
 
         [Fact]

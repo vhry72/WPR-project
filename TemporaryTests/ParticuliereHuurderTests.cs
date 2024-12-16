@@ -89,9 +89,12 @@ namespace WPR_project.TemporaryTests
 
             // Act
             var ex = Assert.Throws<ArgumentException>(() => _service.Register(huurder));
+            var exe = Assert.Throws<ArgumentException>(() => _service.Register(huurder));
+            Console.WriteLine(exe.Message); // Voeg dit toe om de foutmelding te bekijken
+
 
             // Assert
-            Assert.Contains("Wachtwoord moet minimaal 8 tekens bevatten.", ex.Message);
+            Assert.Contains("Validatie mislukt: wachtwoord moet minimaal 8 tekens bevatten.", ex.Message);
         }
 
         [Fact]
