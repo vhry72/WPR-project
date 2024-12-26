@@ -1,86 +1,107 @@
-import apiService from '../apiService'; 
+const API_URL = 'https://localhost:5033/api/ParticulierHuurder'; // Pas dit aan naar jouw API-base-URL
 
+const handleResponse = async (response) => {
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Something went wrong');
+    }
+    return response.json();
+};
 
 const ParticulierHuurdersRequestService = {
     getAll: async () => {
         try {
-            const response = await apiService.get('/ParticulierHuurders');
-            console.log('GET All:', response.data);
+            const response = await fetch(`${API_URL}`);
+            return await handleResponse(response);
         } catch (error) {
             console.error('Error fetching all huurders:', error);
+            throw error;
         }
     },
 
     getById: async (id) => {
         try {
-            const response = await apiService.get(`/ParticulierHuurder/${id}`);
-            return response; // Response wordt teruggegeven aan de aanroepende functie
+            const response = await fetch(`${API_URL}/${id}`);
+            return await handleResponse(response);
         } catch (error) {
             console.error(`Error fetching huurder with ID ${id}:`, error);
-            throw error; // Error opnieuw gooien om af te handelen in de frontend
+            throw error;
         }
     },
 
     update: async (id, payload) => {
         try {
-            const response = await apiService.put(`/ParticulierHuurder/${id}`, { body: payload });
-            console.log(payload)
-            return response; // Response wordt teruggegeven voor succescontrole
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            return await handleResponse(response);
         } catch (error) {
             console.error(`Error updating huurder with ID ${id}:`, error);
-            throw error; // Error opnieuw gooien om af te handelen in de frontend
+            throw error;
         }
     },
 
     login: async (credentials) => {
         try {
-            const response = await apiService.post('/ParticulierHuurder/login', { body: credentials });
-            return response; // Zorg dat dit een geldig object is
+            const response = await fetch(`${API_URL}/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(credentials),
+            });
+            return await handleResponse(response);
         } catch (error) {
-            console.error("API Error:", error);
-            throw error; // Gooi de fout opnieuw als het misgaat
+            console.error('Error during login:', error);
+            throw error;
         }
     },
 
     register: async (data) => {
         try {
-            const response = await apiService.post('/ParticulierHuurder/register', { body: data });
-            return response; // Zorg dat dit een geldig object is
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data),
+            });
+            return await handleResponse(response);
         } catch (error) {
-            console.error("API Error:", error);
-            throw error; // Gooi de fout opnieuw als het misgaat
+            console.error('Error during registration:', error);
+            throw error;
         }
     },
 
-
     verifyEmail: async (token) => {
         try {
-            const response = await apiService.get(`/ParticulierHuurders/verify`, {
-                params: { token },
-            });
-            console.log('GET Verify Email:', response.data);
+            const response = await fetch(`${API_URL}/verify?token=${encodeURIComponent(token)}`);
+            return await handleResponse(response);
         } catch (error) {
             console.error('Error verifying email:', error);
+            throw error;
         }
     },
 
     delete: async (id) => {
         try {
-            await apiService.delete(`/ParticulierHuurders/${id}`);
-            console.log('DELETE: Success');
+            const response = await fetch(`${API_URL}/${id}`, {
+                method: 'DELETE',
+            });
+            return await handleResponse(response);
         } catch (error) {
             console.error(`Error deleting huurder with ID ${id}:`, error);
+            throw error;
         }
     },
 
     isEmailVerified: async (id) => {
         try {
-            const response = await apiService.get(`/ParticulierHuurders/${id}/isVerified`);
-            console.log('GET Is Email Verified:', response.data);
+            const response = await fetch(`${API_URL}/${id}/isVerified`);
+            return await handleResponse(response);
         } catch (error) {
             console.error(`Error checking email verification for huurder with ID ${id}:`, error);
+            throw error;
         }
     },
 };
 
-export default ParticulierHuurdersRequestService
+export default ParticulierHuurdersRequestService;

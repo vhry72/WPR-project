@@ -12,6 +12,7 @@ namespace WPR_project.Controllers
     {
         private readonly AbonnementService _service;
 
+
         public AbonnementController(AbonnementService service)
         {
             _service = service;
@@ -32,7 +33,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [HttpPost("{zakelijkeId}/abonnement/maken")]
+        [HttpPost("{beheerderId}/abonnement/maken")]
         public IActionResult MaakBedrijfsAbonnement(Guid zakelijkeId, [FromBody] AbonnementDTO abonnementSoort)
         {
             try
@@ -65,7 +66,21 @@ namespace WPR_project.Controllers
         //hier moet nog een Get endpoint komen om het abonnement van het bedrijf te weergeven
 
 
-        [HttpPost("{zakelijkeId}/saldo/opwaarderen")]
+        [HttpPost("{beheerderId}/prepaid/betalen")]
+        public IActionResult VerwerkPrepaidBetaling(Guid beheerderId, [FromBody] decimal kosten)
+        {
+            try
+            {
+                _service.VerwerkPrepaidBetaling(beheerderId, kosten);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex);
+            }
+        }
+
+        [HttpPost("{beheerderId}/saldo/opwaarderen")]
         public IActionResult LaadSaldoOp(Guid zakelijkeId, [FromBody] decimal bedrag)
         {
             try
@@ -79,12 +94,12 @@ namespace WPR_project.Controllers
             }
         }
 
-        [HttpPost("{zakelijkeId}/eenmalig/betalen")]
-        public IActionResult EenmaligeBetaling(Guid zakelijkeId, [FromBody] decimal bedrag)
+        [HttpPost("{beheerderId}/eenmalig/betalen")]
+        public IActionResult EenmaligeBetaling(Guid beheerderId, [FromBody] decimal bedrag)
         {
             try
             {
-                _service.VerwerkPayAsYouGoBetaling(zakelijkeId, bedrag);
+                _service.VerwerkPayAsYouGoBetaling(beheerderId, bedrag);
                 return Ok(new { Message = "Betaling succesvol verwerkt." });
             }
             catch (Exception ex)
@@ -93,7 +108,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [HttpPost("{zakelijkeId}/medewerker/toevoegen")]
+        [HttpPost("{beheerderId}/medewerker/toevoegen")]
         public IActionResult VoegMedewerkerToe(Guid zakelijkeId, [FromBody] string medewerkerEmail, string medewerkerNaam)
         {
             try
@@ -107,22 +122,38 @@ namespace WPR_project.Controllers
             }
         }
 
+        // Wijzigt een abonnement op basis van het geselecteerde type (direct zichtbaar of vanaf de volgende periode).
         [HttpPost("{beheerderId}/abonnement/wijzig")]
         public IActionResult WijzigAbonnement(Guid beheerderId, [FromBody] AbonnementVerzoek verzoek)
         {
             try
             {
-                _service.WijzigAbonnement(beheerderId, verzoek.AbonnementId, verzoek.AbonnementType);
+                if (verzoek.directZichtbaar)
+                {
+                    _service.WijzigAbonnementMetDirecteKosten(beheerderId, verzoek.AbonnementId, verzoek.AbonnementType);
+                }
+                else if (verzoek.volgendePeriode)
+                {
+                    _service.WijzigAbonnementVanafVolgendePeriode(beheerderId, verzoek.AbonnementId, verzoek.AbonnementType);
+                }
+                else
+                {
+                    return BadRequest(new { Message = "Geef aan of de wijziging direct zichtbaar moet zijn of vanaf de volgende periode moet ingaan." });
+                }
+
                 return Ok(new { Message = "Abonnement succesvol gewijzigd." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Error = ex.Message });
             }
             catch (Exception ex)
             {
-                // Algemene foutafhandeling
-                return BadRequest(new
-                {
-                    Error = "Er is een fout opgetreden bij het wijzigen van het abonnement.",
-                    Details = ex.Message
-                });
+                return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
             }
         }
     }
