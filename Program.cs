@@ -30,6 +30,7 @@ builder.Services.AddScoped<IVoertuigRepository, VoertuigRepository>();
 builder.Services.AddScoped<IAbonnementRepository, AbonnementRepository>();
 builder.Services.AddScoped<IBedrijfsMedewerkersRepository, BedrijfsMedewerkersRepository>();
 builder.Services.AddScoped<IHuurVerzoekRepository, HuurVerzoekRepository>();
+builder.Services.AddScoped<ISchademeldingRepository, SchademeldingRepository>();
 
 
 
@@ -42,6 +43,7 @@ builder.Services.AddScoped<AbonnementService>();
 builder.Services.AddScoped<VoertuigService>();
 builder.Services.AddScoped<BedrijfsMedewerkersService>();
 builder.Services.AddScoped<HuurverzoekService>();
+
 
 //Voor de 24-uurs reminder service
 builder.Services.AddHostedService<HuurverzoekReminderService>();
