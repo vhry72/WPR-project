@@ -3,8 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/LayoutTest";
 import Register from "./pages/register";
 import Login from "./pages/login";
-import Home from "./pages/Home";
 import Index from "./pages/Index";
+import StartLogin from "./pages/StartLogin";
 import Abonnement from "./pages/abonnement";
 import Payment from "./pages/payment";
 import BedrijfsAbonnement from "./pages/bedrijfsabonnement";
@@ -27,7 +27,7 @@ import BackOfficeMedewerker from "./pages/BackOfficeMedewerker/BackOfficeMedewer
 import BackOfficeVerhuurAanvragen from "./pages/BackOfficeMedewerker/BackOfficeVerhuurAanvragen";
 import VerhuurGegevens from "./pages/BackOfficeMedewerker/VerhuurGegevens";
 import SchadeMeldingen from "./pages/BackOfficeMedewerker/SchadeMeldingen";
-import { UserProvider } from "./context/UserContext"; // Context import
+import { UserProvider } from "./context/UserContext"; 
 
 function PageRoute() {
     return (
@@ -36,7 +36,7 @@ function PageRoute() {
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Index />} />
-                        <Route path="Home" element={<Home />} />
+                        <Route path="startLogin" element={<StartLogin />} />
                         <Route path="register" element={<Register />} />
                         <Route path="login" element={<Login />} />
                         <Route path="abonnement" element={<Abonnement />} />

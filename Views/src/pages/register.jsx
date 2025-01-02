@@ -215,6 +215,9 @@ const Register = () => {
                     <button type="submit" className="register-button" disabled={isLoading}>
                         {isLoading ? "Verwerken..." : "Registreren"}
                     </button>
+                    <button type="button" className="login-button" onClick={() => window.location.href = '/LoginVoorWijziging'}>
+                        Ga naar het inlogscherm
+                    </button>
                 </form>
             )}
             {/* Zakelijk Formulier */}
@@ -283,9 +286,13 @@ const Register = () => {
                     <button type="submit" className="register-button">
                         Registreren
                     </button>
+                    <button type="button" className="login-button" onClick={() => window.location.href = '/LoginVoorWijziging'}>
+                        Ga naar het inlogscherm
+                    </button>   
                 </form>
             )}
             {errorMessage && <div className="error-message">{errorMessage}</div>}
+            
         </div>
     );
 };
