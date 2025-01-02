@@ -6,6 +6,7 @@ import "../styles/navigatieBalk.css";
 const Layout = () => {
     const { userRole } = useContext(UserContext);
 
+
     // Definieer navigatie-opties per rol
     const navLinks = {
         particulier: [
@@ -33,6 +34,7 @@ const Layout = () => {
         ],
     };
 
+
     return (
         <>
             <header>
@@ -41,6 +43,7 @@ const Layout = () => {
                     <Link to="/" className="nav-link">Home</Link>
                     <Link to="/register" className="nav-link">Registreren</Link>
                     <Link to ="LoginVoorWijziging" className = "nav-link"> Inloggen</Link>
+
 
                     {/* Dynamische opties op basis van de gebruikersrol */}
                     {userRole &&

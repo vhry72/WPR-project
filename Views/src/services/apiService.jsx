@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const API_URL = 'https://localhost:5033/api'; // TODO: Make this a config variable
 

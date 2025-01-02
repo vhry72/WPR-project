@@ -3,79 +3,85 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using WPR_project.Data;
+using WPR_project.DTO_s;
 using WPR_project.Models;
+using WPR_project.Services;
 
 namespace WPR_project.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class SchademeldingController : Controller
     {
-        private readonly GegevensContext _context;
 
-        public SchademeldingController(GegevensContext context)
+        private readonly BedrijfsMedewerkersService _service;
+
+        public SchademeldingController(BedrijfsMedewerkersService service)
         {
-            _context = context;
+            _service = service;
         }
 
         // Aanmaken van een nieuwe schademelding
         [HttpPost]
-        public IActionResult Create(Guid voertuigId, string beschrijving, string status, string opmerkingen)
+        public IActionResult CreateSchadeMelding([FromBody] SchademeldingDTO schademelding)
         {
-            var voertuig = _context.Voertuigen.Find(voertuigId);
-            if (voertuig == null) return NotFound();
-
-            var schademelding = new Schademelding
+            if (schademelding == null)
             {
-                SchademeldingId = Guid.NewGuid(),
-                VoertuigId = voertuigId,
-                Beschrijving = beschrijving,
-                Datum = DateTime.Now,
-                Status = status,
-                Opmerkingen = opmerkingen
-            };
+                return BadRequest(new { Message = "Invalid data" });
+            }
 
-            _context.Schademeldingen.Add(schademelding);
-            _context.SaveChanges();
-
-            return Ok(schademelding);
-        }
-
-        // Ophalen van alle schademeldingen van een specifiek voertuig
-        [HttpGet]
-        public IActionResult GetByVoertuig(Guid voertuigId)
-        {
-            var meldingen = _context.Schademeldingen
-                .Where(s => s.VoertuigId == voertuigId)
-                .ToList();
-
-            return Ok(meldingen);
-        }
-        [HttpGet("api/schademeldingen")]
-        public IActionResult GetSchademeldingen()
-        {
             try
             {
-                var meldingen = _context.Schademeldingen.Include(s => s.Voertuig).ToList();
-                return Ok(meldingen);
+                _service.newSchademelding(schademelding);
+                return Ok(new { Message = "Schademelding succesvol aangemaakt" });
             }
             catch (Exception ex)
             {
-                // Log de fout voor verdere analyse
-                return StatusCode(500, $"Internal server error: {ex.Message}");
+                return BadRequest(new { Message = ex.Message });
             }
         }
 
-        [HttpPut("api/schademeldingen/{id}")]
-        public IActionResult UpdateSchademelding(Guid id, [FromBody] Schademelding updatedMelding)
+        // Ophalen van alle schademeldingen van een specifiek voertuig
+        [HttpGet("{voertuigId}")]
+        public IActionResult GetByVoertuig(Guid voertuigId)
         {
-            var melding = _context.Schademeldingen.Find(id);
-            if (melding == null) return NotFound();
+            var meldingen = _service.GetSchademeldingByVoertuigId(voertuigId);
+            return Ok(meldingen);
+        }
 
-            melding.Status = updatedMelding.Status;
-            melding.Opmerkingen = updatedMelding.Opmerkingen;
+        // ophalen van alle schademeldingen
+        [HttpGet]
+        public ActionResult<IEnumerable<SchademeldingDTO>> GetAllSchademeldingen()
+        {
+            var medlingen = _service.GetAllSchademeldingen();
+            return Ok(medlingen);
+        }
 
-            _context.SaveChanges();
-            return Ok(melding);
+
+        //update schademeldingen
+        [HttpPut]
+        [Route("api/schademeldingen/{id}")]
+        public IActionResult UpdateSchademelding(Guid id, [FromBody] SchademeldingDTO DTO)
+        {
+            try
+            {
+                _service.updateSchademelding(id, DTO);
+                return Ok(new { Message = "Schademelding is succesvol bijgewerkt" });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
 
     }
 }
+
+
+
+
+
