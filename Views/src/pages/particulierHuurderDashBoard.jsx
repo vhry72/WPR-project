@@ -14,7 +14,7 @@ const ZakelijkHuurderDashBoard = () => {
                         Huur Auto
                     </Link>
                     <Link to={`/accountwijzigingHuurders?HuurderID=${HuurderId}`} className="btn">
-                        Account Wijzigen
+                        Account Wijzigen 
                     </Link>
                 </div>
             </div>

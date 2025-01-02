@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "../styles/Abonnement.css";
 
@@ -6,22 +6,24 @@ function MedewerkersDashboard() {
     const location = useLocation();
     const abonnement = location.state?.abonnement;
     const [medewerkers, setMedewerkers] = useState([]);
-    const [nieuweMedewerker, setNieuweMedewerker] = useState({ naam: "", email: "" });
     const [toegevoegdAanAbonnement, setToegevoegdAanAbonnement] = useState([]);
+    const [notificatie, setNotificatie] = useState("");
 
-    const voegMedewerkerToe = () => {
-        if (!nieuweMedewerker.naam || !nieuweMedewerker.email) {
-            alert("Voer een naam en e-mailadres in.");
-            return;
-        }
-        setMedewerkers([...medewerkers, nieuweMedewerker]);
-        setNieuweMedewerker({ naam: "", email: "" });
-    };
+    // Haal medewerkers op bij het laden van de pagina
+    useEffect(() => {
+        const fetchMedewerkers = async () => {
+            try {
+                const response = await fetch("/api/medewerkers"); // Simuleer een API-endpoint
+                const data = await response.json();
+                setMedewerkers(data);
+            } catch (error) {
+                setNotificatie("Kon medewerkers niet ophalen.");
+                setTimeout(() => setNotificatie(""), 3000);
+            }
+        };
 
-    const verwijderMedewerker = (index) => {
-        const updatedMedewerkers = medewerkers.filter((_, i) => i !== index);
-        setMedewerkers(updatedMedewerkers);
-    };
+        fetchMedewerkers();
+    }, []);
 
     const voegToeAanAbonnement = (index) => {
         const medewerker = medewerkers[index];
@@ -33,46 +35,48 @@ function MedewerkersDashboard() {
         alert(`${medewerker.naam} is toegevoegd aan het abonnement.`);
     };
 
+    const verwijderUitAbonnement = (index) => {
+        const updatedList = toegevoegdAanAbonnement.filter((_, i) => i !== index);
+        setToegevoegdAanAbonnement(updatedList);
+        alert("Medewerker verwijderd uit het abonnement.");
+    };
+
     return (
         <div className="medewerkers-dashboard">
             <h1>Medewerkers Toevoegen</h1>
-            <br></br>
-            <h3>Gekozen Abonnement: {abonnement?.naam} - {abonnement?.prijs}</h3>
-            <div>
-                <input
-                    type="text"
-                    placeholder="Naam"
-                    value={nieuweMedewerker.naam}
-                    onChange={(e) => setNieuweMedewerker({ ...nieuweMedewerker, naam: e.target.value })}
-                />
-                <input
-                    type="email"
-                    placeholder="E-mail"
-                    value={nieuweMedewerker.email}
-                    onChange={(e) => setNieuweMedewerker({ ...nieuweMedewerker, email: e.target.value })}
-                />
-                <button onClick={voegMedewerkerToe}>Toevoegen</button>
-            </div>
-            <h3>Huidige Medewerkers</h3>
+            <br />
+            <h3>Gekozen Abonnement: {abonnement?.naam} - €{abonnement?.prijs}</h3>
+            <h3>Beschikbare Medewerkers</h3>
             <ul>
                 {medewerkers.map((medewerker, index) => (
                     <li key={index}>
                         {medewerker.naam} ({medewerker.email})
-                        <button className="verwijder-knop" onClick={() => verwijderMedewerker(index)}>
-                            Verwijderen
-                        </button>
-                        <button className="toevoegen-knop" onClick={() => voegToeAanAbonnement(index)}>
+                        <button
+                            className="toevoegen-knop"
+                            onClick={() => voegToeAanAbonnement(index)}
+                        >
                             Toevoegen aan Abonnement
                         </button>
                     </li>
                 ))}
             </ul>
+
             <h3>Medewerkers in Abonnement</h3>
             <ul>
                 {toegevoegdAanAbonnement.map((medewerker, index) => (
-                    <li key={index}>{medewerker.naam} ({medewerker.email})</li>
+                    <li key={index}>
+                        {medewerker.naam} ({medewerker.email})
+                        <button
+                            className="verwijder-knop"
+                            onClick={() => verwijderUitAbonnement(index)}
+                        >
+                            Verwijderen
+                        </button>
+                    </li>
                 ))}
             </ul>
+
+            {notificatie && <div className="notificatie-box">{notificatie}</div>}
         </div>
     );
 }
