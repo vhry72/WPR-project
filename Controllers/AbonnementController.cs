@@ -46,7 +46,8 @@ namespace WPR_project.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
-
+            }
+        }
         //Geeft abonnement details terug
         [HttpGet("{abonnementId}/details")]
         public IActionResult GetAbonnementDetails(Guid abonnementId)
