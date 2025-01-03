@@ -29,7 +29,7 @@ import VerhuurGegevens from "./pages/BackOfficeMedewerker/VerhuurGegevens";
 import SchadeMeldingen from "./pages/BackOfficeMedewerker/SchadeMeldingen";
 import Notification from "./pages/NotificatieZakelijk";
 import { UserProvider } from "./context/UserContext"; // Context import
-import { UserProvider } from "./context/UserContext"; 
+
 
 function PageRoute() {
     return (
