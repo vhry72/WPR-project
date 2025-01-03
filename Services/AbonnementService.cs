@@ -29,6 +29,10 @@ namespace WPR_project.Services
         {
             return _abonnementRepository.GetAllAbonnementen();
         }
+        public IEnumerable<Abonnement>GetBijnaVerlopenAbonementen() 
+        {
+            return _abonnementRepository.GetBijnaVerlopenAbonnementen();
+        }
 
         public void VoegMedewerkerToe(Guid bedrijfsId, string medewerkerNaam, string medewerkerEmail)
         {
@@ -259,5 +263,6 @@ namespace WPR_project.Services
 
             _emailService.SendEmail(beheerder.bedrijfsEmail, subject, body);
         }
+
     }
 }

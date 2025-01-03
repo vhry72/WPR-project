@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./pages/Layout";
-/*import Layout from "./pages/LayoutTest";*/
+/*import Layout from "./pages/Layout";*/
+import Layout from "./pages/LayoutTest";
 import Register from "./pages/register";
 import Login from "./pages/login";
 import Home from "./pages/Home";
@@ -27,6 +27,7 @@ import BackOfficeMedewerker from "./pages/BackOfficeMedewerker/BackOfficeMedewer
 import BackOfficeVerhuurAanvragen from "./pages/BackOfficeMedewerker/BackOfficeVerhuurAanvragen";
 import VerhuurGegevens from "./pages/BackOfficeMedewerker/VerhuurGegevens";
 import SchadeMeldingen from "./pages/BackOfficeMedewerker/SchadeMeldingen";
+import Notification from "./pages/NotificatieZakelijk";
 import { UserProvider } from "./context/UserContext"; // Context import
 
 function PageRoute() {
@@ -61,6 +62,7 @@ function PageRoute() {
                         <Route path="BackOfficeVerhuurAanvragen" element={<BackOfficeVerhuurAanvragen />} />
                         <Route path="VerhuurGegevens" element={<VerhuurGegevens />} />
                         <Route path="SchadeMeldingen" element={<SchadeMeldingen />} />
+                        <Route path="NotificatieZakelijk" element={<Notification/> }/>
                     </Route>
                 </Routes>
             </BrowserRouter>
