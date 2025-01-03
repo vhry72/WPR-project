@@ -179,8 +179,8 @@ namespace WPR_project.Services
             _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
             _wagenparkBeheerderRepository.Save();
 
-            StuurBevestigingsEmail(beheerder, nieuwAbonnement);
-            StuurFactuurEmail(beheerder, nieuwAbonnement);
+            StuurBevestigingsEmail(beheerderId, abonnementId);
+            StuurFactuurEmail(beheerderId, abonnementId);
         }
 
         public DateTime BerekenVolgendePeriode()
@@ -222,46 +222,78 @@ namespace WPR_project.Services
             _wagenparkBeheerderRepository.Save();
         }
 
-        private void StuurFactuurEmail(WagenparkBeheerder beheerder, Abonnement nieuwAbonnement)
+        public void StuurFactuurEmail(Guid beheerderId, Guid abonnementId)
         {
-            if (beheerder == null || nieuwAbonnement == null) throw new ArgumentNullException();
+            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            if (beheerder == null)
+                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
+            var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
+            if (abonnement == null)
+                throw new KeyNotFoundException("Abonnement niet gevonden.");
 
             string subject = "Factuur voor uw nieuwe abonnement";
             string body = $@"
-        Beste {beheerder.beheerderNaam},
+            Beste {beheerder.beheerderNaam},
 
-        Hartelijk dank voor het kiezen van het {nieuwAbonnement.Naam}-abonnement.
-        Hieronder vindt u de details van uw abonnement:
+            Hartelijk dank voor het kiezen van het {abonnement.Naam}-abonnement.
+            Hieronder vindt u de details van uw abonnement:
 
-        Abonnement: {nieuwAbonnement.Naam}
-        Kosten: €{nieuwAbonnement.Kosten:F2} per maand
-        Startdatum: {beheerder.updateDatumAbonnement:dd-MM-yyyy}
+            Abonnement: {abonnement.Naam}
+            Kosten: €{abonnement.Kosten:F2} per maand
+            Startdatum: {beheerder.updateDatumAbonnement:dd-MM-yyyy}
 
-        Bewaar deze factuur voor uw administratie.
-        Met vriendelijke groet,
-        CarAndAll";
+            Bewaar deze factuur voor uw administratie.
+            Met vriendelijke groet,
+            CarAndAll";
 
             _emailService.SendEmail(beheerder.bedrijfsEmail, subject, body);
         }
-
-        private void StuurBevestigingsEmail(WagenparkBeheerder beheerder, Abonnement nieuwAbonnement)
+        public void StuurBevestigingsEmail(Guid beheerderId, Guid abonnementId)
         {
-            if (beheerder == null || nieuwAbonnement == null) throw new ArgumentNullException();
-
+            // Haal de WagenparkBeheerder en Abonnement op
+            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+               if (beheerder == null) {
+                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
+            }
+            var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
+               if (abonnement == null) {
+                throw new KeyNotFoundException("Abonnement niet gevonden.");
+            }
+            // Factuur bericht
             string subject = "Bevestiging van uw abonnementswijziging";
             string body = $@"
-        Beste {beheerder.beheerderNaam},
+            Beste {beheerder.beheerderNaam},
 
-        Uw abonnementswijziging is geregistreerd.
+            Uw abonnementswijziging is geregistreerd.
 
-        Nieuw abonnement: {nieuwAbonnement.Naam}
-        Kosten: €{nieuwAbonnement.Kosten:F2} per maand
-        Ingangsdatum: {beheerder.updateDatumAbonnement:dd-MM-yyyy}
+            Nieuw abonnement: {abonnement.Naam}
+            Kosten: €{abonnement.Kosten:F2} per maand
+            Ingangsdatum: {beheerder.updateDatumAbonnement:dd-MM-yyyy}
 
-        Met vriendelijke groet,
-        CarAndAll";
+            Met vriendelijke groet,
+            CarAndAll";
 
+            // Verstuur de e-mail
             _emailService.SendEmail(beheerder.bedrijfsEmail, subject, body);
+        }
+
+        public AbonnementVerzoek GetAbonnementDetails(Guid abonnementId)
+        {
+            var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
+            if (abonnement == null)
+                throw new KeyNotFoundException("Abonnement niet gevonden.");
+
+            // Stel een AbonnementVerzoek object samen met alle details
+            return new AbonnementVerzoek
+            {
+                AbonnementId = abonnement.AbonnementId,
+                AbonnementType = abonnement.AbonnementType,
+                aantalDagen = abonnement.WagenparkBeheerders.Count, // Aanpassen als de business logica anders is
+                korting = 10m, // Hardcoded voor nu, je kunt dit vervangen door dynamische logica
+                details = $"Dit abonnement bevat extra voordelen voor bedrijfsgebruikers: {abonnement.Naam}.",
+                directZichtbaar = false,
+                volgendePeriode = true
+            };
         }
 
     }

@@ -5,9 +5,9 @@ import "../styles/Abonnement.css";
 function Abonnement() {
     const navigate = useNavigate();
     const [abonnementOptions] = useState([
-        { id: 0, naam: "Standaard Maandelijks", prijs: "€10 / maand" },
-        { id: 1, naam: "Standaard Per kwartaal", prijs: "€25 / kwartaal" },
-        { id: 2, naam: "Standaard Per jaar", prijs: "€80 / jaar" },
+        { id: 0, naam: "Standaard Maandelijks", prijs: 10, korting: 0 },
+        { id: 1, naam: "Standaard Per kwartaal", prijs: 25, korting: 5 }, // 5% korting
+        { id: 2, naam: "Standaard Per jaar", prijs: 80, korting: 10 }, // 10% korting
     ]);
 
     const handleSelect = (option) => {
@@ -25,7 +25,10 @@ function Abonnement() {
                         className="option"
                         onClick={() => handleSelect(option)}
                     >
-                        {option.naam} - {option.prijs}
+                        {option.naam} - €{option.prijs}
+                        {option.korting > 0 && (
+                            <span> (Korting: {option.korting}%)</span>
+                        )}
                     </div>
                 ))}
             </div>

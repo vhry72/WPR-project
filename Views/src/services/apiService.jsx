@@ -1,16 +1,16 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const API_URL = 'https://localhost:5033/api'; // TODO: Make this a config variable
 
 const defaultHeaders = {
-   'Content-Type': 'application/json',
+    'Content-Type': 'application/json',
 };
 
 const apiService = {
-   get: (path, options = {}) => {
+    get: (path, options = {}) => {
         return axios.get(`${API_URL}${path}`, {
-           headers: { ...defaultHeaders, ...(options.headers || {}) },
-           params: options.params || {},
+            headers: { ...defaultHeaders, ...(options.headers || {}) },
+            params: options.params || {},
             withCredentials: true,
         });
     },
