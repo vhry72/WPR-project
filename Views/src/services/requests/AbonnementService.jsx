@@ -10,6 +10,17 @@ const AbonnementService = {
             throw error;
         }
     },
+    getBijnaVerlopen: async () => {
+        try {
+            const response = await apiService.get('/Abonnement/bijna-verlopen');
+            return response
+        }
+        catch (error) {
+            console.error('Error fetching bijna verlopen abonnementen: ', error);
+            throw error;
+        }
+    },
+    
 
     getById: async (zakelijkeId) => {
         try {

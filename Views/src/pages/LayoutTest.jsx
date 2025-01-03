@@ -1,7 +1,7 @@
 ﻿import { Outlet, Link } from "react-router-dom";
 import "../styles/navigatieBalk.css";
 
-const Layout = () => {
+export const Layout = () => {
     return (
         <>
             <header>
@@ -10,7 +10,7 @@ const Layout = () => {
                     <Link to="/Home" className="nav-link">Info Pagina</Link>&nbsp;
                     <Link to="/instellingen" className="nav-link">Instellingen</Link>
                     <Link to="/abonnement" className="nav-link">Abonnement</Link>
-                    <Link to="/zaakdashboard" className="nav-link">Zaak Dashboard</Link>
+                    <Link to="/zakelijkHuurderDashboard" className="nav-link">Zaak Dashboard</Link>
                     <Link to="/wagenparklogin" className="nav-link">Wagenpark Login</Link>
                     <Link to="/testPage" className="nav-link">TestPage</Link>
                     <Link to="/wagendashboard" className="nav-link">Wagen Dashboard</Link>

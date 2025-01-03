@@ -7,6 +7,7 @@ using WPR_project.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // React CORS-configuratie
 builder.Services.AddCors(options =>
 {

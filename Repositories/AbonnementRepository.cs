@@ -1,5 +1,6 @@
 ﻿using WPR_project.Models;
 using WPR_project.Data;
+using System.Diagnostics.Contracts;
 using Microsoft.EntityFrameworkCore;
 
 namespace WPR_project.Repositories
@@ -22,6 +23,17 @@ namespace WPR_project.Repositories
         public IEnumerable<Abonnement> GetAllAbonnementen()
         {
             return _context.Abonnementen.ToList();
+        }
+        public IEnumerable<Abonnement> GetBijnaVerlopenAbonnementen()
+        {
+            var vandaag = DateTime.Now;
+            var eenMaandLater = vandaag.AddMonths(1);
+
+            return _context.Abonnementen
+                .Where(a => a.vervaldatum >= vandaag && a.vervaldatum <= eenMaandLater)
+                .ToList();
+           
+
         }
 
         public Abonnement GetAbonnementById(Guid id)
