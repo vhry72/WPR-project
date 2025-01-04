@@ -1,4 +1,5 @@
-﻿using WPR_project.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using WPR_project.Data;
 using WPR_project.Models;
 using WPR_project.Repositories;
 
@@ -18,29 +19,44 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         _context.SaveChanges();
     }
 
-    public IEnumerable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId)
+    public IQueryable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId)
     {
         return _context.Huurverzoeken
-            .Where(h => h.HuurderID == huurderId && h.endDate > DateTime.Now)
-            .ToList();
+           .Where(h => h.HuurderID == huurderId && h.endDate > DateTime.Now)
+           .Include(h => h.Voertuig);
+           
+            
     }
 
-    public IEnumerable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime)
+    public IQueryable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime)
     {
         return _context.Huurverzoeken
             .Where(h => h.beginDate <= reminderTime && h.beginDate > DateTime.Now)
-            .ToList();
+            .Include(h => h.Voertuig);
     }
 
-      public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
+      public IQueryable<Huurverzoek> GetAllHuurVerzoeken()
       {
-                return _context.Huurverzoeken.ToList();
-       }
-    public IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken()
+                return _context.Huurverzoeken
+            .Include(h => h.Voertuig);
+    }
+    public IQueryable<Huurverzoek> GetAllActiveHuurVerzoeken()
     {
         return _context.Huurverzoeken
-            .Where(h => h.approved == false) // Filtert op huurverzoeken waar Approved false is
-            .ToList(); // Zet het resultaat om naar een lijst
+            .Where(h => h.isBevestigd == false) 
+            .Include(h => h.Voertuig);
+    }
+    public IQueryable<Huurverzoek> GetAllBeantwoordenHuurVerzoeken()
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.isBevestigd == true)
+            .Include(h => h.Voertuig);
+    }
+    public IQueryable<Huurverzoek> GetAllAfgekeurde()
+    {
+        return _context.Huurverzoeken
+            .Where(h => (h.isBevestigd == true) && (h.approved == false))
+            .Include(h => h.Voertuig);
     }
 
     public Huurverzoek GetByID(Guid id)
@@ -52,6 +68,7 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         {
             _context.Huurverzoeken.Update(huurVerzoek);
         }
+    
     public void Save()
     {
         _context.SaveChanges();

@@ -3,6 +3,9 @@
 const HuurVerzoekenList = () => {
     const [huurverzoeken, setHuurverzoeken] = useState([]);
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+   
 
     useEffect(() => {
         fetch('https://localhost:5033/api/Huurverzoek/GetAllActive')
@@ -67,11 +70,10 @@ const HuurVerzoekenList = () => {
             <ul>
                 {huurverzoeken.map((huurverzoek) => (
                     <li key={huurverzoek.huuderID}> {/* Zorg ervoor dat HuurverzoekId uniek is */}
-                        <p>Voertuig: {huurverzoek.voertuig ? huurverzoek.voertuig.naam : 'Onbekend'}</p>
+                        <p>Voertuig: {huurverzoek.voertuig.merk} { huurverzoek.voertuig.model}</p>
                         <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
-                        <p>Eind Datum: {new Date(huurverzoek.eindDate).toLocaleDateString()}</p>
+                        <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>
                         <p>Goedkeuring: {huurverzoek.approved ? 'Goedgekeurd' : 'Afgewezen'}</p>
-
                         <button onClick={() => updateGoedkeuring(huurverzoek.huuderID)}>
                             Zet op "Goedgekeurd"
                         </button>

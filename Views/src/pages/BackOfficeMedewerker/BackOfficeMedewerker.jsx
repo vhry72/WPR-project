@@ -13,7 +13,7 @@ const BackOfficeMedewerker = () => {
                         Actieve Verhuur Aanvragen
                     </Link>
                     <Link to="/VerhuurGegevens" className="btn">
-                        Geschiedenis VerhuurVerzoeken
+                        Afgekeurde Verhuur Aanvragen
                     </Link>
                     <Link to="/SchadeMeldingen" className="btn">
                         SchadeMeldingen

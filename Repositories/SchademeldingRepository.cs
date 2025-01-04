@@ -1,4 +1,5 @@
-﻿using WPR_project.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using WPR_project.Data;
 using WPR_project.Models;
 
 namespace WPR_project.Repositories
@@ -12,10 +13,12 @@ namespace WPR_project.Repositories
             _context = context;
         }
 
-        public IEnumerable<Schademelding> GetAllSchademeldingen() 
+        public IQueryable<Schademelding> GetAllSchademeldingen()
         {
-            return _context.Schademeldingen.ToList();
+            return _context.Schademeldingen
+                .Include(s => s.Voertuig);  // Eager load Voertuig
         }
+
         public List<Schademelding> GetSchademeldingByVoertuigId(Guid voertuigId)
         {
             return _context.Schademeldingen
