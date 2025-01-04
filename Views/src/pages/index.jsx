@@ -3,7 +3,6 @@ import React, { useEffect } from "react";
 import "../styles/styles.css";
 import "../styles/navigatieBalk.css";
 
-
 const Index = () => {
     useEffect(() => {
         console.log("Navigeert naar Home");
@@ -11,16 +10,19 @@ const Index = () => {
 
     return (
         <>
-           
-
             <div className="hero" id="home">
                 <div className="hero-text-container">
                     <h1>Welkom bij CarAndAll!</h1>
                     <p>Ontdek de beste diensten die we aanbieden!</p>
                 </div>
 
+                {/* Toegankelijke knop met aria-label */}
                 <div className="ontdek-btn">
-                    <a href="#services" className="cta">
+                    <a
+                        href="#services"
+                        className="cta"
+                        aria-label="Ontdek meer over onze diensten"
+                    >
                         Ontdek Meer
                     </a>
                 </div>
@@ -32,32 +34,35 @@ const Index = () => {
                 <div className="service-list">
                     {[
                         {
-                            id: 1, // Toegevoegd
+                            id: 1,
                             imgSrc: "src/assets/mercedes-indesx.jpg",
-                            title: "Service 1",
-                            description: "Beschrijving van Service 1.",
+                            title: "Auto's verhuur",
+                            description: "De beste auto verhuurdiensten met opties voor een ieder geschikt!",
                         },
                         {
-                            id: 2, // Toegevoegd
+                            id: 2,
                             imgSrc: "src/assets/camper-index.png",
-                            title: "Service 2",
-                            description: "Beschrijving van Service 2.",
+                            title: "Camper verhuur",
+                            description: "Ontdek onze camperverhuurdiensten voor reizen.",
                         },
                         {
-                            id: 3, // Toegevoegd
+                            id: 3,
                             imgSrc: "src/assets/caravans-index.jpg",
-                            title: "Service 3",
-                            description: "Beschrijving van Service 3.",
+                            title: "Caravan verhuur",
+                            description: "Caravan verhuurdiensten voor vakantiegangers.",
                         },
                         {
-                            id: 4, // Toegevoegd
+                            id: 4,
                             imgSrc: "src/assets/z&p-index.png",
-                            title: "Service 4",
-                            description: "Beschrijving van Service 4.",
+                            title: "Zakelijke & Persoonlijke verhuur",
+                            description: "Verhuur voor zowel zakelijke als persoonlijke behoeften.",
                         },
                     ].map((service) => (
                         <div className="service" key={service.id}>
-                            <img src={service.imgSrc} alt={service.title} />
+                            <img
+                                src={service.imgSrc}
+                                alt={`${service.title} - ${service.description}`}
+                            />
                             <h3>{service.title}</h3>
                             <p>{service.description}</p>
                         </div>

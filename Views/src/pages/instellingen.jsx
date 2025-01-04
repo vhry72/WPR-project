@@ -6,7 +6,6 @@ const instellingen = () => {
     console.log("instellingen component wordt gerenderd");
 
     return (
-        <>
             <div className="index-container">
                 <div className="options">
                     <Link to="/accountwijzigingHuurders" className="btn">
@@ -17,7 +16,6 @@ const instellingen = () => {
                     </Link>
                 </div>
             </div>
-        </>
     );
 };
 
