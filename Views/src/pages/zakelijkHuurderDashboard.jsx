@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import "../styles/styles.css";
-import { FaBell } from 'react-icons/fa';
+//import { FaBell } from 'react-icons/fa';
 import AbonnementService from "../services/requests/AbonnementService";  // Zorg ervoor dat deze geïmporteerd is
 
 export const ZakelijkHuurderDashBoard = () => {

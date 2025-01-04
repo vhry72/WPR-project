@@ -39,6 +39,7 @@ body header {
 
 
  /*Style for each navigation link */
+/* Donkerdere achtergrond voor betere contrast */
 .nav-link {
     color: #FFFFFF;
     font-family: Arial, sans-serif;
@@ -46,7 +47,10 @@ body header {
     padding: 10px 15px;
     text-decoration: none;
     margin-right: 10px;
+    border-radius: 50px;
+    background-color: #1a2b4c; /* Donkerder blauw */
 }
+
 
 .nav-link:hover {
     background-color: #2c3e50;
