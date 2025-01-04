@@ -5,6 +5,9 @@
         public DateTime? StartDatum { get; set; }
         public DateTime? EindDatum { get; set; }
         public bool VoertuigBeschikbaar { get; set; }
+        public string model { get; set; }
+        public string merk { get; set; }
+
     }
 }
 
