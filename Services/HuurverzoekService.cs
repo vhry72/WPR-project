@@ -122,7 +122,11 @@ public class HuurverzoekService
         {
             return _repository.GetAllHuurVerzoeken();
         }
-        public HuurVerzoekDTO GetById(Guid id)
+        public IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken()
+        {
+            return _repository.GetAllActiveHuurVerzoeken();
+        }
+    public HuurVerzoekDTO GetById(Guid id)
         {
             var huurder = _repository.GetByID(id);
             if (huurder == null) { return null; }
@@ -143,6 +147,7 @@ public class HuurverzoekService
             huurder.approved = dto.approved;
 
             _repository.Update(huurder);
+            _repository.Save();
 
         }
     }
