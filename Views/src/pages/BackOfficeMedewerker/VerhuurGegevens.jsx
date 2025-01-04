@@ -36,7 +36,7 @@ const HuurVerzoekenList = () => {
 
     return (
         <div>
-            <h1>Huurverzoeken</h1>
+            <h1>Afgekeurde Huurverzoeken</h1>
             {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
             {huurverzoeken.length === 0 ? (
                 <p>Geen Huurverzoeken aangevraagd.</p>

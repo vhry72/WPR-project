@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 
 import { Link } from "react-router-dom";
 
@@ -25,5 +25,3 @@ const BackOfficeMedewerker = () => {
 };
 
 export default BackOfficeMedewerker;
-
-

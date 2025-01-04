@@ -99,12 +99,12 @@ namespace WPR_project.Services
         {
             var medewerker = _repository.GetMedewerkerById(id);
             if (medewerker == null) throw new KeyNotFoundException("Medewerker niet gevonden.");
-
+            
             _repository.Delete(medewerker.bedrijfsMedewerkerId);
             _repository.Save();
         }
 
-        public IEnumerable<SchademeldingDTO> GetAllSchademeldingen()
+        public IQueryable<SchademeldingDTO> GetAllSchademeldingen()
         {
             return _schaderepository.GetAllSchademeldingen().Select(h => new SchademeldingDTO
             {
@@ -117,6 +117,8 @@ namespace WPR_project.Services
                 Voertuig = h.Voertuig
             });
         }
+
+
         public List<SchademeldingDTO> GetSchademeldingByVoertuigId(Guid voertuigId)
         {
             

@@ -118,14 +118,16 @@ public class HuurverzoekService
         }
     }
 
-    public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
-    {
-        return _repository.GetAllHuurVerzoeken();
-    }
-    public IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken()
-    {
-        return _repository.GetAllActiveHuurVerzoeken();
-    }
+
+        public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
+        {
+            return _repository.GetAllHuurVerzoeken();
+        }
+        public IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken()
+        {
+            return _repository.GetAllActiveHuurVerzoeken();
+        }
+
     public IEnumerable<Huurverzoek> GetAllBeantwoordeHuurVerzoeken()
     {
         return _repository.GetAllBeantwoordenHuurVerzoeken();
@@ -152,14 +154,14 @@ public class HuurverzoekService
         var huurder = _repository.GetByID(id);
         if (huurder == null) throw new KeyNotFoundException("Huurverzoek niet gevonden.");
 
+
         huurder.approved = dto.approved;
         huurder.isBevestigd = dto.isBevestigd;
 
+
         _repository.Update(huurder);
         _repository.Save();
-
     }
-
-
+        
 }
 

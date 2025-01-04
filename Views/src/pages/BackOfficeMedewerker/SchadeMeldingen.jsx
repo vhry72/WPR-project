@@ -18,7 +18,6 @@ const SchademeldingenList = () => {
             })
             .catch((error) => {
                 setError('Er is een fout opgetreden bij het ophalen van de schademeldingen.');
-                setSchademeldingen(dummySchademeldingen); // Zet de dummy lijst bij fout
             });
     }, []);
 
@@ -67,8 +66,6 @@ const SchademeldingenList = () => {
                         <p>Voertuig: {schademelding.voertuig.merk} {schademelding.voertuig.model}</p>
                         <p>Datum: {new Date(schademelding.datum).toLocaleDateString()}</p>
 
-                        {/* Toon de afbeelding van de schademelding */}
-                        {schademelding.fotoUrl && <img src={schademelding.fotoUrl} alt="Schade" width="200" />}
 
                         {/* Bewerken van opmerkingen */}
                         <div>

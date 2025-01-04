@@ -7,6 +7,8 @@ const HuurVerzoekenList = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
+
     useEffect(() => {
         axios.get('https://localhost:5033/api/Huurverzoek/GetAllActive')
             .then(response => {
@@ -45,6 +47,7 @@ const HuurVerzoekenList = () => {
         <div>
             <h1>Huurverzoeken</h1>
             {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
+
             {huurverzoeken.length === 0 ? (
                 <p>Geen Huurverzoeken aangevraagd.</p>
             ) : (
