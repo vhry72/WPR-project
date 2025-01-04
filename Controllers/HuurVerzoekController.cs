@@ -156,7 +156,6 @@ public class HuurverzoekController : ControllerBase
             return NotFound(new { Message = "Huurverzoek niet gevonden." });
         }
     }
-
     [HttpPut("approve/{id}/{approved}")]
     public IActionResult ApproveRequest(Guid id, bool approved, bool isBevestigd)
     {
@@ -201,7 +200,6 @@ public class HuurverzoekController : ControllerBase
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
-
 
 }
 
