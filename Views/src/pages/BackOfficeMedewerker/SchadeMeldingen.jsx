@@ -5,39 +5,8 @@ const SchademeldingenList = () => {
     const [error, setError] = useState(null);
     const [editedOpmerkingen, setEditedOpmerkingen] = useState({});
 
-    // Dummy lijst van schademeldingen (voor als er een fout optreedt)
-    const dummySchademeldingen = [
-        {
-            schademeldingId: '1',
-            beschrijving: 'Kras op de deur',
-            status: 'Open',
-            opmerkingen: 'Moet nog worden gerepareerd',
-            voertuig: { naam: 'Auto 1' },
-            datum: new Date().toISOString(),
-            fotoUrl: 'https://example.com/image1.jpg', // Dummy afbeelding
-        },
-        {
-            schademeldingId: '2',
-            beschrijving: 'Schade aan voorruit',
-            status: 'Afgehandeld',
-            opmerkingen: 'Verzekering heeft betaald',
-            voertuig: { naam: 'Auto 2' },
-            datum: new Date().toISOString(),
-            fotoUrl: 'https://example.com/image2.jpg', // Dummy afbeelding
-        },
-        {
-            schademeldingId: '3',
-            beschrijving: 'Deuk in de bumper',
-            status: 'In behandeling',
-            opmerkingen: 'Wachten op onderdelen',
-            voertuig: { naam: 'Auto 3' },
-            datum: new Date().toISOString(),
-            fotoUrl: 'https://example.com/image3.jpg', // Dummy afbeelding
-        },
-    ];
-
     useEffect(() => {
-        fetch('https://localhost:5033/api/schademeldingen')
+        fetch('https://localhost:5033/api/Schademelding')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Netwerk reactie was niet ok');
@@ -87,12 +56,15 @@ const SchademeldingenList = () => {
         <div>
             <h1>Schademeldingen</h1>
             {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
+            {schademeldingen.length === 0 ? (
+                <p>Er zijn op dit moment geen schademeldingen.</p>
+            ) : (
             <ul>
                 {schademeldingen.map((schademelding) => (
                     <li key={schademelding.schademeldingId}>
-                        <h3>{schademelding.beschrijving}</h3>
+                        <p>{schademelding.beschrijving}</p>
                         <p>Status: {schademelding.status}</p>
-                        <p>Voertuig: {schademelding.voertuig ? schademelding.voertuig.naam : 'Onbekend'}</p>
+                        <p>Voertuig: {schademelding.voertuig.merk} {schademelding.voertuig.model}</p>
                         <p>Datum: {new Date(schademelding.datum).toLocaleDateString()}</p>
 
                         {/* Toon de afbeelding van de schademelding */}
@@ -117,6 +89,7 @@ const SchademeldingenList = () => {
                     </li>
                 ))}
             </ul>
+            )}
         </div>
     );
 };

@@ -8,7 +8,7 @@ const HuurVerzoekenList = () => {
    
 
     useEffect(() => {
-        fetch('https://localhost:5033/api/Huurverzoek')
+        fetch('https://localhost:5033/api/Huurverzoek/GetAllAfgekeurde')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Netwerk reactie was niet ok');
@@ -38,17 +38,25 @@ const HuurVerzoekenList = () => {
         <div>
             <h1>Huurverzoeken</h1>
             {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
-            <ul>
-                {huurverzoeken.map((huurverzoek) => (
-                    <li key={huurverzoek.HuurverzoekId}>
-                        <p>Voertuig: {huurverzoek.voertuig ? huurverzoek.voertuig.naam : 'Onbekend'}</p>
-                        <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
-                        <p>Eind Datum: {new Date(huurverzoek.eindDate).toLocaleDateString()}</p>
-                        <p>Goedkeuring: {huurverzoek.approved ? 'Goedgekeurd' : 'Afgewezen'}</p>
-                    </li>
-                ))}
-            </ul>
-
+            {huurverzoeken.length === 0 ? (
+                <p>Geen Huurverzoeken aangevraagd.</p>
+            ) : (
+                <ul>
+                    {huurverzoeken.map((huurverzoek) => (
+                        <li key={huurverzoek.huurderID}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
+                            <p>Voertuig: {huurverzoek.voertuig.merk} {huurverzoek.voertuig.model}</p>
+                            <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
+                            <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>
+                            <button onClick={() => approveRequest(huurverzoek.huurderID)}>
+                                Keur verzoek goed.
+                            </button>
+                            <button onClick={() => weigerRequest(huurverzoek.huurderID)}>
+                                Weiger verzoek.
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };

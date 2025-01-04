@@ -10,10 +10,10 @@ const BackOfficeMedewerker = () => {
             <div className="index-container">
                 <div className="options">
                     <Link to="/BackOfficeVerhuurAanvragen" className="btn">
-                        Actieve Verhuur Aanvragen
+                        Huur verzoeken
                     </Link>
                     <Link to="/VerhuurGegevens" className="btn">
-                        Geschiedenis VerhuurVerzoeken
+                        Afgewezen verzoeken
                     </Link>
                     <Link to="/SchadeMeldingen" className="btn">
                         SchadeMeldingen
