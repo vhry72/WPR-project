@@ -43,12 +43,12 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
     public IQueryable<Huurverzoek> GetAllActiveHuurVerzoeken()
     {
         return _context.Huurverzoeken
-            .Where(h => h.isBevestigd == false)
+            .Where(h => h.isBevestigd== false)
             .Where(h => h.isBevestigd == false) 
 
             .Include(h => h.Voertuig);
     }
-    public IQueryable<Huurverzoek> GetAllBeantwoordenHuurVerzoeken()
+    public IQueryable<Huurverzoek> GetAllBeantwoorde()
     {
         return _context.Huurverzoeken
             .Where(h => h.isBevestigd == true)

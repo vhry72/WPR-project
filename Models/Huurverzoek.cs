@@ -11,6 +11,7 @@ namespace WPR_project.Models
         public DateTime endDate { get; set; }
         public bool approved { get; set; }
         public bool isBevestigd { get; set; }
+
         [ForeignKey("VoertuigId")]
         public Voertuig Voertuig { get; set; }
     }

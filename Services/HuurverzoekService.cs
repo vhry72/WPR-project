@@ -130,7 +130,7 @@ public class HuurverzoekService
 
     public IEnumerable<Huurverzoek> GetAllBeantwoordeHuurVerzoeken()
     {
-        return _repository.GetAllBeantwoordenHuurVerzoeken();
+        return _repository.GetAllBeantwoorde();
     }
     public IEnumerable<Huurverzoek> GetAllAfgekeurde()
     {

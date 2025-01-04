@@ -12,7 +12,7 @@ namespace WPR_project.Repositories
 
         IQueryable<Huurverzoek> GetAllHuurVerzoeken();
         IQueryable<Huurverzoek> GetAllActiveHuurVerzoeken();
-        IQueryable<Huurverzoek> GetAllBeantwoordenHuurVerzoeken();
+        IQueryable<Huurverzoek> GetAllBeantwoorde();
         IQueryable<Huurverzoek> GetAllAfgekeurde();
         public Huurverzoek GetByID(Guid Id);
         void Update(Huurverzoek huurVerzoek);
