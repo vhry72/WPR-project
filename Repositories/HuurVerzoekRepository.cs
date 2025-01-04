@@ -36,8 +36,14 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
       {
                 return _context.Huurverzoeken.ToList();
        }
-       
-        public Huurverzoek GetByID(Guid id)
+    public IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken()
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.approved == false) // Filtert op huurverzoeken waar Approved false is
+            .ToList(); // Zet het resultaat om naar een lijst
+    }
+
+    public Huurverzoek GetByID(Guid id)
       {
           return _context.Huurverzoeken.Find(id);
       }
@@ -46,8 +52,11 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         {
             _context.Huurverzoeken.Update(huurVerzoek);
         }
-
+    public void Save()
+    {
+        _context.SaveChanges();
     }
+}
 
 
 

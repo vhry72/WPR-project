@@ -11,8 +11,9 @@ namespace WPR_project.Repositories
         IEnumerable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime);
 
         IEnumerable<Huurverzoek> GetAllHuurVerzoeken();
+        IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken();
         public Huurverzoek GetByID(Guid Id);
         void Update(Huurverzoek huurVerzoek);
-
+        void Save();
     }
 }

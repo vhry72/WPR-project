@@ -1,109 +1,88 @@
-﻿import React, { useState } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 
-const BackOfficeVerhuurAanvraag = () => {
-    // Dummy lijst van items met hun initiële goedkeuringsstatus en lege reden
-    const initialList = [
-        { id: 1, name: 'Ford Focus van 12-11 tot 13-11', approved: null, reason: '' },
-        { id: 2, name: 'Tyota Aygo van 19-12 tot 01-01', approved: null, reason: '' },
-        { id: 3, name: 'Nissan Note van 01-02 tot 04-05', approved: null, reason: '' },
-        { id: 4, name: 'Mercedes Benz van 12-12 tot 14-12', approved: null, reason: '' },
-    ];
+const HuurVerzoekenList = () => {
+    const [huurverzoeken, setHuurverzoeken] = useState([]);
+    const [error, setError] = useState(null);
 
-    // Gebruik van useState om de lijst van items en afgekeurde verzoeken bij te houden
-    const [items, setItems] = useState(initialList);
-    const [rejectedItems, setRejectedItems] = useState([]); // Voor afgekeurde verzoeken
+    useEffect(() => {
+        fetch('https://localhost:5033/api/Huurverzoek/GetAllActive')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Netwerk reactie was niet ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setHuurverzoeken(data); // Zet de opgehaalde data
+            })
+            .catch((error) => {
+                setError('Er is een fout opgetreden bij het ophalen van de huurverzoeken.');
+            });
+    }, []);
 
-    // Functie om de goedkeuringsstatus van een item te veranderen
-    const handleApproval = (id, status) => {
-        const updatedItem = items.find(item => item.id === id);
+    // update de goedkeuring van het verzoek
+    const updateGoedkeuring = (id) => {
+        // Stel de DTO voor de goedkeuring samen
+        const dto = {
+             // Zorg ervoor dat dit het juiste veld is dat overeenkomt met de route parameter in je API
+            approved: true // Zet approved op true, want je wilt het goedkeuren
+        };
 
-        if (status) {
-            // Goedkeuren: Verwijderen uit de lijst
-            setItems(items.filter(item => item.id !== id));
-        } else {
-            // Afkeuren: Verplaatsen naar de afgekeurde lijst
-            setRejectedItems([...rejectedItems, { ...updatedItem, approved: false }]);
-            setItems(items.filter(item => item.id !== id));
-        }
-    };
+        // Stuur een PUT verzoek naar de API
+        fetch(`https://localhost:5033/api/Huurverzoek/KeurGoed/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dto),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Er is een fout opgetreden bij het bijwerken van de goedkeuring.');
+                }
+                return response.json();
+            })
+            .then(() => {
+                // Werk de state bij om de goedkeuring te reflecteren zonder opnieuw te hoeven laden
+                setHuurverzoeken((prevHuurverzoeken) =>
+                    prevHuurverzoeken.map((verzoek) =>
+                        verzoek.huurderID === id
+                            ? { ...verzoek, approved: true } // Update de goedkeuring in de UI
+                            : verzoek
+                    )
+                );
+            })
+            .catch((error) => {
+                setError('Er is een fout opgetreden bij het bijwerken van de goedkeuring.');
+                console.error(error);
+            });
+        console.log(huurverzoeken); // Voeg dit toe om te zien of de HuurverzoekId's uniek zijn
 
-    // Functie om de reden bij te werken (voor goedkeuren of afkeuren)
-    const handleReasonChange = (id, value) => {
-        setItems(items.map(item =>
-            item.id === id ? { ...item, reason: value } : item
-        ));
     };
 
     return (
         <div>
-            <h1>Verhuur Aanvragen</h1>
-
-            {/* Lijst van actieve items */}
+            <h1>Huurverzoeken</h1>
+            {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
             <ul>
-                {items.map((item) => (
-                    <li key={item.id}>
-                        <span>{item.name}</span>
-                        <span style={{ marginLeft: '10px' }}>
-                            {item.approved === null
-                                ? 'Wachten op goedkeuring'
-                                : item.approved ? 'Goedgekeurd' : 'Afgekeurd'}
-                        </span>
+                {huurverzoeken.map((huurverzoek) => (
+                    <li key={huurverzoek.huuderID}> {/* Zorg ervoor dat HuurverzoekId uniek is */}
+                        <p>Voertuig: {huurverzoek.voertuig ? huurverzoek.voertuig.naam : 'Onbekend'}</p>
+                        <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
+                        <p>Eind Datum: {new Date(huurverzoek.eindDate).toLocaleDateString()}</p>
+                        <p>Goedkeuring: {huurverzoek.approved ? 'Goedgekeurd' : 'Afgewezen'}</p>
 
-                        {/* Het invulveld voor de reden */}
-                        <div>
-                            <label htmlFor={`reason-${item.id}`} style={{ marginLeft: '10px' }}>
-                                Reden:
-                            </label>
-                            <input
-                                id={`reason-${item.id}`}
-                                type="text"
-                                value={item.reason}
-                                onChange={(e) => handleReasonChange(item.id, e.target.value)}
-                                placeholder="Geef een reden"
-                                style={{ marginLeft: '10px', padding: '5px', width: '300px' }}
-                            />
-                        </div>
-
-                        {/* Goedkeurings- en afkeurknoppen */}
-                        <button
-                            onClick={() => handleApproval(item.id, true)}
-                            style={{ marginLeft: '10px', backgroundColor: 'green', color: 'white' }}
-                            disabled={!item.reason.trim()} // Voorkom goedkeuren zonder reden
-                        >
-                            Goedkeuren
-                        </button>
-                        <button
-                            onClick={() => handleApproval(item.id, false)}
-                            style={{ marginLeft: '10px', backgroundColor: 'red', color: 'white' }}
-                            disabled={!item.reason.trim()} // Voorkom afkeuren zonder reden
-                        >
-                            Afkeuren
+                        <button onClick={() => updateGoedkeuring(huurverzoek.huuderID)}>
+                            Zet op "Goedgekeurd"
                         </button>
                     </li>
                 ))}
             </ul>
 
-            {/* Lijst van afgekeurde items */}
-            {rejectedItems.length > 0 && (
-                <div>
-                    <h2>Afgekeurde Verzoeken</h2>
-                    <ul>
-                        {rejectedItems.map((item) => (
-                            <li key={item.id}>
-                                <span>{item.name}</span>
-                                <span style={{ marginLeft: '10px', color: 'red' }}>
-                                    Afgekeurd
-                                </span>
-                                <p style={{ marginLeft: '10px' }}>
-                                    Reden: {item.reason || 'Geen reden opgegeven'}
-                                </p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
         </div>
     );
 };
 
-export default BackOfficeVerhuurAanvraag;
+export default HuurVerzoekenList;
+
+

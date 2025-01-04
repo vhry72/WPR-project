@@ -78,6 +78,21 @@ public class HuurverzoekController : ControllerBase
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
+
+    [HttpGet("GetAllActive")]
+    public IActionResult GetAllActiveHuurVerZoeken()
+    {
+        try
+        {
+            var huurverzoeken = _service.GetAllActiveHuurVerzoeken();
+            return Ok(huurverzoeken);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
+
     // Haalt een specifiek Huurverzoek op d.m.v. huurderID
     [HttpGet("{id}")]
     public ActionResult<Huurverzoek> GetById(Guid id)
@@ -91,8 +106,7 @@ public class HuurverzoekController : ControllerBase
     }
 
     // Werkt bij of een HuurVerzoek is GoedGekeurd of Afgekeurd.
-
-    [HttpPut("{id}")]
+    [HttpPut("KeurGoed/{id}")]
     public IActionResult Update(Guid id, [FromBody] HuurVerzoekDTO dto)
     {
         if (!ModelState.IsValid)
