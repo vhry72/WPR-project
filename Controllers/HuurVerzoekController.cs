@@ -157,6 +157,52 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
+    [HttpPut("approve/{id}/{approved}")]
+    public IActionResult ApproveRequest(Guid id, bool approved, bool isBevestigd)
+    {
+        try
+        {
+            var huurverzoek = _service.GetById(id);
+            if (huurverzoek == null)
+            {
+                return NotFound(new { Message = "Huurverzoek niet gevonden." });
+            }
+
+            huurverzoek.approved = true; // Update de goedkeuring
+            huurverzoek.isBevestigd = true; //update de bevestiging
+            huurverzoek.Voertuig.voertuigBeschikbaar = false;
+            _service.Update(id, huurverzoek); // Pas de update correct toe
+            return Ok(new { Message = "Huurverzoek goedgekeurd." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
+    [HttpPut("weiger/{id}/{approved}")]
+    public IActionResult WeigerRequest(Guid id, bool approved, bool isBevestigd)
+    {
+        try
+        {
+            var huurverzoek = _service.GetById(id);
+            if (huurverzoek == null)
+            {
+                return NotFound(new { Message = "Huurverzoek niet gevonden." });
+            }
+
+            huurverzoek.approved = false; // Update de goedkeuring
+            huurverzoek.isBevestigd = true; //update de bevestiging
+            
+            _service.Update(id, huurverzoek); // Pas de update correct toe
+            return Ok(new { Message = "Huurverzoek Afgekeurd." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
+
+
 }
 
 

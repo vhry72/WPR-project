@@ -22,7 +22,7 @@ namespace WPR_project.Controllers
         }
 
         // Aanmaken van een nieuwe schademelding
-        [HttpPost]
+        [HttpPost("maak")]
         public IActionResult CreateSchadeMelding([FromBody] SchademeldingDTO schademelding)
         {
             if (schademelding == null)

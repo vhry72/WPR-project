@@ -13,11 +13,12 @@ namespace WPR_project.Repositories
             _context = context;
         }
 
-        public IQueryable<Schademelding> GetAllSchademeldingen()
+
+        public IQueryable<Schademelding> GetAllSchademeldingen() 
         {
             return _context.Schademeldingen
-                .Include(s => s.Voertuig);  // Eager load Voertuig
-        }
+                .Include(s => s.Voertuig);
+
 
         public List<Schademelding> GetSchademeldingByVoertuigId(Guid voertuigId)
         {

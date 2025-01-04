@@ -24,8 +24,6 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         return _context.Huurverzoeken
            .Where(h => h.HuurderID == huurderId && h.endDate > DateTime.Now)
            .Include(h => h.Voertuig);
-           
-            
     }
 
     public IQueryable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime)
@@ -35,15 +33,19 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
             .Include(h => h.Voertuig);
     }
 
-      public IQueryable<Huurverzoek> GetAllHuurVerzoeken()
-      {
-                return _context.Huurverzoeken
-            .Include(h => h.Voertuig);
+
+    public IQueryable<Huurverzoek> GetAllHuurVerzoeken()
+    {
+        return _context.Huurverzoeken
+    .Include(h => h.Voertuig);
+
     }
     public IQueryable<Huurverzoek> GetAllActiveHuurVerzoeken()
     {
         return _context.Huurverzoeken
+            .Where(h => h.isBevestigd == false)
             .Where(h => h.isBevestigd == false) 
+
             .Include(h => h.Voertuig);
     }
     public IQueryable<Huurverzoek> GetAllBeantwoordenHuurVerzoeken()
@@ -60,20 +62,25 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
     }
 
     public Huurverzoek GetByID(Guid id)
-      {
-          return _context.Huurverzoeken.Find(id);
-      }
 
-        public void Update(Huurverzoek huurVerzoek)
-        {
-            _context.Huurverzoeken.Update(huurVerzoek);
-        }
-    
+    {
+        return _context.Huurverzoeken.Find(id);
+    }
+
+    public void Update(Huurverzoek huurVerzoek)
+    {
+        _context.Huurverzoeken.Update(huurVerzoek);
+    }
+
+
     public void Save()
     {
         _context.SaveChanges();
     }
 }
+
+
+
 
 
 

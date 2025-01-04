@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 
 import { Link } from "react-router-dom";
 
@@ -10,10 +10,10 @@ const BackOfficeMedewerker = () => {
             <div className="index-container">
                 <div className="options">
                     <Link to="/BackOfficeVerhuurAanvragen" className="btn">
-                        Actieve Verhuur Aanvragen
+                        Huur verzoeken
                     </Link>
                     <Link to="/VerhuurGegevens" className="btn">
-                        Afgekeurde Verhuur Aanvragen
+                        Afgewezen verzoeken
                     </Link>
                     <Link to="/SchadeMeldingen" className="btn">
                         SchadeMeldingen
@@ -25,5 +25,3 @@ const BackOfficeMedewerker = () => {
 };
 
 export default BackOfficeMedewerker;
-
-

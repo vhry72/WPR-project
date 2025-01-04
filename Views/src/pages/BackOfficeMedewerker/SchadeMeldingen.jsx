@@ -55,6 +55,9 @@ const SchademeldingenList = () => {
         <div>
             <h1>Schademeldingen</h1>
             {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
+            {schademeldingen.length === 0 ? (
+                <p>Er zijn op dit moment geen schademeldingen.</p>
+            ) : (
             <ul>
                 {schademeldingen.map((schademelding) => (
                     <li key={schademelding.schademeldingId}>
@@ -83,6 +86,7 @@ const SchademeldingenList = () => {
                     </li>
                 ))}
             </ul>
+            )}
         </div>
     );
 };
