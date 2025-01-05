@@ -51,8 +51,9 @@ const Layout = () => {
         <>
             <header>
                 <nav className="navbar">
-                    <Link to="/Home" className="nav-link">Home</Link>
-                    {!userRole && <Link to="/" className="nav-link">Aanmelden</Link>}
+                    <Link to="/Index" className="nav-link">Home</Link>
+                    {!userRole && <Link to="/register" className="nav-link">Aanmelden</Link>}
+                    {!userRole && <Link to="/login" className="nav-link">Inloggen</Link>}
                     {userRole &&
                         navLinks[userRole]?.map((link, index) => (
                             <Link key={index} to={link.to} className="nav-link">
