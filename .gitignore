@@ -361,8 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/Views/src/pages/FrontOfficeMedewerker
-/package-lock.json
-/package.json
-/Views/src/PageRoute.jsx
-/Views/src/pages/LayoutTest.jsx
+
