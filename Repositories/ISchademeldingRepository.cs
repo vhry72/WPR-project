@@ -9,6 +9,7 @@ namespace WPR_project.Repositories
         Schademelding GetSchademeldingById(Guid id);
         void updateSchademelding(Schademelding schademelding);
         void Add(Schademelding schademelding);
+        void Update(Schademelding schademelding);
         void Save();
     }
 }

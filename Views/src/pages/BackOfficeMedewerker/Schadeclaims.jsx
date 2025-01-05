@@ -1,12 +1,15 @@
 ﻿import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
 
-const SchadeMeldingenList = () => {
+const SchadeClaimsList = () => {
     const [schademeldingen, setSchademeldingen] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    const fetchSchademeldingen = () => {
+
+
+    useEffect(() => {
         axios.get('https://localhost:5033/api/Schademelding')
             .then(response => {
                 setSchademeldingen(response.data);
@@ -16,49 +19,50 @@ const SchadeMeldingenList = () => {
                 setError(err.message);
                 setLoading(false);
             });
-    };
-
-    useEffect(() => {
-        fetchSchademeldingen(); // Initieel ophalen van gegevens
-
-        // Periodiek ophalen van gegevens (polling)
-        const interval = setInterval(() => {
-            fetchSchademeldingen();
-        }, 5000); // Elke 5 seconden
-
-        return () => clearInterval(interval); // Opruimen bij unmounten
     }, []);
 
-    const inReparatie = (id) => {
-        axios.put(`https://localhost:5033/api/Schademelding/InReparatie/${id}/"In Reparatie"`)
+    const inBehandeling = (id) => {
+        axios.put(`https://localhost:5033/api/Schademelding/inBehandeling/${id}/"In Behandeling"`)
             .then(() => {
                 setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
-                alert('Schademelding op In Reparatie gezet.');
+                alert('Schademelding op In Behandeling gezet.');
             })
-            .catch(err => alert(`Fout bij het verwerken: ${err.message}`));
+            .catch(err => alert(`Fout bij goedkeuren: ${err.message}`));
     };
+    const Afgehandeld = (id) => {
+        axios.put(`https://localhost:5033/api/Schademelding/Afgehandeld/${id}/"Afgehandeld"`)
+            .then(() => {
+                setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
+                alert('Schademelding afgehandeld.');
+            })
+            .catch(err => alert(`Fout bij status aanpassing: ${err.message}`));
+    };
+
+
+
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
-
     return (
         <div>
-            <h1>Schademeldingen</h1>
-            {error && <p>{error}</p>}
+            <h1>Schadeclaims</h1>
+            {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
 
             {schademeldingen.length === 0 ? (
-                <p>Geen Schademeldingen op het moment.</p>
+                <p>Geen Schadeclaims op het moment.</p>
             ) : (
                 <ul>
                     {schademeldingen.map((schademelding) => (
-                        <li key={schademelding.schademeldingId}>
+                        <li key={schademelding.schademeldingId}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
                             <p>Voertuig: {schademelding.voertuig.merk} {schademelding.voertuig.model}</p>
                             <p>Status: {schademelding.status}</p>
                             <p>Beschrijving: {schademelding.beschrijving}</p>
                             <p>Datum: {new Date(schademelding.datum).toLocaleDateString()}</p>
-
-                            <button onClick={() => inReparatie(schademelding.schademeldingId)}>
-                                Zet op In Reparatie.
+                            <button onClick={() => inBehandeling(schademelding.schademeldingId)}>
+                                Zet op In Behandeling.
+                            </button>
+                            <button onClick={() => Afgehandeld(schademelding.schademeldingId)}>
+                                Zet op Afgehandeld
                             </button>
                         </li>
                     ))}
@@ -68,4 +72,4 @@ const SchadeMeldingenList = () => {
     );
 };
 
-export default SchadeMeldingenList;
+export default SchadeClaimsList;

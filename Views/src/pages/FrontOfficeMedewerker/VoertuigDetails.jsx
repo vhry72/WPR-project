@@ -1,44 +1,43 @@
-﻿import React, { useEffect, useState } from 'react';
+﻿import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-
-const VoertuigenList = () => {
+const FrontOfficeDetails = () => {
     const [voertuigen, setVoertuigen] = useState([]);
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const HuurderId = new URLSearchParams(location.search).get("HuurderID");
 
-
-    useEffect(() => {
-        fetch('https://localhost:5033/api/Voertuigen')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Netwerk reactie was niet ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setVoertuigen(data); // Zet de opgehaalde data
-            })
-            .catch((error) => {
-                setError('Er is een fout opgetreden bij het ophalen van de Voertuigen.');
-            });
-    }, []);
-   
     return (
-        <div>
-            <h1>Voertuigen</h1>
-            {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
-            {voertuigen.length === 0 ? (
-                <p>Geen voertuigen beschikbaar.</p>
-            ) : (
-                <ul>
-                    {voertuigen.map((voertuig) => (
-                        <li key={voertuig.voertuigId}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
-                            <p>Voertuig: {voertuig.merk} {voertuig.model}</p>                            
-                        </li>
+        <div className="container">
+            <table className="styled-table">
+                <thead>
+                    <tr>
+                        <th>Merk</th>
+                        <th>Model</th>
+                        <th>Prijs Per Dag</th>
+                        <th>Voertuig Type</th>
+                        <th>Bouwjaar</th>
+                        <th>Kenteken</th>
+                        <th>Kleur</th>
+                        <th>Beschikbaar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {voertuigen.map((voertuig, index) => (
+                        <tr key={index}>
+                            <td>{voertuig.model}</td>
+                            <td>{voertuig.prijsPerDag}</td>
+                            <td>{voertuig.voertuigType}</td>
+                            <td>{voertuig.bouwjaar}</td>
+                            <td>{voertuig.kenteken}</td>
+                            <td>{voertuig.kleur}</td>
+                            <td>{voertuig.voertuigBeschikbaar ? "Ja" : "Nee"}</td>
+                        </tr>
                     ))}
-                </ul>
-            )}
+                </tbody>
+            </table>
         </div>
     );
 };
 
-export default VoertuigenList;
+
+export default FrontOfficeDetails;

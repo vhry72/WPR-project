@@ -25,6 +25,12 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
            .Where(h => h.HuurderID == huurderId && h.endDate > DateTime.Now)
            .Include(h => h.Voertuig);
     }
+    public IQueryable<Huurverzoek> GetBeantwoordeHuurverzoekenByHuurderId(Guid huurderId)
+    {
+        return _context.Huurverzoeken
+           .Where(h => h.HuurderID == huurderId && (h.isBevestigd == true))
+           .Include(h => h.Voertuig);
+    }
 
     public IQueryable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime)
     {
@@ -52,6 +58,12 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
     {
         return _context.Huurverzoeken
             .Where(h => h.isBevestigd == true)
+            .Include(h => h.Voertuig);
+    }
+    public IQueryable<Huurverzoek> GetAllGoedGekeurde()
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.isBevestigd == true && h.approved == true)
             .Include(h => h.Voertuig);
     }
     public IQueryable<Huurverzoek> GetAllAfgekeurde()

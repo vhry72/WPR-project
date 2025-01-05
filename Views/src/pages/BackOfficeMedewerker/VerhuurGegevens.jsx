@@ -47,12 +47,7 @@ const HuurVerzoekenList = () => {
                             <p>Voertuig: {huurverzoek.voertuig.merk} {huurverzoek.voertuig.model}</p>
                             <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
                             <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>
-                            <button onClick={() => approveRequest(huurverzoek.huurderID)}>
-                                Keur verzoek goed.
-                            </button>
-                            <button onClick={() => weigerRequest(huurverzoek.huurderID)}>
-                                Weiger verzoek.
-                            </button>
+                            <p>Verzoek is afgewezen: {huurverzoek.voertuig.VO }</p>
                         </li>
                     ))}
                 </ul>

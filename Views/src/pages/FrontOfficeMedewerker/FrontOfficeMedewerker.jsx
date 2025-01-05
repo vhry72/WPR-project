@@ -14,6 +14,13 @@ const FrontOfficeMedewerker = () => {
                     </Link> 
                 </div>
             </div>
+            <div className="index-container">
+                <div className="options">
+                    <Link to="/VoertuigInenUitname" className="btn">
+                        Voertuig In en Uitname
+                    </Link>
+                </div>
+            </div>
         </>
     );
 };
