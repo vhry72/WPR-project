@@ -17,7 +17,7 @@ const PrivateRoute = ({ allowedRoles, children }) => {
             
             if (!redirectPath) {
                 toast.error("Je hebt geen toegang tot deze pagina.", { autoClose: 3000 });
-                setTimeout(() => setRedirectPath("/Home"), 3000);
+                setTimeout(() => setRedirectPath("/Index"), 3000);
             }
         }
     }, [userRole, allowedRoles, redirectPath]);
