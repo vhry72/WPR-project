@@ -61,6 +61,8 @@ namespace WPR_project.Controllers
             }
         }
 
+        
+
         [HttpGet("{id}/status")]
         public IActionResult GetVoertuigStatus(Guid id)
         {

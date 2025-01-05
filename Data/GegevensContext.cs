@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using WPR_project.Models;
 
 namespace WPR_project.Data
 {
-    public class GegevensContext : DbContext
+    public class GegevensContext : IdentityDbContext<IdentityUser>
     {
         public GegevensContext(DbContextOptions<GegevensContext> options) : base(options)
         {
@@ -83,6 +84,14 @@ namespace WPR_project.Data
             // ParticulierHuurder Configuratie
             modelBuilder.Entity<ParticulierHuurder>()
                 .HasKey(p => p.particulierId);
+
+            modelBuilder.Entity<ParticulierHuurder>(entity =>
+            {
+                entity.HasOne<IdentityUser>()
+                      .WithMany()
+                      .HasForeignKey(p => p.AspNetUserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
 
             //SchadeMelding Configuratie
             modelBuilder.Entity<Schademelding>()

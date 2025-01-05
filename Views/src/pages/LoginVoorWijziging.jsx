@@ -1,177 +1,125 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiService from "../services/apiService";
 import "../styles/Login.css";
-import particulierHuurdersRequestService from "../services/requests/ParticulierHuurderRequestService";
-import zakelijkHuurdersRequestService from "../services/requests/ZakelijkeHuurderRequestService";
+import axios from "axios";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { toast } from 'react-toastify';
+
 
 const Login = () => {
-    const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState("particulier"); // 'particulier' or 'zakelijk'
-    const [particulierFormData, setParticulierFormData] = useState({
-        particulierEmail: "",
-        wachtwoord: "",
-    });
-    const [zakelijkFormData, setZakelijkFormData] = useState({
-        zakelijkEmail: "",
-        wachtwoord: "",
-    });
-    const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState("");
+    const { setUserRole } = useContext(UserContext);
+    const [password, setPassword] = useState("");
+    const [twoFactorCode, setTwoFactorCode] = useState("");
+    const [userId, setUserId] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
-    const handleTabChange = (tab) => {
-        setActiveTab(tab);
-        setErrorMessage(""); // Reset error message when switching tabs
-    };
-
-    const handleChange = (event, formType) => {
-        const { id, value } = event.target;
-        if (formType === "particulier") {
-            setParticulierFormData((prev) => ({ ...prev, [id]: value }));
-        } else {
-            setZakelijkFormData((prev) => ({ ...prev, [id]: value }));
-        }
-    };
-
-    const handleLogin = async (event) => {
-        event.preventDefault();
+    const handleLogin = async () => {
         setIsLoading(true);
         setErrorMessage("");
 
         try {
-            let payload, response;
+            const payload = {
+                email: email,
+                password: password,
+            };
 
-            if (activeTab === "particulier") {
-                const { particulierEmail, wachtwoord } = particulierFormData;
-                if (!particulierEmail || !wachtwoord) {
-                    setErrorMessage("Vul alle verplichte velden in!");
-                    setIsLoading(false);
-                    return;
-                }
+            const response = await apiService.post("/Account/login", { body: payload });
 
-                payload = {
-                    email: particulierEmail,
-                    wachtwoord: wachtwoord,
-                };
-
-                response = await particulierHuurdersRequestService.login(payload);
-
-                if (response.data.isEmailVerified) {
-                    navigate(`/particulierHuurderDashBoard?HuurderID=${response.data.id}`);
-                } else {
-                    setErrorMessage("Je moet eerst je e-mail bevestigen.");
-                }
-            } else if (activeTab === "zakelijk") {
-                const { zakelijkEmail, wachtwoord } = zakelijkFormData;
-                if (!zakelijkEmail || !wachtwoord) {
-                    setErrorMessage("Vul alle verplichte velden in!");
-                    setIsLoading(false);
-                    return;
-                }
-
-                payload = {
-                    email: zakelijkEmail,
-                    wachtwoord: wachtwoord,
-                };
-
-                response = await zakelijkHuurdersRequestService.login(payload);
-
-                
-                navigate(`/zakelijkDashboard?id=${response.data.id}`);
+            if (response.data && response.data.requiresTwoFactor) {
+                setUserId(response.data.userId);
+            } else {
+                throw new Error("Er is een onverwachte fout opgetreden. 2FA is vereist.");
             }
         } catch (error) {
-            setErrorMessage("Login mislukt. Controleer je gegevens en probeer opnieuw.");
+            console.error("Login error:", error.response || error);
+            const message = error.response?.data || "Fout bij inloggen. Probeer opnieuw.";
+            setErrorMessage(typeof message === "string" ? message : "Onbekende fout.");
         } finally {
             setIsLoading(false);
         }
     };
 
+
+    const handleVerifyTwoFactor = async () => {
+        setIsLoading(true);
+        setErrorMessage("");
+
+        try {
+            const payload = {
+                userId: userId,
+                code: twoFactorCode,
+            };
+
+            const response = await axios.post("https://localhost:5033/api/Account/verify-2fa", payload, {
+                withCredentials: true, // Ensures cookies are processed
+            });
+
+            console.log("2FA successful:", response.data);
+            const userRole = response.data.role; // Get role from response
+
+            setUserRole(userRole); // Update de context
+            localStorage.setItem("role", userRole);; // Store role in localStorage for UI purposes
+
+            toast.success("Succesvol ingelogd!");
+            
+
+
+            navigate("/home");
+        } catch (error) {
+            console.error("2FA verification failed:", error.response || error);
+            setErrorMessage("Verification failed. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
+
     return (
         <div className="login-container-wrapper">
             <div className="login-container">
-                <h1>Login</h1>
-
-                {/* Tabs for switching between Particulier and Zakelijk login */}
-                <div className="login-tabs">
-                    <button
-                        className={activeTab === "particulier" ? "active" : ""}
-                        onClick={() => handleTabChange("particulier")}
-                    >
-                        Particulier
-                    </button>
-                    <button
-                        className={activeTab === "zakelijk" ? "active" : ""}
-                        onClick={() => handleTabChange("zakelijk")}
-                    >
-                        Zakelijk
-                    </button>
-                </div>
-
-                {/* Form based on the active tab */}
-                <form onSubmit={handleLogin} className="login-form">
-                    {activeTab === "particulier" && (
-                        <>
-                            <div className="form-group">
-                                <label htmlFor="particulierEmail">Email</label>
-                                <input
-                                    type="email"
-                                    id="particulierEmail"
-                                    value={particulierFormData.particulierEmail}
-                                    onChange={(e) => handleChange(e, "particulier")}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="wachtwoord">Wachtwoord</label>
-                                <input
-                                    type="password"
-                                    id="wachtwoord"
-                                    value={particulierFormData.wachtwoord}
-                                    onChange={(e) => handleChange(e, "particulier")}
-                                    required
-                                />
-                            </div>
-                        </>
-                    )}
-
-                    {activeTab === "zakelijk" && (
-                        <>
-                            <div className="form-group">
-                                <label htmlFor="zakelijkEmail">Email</label>
-                                <input
-                                    type="email"
-                                    id="zakelijkEmail"
-                                    value={zakelijkFormData.zakelijkEmail}
-                                    onChange={(e) => handleChange(e, "zakelijk")}
-                                    required
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="wachtwoord">Wachtwoord</label>
-                                <input
-                                    type="password"
-                                    id="wachtwoord"
-                                    value={zakelijkFormData.wachtwoord}
-                                    onChange={(e) => handleChange(e, "zakelijk")}
-                                    required
-                                />
-                            </div>
-                        </>
-                    )}
-
-                    {errorMessage && (
-                        <p className="error-message">{errorMessage}</p>
-                    )}
-
-                    <button
-                        type="submit"
-                        disabled={isLoading}
-                        className={isLoading ? "submit-button loading" : "submit-button"}
-                    >
-                        {isLoading ? "Bezig met inloggen..." : "Login"}
-                    </button>
-                </form>
+                {!userId ? (
+                    <div className="login-form">
+                        <h2>Login</h2>
+                        <input
+                            type="email"
+                            placeholder="E-mailadres"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="login-input"
+                        />
+                        <input
+                            type="password"
+                            placeholder="Wachtwoord"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="login-input"
+                        />
+                        <button onClick={handleLogin} disabled={isLoading} className="login-button">
+                            {isLoading ? "Inloggen..." : "Login"}
+                        </button>
+                    </div>
+                ) : (
+                    <div className="two-factor-form">
+                        <h2>Tweestapsverificatie</h2>
+                        <input
+                            type="text"
+                            placeholder="Verificatiecode"
+                            value={twoFactorCode}
+                            onChange={(e) => setTwoFactorCode(e.target.value)}
+                            className="login-input"
+                        />
+                        <button onClick={handleVerifyTwoFactor} disabled={isLoading} className="login-button">
+                            {isLoading ? "Verifiëren..." : "Verifieer"}
+                        </button>
+                    </div>
+                )}
+                {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
         </div>
     );

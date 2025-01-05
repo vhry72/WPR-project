@@ -39,6 +39,7 @@ public class HuurverzoekController : ControllerBase
         try
         {
             // Verwerk het huurverzoek
+            huurverzoek.approved = false;
             _service.Add(huurverzoek);
 
             // Haal e-mail op op basis van huurderID

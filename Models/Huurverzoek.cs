@@ -7,5 +7,9 @@
         public DateTime beginDate { get; set; }
         public DateTime endDate { get; set; }
         public bool approved { get; set; }
+
+        public bool IsBevestigd { get; set; }
+
+        public string? Reden { get; set; }
     }
 }

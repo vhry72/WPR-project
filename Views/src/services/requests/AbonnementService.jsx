@@ -1,5 +1,4 @@
-﻿import apiService from '../apiService';
-
+﻿
 const AbonnementService = {
     getAll: async () => {
         try {

@@ -1,5 +1,4 @@
-﻿import apiService from '../apiService';
-
+﻿
 
 const medewerkerService = {
     // Haal medewerkers opo

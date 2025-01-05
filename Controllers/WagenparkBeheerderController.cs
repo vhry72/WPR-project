@@ -43,6 +43,42 @@ namespace WPR_project.Controllers
             return Ok(beheerder);
         }
 
+        [HttpGet("verhuurdevoertuigen/{medewerkerId}")]
+        public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
+        {
+            try
+            {
+                var huurverzoeken = _service.GetVerhuurdeVoertuigen(medewerkerId);
+                return Ok(huurverzoeken);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}/medewerkers")]
+        public IActionResult GetMedewerkersIds(Guid id)
+        {
+            try
+            {
+                var medewerkerIds = _service.GetMedewerkersIdsByWagenparkbeheerder(id);
+
+                if (!medewerkerIds.Any())
+                    return NotFound(new { Message = "Geen medewerkers gevonden voor de opgegeven WagenparkbeheerderID." });
+
+                return Ok(medewerkerIds);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Er is een onverwachte fout opgetreden.", Details = ex.Message });
+            }
+        }
+
         /// <summary>
         /// Voegt een nieuwe wagenparkbeheerder toe
         /// </summary>
