@@ -6,13 +6,16 @@ namespace WPR_project.Repositories
     {
         void Add(Huurverzoek huurverzoek);
 
-        IEnumerable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId);
+        IQueryable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId);
 
-        IEnumerable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime);
+        IQueryable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime);
 
-        IEnumerable<Huurverzoek> GetAllHuurVerzoeken();
+        IQueryable<Huurverzoek> GetAllHuurVerzoeken();
+        IQueryable<Huurverzoek> GetAllActiveHuurVerzoeken();
+        IQueryable<Huurverzoek> GetAllBeantwoorde();
+        IQueryable<Huurverzoek> GetAllAfgekeurde();
         public Huurverzoek GetByID(Guid Id);
         void Update(Huurverzoek huurVerzoek);
-
+        void Save();
     }
 }

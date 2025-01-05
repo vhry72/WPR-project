@@ -2,14 +2,14 @@ using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
-﻿using NuGet.Protocol.Core.Types;
+using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
 
 namespace WPR_project.Services;
 
 public class HuurverzoekService
-{ 
+{
 
 
     private readonly IHuurVerzoekRepository _repository;
@@ -87,7 +87,7 @@ public class HuurverzoekService
         }
 
         _repository.Add(huurVerzoek);
-        
+
 
         var email = GetEmailByHuurderId(huurVerzoek.HuurderID);
         var subject = "Bevestiging van uw huurverzoek";
@@ -118,33 +118,50 @@ public class HuurverzoekService
         }
     }
 
+
         public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
         {
             return _repository.GetAllHuurVerzoeken();
         }
-        public HuurVerzoekDTO GetById(Guid id)
+        public IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken()
         {
-            var huurder = _repository.GetByID(id);
-            if (huurder == null) { return null; }
-
-            return new HuurVerzoekDTO
-            {
-                HuurderID = id,
-                beginDate = huurder.beginDate,
-                endDate = huurder.endDate,
-                approved = huurder.approved
-            };
+            return _repository.GetAllActiveHuurVerzoeken();
         }
-        public void Update(Guid id, HuurVerzoekDTO dto)
-        {
-            var huurder = _repository.GetByID(id);
-            if (huurder == null) throw new KeyNotFoundException("Huurverzoek niet gevonden.");
 
-            huurder.approved = dto.approved;
-
-            _repository.Update(huurder);
-
-        }
+    public IEnumerable<Huurverzoek> GetAllBeantwoordeHuurVerzoeken()
+    {
+        return _repository.GetAllBeantwoorde();
     }
+    public IEnumerable<Huurverzoek> GetAllAfgekeurde()
+    {
+        return _repository.GetAllAfgekeurde();
+    }
+    public HuurVerzoekDTO GetById(Guid id)
+    {
+        var huurder = _repository.GetByID(id);
+        if (huurder == null) { return null; }
 
+        return new HuurVerzoekDTO
+        {
+            HuurderID = id,
+            beginDate = huurder.beginDate,
+            endDate = huurder.endDate,
+            approved = huurder.approved
+        };
+    }
+    public void Update(Guid id, HuurVerzoekDTO dto)
+    {
+        var huurder = _repository.GetByID(id);
+        if (huurder == null) throw new KeyNotFoundException("Huurverzoek niet gevonden.");
+
+
+        huurder.approved = dto.approved;
+        huurder.isBevestigd = dto.isBevestigd;
+
+
+        _repository.Update(huurder);
+        _repository.Save();
+    }
+        
+}
 

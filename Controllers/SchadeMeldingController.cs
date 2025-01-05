@@ -22,7 +22,7 @@ namespace WPR_project.Controllers
         }
 
         // Aanmaken van een nieuwe schademelding
-        [HttpPost]
+        [HttpPost("maak")]
         public IActionResult CreateSchadeMelding([FromBody] SchademeldingDTO schademelding)
         {
             if (schademelding == null)
@@ -51,7 +51,7 @@ namespace WPR_project.Controllers
 
         // ophalen van alle schademeldingen
         [HttpGet]
-        public ActionResult<IEnumerable<SchademeldingDTO>> GetAllSchademeldingen()
+        public ActionResult<IQueryable<SchademeldingDTO>> GetAllSchademeldingen()
         {
             var medlingen = _service.GetAllSchademeldingen();
             return Ok(medlingen);
