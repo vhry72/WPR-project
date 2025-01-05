@@ -6,10 +6,12 @@ namespace WPR_project.Repositories
     public class ZakelijkeHuurderRepository : IZakelijkeHuurderRepository
     {
         private readonly GegevensContext _context;
+        private readonly ILogger<ZakelijkeHuurderRepository> _logger;
 
-        public ZakelijkeHuurderRepository(GegevensContext context)
+        public ZakelijkeHuurderRepository(GegevensContext context , ILogger<ZakelijkeHuurderRepository> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // Voeg een nieuwe zakelijke huurder toe
@@ -41,10 +43,24 @@ namespace WPR_project.Repositories
         }
 
         // Haal een zakelijke huurder op via verificatietoken
-        public ZakelijkHuurder GetZakelijkHuurderByToken(string token)
+        public ZakelijkHuurder GetZakelijkHuurderByToken(Guid token)
         {
-            return _context.ZakelijkHuurders.FirstOrDefault(h => h.EmailBevestigingToken == token);
+            if (token == Guid.Empty)
+            {
+                throw new ArgumentException("Token mag niet leeg zijn.", nameof(token));
+            }
+
+            try
+            {
+                return _context.ZakelijkHuurders.FirstOrDefault(h => h.EmailBevestigingToken == token);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Fout bij het ophalen van ZakelijkeHuurder met token {Token}.", token);
+                throw new Exception("Er is een fout opgetreden bij het ophalen van de zakelijke huurder.");
+            }
         }
+
 
         // Werk een bestaande zakelijke huurder bij
         public void UpdateZakelijkHuurder(ZakelijkHuurder zakelijkHuurder)

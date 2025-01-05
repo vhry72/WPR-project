@@ -3,6 +3,7 @@ using System;
 using WPR_project.Models;
 using WPR_project.Services;
 using WPR_project.DTO_s;
+using Microsoft.EntityFrameworkCore;
 
 namespace WPR_project.Controllers
 {
@@ -30,6 +31,40 @@ namespace WPR_project.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
+            }
+        }
+
+        //haalt alle abonnnementen op die binnen een maand verlopen
+        [HttpGet("bijna-verlopen")]
+        public IActionResult GetBijnaVerlopenAbonnementen()
+        {
+            try
+            {
+                var abonnementen = _service.GetAllAbonnementen();
+                return Ok(abonnementen);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Interne serverfout: {ex.Message}");
+            }
+        }
+        //Geeft abonnement details terug
+        [HttpGet("{abonnementId}/details")]
+        public IActionResult GetAbonnementDetails(Guid abonnementId)
+        {
+            try
+            {
+                var abonnementDetails = _service.GetAbonnementDetails(abonnementId);
+                return Ok(abonnementDetails);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
+
             }
         }
 
@@ -121,6 +156,25 @@ namespace WPR_project.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        // haalt de huiderige abonnement op van de beheerder
+        [HttpGet("{beheerderId}/huidig-abonnement")]
+        public IActionResult GetHuidigAbonnement(Guid beheerderId)
+        {
+            try
+            {
+                var abonnement = _service.GetAbonnementDetails(beheerderId);
+                return Ok(abonnement);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
+            }
+        }
+
 
         // Wijzigt een abonnement op basis van het geselecteerde type (direct zichtbaar of vanaf de volgende periode).
         [HttpPost("{beheerderId}/abonnement/wijzig")]
@@ -156,5 +210,42 @@ namespace WPR_project.Controllers
                 return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
             }
         }
+
+        [HttpPost("{beheerderId}/factuur/stuur")]
+        public IActionResult StuurFactuur(Guid beheerderId, [FromBody] Guid abonnementId)
+        {
+            try
+            {
+                _service.StuurFactuurEmail(beheerderId, abonnementId);
+                return Ok(new { Message = "Factuur succesvol verstuurd." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = ex.Message });
+            }
+        }
+
+        [HttpPost("{beheerderId}/bevestiging/stuur")]
+        public IActionResult StuurBevestigingsEmail(Guid beheerderId, [FromBody] Guid abonnementId)
+        {
+            try
+            {
+                _service.StuurBevestigingsEmail(beheerderId, abonnementId);
+                return Ok(new { Message = "Bevestigingsmail succesvol verstuurd." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = ex.Message });
+            }
+        }
+
     }
 }

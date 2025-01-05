@@ -53,7 +53,7 @@
         }
 
 
-        public ParticulierHuurder GetByToken(string token)
+        public ParticulierHuurder GetByToken(Guid token)
             {
                 return _context.ParticulierHuurders.FirstOrDefault(h => h.EmailBevestigingToken == token);
             }

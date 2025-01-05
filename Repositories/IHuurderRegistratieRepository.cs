@@ -8,7 +8,7 @@ namespace WPR_project.Repositories
         IEnumerable<ParticulierHuurder> GetAll();
         ParticulierHuurder GetById(Guid id);
         ParticulierHuurder GetByEmailAndPassword(string email, string password);
-        ParticulierHuurder GetByToken(string token);
+        ParticulierHuurder GetByToken(Guid token);
         void Add(ParticulierHuurder particulierHuurder);
         void Update(ParticulierHuurder particulierHuurder);
         void Delete(Guid id);

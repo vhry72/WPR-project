@@ -1,0 +1,25 @@
+﻿/* Algemene styling voor de knop */
+.options .btn {
+    position: relative; /* Zorg ervoor dat het rode balletje in de context van de knop wordt gepositioneerd */
+    padding: 10px 20px;
+    font-size: 16px;
+    color: white;
+    background-color: #4CAF50; /* Je eigen achtergrondkleur */
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.notification-badge {
+    position: absolute;
+    top: -5px; /* Plaats het iets boven de knop */
+    right: -5px; /* Plaats het iets rechts van de knop */
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    color: white;
+    font-size: 10px;
+    text-align: center;
+    line-height: 12px;
+    display: inline-block;
+}

@@ -50,10 +50,10 @@ namespace WPR_project.Services
 
             var verificatieUrl = $"https://localhost:5033/api/ZakelijkeHuurder/verify?token={huurder.EmailBevestigingToken}";
             var emailBody = $"Beste {huurder.bedrijfsNaam},<br><br>Klik op de volgende link om je e-mailadres te bevestigen:<br><a href='{verificatieUrl}'>Bevestig e-mail</a>";
-            _emailService.SendEmail(huurder.bedrijsEmail, "Bevestig je registratie", emailBody);
+            _emailService.SendEmail(huurder.bedrijfsEmail, "Bevestig je registratie", emailBody);
         }
 
-        public bool VerifyEmail(string token)
+        public bool VerifyEmail(Guid token)
         {
             var huurder = _repository.GetZakelijkHuurderByToken(token);
             if (huurder == null || huurder.IsEmailBevestigd)
@@ -93,7 +93,7 @@ namespace WPR_project.Services
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
             }
 
-            if (!beheerder.bedrijfsEmail.EndsWith($"@{zakelijkeHuurder.bedrijsEmail.Split('@')[1]}"))
+            if (!beheerder.bedrijfsEmail.EndsWith($"@{zakelijkeHuurder.bedrijfsEmail.Split('@')[1]}"))
             {
                 throw new ArgumentException("Het e-mailadres van de wagenparkbeheerder moet overeenkomen met het domein van de zakelijke huurder.");
             }
@@ -115,7 +115,7 @@ namespace WPR_project.Services
             bestaandeHuurder.adres = updatedHuurder.adres;
             bestaandeHuurder.KVKNummer = updatedHuurder.KVKNummer;
             bestaandeHuurder.telNummer = updatedHuurder.telNummer;
-            bestaandeHuurder.bedrijsEmail = updatedHuurder.bedrijsEmail;
+            bestaandeHuurder.bedrijfsEmail = updatedHuurder.bedrijfsEmail;
 
             _repository.UpdateZakelijkHuurder(bestaandeHuurder);
             _repository.Save();

@@ -2,9 +2,16 @@
 {
     public class VoertuigDTO
     {
+        public Guid voertuigId { get; set; }
         public DateTime? StartDatum { get; set; }
         public DateTime? EindDatum { get; set; }
-        public bool VoertuigBeschikbaar { get; set; }
+        public bool voertuigBeschikbaar { get; set; }
+
+        public string merk { get; set; }
+        public string model { get; set; }
+
+        public VoertuigStatusDTO voertuigStatus { get; set; }
+
     }
 }
 

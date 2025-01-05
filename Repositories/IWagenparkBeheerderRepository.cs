@@ -10,6 +10,8 @@ namespace WPR_project.Repositories
         void UpdateWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder, Guid id);
         void DeleteWagenparkBeheerder(Guid id);
 
+        List<Guid> GetMedewerkersIdsByWagenparkbeheerder(Guid wagenparkbeheerderId);
+
         //sla op 
         void Save();
         void UpdateWagenparkBeheerder(WagenparkBeheerder existingBeheerder);

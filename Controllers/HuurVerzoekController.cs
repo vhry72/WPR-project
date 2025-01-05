@@ -23,6 +23,12 @@ public class HuurverzoekController : ControllerBase
         var hasActiveRequest = _service.HasActiveHuurverzoek(huurderId);
         return Ok(new { hasActiveRequest });
     }
+    [HttpGet("check-Beantwoorde/{huurderId}")]
+    public IActionResult CheckBeantwoordeHuurverzoek(Guid huurderId)
+    {
+        var hasActiveRequest = _service.HasAnsweredHuurverzoek(huurderId);
+        return Ok(new { hasActiveRequest });
+    }
 
     [HttpPost("verzoek")]
     public IActionResult Verzoek([FromBody] Huurverzoek huurverzoek)
@@ -39,6 +45,7 @@ public class HuurverzoekController : ControllerBase
         try
         {
             // Verwerk het huurverzoek
+            huurverzoek.approved = false;
             _service.Add(huurverzoek);
 
             // Haal e-mail op op basis van huurderID
@@ -78,6 +85,60 @@ public class HuurverzoekController : ControllerBase
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
+
+    [HttpGet("GetAllActive")]
+    public IActionResult GetAllActiveHuurVerZoeken()
+    {
+        try
+        {
+            var huurverzoeken = _service.GetAllActiveHuurVerzoeken();
+            return Ok(huurverzoeken);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
+    [HttpGet("GetAllBeantwoorde")]
+    public IActionResult GetAllBeantwoordeVerZoeken()
+    {
+        try
+        {
+            var huurverzoeken = _service.GetAllBeantwoordeHuurVerzoeken();
+            return Ok(huurverzoeken);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
+    [HttpGet("GetAllAfgekeurde")]
+    public IActionResult GetAllAfgekeurde()
+    {
+        try
+        {
+            var huurverzoeken = _service.GetAllAfgekeurde();
+            return Ok(huurverzoeken);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
+    [HttpGet("GetAllGoedGekeurde")]
+    public IActionResult GetAllGoedGekeurde()
+    {
+        try
+        {
+            var huurverzoeken = _service.GetAllGoedGekeurde();
+            return Ok(huurverzoeken);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
+
     // Haalt een specifiek Huurverzoek op d.m.v. huurderID
     [HttpGet("{id}")]
     public ActionResult<Huurverzoek> GetById(Guid id)
@@ -90,9 +151,8 @@ public class HuurverzoekController : ControllerBase
         return Ok(huurder);
     }
 
-    // Werkt bij of een HuurVerzoek is GoedGekeurd of Afgekeurd.
-
-    [HttpPut("{id}")]
+    // Werkt bij of een HuurVerzoek is GoedGekeurd of Afgekeurd en of die bevestigd is.
+    [HttpPut("KeurGoed/{id}")]
     public IActionResult Update(Guid id, [FromBody] HuurVerzoekDTO dto)
     {
         if (!ModelState.IsValid)
@@ -116,6 +176,31 @@ public class HuurverzoekController : ControllerBase
             return NotFound(new { Message = "Huurverzoek niet gevonden." });
         }
     }
+    
+    [HttpPut("keuring/{id}/{approved}")]
+    public IActionResult WeigerRequest(Guid id, bool approved, bool isBevestigd)
+    {
+        try
+        {
+            var huurverzoek = _service.GetById(id);
+            if (huurverzoek == null)
+            {
+                return NotFound(new { Message = "Huurverzoek niet gevonden." });
+            }
+
+            huurverzoek.approved = approved; // Update de goedkeuring
+            huurverzoek.isBevestigd = true; //update de bevestiging
+            
+            _service.Update(id, huurverzoek); // Pas de update correct toe
+            return Ok(new { Message = "Huurverzoek Afgekeurd." });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
+    
+
 }
 
 

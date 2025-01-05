@@ -1,4 +1,5 @@
-﻿using WPR_project.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using WPR_project.Data;
 using WPR_project.Models;
 using WPR_project.Repositories;
 
@@ -18,36 +19,80 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         _context.SaveChanges();
     }
 
-    public IEnumerable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId)
+    public IQueryable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId)
     {
         return _context.Huurverzoeken
-            .Where(h => h.HuurderID == huurderId && h.endDate > DateTime.Now)
-            .ToList();
+           .Where(h => h.HuurderID == huurderId && h.endDate > DateTime.Now)
+           .Include(h => h.Voertuig);
+    }
+    public IQueryable<Huurverzoek> GetBeantwoordeHuurverzoekenByHuurderId(Guid huurderId)
+    {
+        return _context.Huurverzoeken
+           .Where(h => h.HuurderID == huurderId && (h.isBevestigd == true))
+           .Include(h => h.Voertuig);
     }
 
-    public IEnumerable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime)
+    public IQueryable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime)
     {
         return _context.Huurverzoeken
             .Where(h => h.beginDate <= reminderTime && h.beginDate > DateTime.Now)
-            .ToList();
+            .Include(h => h.Voertuig);
     }
 
-      public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
-      {
-                return _context.Huurverzoeken.ToList();
-       }
-       
-        public Huurverzoek GetByID(Guid id)
-      {
-          return _context.Huurverzoeken.Find(id);
-      }
 
-        public void Update(Huurverzoek huurVerzoek)
-        {
-            _context.Huurverzoeken.Update(huurVerzoek);
-        }
+    public IQueryable<Huurverzoek> GetAllHuurVerzoeken()
+    {
+        return _context.Huurverzoeken
+    .Include(h => h.Voertuig);
 
     }
+    public IQueryable<Huurverzoek> GetAllActiveHuurVerzoeken()
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.isBevestigd== false)
+            .Where(h => h.isBevestigd == false) 
+
+            .Include(h => h.Voertuig);
+    }
+    public IQueryable<Huurverzoek> GetAllBeantwoorde()
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.isBevestigd == true)
+            .Include(h => h.Voertuig);
+    }
+    public IQueryable<Huurverzoek> GetAllGoedGekeurde()
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.isBevestigd == true && h.approved == true)
+            .Include(h => h.Voertuig);
+    }
+    public IQueryable<Huurverzoek> GetAllAfgekeurde()
+    {
+        return _context.Huurverzoeken
+            .Where(h => (h.isBevestigd == true) && (h.approved == false))
+            .Include(h => h.Voertuig);
+    }
+
+    public Huurverzoek GetByID(Guid id)
+
+    {
+        return _context.Huurverzoeken.Find(id);
+    }
+
+    public void Update(Huurverzoek huurVerzoek)
+    {
+        _context.Huurverzoeken.Update(huurVerzoek);
+    }
+
+
+    public void Save()
+    {
+        _context.SaveChanges();
+    }
+}
+
+
+
 
 
 

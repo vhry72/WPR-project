@@ -14,7 +14,6 @@ const WagenbeheerDashboard = () => {
     const [notificatie, setNotificatie] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    // Ophalen van bestaande medewerkers
     useEffect(() => {
         const fetchMedewerkers = async () => {
             try {
@@ -81,31 +80,40 @@ const WagenbeheerDashboard = () => {
                 <div className="options">
                     <div className="medewerker-form">
                         <h2>Voeg een nieuwe medewerker toe</h2>
+                        <label htmlFor="naam">Naam</label>
                         <input
                             type="text"
+                            id="naam"
                             name="naam"
                             value={nieuweMedewerker.naam}
                             onChange={handleInputChange}
                             placeholder="Naam"
                             required
+                            aria-required="true"
                         />
+                        <label htmlFor="email">Bedrijfs-E-mailadres</label>
                         <input
                             type="email"
+                            id="email"
                             name="email"
                             value={nieuweMedewerker.email}
                             onChange={handleInputChange}
                             placeholder="Bedrijfs-E-mailadres"
                             required
+                            aria-required="true"
                         />
+                        <label htmlFor="wachtwoord">Wachtwoord</label>
                         <input
                             type="password"
+                            id="wachtwoord"
                             name="wachtwoord"
                             value={nieuweMedewerker.wachtwoord}
                             onChange={handleInputChange}
                             placeholder="Wachtwoord"
                             required
+                            aria-required="true"
                         />
-                        <button onClick={voegMedewerkerToe} disabled={isLoading}>
+                        <button onClick={voegMedewerkerToe} disabled={isLoading} aria-live="polite">
                             {isLoading ? "Bezig..." : "Toevoegen"}
                         </button>
                     </div>
@@ -114,10 +122,11 @@ const WagenbeheerDashboard = () => {
                     <ul>
                         {medewerkers.map((medewerker, index) => (
                             <li key={index}>
-                                {medewerker.naam} - {medewerker.email}
+                                <span>{medewerker.naam} - {medewerker.email}</span>
                                 <button
                                     onClick={() => verwijderMedewerker(medewerker.email)}
                                     disabled={isLoading}
+                                    aria-live="polite"
                                 >
                                     Verwijderen
                                 </button>
@@ -125,7 +134,7 @@ const WagenbeheerDashboard = () => {
                         ))}
                     </ul>
                 </div>
-                {notificatie && <div className="notificatie-box">{notificatie}</div>}
+                {notificatie && <div className="notificatie-box" role="alert" aria-live="assertive">{notificatie}</div>}
             </div>
         </>
     );

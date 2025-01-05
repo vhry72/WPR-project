@@ -1,5 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using WPR_project.Data;
 using WPR_project.Repositories;
 using WPR_project.Services;
@@ -7,12 +12,12 @@ using WPR_project.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// React CORS-configuratie
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",
-        policy => policy.WithOrigins("http://localhost:5173")
 
+        policy => policy.WithOrigins("https://localhost:5173")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());
@@ -22,6 +27,61 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<GegevensContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Voeg Identity DbContext en configuratie toe
+builder.Services.AddDbContext<GegevensContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<GegevensContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    // Haal de JWT-token uit de cookie
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var jwtCookie = context.HttpContext.Request.Cookies["jwt"];
+            if (!string.IsNullOrEmpty(jwtCookie))
+            {
+                context.Token = jwtCookie; // Stel de JWT-token in vanuit de cookie
+            }
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
+            // Optionele logging voor debugging van mislukte authenticatie
+            Console.WriteLine("JWT authenticatie mislukt: " + context.Exception.Message);
+            return Task.CompletedTask;
+        }
+    };
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        // Validatie van de JWT-inhoud
+        ValidateIssuer = true, // Controleer de 'issuer' claim
+        ValidateAudience = true, // Controleer de 'audience' claim
+        ValidateLifetime = true, // Controleer of de token verlopen is
+        ValidateIssuerSigningKey = true, // Controleer de handtekening van de token
+
+        // Instellingen voor validatie
+        ValidIssuer = builder.Configuration["Jwt:Issuer"], // Uit je appsettings.json
+        ValidAudience = builder.Configuration["Jwt:Audience"], // Uit je appsettings.json
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+
+        // Tolerantie voor tijdssynchronisatie (optioneel)
+        ClockSkew = TimeSpan.Zero // Verwijdert standaard tolerantie van 5 minuten
+    };
+});
+
+
+
 // Dependency Injection voor repositories
 builder.Services.AddScoped<IHuurderRegistratieRepository, HuurderRegistratieRepository>();
 builder.Services.AddScoped<IZakelijkeHuurderRepository, ZakelijkeHuurderRepository>();
@@ -30,6 +90,8 @@ builder.Services.AddScoped<IVoertuigRepository, VoertuigRepository>();
 builder.Services.AddScoped<IAbonnementRepository, AbonnementRepository>();
 builder.Services.AddScoped<IBedrijfsMedewerkersRepository, BedrijfsMedewerkersRepository>();
 builder.Services.AddScoped<IHuurVerzoekRepository, HuurVerzoekRepository>();
+builder.Services.AddScoped<ISchademeldingRepository, SchademeldingRepository>();
+builder.Services.AddScoped<IVoertuigStatusRepository, VoertuigStatusRepository>();
 
 
 
@@ -43,7 +105,13 @@ builder.Services.AddScoped<VoertuigService>();
 builder.Services.AddScoped<BedrijfsMedewerkersService>();
 builder.Services.AddScoped<HuurverzoekService>();
 
-//Voor de 24-uurs reminder service
+builder.Services.AddScoped<SchademeldingService>();
+builder.Services.AddScoped<VoertuigStatusService>();
+
+builder.Services.AddScoped<UserManagerService>();
+
+
+// Voor de 24-uurs reminder service
 builder.Services.AddHostedService<HuurverzoekReminderService>();
 
 
@@ -53,42 +121,16 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve; // Prevent circular references
+        options.JsonSerializerOptions.MaxDepth = 64; // Adjust depth as needed
     });
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
- void ConfigureServices(IServiceCollection services)
-{
-    services.AddControllers()
-            .AddJsonOptions(options =>
-            {
-                // Je kunt hier globale JSON-opties instellen als dat nodig is
-            });
-}
-
- void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-{
-    if (env.IsDevelopment())
-    {
-        app.UseDeveloperExceptionPage();
-    }
-    else
-    {
-        app.UseExceptionHandler("/Home/Error");
-        app.UseHsts();
-    }
-
-    app.UseRouting();
-
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllers();
-    });
-}
 
 
-// Configureer de HTTP-aanvraagpipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -96,20 +138,25 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(); // Zorgt ervoor dat bestanden in wwwroot worden geserveerd
+app.UseStaticFiles();
 app.UseRouting();
 app.UseCors("AllowLocalhost");
 
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configureer routes
 app.MapControllers();
 
 // Fallback voor React-routering
 app.MapFallbackToFile("index.html");
 
-app.UseHttpsRedirection();
+
+using (var scope = app.Services.CreateScope())
+{
+    await RoleSeeder.SeedRoles(scope.ServiceProvider);
+}
 
 // Start de applicatie op een specifieke poort
 app.Run("https://localhost:5033");
+
+

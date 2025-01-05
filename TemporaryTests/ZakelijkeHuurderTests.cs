@@ -35,11 +35,11 @@ namespace WPR_project.TemporaryTests
                 zakelijkeId = Guid.NewGuid(),
                 bedrijfsNaam = "Test Bedrijf",
                 adres = "Weimarstraat 24b",
-                bedrijsEmail = "testbedrijf@bedrijf.nl",
+                bedrijfsEmail = "testbedrijf@bedrijf.nl",
                 KVKNummer = 12345678,
                 wachtwoord = "Password123!",
                 telNummer = "+31612345678",
-                EmailBevestigingToken = Guid.NewGuid().ToString()
+                EmailBevestigingToken = Guid.NewGuid()
             };
 
             // Act
@@ -49,7 +49,7 @@ namespace WPR_project.TemporaryTests
             _mockRepository.Verify(r => r.AddZakelijkHuurder(It.IsAny<ZakelijkHuurder>()), Times.Once);
             _mockRepository.Verify(r => r.Save(), Times.Once);
             _mockEmailService.Verify(e => e.SendEmail(
-                huurder.bedrijsEmail,
+                huurder.bedrijfsEmail,
                 "Bevestig je registratie",
                 It.Is<string>(body => body.Contains("Klik op de volgende link om je e-mailadres te bevestigen"))
             ), Times.Once);
@@ -66,7 +66,7 @@ namespace WPR_project.TemporaryTests
             {
                 bedrijfsNaam = "Test Bedrijf",
                 adres = "Weimarstraat 24b",
-                bedrijsEmail = "ongeldigemail", // Ongeldig e-mailadres
+                bedrijfsEmail = "ongeldigemail", // Ongeldig e-mailadres
                 KVKNummer = 12345678,
                 wachtwoord = "Password123!",
                 telNummer = "+31612345678"

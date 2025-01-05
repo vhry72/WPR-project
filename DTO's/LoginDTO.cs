@@ -2,7 +2,7 @@
 {
     public class LoginDTO
     {
-        public string email { get; set; }
-        public string wachtwoord { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
     }
 }

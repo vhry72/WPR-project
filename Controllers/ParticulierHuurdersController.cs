@@ -2,6 +2,7 @@
 using WPR_project.DTO_s;
 using WPR_project.Services;
 using WPR_project.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
 {
@@ -16,9 +17,7 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-        /// <summary>
-        /// Haalt alle particuliere huurders op.
-        /// </summary>
+        [Authorize(Roles = "ParticulierHuurder")]
         [HttpGet]
         public ActionResult<IEnumerable<ParticulierHuurderDTO>> GetAll()
         {
@@ -26,9 +25,7 @@ namespace WPR_project.Controllers
             return Ok(huurders);
         }
 
-        /// <summary>
-        /// Haalt een specifieke particuliere huurder op via ID.
-        /// </summary>
+        
         [HttpGet("{id}")]
         public ActionResult<ParticulierHuurderDTO> GetById(Guid id)
         {
@@ -41,44 +38,12 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-        /// <summary>
-        /// Registreert een nieuwe particuliere huurder en verstuurt een verificatiemail.
-        /// </summary>
-        [HttpPost("register")]
-        public IActionResult Register([FromBody] ParticulierHuurder pHuurder)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new
-                {
-                    Message = "Validatiefout",
-                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
-                });
-            }
 
-            try
-            {
-                _service.Register(pHuurder);
-                return Ok(new { Message = "Registratie succesvol. Controleer je e-mail voor verificatie." });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Message = "Interne serverfout.", Error = ex.Message });
-            }
-        }
-
-
-        /// <summary>
-        /// Verifieert de e-mail van een particuliere huurder met een token.
-        /// </summary>
+        [Authorize(Roles = "ParticulierHuurder")]
         [HttpGet("verify")]
-        public IActionResult VerifyEmail(string token)
+        public IActionResult VerifyEmail(Guid token)
         {
-            if (string.IsNullOrEmpty(token))
+            if (token == Guid.Empty)
             {
                 return BadRequest(new { Message = "Verificatietoken is verplicht." });
             }
@@ -92,9 +57,7 @@ namespace WPR_project.Controllers
             return Ok(new { Message = "E-mail succesvol bevestigd." });
         }
 
-        /// <summary>
-        /// Werkt de gegevens van een bestaande particuliere huurder bij.
-        /// </summary>
+        [Authorize(Roles = "ParticulierHuurder")]
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderDTO dto)
         {
@@ -124,9 +87,7 @@ namespace WPR_project.Controllers
         }
 
 
-        /// <summary>
-        /// Verwijdert een particuliere huurder op basis van ID.
-        /// </summary>
+        [Authorize(Roles = "ParticulierHuurder")]
         [HttpDelete("{id}")]
         public IActionResult DeleteHuurder(Guid id)
         {
@@ -141,9 +102,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        /// <summary>
-        /// Controleert of de e-mail van een huurder is geverifieerd.
-        /// </summary>
+        [Authorize(Roles = "ParticulierHuurder")]
         [HttpGet("{id}/isVerified")]
         public IActionResult IsEmailVerified(Guid id)
         {
@@ -155,31 +114,5 @@ namespace WPR_project.Controllers
 
             return Ok(new { IsEmailVerified = huurder.IsEmailBevestigd });
         }
-
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginDTO loginDto)
-        {
-            if (string.IsNullOrEmpty(loginDto.email) || string.IsNullOrEmpty(loginDto.wachtwoord))
-            {
-                return BadRequest(new { Message = "E-mail en wachtwoord zijn verplicht." });
-            }
-
-            var huurder = _service.GetByEmailAndPassword(loginDto.email, loginDto.wachtwoord);
-            if (huurder == null)
-            {
-                return Unauthorized(new { Message = "Ongeldige e-mail of wachtwoord." });
-            }
-
-            return Ok(new
-            {
-                Id = huurder.particulierId,
-                IsEmailVerified = huurder.IsEmailBevestigd,
-                Message = "Login succesvol."
-            });
-        }
-
-
-
-
     }
 }

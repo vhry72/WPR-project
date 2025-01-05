@@ -1,5 +1,4 @@
-﻿import apiService from '../apiService';
-
+﻿
 const AbonnementService = {
     getAll: async () => {
         try {
@@ -7,6 +6,16 @@ const AbonnementService = {
             return response;
         } catch (error) {
             console.error('Error fetching abonnementen:', error);
+            throw error;
+        }
+    },
+    getBijnaVerlopen: async () => {
+        try {
+            const response = await apiService.get('/Abonnement/bijna-verlopen');
+            return response;
+        }
+        catch (error) {
+            console.error('Error fetching bijna verlopen abonnementen: ', error);
             throw error;
         }
     },
@@ -41,22 +50,12 @@ const AbonnementService = {
         }
     },
 
-    processOneTimePayment: async (zakelijkeId, bedrag) => {
+    processPrepaidPayment: async (beheerderId, bedrag) => {
         try {
-            const response = await apiService.post(`/Abonnement/${zakelijkeId}/eenmalig/betalen`, { bedrag });
+            const response = await apiService.post(`/Abonnement/${beheerderId}/prepaid/betalen`, { bedrag });
             return response;
         } catch (error) {
-            console.error(`Error processing one-time payment for ID ${zakelijkeId}:`, error);
-            throw error;
-        }
-    },
-
-    addEmployee: async (zakelijkeId, medewerkerData) => {
-        try {
-            const response = await apiService.post(`/Abonnement/${zakelijkeId}/medewerker/toevoegen`, medewerkerData);
-            return response;
-        } catch (error) {
-            console.error(`Error adding employee for ID ${zakelijkeId}:`, error);
+            console.error(`Error processing prepaid payment for ID ${beheerderId}:`, error);
             throw error;
         }
     },

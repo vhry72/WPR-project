@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using WPR_project.Models;
 
 public class Abonnement
@@ -9,9 +10,13 @@ public class Abonnement
 
     [Required]
     public string Naam { get; set; }
+    [Column("vervaldatum")]
+    public DateTime vervaldatum { get; set; }
 
     [Precision(18, 2)]
     public decimal Kosten { get; set; }
+
+    public DateTime vervaldatum { get; set; }
     public AbonnementType AbonnementType { get; set; }
 
     public ICollection<WagenparkBeheerder> WagenparkBeheerders { get; set; } = new List<WagenparkBeheerder>();

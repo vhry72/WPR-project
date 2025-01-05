@@ -124,12 +124,12 @@ namespace WPR_project.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDTO loginDto)
         {
-            if (string.IsNullOrEmpty(loginDto.email) || string.IsNullOrEmpty(loginDto.wachtwoord))
+            if (string.IsNullOrEmpty(loginDto.Email) || string.IsNullOrEmpty(loginDto.Password))
             {
                 return BadRequest(new { Message = "E-mail en wachtwoord zijn verplicht." });
             }
 
-            var medewerker = _service.GetByEmailAndPassword(loginDto.email, loginDto.wachtwoord);
+            var medewerker = _service.GetByEmailAndPassword(loginDto.Email, loginDto.Password);
             if (medewerker == null)
             {
                 return Unauthorized(new { Message = "Ongeldige e-mail of wachtwoord." });

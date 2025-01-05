@@ -1,8 +1,7 @@
 ﻿using WPR_project.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using WPR_project.Data;
+using System.Diagnostics.Contracts;
+using Microsoft.EntityFrameworkCore;
 
 namespace WPR_project.Repositories
 {
@@ -25,10 +24,23 @@ namespace WPR_project.Repositories
         {
             return _context.Abonnementen.ToList();
         }
+        public IEnumerable<Abonnement> GetBijnaVerlopenAbonnementen()
+        {
+            var vandaag = DateTime.Now;
+            var eenMaandLater = vandaag.AddMonths(1);
+
+            return _context.Abonnementen
+                .Where(a => a.vervaldatum >= vandaag && a.vervaldatum <= eenMaandLater)
+                .ToList();
+           
+
+        }
 
         public Abonnement GetAbonnementById(Guid id)
         {
-            return _context.Abonnementen.Find(id);
+            return _context.Abonnementen
+         .Include(a => a.WagenparkBeheerders)
+         .FirstOrDefault(a => a.AbonnementId == id);
         }
 
         public void AddAbonnement(Abonnement abonnement)

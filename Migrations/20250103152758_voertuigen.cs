@@ -199,8 +199,8 @@ Values
 ('c8c6d699-2165-4971-955a-187479238325', 'Hobby', 'Prestige', 50.25, 'caravan', 2018, 'CD-123-EF', 'grijs', NULL, NULL, 1),
 ('eb966bc8-9724-4f5b-b13c-7b16d784cee8', 'Dethleffs', 'C\go', 50.25, 'caravan', 2020, 'GH-456-IJ', 'blauw', NULL, NULL, 1),
 ('5116b77f-cd8f-4301-9857-0fa064b330fa', 'Burstner', 'Premio Life', 50.25, 'caravan', 2017, 'KL-789-MN', 'rood', NULL, NULL, 1)");
-
         }
+
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)

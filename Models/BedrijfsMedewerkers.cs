@@ -25,6 +25,8 @@ namespace WPR_project.Models
         [Required(ErrorMessage = "Zakelijke huurder ID is verplicht.")]
         public Guid zakelijkeHuurderId { get; set; } // Buitenlandse sleutel voor relatie
 
+        public Guid WagenparkBeheerderbeheerderId { get; set; }
+
         // Navigatie-eigenschap naar de gerelateerde ZakelijkeHuurder
         public ZakelijkHuurder ZakelijkeHuurder { get; set; }
     }

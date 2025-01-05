@@ -1,4 +1,5 @@
 const API_URL = 'https://localhost:5033/api/ParticulierHuurder'; // Pas dit aan naar jouw API-base-URL
+import apiService from '../apiService'; 
 
 const handleResponse = async (response) => {
     if (!response.ok) {
@@ -59,17 +60,15 @@ const ParticulierHuurdersRequestService = {
 
     register: async (data) => {
         try {
-            const response = await fetch(`${API_URL}/register`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data),
-            });
-            return await handleResponse(response);
+            const response = await apiService.post('/Account/register-particulier', { body: data });
+            return response; // Zorg dat dit een geldig object is
         } catch (error) {
-            console.error('Error during registration:', error);
-            throw error;
+            console.error("API Error:", error);
+            throw error; // Gooi de fout opnieuw als het misgaat
         }
     },
+
+
 
     verifyEmail: async (token) => {
         try {

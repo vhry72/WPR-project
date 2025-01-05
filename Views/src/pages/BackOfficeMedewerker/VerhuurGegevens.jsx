@@ -1,58 +1,59 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useEffect, useState } from 'react';
 
-const HuurVerzoekList = () => {
-    // Gebruik van useState om de huurverzoeken op te slaan
-    const [huurVerzoeken, setHuurVerzoeken] = useState([]);
-    const [loading, setLoading] = useState(true);
+
+const HuurVerzoekenList = () => {
+    const [huurverzoeken, setHuurverzoeken] = useState([]);
     const [error, setError] = useState(null);
+    const [editedOpmerkingen, setEditedOpmerkingen] = useState({});
+   
 
-    // Haal de huurverzoeken op wanneer de component laadt
     useEffect(() => {
-        const fetchHuurVerzoeken = async () => {
-            try {
-                const response = await fetch('/api/HuurVerzoek');
+        fetch('https://localhost:5033/api/Huurverzoek/GetAllAfgekeurde')
+            .then((response) => {
                 if (!response.ok) {
-                    throw new Error('Netwerkantwoord was niet ok');
+                    throw new Error('Netwerk reactie was niet ok');
                 }
+                return response.json();
+            })
+            .then((data) => {
+                setHuurverzoeken(data); // Zet de opgehaalde data
+            })
+            .catch((error) => {
+                setError('Er is een fout opgetreden bij het ophalen van de huurverzoeken.');
+            });
+    }, []);
 
-                const data = await response.json(); // Direct de response omzetten naar JSON
-                setHuurVerzoeken(data);
-            } catch (err) {
-                setError(`Fout bij het ophalen van de huurverzoeken: ${err.message}`);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchHuurVerzoeken();
-    }, []); // Lege dependency array betekent dat dit alleen wordt uitgevoerd bij de eerste render
-
-    // Toon een laadtijd-indicator
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
-    // Toon een foutmelding als er een fout is
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+    // update of het verzoek is goedgekeurd
+    const updateGoedkeuring = (id) => {
+        setHuurverzoeken((prevHuurverzoeken) =>
+            prevHuurverzoeken.map((verzoek) =>
+                verzoek.HuurverzoekId === id
+                    ? { ...verzoek, approved: 1 }
+                    : verzoek
+            )
+        );
+    };
 
     return (
         <div>
-            <h1>Huurverzoeken</h1>
-            <ul>
-                {huurVerzoeken.map((verzoek) => (
-                    <li key={verzoek.HuurderID}>
-                        <p><strong>Huurder ID:</strong> {verzoek.HuurderID}</p>
-                        <p><strong>Voertuig ID:</strong> {verzoek.voertuigId}</p>
-                        <p><strong>Begindatum:</strong> {new Date(verzoek.beginDate).toLocaleDateString()}</p>
-                        <p><strong>Einddatum:</strong> {new Date(verzoek.endDate).toLocaleDateString()}</p>
-                        <p><strong>Goedkeuring:</strong> {verzoek.approved ? 'Goedgekeurd' : 'Afgekeurd'}</p>
-                    </li>
-                ))}
-            </ul>
+            <h1>Afgekeurde Huurverzoeken</h1>
+            {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
+            {huurverzoeken.length === 0 ? (
+                <p>Geen Huurverzoeken aangevraagd.</p>
+            ) : (
+                <ul>
+                    {huurverzoeken.map((huurverzoek) => (
+                        <li key={huurverzoek.huurderID}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
+                            <p>Voertuig: {huurverzoek.voertuig.merk} {huurverzoek.voertuig.model}</p>
+                            <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
+                            <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>
+                            <p>Verzoek is afgewezen: {huurverzoek.voertuig.VO }</p>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
     );
 };
 
-export default HuurVerzoekList;
+export default HuurVerzoekenList;

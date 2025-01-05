@@ -1,5 +1,4 @@
-﻿import apiService from '../apiService';
-
+﻿import apiService from '../apiService'; 
 
 const ZakelijkeHuurderRequestService = {
     getAll: async () => {
@@ -33,7 +32,7 @@ const ZakelijkeHuurderRequestService = {
     register: async (data) => {
         try {
             console.log({body: data})
-            const response = await apiService.post('/ZakelijkeHuurder/registerDTO', { body: data });
+            const response = await apiService.post('/Account/register-zakelijk', { body: data });
             return response; // Zorg dat dit een geldig object is
         } catch (error) {
             console.error("API Error:", error);

@@ -41,8 +41,14 @@ namespace WPR_project.Repositories
 
         public Voertuig GetVoertuigById(Guid id)
         {
-            return _context.Voertuigen.FirstOrDefault(v => v.voertuigId == id);
+            var voertuig = _context.Voertuigen.SingleOrDefault(v => v.voertuigId == id);
+            if (voertuig == null)
+            {
+                throw new KeyNotFoundException($"Voertuig met ID {id} is niet gevonden.");
+            }
+            return voertuig;
         }
+
 
         public IEnumerable<Voertuig> GetVoertuigTypeVoertuigen(string voertuigType)
         {
@@ -60,15 +66,26 @@ namespace WPR_project.Repositories
         public VoertuigStatus GetVoertuigStatus(Guid voertuigId)
         {
             var voertuig = _context.Voertuigen
-                .Include(v => v.voertuigstatus)
+                .Include(v => v.voertuigStatus)
                 .FirstOrDefault(v => v.voertuigId == voertuigId);
 
-            if (voertuig == null || voertuig.voertuigstatus == null)
+            if (voertuig == null || voertuig.voertuigStatus == null)
             {
                 throw new KeyNotFoundException("Voertuig of status niet gevonden.");
             }
 
-            return voertuig.voertuigstatus;
+            return voertuig.voertuigStatus;
+        }
+        public Voertuig GetByID(Guid id)
+
+        {
+            return _context.Voertuigen.Find(id);
+        }
+        public IQueryable<Voertuig> GetAllVoertuigen()
+        {
+            return _context.Voertuigen
+            .Include(h => h.voertuigStatus);
+
         }
 
         public void updateVoertuig(Voertuig voertuig)
@@ -76,6 +93,7 @@ namespace WPR_project.Repositories
             _context.Voertuigen.Update(voertuig);
             _context.SaveChanges();
         }
+       
 
     }
 }
