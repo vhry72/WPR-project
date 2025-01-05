@@ -176,3 +176,11 @@ li {
     align-items: center;
     justify-content: center;
 }
+
+.saldo-container {
+
+}
+
+    .saldo-container h1 {
+        color: black;
+    }

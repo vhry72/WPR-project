@@ -156,6 +156,25 @@ namespace WPR_project.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        // haalt de huiderige abonnement op van de beheerder
+        [HttpGet("{beheerderId}/huidig-abonnement")]
+        public IActionResult GetHuidigAbonnement(Guid beheerderId)
+        {
+            try
+            {
+                var abonnement = _service.GetAbonnementDetails(beheerderId);
+                return Ok(abonnement);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
+            }
+        }
+
 
         // Wijzigt een abonnement op basis van het geselecteerde type (direct zichtbaar of vanaf de volgende periode).
         [HttpPost("{beheerderId}/abonnement/wijzig")]
