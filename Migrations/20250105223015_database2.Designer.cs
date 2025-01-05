@@ -12,8 +12,8 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    [Migration("20250102143126_abonnementVervalDatum")]
-    partial class abonnementVervalDatum
+    [Migration("20250105223015_database2")]
+    partial class database2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -43,7 +43,8 @@ namespace WPR_project.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("vervaldatum")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime2")
+                        .HasColumnName("vervaldatum");
 
                     b.HasKey("AbonnementId");
 
@@ -281,7 +282,11 @@ namespace WPR_project.Migrations
                     b.Property<Guid?>("AbonnementId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("WagenparkBeheerderbeheerderId")
+                    b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("WagenparkBeheerderbeheerderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("medewerkerEmail")
@@ -317,6 +322,12 @@ namespace WPR_project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Reden")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("VoertuigId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<bool>("approved")
                         .HasColumnType("bit");
 
@@ -326,10 +337,12 @@ namespace WPR_project.Migrations
                     b.Property<DateTime>("endDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("voertuigId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<bool>("isBevestigd")
+                        .HasColumnType("bit");
 
                     b.HasKey("HuurderID");
+
+                    b.HasIndex("VoertuigId");
 
                     b.ToTable("Huurverzoeken");
                 });
@@ -536,6 +549,10 @@ namespace WPR_project.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
+                    b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("KVKNummer")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -577,10 +594,12 @@ namespace WPR_project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("EmailBevestigingToken")
+                    b.Property<string>("AspNetUserId")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EmailBevestigingToken")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
@@ -619,12 +638,20 @@ namespace WPR_project.Migrations
                 {
                     b.HasBaseType("WPR_project.Models.Medewerker");
 
+                    b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.ToTable("BackofficeMedewerkers", (string)null);
                 });
 
             modelBuilder.Entity("WPR_project.Models.FrontofficeMedewerker", b =>
                 {
                     b.HasBaseType("WPR_project.Models.Medewerker");
+
+                    b.Property<string>("AspNetUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.ToTable("FrontofficeMedewerkers", (string)null);
                 });
@@ -688,7 +715,9 @@ namespace WPR_project.Migrations
 
                     b.HasOne("WPR_project.Models.WagenparkBeheerder", null)
                         .WithMany("MedewerkerLijst")
-                        .HasForeignKey("WagenparkBeheerderbeheerderId");
+                        .HasForeignKey("WagenparkBeheerderbeheerderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ZakelijkHuurder", "ZakelijkeHuurder")
                         .WithMany("Medewerkers")
@@ -697,6 +726,17 @@ namespace WPR_project.Migrations
                         .IsRequired();
 
                     b.Navigation("ZakelijkeHuurder");
+                });
+
+            modelBuilder.Entity("WPR_project.Models.Huurverzoek", b =>
+                {
+                    b.HasOne("WPR_project.Models.Voertuig", "Voertuig")
+                        .WithMany()
+                        .HasForeignKey("VoertuigId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Voertuig");
                 });
 
             modelBuilder.Entity("WPR_project.Models.ParticulierHuurder", b =>
@@ -721,11 +761,13 @@ namespace WPR_project.Migrations
 
             modelBuilder.Entity("WPR_project.Models.VoertuigStatus", b =>
                 {
-                    b.HasOne("WPR_project.Models.Voertuig", null)
-                        .WithOne("voertuigstatus")
+                    b.HasOne("WPR_project.Models.Voertuig", "voertuig")
+                        .WithOne("voertuigStatus")
                         .HasForeignKey("WPR_project.Models.VoertuigStatus", "voertuigId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("voertuig");
                 });
 
             modelBuilder.Entity("WPR_project.Models.WagenparkBeheerder", b =>
@@ -766,7 +808,7 @@ namespace WPR_project.Migrations
                 {
                     b.Navigation("Schademeldingen");
 
-                    b.Navigation("voertuigstatus")
+                    b.Navigation("voertuigStatus")
                         .IsRequired();
                 });
 

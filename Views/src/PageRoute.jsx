@@ -1,6 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 /*import Layout from "./pages/LayoutTest";*/
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Register from "./pages/register";
 import Login from "./pages/login";
@@ -28,15 +27,12 @@ import BackOfficeMedewerker from "./pages/BackOfficeMedewerker/BackOfficeMedewer
 import BackOfficeVerhuurAanvragen from "./pages/BackOfficeMedewerker/BackOfficeVerhuurAanvragen";
 import VerhuurGegevens from "./pages/BackOfficeMedewerker/VerhuurGegevens";
 import SchadeMeldingen from "./pages/BackOfficeMedewerker/SchadeMeldingen";
-
 import Notification from "./pages/NotificatieZakelijk";
 import Schadeclaims from "./pages/BackOfficeMedewerker/Schadeclaims";
 import FrontOfficeMedewerker from "./pages/FrontOfficeMedewerker/FrontOfficeMedewerker";
 import VoertuigDetails from "./pages/FrontOfficeMedewerker/VoertuigDetails";
 import VoertuigInEnUitname from "./pages/FrontOfficeMedewerker/VoertuigInenUitname";
 import { UserProvider } from "./context/UserContext"; // Context import
-
-import { UserProvider } from "./context/UserContext";
 import EmailConfirmation from "./pages/EmailConformation";
 import PrivateRoute from "./pages/PrivateRoute";
 import VerhuurdeVoertuigen from "./pages/VerhuurdeVoertuigen";

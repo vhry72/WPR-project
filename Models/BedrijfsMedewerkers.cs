@@ -29,5 +29,9 @@ namespace WPR_project.Models
 
         // Navigatie-eigenschap naar de gerelateerde ZakelijkeHuurder
         public ZakelijkHuurder ZakelijkeHuurder { get; set; }
+
+        [Required]
+        public string AspNetUserId { get; set; }
     }
 }
+

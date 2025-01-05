@@ -45,5 +45,8 @@ namespace WPR_project.Models
         [Precision(18, 2)]
         public decimal? PrepaidSaldo { get; set; } = 0;
         public List<BedrijfsMedewerkers>? MedewerkerLijst { get; set; } = new List<BedrijfsMedewerkers>();
+
+        [Required]
+        public string AspNetUserId { get; set; }
     }
 }
