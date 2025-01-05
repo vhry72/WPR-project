@@ -40,6 +40,10 @@ namespace WPR_project.Repositories
             _context.Schademeldingen.Update(schademelding);
             _context.SaveChanges();
         }
+        public void Update(Schademelding schademelding)
+        {
+            _context.Schademeldingen.Update(schademelding);
+        }
         public void Save()
         {
             _context.SaveChanges();

@@ -14,6 +14,8 @@ namespace WPR_project.DTO_s
         public bool isBevestigd {  get; set; }
       
         public string? reden {get; set;}
+
+        
       
         public Voertuig Voertuig { get; set; }
 

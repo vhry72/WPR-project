@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.DTO_s;
+using NuGet.Protocol.Core.Types;
+
 
 namespace WPR_project.Services
 {
@@ -52,7 +54,7 @@ namespace WPR_project.Services
         {
             return _voertuigRepository.GetVoertuigStatus(voertuigId);
         }
-
+        
         public void UpdateVoertuig(Guid id, VoertuigDTO DTO)
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);
@@ -64,11 +66,28 @@ namespace WPR_project.Services
             // Pas alleen de velden aan die in de DTO zijn opgenomen
             voertuig.startDatum = DTO.StartDatum;
             voertuig.eindDatum = DTO.EindDatum;
-            voertuig.voertuigBeschikbaar = DTO.VoertuigBeschikbaar;
+            voertuig.voertuigBeschikbaar = DTO.voertuigBeschikbaar;
 
             // Sla de wijzigingen op
             _voertuigRepository.updateVoertuig(voertuig);
         }
+        public VoertuigDTO GetById(Guid id)
+        {
+            var voertuig = _voertuigRepository.GetByID(id);
+            if (voertuig == null) { return null; }
 
+            return new VoertuigDTO
+            {
+                voertuigId = voertuig.voertuigId,
+                merk = voertuig.merk,
+                model = voertuig.model, 
+                voertuigBeschikbaar = voertuig.voertuigBeschikbaar,               
+            };
+        }
+        
+        public IEnumerable<Voertuig> GetAllVoertuigen()
+        {
+            return _voertuigRepository.GetAllVoertuigen();
+        }
     }
 }

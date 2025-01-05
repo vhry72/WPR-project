@@ -1,58 +1,64 @@
 import { Link, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import "../styles/styles.css";
-//import { FaBell } from 'react-icons/fa';
-import AbonnementService from "../services/requests/AbonnementService";  // Zorg ervoor dat deze geïmporteerd is
+import { FaBell } from 'react-icons/fa';
+import axios from 'axios';
+import "../styles/Notificatie.css"; // Ensure you have your CSS imported
 
+// IconWithDot Component
+export const IconWithDot = ({ showDot }) => {
+    return (
+        <div className="container">
+            <div className="icon">
+                <FaBell size={24} />
+                {showDot && <div className="red-dot"></div>} {/* Only show red dot when showDot is true */}
+            </div>
+        </div>
+    );
+};
+
+// ZakelijkHuurderDashBoard Component
 export const ZakelijkHuurderDashBoard = () => {
     const location = useLocation();
     const HuurderId = new URLSearchParams(location.search).get("HuurderID");
 
-    // Gebruik state om notificaties bij te houden
-    const [hasNotifications, setHasNotifications] = useState(false);  // <-- Dit is de declaratie van de state
+    // State to control whether the red dot should be shown
+    const [showDot, setShowDot] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchAbonnementen = async () => {
-            try {
-                // Haal de abonnementen op via de API
-                const response = await AbonnementService.getBijnaVerlopen();
-                console.log(hasNotifications);
-
-                // Controleer of er abonnementen zijn die bijna verlopen
-                if (response.data && Array.isArray(response.data) && response.data.length > 0) {
-                    // Stel in dat er notificaties zijn als er abonnementen bijna verlopen
-                    setHasNotifications(true);
+        // Check if there are any unanswered requests or notifications
+        axios.get(`https://localhost:5033/api/Huurverzoek/check-Beantwoorde/${HuurderId}`)
+            .then(response => {
+                // Assuming the API response indicates if the red dot should be shown
+                if (response.data && response.data.showDot) {
+                    setShowDot(true);  // Show the red dot if condition is met
                 } else {
-                    setHasNotifications(false);  // Geen notificaties als er geen abonnementen zijn
+                    setShowDot(false);  // Hide the red dot otherwise
                 }
-            } catch (error) {
-                console.error("Fout bij het ophalen van abonnementen:", error);
-                setHasNotifications(false);  // Zorg ervoor dat notificaties niet worden weergegeven bij een fout
-            }
-        };
-        
-        fetchAbonnementen();  // Roep de functie aan bij de eerste render
-    }, []); // De useEffect wordt nu alleen uitgevoerd bij de eerste render
+            })
+            .catch(err => {
+                setError(err.message);
+                console.error("Error fetching data:", err);
+            });
+    }, [HuurderId]); // Run the effect when HuurderId changes
 
     return (
-        <>
-            <div className="index-container">
-                <div className="options">
-                    <Link to={`/ZakelijkeAutoTonen?HuurderID=${HuurderId}`} className="btn">
-                        Huur Auto
-                    </Link>
-                    <Link to={`/accountwijzigingHuurders?HuurderID=${HuurderId}`} className="btn">
-                        Account Wijzigen
-                    </Link>
-                    <Link to={`/NotificatieZakelijk?HuurderID=${HuurderId}`} className="btn">
-                        <FaBell size={24} />
-                        {hasNotifications && <span className="notification-badge"></span>}
-                    </Link>
-                </div>
+        <div className="index-container">
+            <div className="options">
+                <Link to={`/ZakelijkeAutoTonen?HuurderID=${HuurderId}`} className="btn">
+                    Huur Auto
+                </Link>
+                <Link to={`/accountwijzigingHuurders?HuurderID=${HuurderId}`} className="btn">
+                    Account Wijzigen
+                </Link>
+                <Link to={`/NotificatieZakelijk?HuurderID=${HuurderId}`} className="btn">
+                    <IconWithDot showDot={showDot} /> {/* Pass the showDot state as a prop */}
+                </Link>
             </div>
-        </>
+
+            {/* Optionally show error if there's an issue */}
+            {error && <div className="error-message">Error: {error}</div>}
+        </div>
     );
 };
-
 export default ZakelijkHuurderDashBoard;
-

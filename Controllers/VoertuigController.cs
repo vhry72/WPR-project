@@ -31,6 +31,19 @@ namespace WPR_project.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        [HttpGet]
+        public IActionResult GetAllVoertuigen()
+        {
+            try
+            {
+                var voertuigen = _voertuigService.GetAllVoertuigen();
+                return Ok(voertuigen);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Interne serverfout: {ex.Message}");
+            }
+        }
 
         [HttpGet("VoertuigType")]
         public IActionResult GetVoertuigTypeVoertuigen([FromQuery] string voertuigType)
@@ -61,7 +74,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [HttpGet("{id}/status")]
+        [HttpGet("/checkstatus/{id}")]
         public IActionResult GetVoertuigStatus(Guid id)
         {
             try
@@ -74,6 +87,8 @@ namespace WPR_project.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+
 
         [HttpPut("{id}")]
         public IActionResult UpdateVoertuig(Guid id, [FromBody] VoertuigDTO DTO)
@@ -93,5 +108,25 @@ namespace WPR_project.Controllers
             }
         }
 
+        [HttpPut("veranderBeschikbaar/{id}/{voertuigBeschikbaar}")]
+        public IActionResult neemIn(Guid id, bool voertuigBeschikbaar)
+        {
+            try
+            {
+                var voertuig = _voertuigService.GetById(id);
+                if (voertuig == null)
+                {
+                    return NotFound(new { Message = "Voertuig niet gevonden." });
+                }
+                voertuig.voertuigBeschikbaar = voertuigBeschikbaar;// Update de goedkeuring               
+                _voertuigService.UpdateVoertuig(id, voertuig); // Pas de update correct toe
+                return Ok(new { Message = "Voertuigingenomen." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Interne serverfout: {ex.Message}");
+            }
+        }
+        
     }
 }

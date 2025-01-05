@@ -18,6 +18,9 @@ const BackOfficeMedewerker = () => {
                     <Link to="/SchadeMeldingen" className="btn">
                         SchadeMeldingen
                     </Link>
+                    <Link to="/Schadeclaims" className="btn">
+                        Schade claims
+                    </Link>
                 </div>
             </div>
         </>

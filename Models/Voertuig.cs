@@ -41,7 +41,7 @@ namespace WPR_project.Models
         [Required]
         public bool voertuigBeschikbaar { get; set; }
 
-        public VoertuigStatus voertuigstatus { get; set; }
+        public VoertuigStatus voertuigStatus { get; set; }
 
         [JsonIgnore]
         public ICollection<Schademelding> Schademeldingen { get; set; }

@@ -36,6 +36,10 @@ public class HuurverzoekService
     {
         return _repository.GetActiveHuurverzoekenByHuurderId(huurderId).Any();
     }
+    public bool HasAnsweredHuurverzoek(Guid huurderId)
+    {
+        return _repository.GetBeantwoordeHuurverzoekenByHuurderId(huurderId).Any();
+    }
 
     public string GetEmailByHuurderId(Guid huurderId)
     {
@@ -136,6 +140,10 @@ public class HuurverzoekService
     {
         return _repository.GetAllAfgekeurde();
     }
+    public IEnumerable<Huurverzoek> GetAllGoedGekeurde()
+    {
+        return _repository.GetAllGoedGekeurde();
+    }
     public HuurVerzoekDTO GetById(Guid id)
     {
         var huurder = _repository.GetByID(id);
@@ -146,7 +154,8 @@ public class HuurverzoekService
             HuurderID = id,
             beginDate = huurder.beginDate,
             endDate = huurder.endDate,
-            approved = huurder.approved
+            approved = huurder.approved,
+            Voertuig = huurder.Voertuig,
         };
     }
     public void Update(Guid id, HuurVerzoekDTO dto)
