@@ -23,6 +23,12 @@ public class HuurverzoekController : ControllerBase
         var hasActiveRequest = _service.HasActiveHuurverzoek(huurderId);
         return Ok(new { hasActiveRequest });
     }
+    [HttpGet("check-Beantwoorde/{huurderId}")]
+    public IActionResult CheckBeantwoordeHuurverzoek(Guid huurderId)
+    {
+        var hasActiveRequest = _service.HasAnsweredHuurverzoek(huurderId);
+        return Ok(new { hasActiveRequest });
+    }
 
     [HttpPost("verzoek")]
     public IActionResult Verzoek([FromBody] Huurverzoek huurverzoek)
@@ -118,6 +124,19 @@ public class HuurverzoekController : ControllerBase
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
+    [HttpGet("GetAllGoedGekeurde")]
+    public IActionResult GetAllGoedGekeurde()
+    {
+        try
+        {
+            var huurverzoeken = _service.GetAllGoedGekeurde();
+            return Ok(huurverzoeken);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
 
     // Haalt een specifiek Huurverzoek op d.m.v. huurderID
     [HttpGet("{id}")]
@@ -156,29 +175,8 @@ public class HuurverzoekController : ControllerBase
             return NotFound(new { Message = "Huurverzoek niet gevonden." });
         }
     }
-    [HttpPut("approve/{id}/{approved}")]
-    public IActionResult ApproveRequest(Guid id, bool approved, bool isBevestigd)
-    {
-        try
-        {
-            var huurverzoek = _service.GetById(id);
-            if (huurverzoek == null)
-            {
-                return NotFound(new { Message = "Huurverzoek niet gevonden." });
-            }
-
-            huurverzoek.approved = true; // Update de goedkeuring
-            huurverzoek.isBevestigd = true; //update de bevestiging
-            huurverzoek.Voertuig.voertuigBeschikbaar = false;
-            _service.Update(id, huurverzoek); // Pas de update correct toe
-            return Ok(new { Message = "Huurverzoek goedgekeurd." });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Interne serverfout: {ex.Message}");
-        }
-    }
-    [HttpPut("weiger/{id}/{approved}")]
+    
+    [HttpPut("keuring/{id}/{approved}")]
     public IActionResult WeigerRequest(Guid id, bool approved, bool isBevestigd)
     {
         try
@@ -189,7 +187,7 @@ public class HuurverzoekController : ControllerBase
                 return NotFound(new { Message = "Huurverzoek niet gevonden." });
             }
 
-            huurverzoek.approved = false; // Update de goedkeuring
+            huurverzoek.approved = approved; // Update de goedkeuring
             huurverzoek.isBevestigd = true; //update de bevestiging
             
             _service.Update(id, huurverzoek); // Pas de update correct toe
@@ -200,6 +198,7 @@ public class HuurverzoekController : ControllerBase
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
+    
 
 }
 
