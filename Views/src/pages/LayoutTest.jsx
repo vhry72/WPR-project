@@ -12,6 +12,7 @@ export const Layout = () => {
                     <Link to="/abonnement" className="nav-link">Abonnement</Link>
                     <Link to="/zakelijkHuurderDashboard" className="nav-link">Zaak Dashboard</Link>
                     <Link to="/wagenparklogin" className="nav-link">Wagenpark Login</Link>
+                    <Link to="/WagenparkVoertuigenInzien" className="nav-link"> Wagenpark Voertuigen Inzien</Link>"
                     <Link to="/testPage" className="nav-link">TestPage</Link>
                     <Link to="/wagendashboard" className="nav-link">Wagen Dashboard</Link>
                     <Link to="/wagenbeheer" className="nav-link">Wagen beheer</Link>

@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-/*import Layout from "./pages/Layout";*/
+//import Layout from "./pages/Layout";
 import Layout from "./pages/LayoutTest";
 import Register from "./pages/register";
 import Login from "./pages/login";
@@ -17,6 +17,7 @@ import AccountwijzigingHuurders from "./pages/accountwijzigingHuurders";
 import Instellingen from "./pages/instellingen";
 import Wagenbeheer from "./pages/wagenbeheer";
 import ParticulierVoertuigTonen from "./pages/particulierVoertuigTonen";
+import WagenparkVoertuigenInzien from "./pages/WagenparkVoertuigenInzien";
 import LoginVoorWijziging from "./pages/LoginVoorWijziging";
 import TestPage from "./pages/testPage";
 import HuurVoertuig from "./pages/huurVoertuig";
@@ -48,6 +49,7 @@ function PageRoute() {
                         <Route path="medewerkerAbonnementDashboard" element={<MedewerkerAbonnementDashboard />} />
                         <Route path="wagenparklogin" element={<Wagenparklogin />} />
                         <Route path="wagendashboard" element={<Wagendashboard />} />
+                        <Route path="wagenparkVoertuigenInzien" element={<WagenparkVoertuigenInzien />} />
                         <Route path="zakelijkeautotonen" element={<ZakelijkAutoTonen />} />
                         <Route path="wagenbeheer" element={<Wagenbeheer />} />
                         <Route path="testPage" element={<TestPage />} />
