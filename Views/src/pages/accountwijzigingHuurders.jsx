@@ -73,7 +73,7 @@ const AccountwijzigingHuurders = () => {
 
     return (
         <div className="accountwijziging-container">
-            <h1>Gebruikersgegevens Wijzigen</h1>
+            <h1 style={{ color: '#000000'}}>Gebruikersgegevens Wijzigen</h1>
             <form className="form" onSubmit={handleSubmit}>
                 <label htmlFor="name">Naam</label>
                 <input

@@ -8,12 +8,12 @@ const instellingen = () => {
     return (
             <div className="index-container">
                 <div className="options">
-                    <Link to="/accountwijzigingHuurders" className="btn">
-                        Beheer Account
-                    </Link>
-                    <Link to="/verwijder" className="btn">
-                        Verwijder account
-                    </Link>
+                <Link to="/accountwijzigingHuurders" className="btn" style={{ color: '#FFFFFF', backgroundColor: '#0053ba' }}>
+                    Beheer Account
+                </Link>
+                <Link to="/verwijder" className="btn" style={{ color: '#FFFFFF', backgroundColor: '#0053ba' }}>
+                    Verwijder account
+                </Link>
                 </div>
             </div>
     );
