@@ -1,64 +1,76 @@
-﻿//import { Outlet, Link } from "react-router-dom";
-//import { useContext } from "react";
-//import { UserContext } from "../context/UserContext";
-//import "../styles/navigatieBalk.css";
+﻿import { Outlet, Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import "../styles/navigatieBalk.css";
+import axios from "axios";
 
-//const Layout = () => {
-//    const { userRole } = useContext(UserContext);
-
-
-//    // Definieer navigatie-opties per rol
-//    const navLinks = {
-//        particulier: [
-//            { to: "/instellingen", label: "Instellingen" },
-//            { to: "/particulierHuurderDashBoard", label: "Dashboard" },
-//            { to: "/particulierVoertuigTonen", label: "Voertuigen Tonen" },
-//        ],
-//        zakelijk: [
-//            { to: "/instellingen", label: "Instellingen" },
-//            { to: "/zaakdashboard", label: "Zaak Dashboard" },
-//            { to: "/zakelijkeautotonen", label: "Zakelijke Auto's" },
-//        ],
-//        backOfficemedewerker: [
-//            { to: "/BackOfficeMedewerker", label: "BackOffice Medewerker" },
-//            { to: "/SchadeMeldingen", label: "Schade Meldingen" },
-//        ],
-//        frontOfficemedewerker: [
-//            { to: "/FrontOfficeMedewerker", label: "FrontOffice Medewerker" },
-//            { to: "/SchadeMeldingen", label: "Schade Meldingen" },
-//        ],
-//        wagenparkbeheerder: [
-//            { to: "/instellingen", label: "Instellingen" },
-//            { to: "/wagendashboard", label: "Wagen Dashboard" },
-//            { to: "/wagenbeheer", label: "Wagen Beheer" },
-//        ],
-//    };
+const Layout = () => {
+    const { userRole, setUserRole } = useContext(UserContext);
+    const navigate = useNavigate();
 
 
-//    return (
-//        <>
-//            <header>
-//                <nav className="navbar">
-//                    {/* Opties die altijd zichtbaar zijn */}
-//                    <Link to="/" className="nav-link">Home</Link>
-//                    <Link to="/register" className="nav-link">Registreren</Link>
-//                    <Link to ="LoginVoorWijziging" className = "nav-link"> Inloggen</Link>
+    const navLinks = {
+        ParticuliereHuurder: [
+            { to: "/instellingen", label: "Instellingen" },
+            { to: "/particulierHuurderDashBoard", label: "Dashboard" },
+            { to: "/particulierVoertuigTonen", label: "Voertuigen Tonen" },
+        ],
+        ZakelijkeHuurder: [
+            { to: "/instellingen", label: "Instellingen" },
+            { to: "/zaakdashboard", label: "Zaak Dashboard" },
+            { to: "/zakelijkeautotonen", label: "Zakelijke Auto's" },
+        ],
+        Bedrijfsmedewerker: [
+            { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },
+            { to: "/zakelijkeautotonen", label: "Zakelijke Auto's" },
+        ],
+        medewerker: [
+            { to: "/instellingen", label: "Instellingen" },
+            { to: "/BackOfficeMedewerker", label: "BackOffice Medewerker" },
+            { to: "/SchadeMeldingen", label: "Schade Meldingen" },
+        ],
+        Wagenparkbeheerder: [
+            { to: "/instellingen", label: "Instellingen" },
+            { to: "/wagendashboard", label: "Wagen Dashboard" },
+            { to: "/wagenbeheer", label: "Wagen Beheer" },
+        ],
+    };
 
+    const handleLogout = async () => {
+        try {
+            await axios.post("https://localhost:5033/api/Account/logout", {}, { withCredentials: true });
+            setUserRole(null); // Reset de rol
+            localStorage.removeItem("role"); // Verwijder de rol uit localStorage
+            navigate("/"); // Navigeer naar de inlogpagina
+        } catch (error) {
+            console.error("Fout bij uitloggen:", error);
+        }
+    };
 
-//                    {/* Dynamische opties op basis van de gebruikersrol */}
-//                    {userRole &&
-//                        navLinks[userRole]?.map((link, index) => (
-//                            <Link key={index} to={link.to} className="nav-link">
-//                                {link.label}
-//                            </Link>
-//                        ))}
-//                </nav>
-//            </header>
-//            <main>
-//                <Outlet /> {/* Render de child route */}
-//            </main>
-//        </>
-//    );
-//};
+    return (
+        <>
+            <header>
+                <nav className="navbar">
+                    <Link to="/Home" className="nav-link">Home</Link>
+                    {!userRole && <Link to="/" className="nav-link">Aanmelden</Link>}
+                    {userRole &&
+                        navLinks[userRole]?.map((link, index) => (
+                            <Link key={index} to={link.to} className="nav-link">
+                                {link.label}
+                            </Link>
+                        ))}
+                    {userRole && (
+                        <button onClick={handleLogout} className="logout-button">
+                            Uitloggen
+                        </button>
+                    )}
+                </nav>
+            </header>
+            <main>
+                <Outlet />
+            </main>
+        </>
+    );
+};
 
-//export default Layout;
+export default Layout;

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
 using WPR_project.Models;
 using WPR_project.Repositories;
@@ -11,6 +12,7 @@ namespace WPR_project.Services
         private readonly IWagenparkBeheerderRepository _repository;
         private readonly IZakelijkeHuurderRepository _zakelijkeHuurderRepository;
         private readonly IAbonnementRepository _abonnementRepository;
+        private readonly IHuurVerzoekRepository _huurVerzoekRepository;
         private readonly IEmailService _emailService;
         private readonly GegevensContext _context;
 
@@ -18,12 +20,14 @@ namespace WPR_project.Services
             IWagenparkBeheerderRepository repository,
             IZakelijkeHuurderRepository zakelijkeHuurderRepository,
             IAbonnementRepository abonnementRepository,
+            IHuurVerzoekRepository huurVerzoekRepository,
             GegevensContext context,
             IEmailService emailService)
         {
             _repository = repository;
             _zakelijkeHuurderRepository = zakelijkeHuurderRepository;
             _abonnementRepository = abonnementRepository;
+            _huurVerzoekRepository = huurVerzoekRepository;
             _context = context;
             _emailService = emailService;
         }
@@ -188,5 +192,20 @@ namespace WPR_project.Services
 
             return _abonnementRepository.GetAllAbonnementen().Where(a => a.WagenparkBeheerders.Contains(huurder));
         }
+
+        public List<Guid> GetMedewerkersIdsByWagenparkbeheerder(Guid wagenparkbeheerderId)
+        {
+            // Haal de medewerkers-ID's op via de repository
+            return _repository.GetMedewerkersIdsByWagenparkbeheerder(wagenparkbeheerderId);
+        }
+
+        public IEnumerable<Huurverzoek> GetVerhuurdeVoertuigen(Guid medewerkerId)
+        {
+            var medewerker = _context.BedrijfsMedewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
+            if (medewerker == null)
+                throw new KeyNotFoundException("Medewerker niet gevonden.");
+            return _huurVerzoekRepository.GetAllHuurVerzoeken().Where(a => a.HuurderID == medewerkerId);
+        }
     }
 }
+

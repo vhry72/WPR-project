@@ -1,13 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ParticulierVoertuigTonen.css";
 import VoertuigRequestService from "../services/requests/VoertuigRequestService";
+import JwtService from "../services/JwtService"; // Importeer de nieuwe JWT-service
 
 const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
+    const [huurderId, setHuurderId] = useState(null);
     const navigate = useNavigate();
-    const HuurderId = new URLSearchParams(location.search).get("HuurderID");
+
+    // Haal het huurderID op via de API bij mount
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setHuurderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
 
     const handleChange = (event) => {
         setFilterType(event.target.value);
@@ -33,8 +52,13 @@ const ParticulierVoertuigTonen = () => {
     };
 
     const handleVoertuigClick = (voertuig) => {
-        navigate(`/huurVoertuig?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}&HuurderID=${HuurderId}&SoortHuurder=Particulier`);
-;
+        if (!huurderId) {
+            alert("Huurder ID niet gevonden.");
+            return;
+        }
+        navigate(
+            `/huurVoertuig?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}&HuurderID=${huurderId}&SoortHuurder=Particulier`
+        );
     };
 
     return (
@@ -50,10 +74,18 @@ const ParticulierVoertuigTonen = () => {
                 </button>
             </div>
             <div className="button-container">
-                <button onClick={() => handleSort("merk")} className="sort-button">Sorteer op Merk</button>
-                <button onClick={() => handleSort("model")} className="sort-button">Sorteer op Model</button>
-                <button onClick={() => handleSort("prijsPerDag")} className="sort-button">Sorteer op Prijs</button>
-                <button onClick={() => handleSort("bouwjaar")} className="sort-button">Sorteer op Bouwjaar</button>
+                <button onClick={() => handleSort("merk")} className="sort-button">
+                    Sorteer op Merk
+                </button>
+                <button onClick={() => handleSort("model")} className="sort-button">
+                    Sorteer op Model
+                </button>
+                <button onClick={() => handleSort("prijsPerDag")} className="sort-button">
+                    Sorteer op Prijs
+                </button>
+                <button onClick={() => handleSort("bouwjaar")} className="sort-button">
+                    Sorteer op Bouwjaar
+                </button>
             </div>
             <table className="styled-table">
                 <thead>
@@ -71,7 +103,16 @@ const ParticulierVoertuigTonen = () => {
                 <tbody>
                     {voertuigen.map((voertuig, index) => (
                         <tr key={index}>
-                            <td onClick={() => handleVoertuigClick(voertuig)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>{voertuig.merk}</td>
+                            <td
+                                onClick={() => handleVoertuigClick(voertuig)}
+                                style={{
+                                    cursor: "pointer",
+                                    color: "blue",
+                                    textDecoration: "underline",
+                                }}
+                            >
+                                {voertuig.merk}
+                            </td>
                             <td>{voertuig.model}</td>
                             <td>{voertuig.prijsPerDag}</td>
                             <td>{voertuig.voertuigType}</td>

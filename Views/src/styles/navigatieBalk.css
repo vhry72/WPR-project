@@ -62,3 +62,18 @@ body header {
     header .logo img {
         width: 150px;
     }
+
+.nav-logout-button {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+    .nav-logout-button:hover {
+        background-color: #cc0000;
+    }

@@ -1,11 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 using Xunit.Sdk;
 
 namespace WPR_project.Models
 {
     public class ParticulierHuurder
     {
-        //annotations toegevoegd voor validatie invoeren gegevens
         [Key]
         public Guid particulierId { get; set; }
 
@@ -17,8 +17,7 @@ namespace WPR_project.Models
         [StringLength(50, MinimumLength = 2, ErrorMessage = "Naam mag niet langer zijn dan 100 tekens.")]
         public string particulierNaam { get; set; }
 
-        [StringLength(255, ErrorMessage = "Email bevestiging token mag niet langer zijn dan 255 tekens.")]
-        public string EmailBevestigingToken { get; set; }
+        public Guid EmailBevestigingToken { get; set; }
 
         public bool IsEmailBevestigd { get; set; } = false;
 
@@ -41,5 +40,8 @@ namespace WPR_project.Models
         [Required(ErrorMessage = "Telefoonnummer is verplicht.")]
         [RegularExpression(@"^(\+31|0)[1-9]\d{8}$", ErrorMessage = "Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.")]
         public string telefoonnummer { get; set; }
+
+        [Required]
+        public string AspNetUserId { get; set; }
     }
 }

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
-import "../styles/styles.css";
-import zakelijkeHuurderRequestService from "../services/requests/ZakelijkeHuurderRequestService"; 
-import particulierHuurdersRequestService from "../services/requests/ParticulierHuurderRequestService";
-import { v4 as uuidv4 } from 'uuid';
+import React, { useState, useRef, useEffect } from "react";
+import { QRCodeSVG } from "qrcode.react";
+import ParticulierHuurdersRequestService from "../services/requests/ParticulierHuurderRequestService";
+import ZakelijkeHuurderRequestService from "../services/requests/ZakelijkeHuurderRequestService";
+import "../styles/Register.css";
 
 const Register = () => {
-    const [activeTab, setActiveTab] = useState("particulier");
     const [formData, setFormData] = useState({
         particulierEmail: "",
         particulierNaam: "",
@@ -14,25 +13,32 @@ const Register = () => {
         postcode: "",
         woonplaats: "",
         telefoonnummer: "",
-        Zakelijkemail: "",
-        Zakelijkwachtwoord: "",
-        bedrijfsnaam: "",
         kantoorAdres: "",
-        zakelijkTelefoonnummer: "",
         kvkNummer: "",
-
+        Zakelijkemail: "",
+        zakelijkTelefoonnummer: "",
+        bedrijfsnaam: "",
+        Zakelijkwachtwoord: "",
     });
-
+    const [qrCode, setQrCode] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [activeTab, setActiveTab] = useState("particulier");
+    const qrCodeRef = useRef(null);
+
+    useEffect(() => {
+        if (qrCode && qrCodeRef.current) {
+            qrCodeRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    }, [qrCode]);
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
 
     const handleTabClick = (tab) => {
         setActiveTab(tab);
-    };
-
-    const handleChange = (event) => {
-        const { id, value } = event.target;
-        setFormData((prev) => ({ ...prev, [id]: value }));
+        setQrCode("");
     };
 
     const handlePostParticulier = async (event) => {
@@ -41,20 +47,9 @@ const Register = () => {
         setErrorMessage("");
 
         try {
-            // Valideer verplichte velden
-            if (!formData.particulierEmail || !formData.wachtwoord) {
-                setErrorMessage("Vul alle verplichte velden in!");
-                setIsLoading(false);
-                return;
-            }
-
-            // Maak payload
             const payload = {
-                particulierId: uuidv4(),
                 particulierEmail: formData.particulierEmail,
                 particulierNaam: formData.particulierNaam,
-                EmailBevestigingToken: '6asdadwq',
-                IsEmailBevestigd: false,
                 wachtwoord: formData.wachtwoord,
                 adress: formData.adress,
                 postcode: formData.postcode,
@@ -62,23 +57,15 @@ const Register = () => {
                 telefoonnummer: formData.telefoonnummer,
             };
 
-            console.log("Verstuurde payload:", payload);
+            const response = await ParticulierHuurdersRequestService.register(payload);
+            const { qrCodeUri } = response.data;
 
-            // Verzoek naar backend
-            const response = await particulierHuurdersRequestService.register(payload);
-            alert("Gebruiker succesvol geregistreerd!");
-            console.log("User registered successfully:", response.data);
-
+            setQrCode(qrCodeUri);
+            alert("Registratie succesvol! Scan de QR-code om tweestapsverificatie in te schakelen.");
         } catch (error) {
-            // Foutafhandeling
-            if (error.response) {
-                setErrorMessage(error.response.data?.message || "Serverfout, probeer later opnieuw.");
-            } else if (error.request) {
-                setErrorMessage("Geen antwoord van de server. Controleer je verbinding.");
-            } else {
-
-                setErrorMessage(`Onbekende fout: ${error.message}`);
-            }
+            setErrorMessage(
+                error.response?.data?.message || "Serverfout, probeer later opnieuw."
+            );
         } finally {
             setIsLoading(false);
         }
@@ -90,40 +77,24 @@ const Register = () => {
         setErrorMessage("");
 
         try {
-            // Valideer verplichte velden
-            if (!formData.Zakelijkemail || !formData.Zakelijkwachtwoord) {
-                setErrorMessage("Vul alle verplichte velden in!");
-                setIsLoading(false);
-                return;
-            }
-
-            // Maak payload
             const payload = {
                 adres: formData.kantoorAdres,
-                kvkNummer: formData.kvkNummer,
+                KVKNummer: parseInt(formData.kvkNummer, 10),
                 bedrijfsEmail: formData.Zakelijkemail,
                 telNummer: formData.zakelijkTelefoonnummer,
-                bedrijfsnaam: formData.bedrijfsnaam,
+                bedrijfsNaam: formData.bedrijfsnaam,
                 wachtwoord: formData.Zakelijkwachtwoord,
             };
 
-            console.log("Verstuurde payload:", payload);
+            const response = await ZakelijkeHuurderRequestService.register(payload);
+            const { qrCodeUri } = response.data;
 
-            // Verzoek naar backend
-            const response = await zakelijkeHuurderRequestService.register(payload);
-            alert("Gebruiker succesvol geregistreerd!");
-            console.log("User registered successfully:", response.data);
-
+            setQrCode(qrCodeUri);
+            alert("Zakelijke registratie succesvol! Scan de QR-code om tweestapsverificatie in te schakelen.");
         } catch (error) {
-            // Foutafhandeling
-            if (error.response) {
-                setErrorMessage(error.response.data?.message || "Serverfout, probeer later opnieuw.");
-            } else if (error.request) {
-                setErrorMessage("Geen antwoord van de server. Controleer je verbinding.");
-            } else {
-
-                setErrorMessage(`Onbekende fout: ${error.message}`);
-            }
+            setErrorMessage(
+                error.response?.data?.message || "Serverfout, probeer later opnieuw."
+            );
         } finally {
             setIsLoading(false);
         }
@@ -132,24 +103,26 @@ const Register = () => {
     return (
         <div className="register-container">
             <h1>Registreren</h1>
-            <div className="tabs">
-                <div
+            <div className="register-tabs">
+                <button
                     className={`tab ${activeTab === "particulier" ? "active" : ""}`}
                     onClick={() => handleTabClick("particulier")}
+                    aria-selected={activeTab === "particulier"}
                 >
                     Particulier
-                </div>
-                <div
+                </button>
+                <button
                     className={`tab ${activeTab === "zakelijk" ? "active" : ""}`}
                     onClick={() => handleTabClick("zakelijk")}
+                    aria-selected={activeTab === "zakelijk"}
                 >
                     Zakelijk
-                </div>
+                </button>
             </div>
 
             {activeTab === "particulier" && (
                 <form id="ParticulierForm" className="form" onSubmit={handlePostParticulier}>
-                    <label htmlFor="particulierEmail">E-mail</label>
+                    <label htmlFor="particulierEmail">E-mailadres</label>
                     <input
                         type="email"
                         id="particulierEmail"
@@ -218,12 +191,25 @@ const Register = () => {
                     <button type="button" className="login-button" onClick={() => window.location.href = '/LoginVoorWijziging'}>
                         Ga naar het inlogscherm
                     </button>
+
+                    {/* QR-code tonen na succesvolle registratie */}
+                    {qrCode && (
+                        <div className="qr-code-container" ref={qrCodeRef} aria-live="polite">
+                            <p>Scan de onderstaande QR-code in je authenticator-app:</p>
+                            <QRCodeSVG value={qrCode} size={200} aria-label="QR-code voor authenticatie" />
+                            <div className="qr-code-details" role="region" aria-labelledby="qr-code-details-heading">
+                                <h2 id="qr-code-details-heading">Handmatige configuratie</h2>
+                                <p><strong>Accountnaam:</strong> {formData.particulierEmail}</p>
+                                <p><strong>Geheime sleutel:</strong> {new URLSearchParams(qrCode.split('?')[1]).get('secret')}</p>
+                            </div>
+                        </div>
+                    )}
                 </form>
             )}
-            {/* Zakelijk Formulier */}
+
             {activeTab === "zakelijk" && (
                 <form id="ZakelijkForm" className="form" onSubmit={handlePostZakelijk}>
-                    <label htmlFor="kantoorAdres">Kantoor Adres</label>
+                    <label htmlFor="kantoorAdres">Kantooradres</label>
                     <input
                         type="text"
                         id="kantoorAdres"
@@ -232,7 +218,6 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
-
                     <label htmlFor="kvkNummer">KVK-nummer</label>
                     <input
                         type="text"
@@ -242,17 +227,15 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
-
-                    <label htmlFor="Zakelijkemail">Email</label>
+                    <label htmlFor="Zakelijkemail">E-mailadres</label>
                     <input
-                        type="text"
+                        type="email"
                         id="Zakelijkemail"
                         name="Zakelijkemail"
                         value={formData.Zakelijkemail}
                         onChange={handleChange}
                         required
                     />
-
                     <label htmlFor="zakelijkTelefoonnummer">Telefoonnummer</label>
                     <input
                         type="text"
@@ -262,7 +245,6 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
-
                     <label htmlFor="bedrijfsnaam">Bedrijfsnaam</label>
                     <input
                         type="text"
@@ -272,25 +254,37 @@ const Register = () => {
                         onChange={handleChange}
                         required
                     />
-
                     <label htmlFor="Zakelijkwachtwoord">Wachtwoord</label>
                     <input
-                        type="text"
+                        type="password"
                         id="Zakelijkwachtwoord"
                         name="Zakelijkwachtwoord"
                         value={formData.Zakelijkwachtwoord}
                         onChange={handleChange}
                         required
                     />
-
-                    <button type="submit" className="register-button">
-                        Registreren
+                    <button type="submit" className="register-button" disabled={isLoading}>
+                        {isLoading ? "Verwerken..." : "Registreren"}
                     </button>
                     <button type="button" className="login-button" onClick={() => window.location.href = '/LoginVoorWijziging'}>
                         Ga naar het inlogscherm
                     </button>   
+
+                    {/* QR-code tonen na succesvolle registratie */}
+                    {qrCode && (
+                        <div className="qr-code-container" ref={qrCodeRef} aria-live="polite">
+                            <p>Scan de onderstaande QR-code in je authenticator-app:</p>
+                            <QRCodeSVG value={qrCode} size={200} aria-label="QR-code voor authenticatie" />
+                            <div className="qr-code-details" role="region" aria-labelledby="qr-code-details-heading">
+                                <h2 id="qr-code-details-heading">Handmatige configuratie</h2>
+                                <p><strong>Accountnaam:</strong> {formData.Zakelijkemail}</p>
+                                <p><strong>Geheime sleutel:</strong> {new URLSearchParams(qrCode.split('?')[1]).get('secret')}</p>
+                            </div>
+                        </div>
+                    )}
                 </form>
             )}
+
             {errorMessage && <div className="error-message">{errorMessage}</div>}
             
         </div>

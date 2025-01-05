@@ -41,8 +41,14 @@ namespace WPR_project.Repositories
 
         public Voertuig GetVoertuigById(Guid id)
         {
-            return _context.Voertuigen.FirstOrDefault(v => v.voertuigId == id);
+            var voertuig = _context.Voertuigen.SingleOrDefault(v => v.voertuigId == id);
+            if (voertuig == null)
+            {
+                throw new KeyNotFoundException($"Voertuig met ID {id} is niet gevonden.");
+            }
+            return voertuig;
         }
+
 
         public IEnumerable<Voertuig> GetVoertuigTypeVoertuigen(string voertuigType)
         {

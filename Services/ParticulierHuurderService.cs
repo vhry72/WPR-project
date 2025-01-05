@@ -82,7 +82,7 @@ namespace WPR_project.Services
                 postcode = particulierH.postcode,
                 woonplaats = particulierH.woonplaats,
                 telefoonnummer = particulierH.telefoonnummer,
-                EmailBevestigingToken = Guid.NewGuid().ToString(),
+                EmailBevestigingToken = Guid.NewGuid(),
                 IsEmailBevestigd = false,
             };
 
@@ -96,7 +96,7 @@ namespace WPR_project.Services
         }
 
 
-        public bool VerifyEmail(string token)
+        public bool VerifyEmail(Guid token)
         {
             var huurder = _repository.GetByToken(token);
             if (huurder == null || huurder.IsEmailBevestigd) return false;

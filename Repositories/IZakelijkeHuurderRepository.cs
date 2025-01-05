@@ -7,7 +7,7 @@ namespace WPR_project.Repositories
         // Functions for ZakelijkHuurder
         IEnumerable<ZakelijkHuurder> GetAllZakelijkHuurders();
         ZakelijkHuurder GetZakelijkHuurderById(Guid id);
-        ZakelijkHuurder GetZakelijkHuurderByToken(string token);
+        ZakelijkHuurder GetZakelijkHuurderByToken(Guid token);
 
         void AddZakelijkHuurder(ZakelijkHuurder zakelijkHuurder);
         void UpdateZakelijkHuurder(ZakelijkHuurder zakelijkHuurder);

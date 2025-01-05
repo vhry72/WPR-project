@@ -19,12 +19,12 @@ public class ZakelijkHuurder
 
     [Required(ErrorMessage = "E-mailadres is verplicht.")]
     [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
-    public string bedrijsEmail { get; set; }
+    public string bedrijfsEmail { get; set; }
 
-    public string domein => bedrijsEmail.Split('@')[1]; // Automatisch het domein uit de e-mail halen
+    public string domein => bedrijfsEmail.Split('@')[1]; // Automatisch het domein uit de e-mail halen
 
-    [StringLength(255, ErrorMessage = "E-mail bevestiging token mag niet langer zijn dan 255 tekens.")]
-    public string EmailBevestigingToken { get; set; }
+    
+    public Guid EmailBevestigingToken { get; set; }
 
     public bool IsEmailBevestigd { get; set; } = false;
 
@@ -39,6 +39,9 @@ public class ZakelijkHuurder
     [Required(ErrorMessage = "wachtwoord is verplicht.")]
     [MinLength(8, ErrorMessage = "wachtwoord moet minimaal 8 tekens bevatten.")]
     public string wachtwoord { get; set; }
+
+    [Required]
+    public string AspNetUserId { get; set; }
 
     [JsonIgnore] // Zorg ervoor dat Medewerkers niet wordt opgenomen in de JSON
     public List<BedrijfsMedewerkers>? Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();

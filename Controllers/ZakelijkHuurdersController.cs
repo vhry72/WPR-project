@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Services;
@@ -16,41 +17,14 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-        [HttpPost("registerDTO")]
-        public ActionResult RegisterZakelijkeHuurder([FromBody] ZakelijkeHuurderDTO dto)
-        {
-            if (dto == null || string.IsNullOrEmpty(dto.bedrijfsEmail))
-            {
-                return BadRequest("Ongeldige gegevens voor registratie.");
-            }
 
-            var zakelijkHuurder = new ZakelijkHuurder
-            {
-                zakelijkeId = Guid.NewGuid(),
-                adres = dto.adres,
-                KVKNummer = dto.KVKNummer,
-                bedrijsEmail = dto.bedrijfsEmail,
-                EmailBevestigingToken = Guid.NewGuid().ToString(),
-                IsEmailBevestigd = false,
-                telNummer = dto.telNummer,
-                bedrijfsNaam = dto.bedrijfsNaam,
-                wachtwoord = dto.wachtwoord
-            };
-
-            _service.RegisterZakelijkeHuurder(zakelijkHuurder);
-            return Ok("Registratie succesvol. Controleer je e-mail voor de verificatielink.");
-        }
-
-
-        /// <summary>
-        /// Verifieert een e-mailadres
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpGet("verify")]
-        public IActionResult VerifyEmail(string token)
+        public IActionResult VerifyEmail(Guid token)
         {
-            if (string.IsNullOrEmpty(token))
+            if(token == Guid.Empty)
             {
-                return BadRequest("Verificatie token is verplicht.");
+                return BadRequest(new { Message = "Verificatietoken is verplicht." });
             }
 
             var result = _service.VerifyEmail(token);
@@ -62,9 +36,7 @@ namespace WPR_project.Controllers
             return Ok("Je e-mail is succesvol bevestigd. Je kunt nu inloggen.");
         }
 
-        /// <summary>
-        /// Haalt alle zakelijke huurders op
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpGet]
         public ActionResult<IEnumerable<ZakelijkHuurder>> GetAllZakelijkeHuurders()
         {
@@ -72,9 +44,7 @@ namespace WPR_project.Controllers
             return Ok(huurders);
         }
 
-        /// <summary>
-        /// Haalt een specifieke zakelijke huurder op via ID
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpGet("{id}")]
         public ActionResult<ZakelijkHuurder> GetZakelijkHuurderById(Guid id)
         {
@@ -86,9 +56,7 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-        /// <summary>
-        /// Voegt een nieuwe zakelijke huurder toe
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpPost]
         public ActionResult AddZakelijkeHuurder([FromBody] ZakelijkHuurder zakelijkHuurder)
         {
@@ -101,9 +69,7 @@ namespace WPR_project.Controllers
             return CreatedAtAction(nameof(GetZakelijkHuurderById), new { id = zakelijkHuurder.zakelijkeId }, zakelijkHuurder);
         }
 
-        /// <summary>
-        /// Wijzigt een bestaande zakelijke huurder
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpPut("{id}")]
         public IActionResult UpdateZakelijkeHuurder(Guid id, [FromBody] ZakelijkHuurder zakelijkHuurder)
         {
@@ -124,9 +90,7 @@ namespace WPR_project.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Verwijdert een zakelijke huurder via ID
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpDelete("{id}")]
         public IActionResult DeleteZakelijkeHuurder(Guid id)
         {
@@ -142,9 +106,7 @@ namespace WPR_project.Controllers
             return NoContent();
         }
 
-        /// <summary>
-        /// Voegt een medewerker toe aan een zakelijke huurder
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpPost("{id}/voegmedewerker")]
         public IActionResult VoegMedewerkerToe(Guid id, [FromBody] BedrijfsMedewerkers medewerker)
         {
@@ -168,9 +130,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        /// <summary>
-        /// Verwijdert een medewerker van een zakelijke huurder
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpDelete("{id}/verwijdermedewerker")]
         public IActionResult VerwijderMedewerker(Guid id, [FromBody] string medewerkerEmail)
         {
@@ -194,9 +154,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        /// <summary>
-        /// Voegt een wagenparkbeheerder toe
-        /// </summary>
+        [Authorize(Roles = "ZakelijkHuurder")]
         [HttpPost("{zakelijkeHuurderId}/wagenparkbeheerder")]
         public IActionResult AddWagenparkBeheerder(Guid zakelijkeHuurderId, [FromBody] WagenparkBeheerder beheerder)
         {

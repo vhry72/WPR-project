@@ -15,6 +15,8 @@ public class Abonnement
 
     [Precision(18, 2)]
     public decimal Kosten { get; set; }
+
+    public DateTime vervaldatum { get; set; }
     public AbonnementType AbonnementType { get; set; }
 
     public ICollection<WagenparkBeheerder> WagenparkBeheerders { get; set; } = new List<WagenparkBeheerder>();

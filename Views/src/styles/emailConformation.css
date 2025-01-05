@@ -1,0 +1,42 @@
+﻿/* Scoped styling voor email-confirmation */
+.email-confirmation-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Vul de volledige hoogte van het scherm */
+    background-color: #f9f9f9; /* Lichtgrijze achtergrondkleur */
+}
+
+.email-confirmation {
+    background-color: #ffffff; /* Witte achtergrond */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 90%;
+    text-align: center;
+}
+
+    .email-confirmation h1 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #333333; /* Donkergrijze tekstkleur */
+    }
+
+    .email-confirmation p {
+        font-size: 16px;
+        color: #555555; /* Lichtgrijze tekstkleur */
+    }
+
+    .email-confirmation .success-text {
+        color: #28a745; /* Groen voor succes */
+    }
+
+    .email-confirmation .error-text {
+        color: #dc3545; /* Rood voor foutmeldingen */
+    }
+
+    .email-confirmation .reason-text {
+        font-size: 14px;
+        color: #666666; /* Grijze tekst voor details */
+    }
