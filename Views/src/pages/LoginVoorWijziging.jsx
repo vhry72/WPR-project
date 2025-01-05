@@ -69,7 +69,7 @@ const Login = () => {
             
 
 
-            navigate("/Index");
+            navigate("/");
         } catch (error) {
             console.error("2FA verification failed:", error.response || error);
             setErrorMessage("Verification failed. Please try again.");

@@ -47,7 +47,6 @@ function PageRoute() {
                         {/* Openbare routes */}
                         <Route index element={<Index />} />
                         <Route path="startLogin" element={<StartLogin />} />
-                        <Route path="Index" element={<Index />} />
                         <Route path="register" element={<Register />} />
                         <Route path="email-confirmation" element={<EmailConfirmation />} />
                         <Route path="VerhuurdeVoertuigen" element={<VerhuurdeVoertuigen/> } />
