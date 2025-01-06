@@ -4,6 +4,7 @@ import ParticulierHuurdersRequestService from '../services/requests/ParticulierH
 import BedrijfsMedewerkerRequestService from '../services/requests/bedrijfsMedewerkerRequestService';
 import VoertuigRequestService from '../services/requests/VoertuigRequestService';
 import HuurVerzoekRequestService from '../services/requests/HuurVerzoekRequestService';
+import JwtService from "../services/JwtService";
 
 const BevestigingHuur = () => {
     const navigate = useNavigate();
@@ -11,7 +12,7 @@ const BevestigingHuur = () => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [huurderNaam, setHuurderNaam] = useState("");
-    const [huurderId, setHuurderId] = useState(null);]
+    const [huurderId, setHuurderId] = useState(null);
 
     // Haal parameters uit de URL
     const kenteken = new URLSearchParams(location.search).get("kenteken");
@@ -39,35 +40,39 @@ const BevestigingHuur = () => {
 
     useEffect(() => {
         const fetchHuurderNaam = async () => {
+            if (!huurderId) {
+                console.error("Geen huurder ID beschikbaar.");
+                return;
+            }
+
             try {
                 let huurderResponse;
 
                 if (SoortHuurder === "Particulier") {
                     huurderResponse = await ParticulierHuurdersRequestService.getById(huurderId);
-                    console.log("Particulier Huurder Data:", huurderResponse);
+                    console.log("Particulier Huurder Data:", huurderResponse.data);
                 } else if (SoortHuurder === "Zakelijk") {
                     huurderResponse = await BedrijfsMedewerkerRequestService.getById(huurderId);
-                    console.log("Zakelijk Huurder Data:", huurderResponse);
+                    console.log("Zakelijk Huurder Data:", huurderResponse.data);
                 }
-
-                // Haal de naam uit de "data" property
-                if (huurderResponse && huurderResponse.data) {
+                console.log(huurderResponse.data);
+                if (huurderResponse?.data) {
                     setHuurderNaam(
-                        huurderResponse.data.particulierNaam || // voor particulier
-                        huurderResponse.data.medewerkerNaam || // voor zakelijk
-                        "Huurder" // fallback
+                        huurderResponse.data.particulierNaam || // Voor particulier
+                        huurderResponse.data.medewerkerNaam || // Voor zakelijk
+                        "Huurder" // Fallback
                     );
-                } else {
-                    throw new Error("Huurdergegevens niet gevonden.");
                 }
             } catch (error) {
                 console.error("Fout bij het ophalen van huurdergegevens:", error);
-                setHuurderNaam("Huurder");
             }
         };
 
-        fetchHuurderNaam();
-    }, [HuurderID, SoortHuurder]);
+        if (huurderId) {
+            fetchHuurderNaam();
+        }
+    }, [huurderId, SoortHuurder]);
+
 
 
     const handleBevestiging = async () => {
@@ -82,15 +87,22 @@ const BevestigingHuur = () => {
                 throw new Error("Je hebt al een actief huurverzoek en kunt niet nogmaals huren.");
             }
 
+            console.log("Haal voertuigdetails op...");
+            const voertuigResponse = await VoertuigRequestService.getById(VoertuigID);
+            const voertuigDetails = voertuigResponse.data;
+
             console.log("Maak nieuw huurverzoek...");
             const huurverzoek = {
-                HuurderID: huurderId,
+                huurderID: huurderId,
                 voertuigId: VoertuigID,
                 beginDate: startDate,
                 endDate: endDate,
-                approved: true,
-                soortHuurder: SoortHuurder,
+                approved: false,
+                isBevestigd: false,
+                reden: "", 
             };
+
+            console.log("Huurverzoek object:", huurverzoek);
             await HuurVerzoekRequestService.register(huurverzoek);
 
             console.log("Update voertuigstatus...");
@@ -110,6 +122,7 @@ const BevestigingHuur = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="container">

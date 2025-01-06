@@ -91,11 +91,11 @@ namespace WPR_project.Controllers
 
 
         [HttpPut("{id}")]
-        public IActionResult UpdateVoertuig(Guid id, [FromBody] VoertuigDTO DTO)
+        public IActionResult UpdateVoertuig(Guid id, [FromBody] VoertuigUpDTO DTO)
         {
             try
             {
-                _voertuigService.UpdateVoertuig(id, DTO);
+                _voertuigService.UpdateUpVoertuig(id, DTO);
                 return Ok(new { Message = "Voertuiggegevens succesvol bijgewerkt." });
             }
             catch (KeyNotFoundException ex)
@@ -107,6 +107,7 @@ namespace WPR_project.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+
 
         [HttpPut("veranderBeschikbaar/{id}/{voertuigBeschikbaar}")]
         public IActionResult neemIn(Guid id, bool voertuigBeschikbaar)

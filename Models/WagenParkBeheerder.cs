@@ -42,6 +42,10 @@ namespace WPR_project.Models
 
         public AbonnementType? AbonnementType { get; set; }
 
+        public Guid EmailBevestigingToken { get; set; }
+
+        public bool IsEmailBevestigd { get; set; } = false;
+
         [Precision(18, 2)]
         public decimal? PrepaidSaldo { get; set; } = 0;
         public List<BedrijfsMedewerkers>? MedewerkerLijst { get; set; } = new List<BedrijfsMedewerkers>();

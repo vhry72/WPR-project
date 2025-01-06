@@ -16,6 +16,10 @@ namespace WPR_project.Models
         [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
         public string medewerkerEmail { get; set; }
 
+        public Guid EmailBevestigingToken { get; set; }
+
+        public bool IsEmailBevestigd { get; set; } = false;
+
         [Required(ErrorMessage = "wachtwoord is verplicht.")]
         [MinLength(8, ErrorMessage = "wachtwoord moet minimaal 8 tekens bevatten.")]
         [RegularExpression(@"^(?=.*[A-Z])(?=.*[!@#$&*]).+$",

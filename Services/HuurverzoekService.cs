@@ -155,7 +155,6 @@ public class HuurverzoekService
             beginDate = huurder.beginDate,
             endDate = huurder.endDate,
             approved = huurder.approved,
-            Voertuig = huurder.Voertuig,
         };
     }
     public void Update(Guid id, HuurVerzoekDTO dto)

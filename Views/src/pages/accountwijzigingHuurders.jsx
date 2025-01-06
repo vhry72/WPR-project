@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "../styles/styles.css";
 import ParticulierHuurdersRequestService from "../services/requests/ParticulierHuurderRequestService";
 import { useNavigate, useLocation } from "react-router-dom";
+import JwtService from "../services/JwtService"; 
+import axios from "axios";
 
 const AccountwijzigingHuurders = () => {
     const [formData, setFormData] = useState({
@@ -18,6 +20,7 @@ const AccountwijzigingHuurders = () => {
         const fetchUserId = async () => {
             try {
                 const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                console.log(userId);
                 if (userId) {
                     setHuurderId(userId);
                 } else {
@@ -35,7 +38,8 @@ const AccountwijzigingHuurders = () => {
         const fetchUserDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await ParticulierHuurdersRequestService.getById(huurderId);
+                const response = await axios.get(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`)
+                console.log(response.data)
                 if (response && response.data) {
                     setFormData({
                         name: response.data.particulierNaam,
@@ -52,8 +56,9 @@ const AccountwijzigingHuurders = () => {
             }
         };
 
-        if (id) fetchUserDetails();
-    }, [id]);
+        if (huurderId) fetchUserDetails(); // Controleer op huurderId i.p.v. id
+    }, [huurderId]); // Zorg ervoor dat de dependency ook huurderId is
+
 
     const handleChange = (event) => {
         const { id, value } = event.target;
@@ -67,16 +72,17 @@ const AccountwijzigingHuurders = () => {
 
         try {
             const payload = {
-                particulierId: id,
-                particulierNaam: formData.name,
+                particulierId: huurderId,
                 particulierEmail: formData.email,
+                particulierNaam: formData.name,
                 wachtwoord: formData.password,
             };
 
-            const response = await ParticulierHuurdersRequestService.update(id, payload);
+            console.log(payload);
+            const response = await axios.put(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`, payload);
             if (response.status === 200 || response.status === 204) {
                 alert("Gebruikersgegevens succesvol bijgewerkt!");
-                navigate("/home"); // Terug naar home of een andere pagina
+                navigate("/"); // Terug naar home of een andere pagina
             } else {
                 setErrorMessage("Er is een fout opgetreden bij het bijwerken van de gegevens.");
             }

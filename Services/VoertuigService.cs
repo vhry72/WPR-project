@@ -54,7 +54,23 @@ namespace WPR_project.Services
         {
             return _voertuigRepository.GetVoertuigStatus(voertuigId);
         }
-        
+
+        public void UpdateUpVoertuig(Guid id, VoertuigUpDTO DTO)
+        {
+            var voertuig = _voertuigRepository.GetVoertuigById(id);
+            if (voertuig == null)
+            {
+                throw new KeyNotFoundException("Voertuig niet gevonden.");
+            }
+
+            // Pas alleen de velden aan die in de DTO zijn opgenomen
+            voertuig.startDatum = DTO.StartDatum;
+            voertuig.eindDatum = DTO.EindDatum;
+            voertuig.voertuigBeschikbaar = DTO.voertuigBeschikbaar;
+
+            // Sla de wijzigingen op
+            _voertuigRepository.updateVoertuig(voertuig);
+        }
         public void UpdateVoertuig(Guid id, VoertuigDTO DTO)
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);

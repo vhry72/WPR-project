@@ -17,7 +17,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",
 
-        policy => policy.WithOrigins("https://localhost:5173")
+        policy => policy.WithOrigins("https://localhost:5174")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());
@@ -117,13 +117,8 @@ builder.Services.AddHostedService<HuurverzoekReminderService>();
 
 
 // Controllers en Swagger
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve; // Prevent circular references
-        options.JsonSerializerOptions.MaxDepth = 64; // Adjust depth as needed
-    });
+builder.Services.AddControllers();
+    
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

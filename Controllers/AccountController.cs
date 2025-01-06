@@ -124,6 +124,153 @@ public class AccountController : ControllerBase
         }
     }
 
+    [HttpPost("register-backoffice")]
+    public async Task<IActionResult> RegisterBackoffice([FromBody] BackofficeMedewerker dto)
+    {
+        if (dto == null)
+        {
+            return BadRequest("Model mag niet null zijn.");
+        }
+
+        try
+        {
+
+            
+
+
+            var medewerker = await _userManagerService.RegisterBackofficeMedewerker(dto);
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
+                new { userId = medewerker.BackofficeMedewerkerId, token = medewerker.EmailBevestigingToken }, Request.Scheme);
+
+            // Verstuur de bevestigingsmail
+            _emailService.SendEmail(dto.medewerkerEmail, "Bevestig je e-mailadres",
+                $"Klik hier om je e-mailadres te bevestigen: <a href='{confirmationLink}'>Bevestig e-mailadres</a>");
+
+
+            var identityUser = await _userManager.FindByIdAsync(medewerker.AspNetUserId);
+
+            if (identityUser == null)
+                return BadRequest("Identity gebruiker niet gevonden.");
+
+            var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
+            _emailService.SendEmail(dto.medewerkerEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
+
+            return Ok(new { Message = "Backoffice medewerker succesvol geregistreerd." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Er is een fout opgetreden: {ex.Message}");
+        }
+    }
+
+    [HttpPost("register-frontoffice")]
+    public async Task<IActionResult> RegisterFrontoffice([FromBody] FrontofficeMedewerker dto)
+    {
+        if (dto == null)
+        {
+            return BadRequest("Model mag niet null zijn.");
+        }
+
+        try
+        {
+            var medewerker = await _userManagerService.RegisterFrontofficeMedewerker(dto);
+
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
+                new { userId = medewerker.FrontofficeMedewerkerId, token = medewerker.EmailBevestigingToken }, Request.Scheme);
+
+            // Verstuur de bevestigingsmail
+            _emailService.SendEmail(dto.medewerkerEmail, "Bevestig je e-mailadres",
+                $"Klik hier om je e-mailadres te bevestigen: <a href='{confirmationLink}'>Bevestig e-mailadres</a>");
+
+
+            var identityUser = await _userManager.FindByIdAsync(medewerker.AspNetUserId);
+
+            if (identityUser == null)
+                return BadRequest("Identity gebruiker niet gevonden.");
+
+            var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
+            _emailService.SendEmail(dto.medewerkerEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
+
+            return Ok(new { Message = "Frontoffice medewerker succesvol geregistreerd." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Er is een fout opgetreden: {ex.Message}");
+        }
+    }
+
+    [HttpPost("register-bedrijfsmedewerker")]
+    public async Task<IActionResult> RegisterBedrijfsMedewerker([FromBody] BedrijfsMedewerkers dto)
+    {
+        if (dto == null)
+        {
+            return BadRequest("Model mag niet null zijn.");
+        }
+
+        try
+        {
+            var medewerker = await _userManagerService.RegisterBedrijfsMedewerker(dto);
+
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
+                new { userId = medewerker.bedrijfsMedewerkerId, token = medewerker.EmailBevestigingToken }, Request.Scheme);
+
+            // Verstuur de bevestigingsmail
+            _emailService.SendEmail(dto.medewerkerEmail, "Bevestig je e-mailadres",
+                $"Klik hier om je e-mailadres te bevestigen: <a href='{confirmationLink}'>Bevestig e-mailadres</a>");
+
+
+            var identityUser = await _userManager.FindByIdAsync(medewerker.AspNetUserId);
+
+            if (identityUser == null)
+                return BadRequest("Identity gebruiker niet gevonden.");
+
+            var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
+            _emailService.SendEmail(dto.medewerkerEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
+
+            return Ok(new { Message = "Bedrijfsmedewerker succesvol geregistreerd." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Er is een fout opgetreden: {ex.Message}");
+        }
+    }
+
+    [HttpPost("register-wagenparkbeheerder")]
+    public async Task<IActionResult> RegisterWagenparkbeheerder([FromBody] WagenparkBeheerder dto)
+    {
+        if (dto == null)
+        {
+            return BadRequest("Model mag niet null zijn.");
+        }
+
+        try
+        {
+            var beheerder = await _userManagerService.RegisterWagenParkBeheerder(dto);
+
+            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
+                new { userId = beheerder.beheerderId, token = beheerder.EmailBevestigingToken }, Request.Scheme);
+
+            // Verstuur de bevestigingsmail
+            _emailService.SendEmail(dto.bedrijfsEmail, "Bevestig je e-mailadres",
+                $"Klik hier om je e-mailadres te bevestigen: <a href='{confirmationLink}'>Bevestig e-mailadres</a>");
+
+            var identityUser = await _userManager.FindByIdAsync(beheerder.AspNetUserId);
+
+            if (identityUser == null)
+                return BadRequest("Identity gebruiker niet gevonden.");
+
+            var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
+            _emailService.SendEmail(dto.bedrijfsEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
+
+            return Ok(new { Message = "Wagenparkbeheerder succesvol geregistreerd." });
+        }
+        catch (Exception ex)
+        {
+            return BadRequest($"Er is een fout opgetreden: {ex.Message}");
+        }
+    }
+
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model)
     {
@@ -171,7 +318,6 @@ public class AccountController : ControllerBase
         try
         {
             // Haal de gebruikersinformatie uit de claims
-            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
@@ -213,9 +359,13 @@ public class AccountController : ControllerBase
             return Unauthorized("Ongeldige verificatiecode.");
         }
 
-        // Controleer of de gebruiker een particulier of zakelijk huurder is
+        // Controleer of de gebruiker een van de bekende rollen heeft
         var particulierHuurder = await _dbContext.ParticulierHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
         var zakelijkHuurder = await _dbContext.ZakelijkHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
+        var backofficeMedewerker = await _dbContext.BackofficeMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
+        var frontofficeMedewerker = await _dbContext.FrontofficeMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
+        var bedrijfsMedewerker = await _dbContext.BedrijfsMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
+        var wagenparkBeheerder = await _dbContext.WagenparkBeheerders.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
 
         string huurderId;
         string role;
@@ -229,6 +379,26 @@ public class AccountController : ControllerBase
         {
             huurderId = zakelijkHuurder.zakelijkeId.ToString();
             role = "ZakelijkeHuurder";
+        }
+        else if (backofficeMedewerker != null)
+        {
+            huurderId = backofficeMedewerker.BackofficeMedewerkerId.ToString();
+            role = "BackofficeMedewerker";
+        }
+        else if (frontofficeMedewerker != null)
+        {
+            huurderId = frontofficeMedewerker.FrontofficeMedewerkerId.ToString();
+            role = "FrontofficeMedewerker";
+        }
+        else if (bedrijfsMedewerker != null)
+        {
+            huurderId = bedrijfsMedewerker.bedrijfsMedewerkerId.ToString();
+            role = "BedrijfsMedewerker";
+        }
+        else if (wagenparkBeheerder != null)
+        {
+            huurderId = wagenparkBeheerder.beheerderId.ToString();
+            role = "WagenparkBeheerder";
         }
         else
         {
@@ -249,6 +419,7 @@ public class AccountController : ControllerBase
 
         return Ok(new { Role = role });
     }
+
 
 
 

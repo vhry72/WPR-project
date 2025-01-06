@@ -6,6 +6,7 @@ import "jspdf-autotable";
 import styles from "../styles/VerhuurdeVoertuigen.module.css";
 import { format, isWithinInterval, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
+import JwtService from "../services/JwtService";
 
 const VerhuurdeVoertuigen = () => {
     const [wagenparkbeheerderId, setWagenparkbeheerderId] = useState(null);

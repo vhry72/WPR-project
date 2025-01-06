@@ -2,15 +2,15 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 /*import Layout from "./pages/LayoutTest";*/
 import Layout from "./pages/Layout";
 import Register from "./pages/register";
-import Login from "./pages/login";
+/*import Login from "./pages/login";*/
 import Index from "./pages/Index";
-import StartLogin from "./pages/StartLogin";
+/*import StartLogin from "./pages/StartLogin";*/
 import Abonnement from "./pages/abonnement";
 import Payment from "./pages/payment";
 import BedrijfsAbonnement from "./pages/bedrijfsabonnement";
-import MedewerkerAbonnementDashboard from "./pages/medewerkerAbonnementDashboard";
+/*import MedewerkerAbonnementDashboard from "./pages/medewerkerAbonnementDashboard";*/
 import Zaakdashboard from "./pages/zaakdashboard";
-import Wagenparklogin from "./pages/wagenparklogin";
+/*import Wagenparklogin from "./pages/wagenparklogin";*/
 import Wagendashboard from "./pages/wagendashboard";
 import ZakelijkAutoTonen from "./pages/ZakelijkAutoTonen";
 import AccountwijzigingHuurders from "./pages/accountwijzigingHuurders";
@@ -47,7 +47,7 @@ function PageRoute() {
                     <Route path="/" element={<Layout />}>
                         {/* Openbare routes */}
                         <Route index element={<Index />} />
-                        <Route path="startLogin" element={<StartLogin />} />
+                        {/*<Route path="startLogin" element={<StartLogin />} />*/}
                         <Route path="register" element={<Register />} />
                         <Route path="email-confirmation" element={<EmailConfirmation />} />
                         <Route path="VerhuurdeVoertuigen" element={<VerhuurdeVoertuigen/> } />

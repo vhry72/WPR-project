@@ -1,11 +1,11 @@
-
+import apiService from '../apiService'; 
 
 
 const HuurVerzoekRequestService = {
 
     register: async (data) => {
         try {
-            const response = await apiService.post('/Huurverzoek/verzoek', { body: data });
+            const response = await apiService.post('/Huurverzoek', { body: data });
             return response; // Zorg dat dit een geldig object is
             console.log(data);
         } catch (error) {

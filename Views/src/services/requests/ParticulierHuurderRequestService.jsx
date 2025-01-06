@@ -12,7 +12,7 @@ const handleResponse = async (response) => {
 const ParticulierHuurdersRequestService = {
     getAll: async () => {
         try {
-            const response = await fetch(`${API_URL}`);
+            const response = await apiService.get(`api/ParticulierHuurder`);
             return await handleResponse(response);
         } catch (error) {
             console.error('Error fetching all huurders:', error);
@@ -22,13 +22,14 @@ const ParticulierHuurdersRequestService = {
 
     getById: async (id) => {
         try {
-            const response = await fetch(`${API_URL}/${id}`);
-            return await handleResponse(response);
+            const response = await apiService.get(`/ParticulierHuurder/${id}`);
+            return response.data; // Axios verwerkt JSON automatisch
         } catch (error) {
-            console.error(`Error fetching huurder with ID ${id}:`, error);
+            console.error(`Error fetching huurder with ID ${id}:`, error.response?.data || error.message);
             throw error;
         }
     },
+
 
     update: async (id, payload) => {
         try {

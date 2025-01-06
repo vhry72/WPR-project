@@ -57,7 +57,6 @@ namespace WPR_project.Controllers
             return Ok(new { Message = "E-mail succesvol bevestigd." });
         }
 
-        [Authorize(Roles = "ParticulierHuurder")]
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderDTO dto)
         {

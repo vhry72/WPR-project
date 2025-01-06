@@ -1,20 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using WPR_project.Models;
+using WPR_project.DTO_s;
 using WPR_project.Data;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using WPR_project.Services.Email;
 using Microsoft.EntityFrameworkCore;
-using WPR_project.DTO_s;
-using Azure.Core;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 
 public class UserManagerService
 {
@@ -109,6 +102,182 @@ public class UserManagerService
             }
 
             throw new Exception($"Er is een fout opgetreden tijdens de registratie: {ex.Message}", ex);
+        }
+    }
+
+    private async Task<IdentityUser> RegisterUser(string email, string password, string role)
+    {
+        var user = new IdentityUser
+        {
+            UserName = email,
+            Email = email,
+            EmailConfirmed = false
+        };
+
+        var result = await _userManager.CreateAsync(user, password);
+        if (!result.Succeeded)
+        {
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            throw new Exception($"Fout bij het aanmaken van de gebruiker: {errors}");
+        }
+
+        var roleResult = await _userManager.AddToRoleAsync(user, role);
+        if (!roleResult.Succeeded)
+        {
+            throw new Exception($"Fout bij het toewijzen van de rol '{role}' aan de gebruiker.");
+        }
+
+        return user;
+    }
+
+    public async Task<BackofficeMedewerker> RegisterBackofficeMedewerker(BackofficeMedewerker dto)
+    {
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            var passwordHasher = new PasswordHasher<object>();
+            string hashedPassword = passwordHasher.HashPassword(null, dto.wachtwoord);
+
+            var user = await RegisterUser(dto.medewerkerEmail, dto.wachtwoord, "Backofficemedewerker");
+
+            var medewerker = new BackofficeMedewerker
+            {
+                BackofficeMedewerkerId = Guid.NewGuid(),
+                medewerkerEmail = dto.medewerkerEmail,
+                medewerkerNaam = dto.medewerkerNaam,
+                wachtwoord = hashedPassword,
+                AspNetUserId = user.Id,
+                IsEmailBevestigd = false,
+                EmailBevestigingToken = Guid.NewGuid()
+            };
+
+            _dbContext.BackofficeMedewerkers.Add(medewerker);
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return medewerker;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task<FrontofficeMedewerker> RegisterFrontofficeMedewerker(FrontofficeMedewerker dto)
+    {
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            var passwordHasher = new PasswordHasher<object>();
+            string hashedPassword = passwordHasher.HashPassword(null, dto.wachtwoord);
+
+            var user = await RegisterUser(dto.medewerkerEmail, dto.wachtwoord, "Frontofficemedewerker");
+
+            var medewerker = new FrontofficeMedewerker
+            {
+                FrontofficeMedewerkerId = Guid.NewGuid(),
+                medewerkerEmail = dto.medewerkerEmail,
+                medewerkerNaam = dto.medewerkerNaam,
+                wachtwoord = hashedPassword,
+                AspNetUserId = user.Id,
+                IsEmailBevestigd = false,
+                EmailBevestigingToken = Guid.NewGuid()
+            };
+
+            _dbContext.FrontofficeMedewerkers.Add(medewerker);
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return medewerker;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task<BedrijfsMedewerkers> RegisterBedrijfsMedewerker(BedrijfsMedewerkers dto)
+    {
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            var passwordHasher = new PasswordHasher<object>();
+            string hashedPassword = passwordHasher.HashPassword(null, dto.wachtwoord);
+
+            var user = await RegisterUser(dto.medewerkerEmail, dto.wachtwoord, "Bedrijfsmedewerker");
+
+            var medewerker = new BedrijfsMedewerkers
+            {
+                bedrijfsMedewerkerId = Guid.NewGuid(),
+                medewerkerEmail = dto.medewerkerEmail,
+                medewerkerNaam = dto.medewerkerNaam,
+                wachtwoord = hashedPassword,
+                zakelijkeHuurderId = dto.zakelijkeHuurderId,
+                WagenparkBeheerderbeheerderId = dto.WagenparkBeheerderbeheerderId,
+                AspNetUserId = user.Id,
+                IsEmailBevestigd = false,
+                EmailBevestigingToken = Guid.NewGuid()
+            };
+
+            _dbContext.BedrijfsMedewerkers.Add(medewerker);
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return medewerker;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task<WagenparkBeheerder> RegisterWagenParkBeheerder(WagenparkBeheerder dto)
+    {
+        using var transaction = await _dbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            var passwordHasher = new PasswordHasher<object>();
+            string hashedPassword = passwordHasher.HashPassword(null, dto.wachtwoord);
+
+            var user = await RegisterUser(dto.bedrijfsEmail, dto.wachtwoord, "Wagenparkbeheerder");
+
+            var beheerder = new WagenparkBeheerder
+            {
+                beheerderId = Guid.NewGuid(),
+                bedrijfsEmail = dto.bedrijfsEmail,
+                beheerderNaam = dto.beheerderNaam,
+                Adres = dto.Adres,
+                KVKNummer = dto.KVKNummer,
+                AbonnementId = dto.AbonnementId,
+                AbonnementType = dto.AbonnementType,
+                HuidigAbonnement = dto.HuidigAbonnement,
+                updateDatumAbonnement = dto.updateDatumAbonnement,
+                PrepaidSaldo = dto.PrepaidSaldo,
+                MedewerkerLijst = dto.MedewerkerLijst,
+                telefoonNummer = dto.telefoonNummer,
+                wachtwoord = hashedPassword,
+                AspNetUserId = user.Id,
+                IsEmailBevestigd = false,
+                EmailBevestigingToken = Guid.NewGuid()
+            };
+
+            _dbContext.WagenparkBeheerders.Add(beheerder);
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+            return beheerder;
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
         }
     }
 
@@ -276,6 +445,62 @@ public class UserManagerService
             return true;
         }
 
+        // Zoek in BackofficeMedewerkers
+        var backofficeMedewerker = await _dbContext.BackofficeMedewerkers
+            .FirstOrDefaultAsync(h => h.BackofficeMedewerkerId == parsedUserId && h.EmailBevestigingToken == parsedToken);
+
+        if (backofficeMedewerker != null)
+        {
+            backofficeMedewerker.IsEmailBevestigd = true;
+            _dbContext.BackofficeMedewerkers.Update(backofficeMedewerker);
+            await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("E-mailbevestiging geslaagd voor backoffice medewerker {UserId}.", userId);
+            return true;
+        }
+
+        // Zoek in FrontofficeMedewerkers
+        var frontofficeMedewerker = await _dbContext.FrontofficeMedewerkers
+            .FirstOrDefaultAsync(h => h.FrontofficeMedewerkerId == parsedUserId && h.EmailBevestigingToken == parsedToken);
+
+        if (frontofficeMedewerker != null)
+        {
+            frontofficeMedewerker.IsEmailBevestigd = true;
+            _dbContext.FrontofficeMedewerkers.Update(frontofficeMedewerker);
+            await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("E-mailbevestiging geslaagd voor frontoffice medewerker {UserId}.", userId);
+            return true;
+        }
+
+        // Zoek in BedrijfsMedewerkers
+        var bedrijfsMedewerker = await _dbContext.BedrijfsMedewerkers
+            .FirstOrDefaultAsync(h => h.bedrijfsMedewerkerId == parsedUserId && h.EmailBevestigingToken == parsedToken);
+
+        if (bedrijfsMedewerker != null)
+        {
+            bedrijfsMedewerker.IsEmailBevestigd = true;
+            _dbContext.BedrijfsMedewerkers.Update(bedrijfsMedewerker);
+            await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("E-mailbevestiging geslaagd voor bedrijfsmedewerker {UserId}.", userId);
+            return true;
+        }
+
+        // Zoek in WagenparkBeheerders
+        var wagenparkBeheerder = await _dbContext.WagenparkBeheerders
+            .FirstOrDefaultAsync(h => h.beheerderId == parsedUserId && h.EmailBevestigingToken == parsedToken);
+
+        if (wagenparkBeheerder != null)
+        {
+            wagenparkBeheerder.IsEmailBevestigd = true;
+            _dbContext.WagenparkBeheerders.Update(wagenparkBeheerder);
+            await _dbContext.SaveChangesAsync();
+
+            _logger.LogInformation("E-mailbevestiging geslaagd voor wagenparkbeheerder {UserId}.", userId);
+            return true;
+        }
+
         _logger.LogWarning("E-mailbevestiging mislukt: geen match gevonden voor gebruiker {UserId} en token {Token}.", userId, token);
         throw new InvalidOperationException("Ongeldige gebruiker of token.");
     }
@@ -300,10 +525,47 @@ public class UserManagerService
             return zakelijkHuurder.IsEmailBevestigd;
         }
 
+        // Controleer in BackofficeMedewerkers
+        var backofficeMedewerker = await _dbContext.BackofficeMedewerkers
+            .FirstOrDefaultAsync(h => h.medewerkerEmail == email);
+
+        if (backofficeMedewerker != null)
+        {
+            return backofficeMedewerker.IsEmailBevestigd;
+        }
+
+        // Controleer in FrontofficeMedewerkers
+        var frontofficeMedewerker = await _dbContext.FrontofficeMedewerkers
+            .FirstOrDefaultAsync(h => h.medewerkerEmail == email);
+
+        if (frontofficeMedewerker != null)
+        {
+            return frontofficeMedewerker.IsEmailBevestigd;
+        }
+
+        // Controleer in BedrijfsMedewerkers
+        var bedrijfsMedewerker = await _dbContext.BedrijfsMedewerkers
+            .FirstOrDefaultAsync(h => h.medewerkerEmail == email);
+
+        if (bedrijfsMedewerker != null)
+        {
+            return bedrijfsMedewerker.IsEmailBevestigd;
+        }
+
+        // Controleer in WagenparkBeheerders
+        var wagenparkBeheerder = await _dbContext.WagenparkBeheerders
+            .FirstOrDefaultAsync(h => h.bedrijfsEmail == email);
+
+        if (wagenparkBeheerder != null)
+        {
+            return wagenparkBeheerder.IsEmailBevestigd;
+        }
+
         // Als de e-mail nergens is gevonden
-        _logger.LogWarning("E-mail niet gevonden in ParticulierHuurders of ZakelijkHuurders: {Email}", email);
+        _logger.LogWarning("E-mail niet gevonden in bekende tabellen: {Email}", email);
         return false;
     }
+
 
     public async Task<string> EnableTwoFactorAuthenticationAsync(IdentityUser user)
     {
@@ -319,6 +581,8 @@ public class UserManagerService
             await _userManager.ResetAuthenticatorKeyAsync(user);
             authenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user);
         }
+
+        await _userManager.SetTwoFactorEnabledAsync(user, true);
 
         // Genereer QR-code URI
         var qrCodeUri = $"otpauth://totp/{Uri.EscapeDataString("MijnApplicatie")}:{Uri.EscapeDataString(user.Email)}?secret={authenticatorKey}&issuer={Uri.EscapeDataString("MijnApplicatie")}&digits=6";

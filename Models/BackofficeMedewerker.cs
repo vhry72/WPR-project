@@ -10,6 +10,10 @@ namespace WPR_project.Models
 
         public string wachtwoord { get; set; }
 
+        public Guid EmailBevestigingToken { get; set; }
+
+        public bool IsEmailBevestigd { get; set; } = false;
+
         [Required]
         public string AspNetUserId { get; set; }
     }

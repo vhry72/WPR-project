@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { FaBell } from 'react-icons/fa';
 import axios from 'axios';
 import "../styles/Notificatie.css"; // Ensure you have your CSS imported
+import JwtService from "../services/JwtService";
 
 // IconWithDot Component
 export const IconWithDot = ({ showDot }) => {
@@ -18,7 +19,7 @@ export const IconWithDot = ({ showDot }) => {
 
 // ZakelijkHuurderDashBoard Component
 export const ZakelijkHuurderDashBoard = () => {
-    const [huurderId, setHuurderId] = useState(null);]
+    const [huurderId, setHuurderId] = useState(null);
 
     // State to control whether the red dot should be shown
     const [showDot, setShowDot] = useState(false);

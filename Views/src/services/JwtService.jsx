@@ -30,6 +30,7 @@ const JwtService = {
     // Haal alleen de gebruikers-ID op via de API
     getUserId: async () => {
         const userInfo = await JwtService.getUserInfo();
+        console.log(userInfo);
         return userInfo?.userId || null;
     },
 
