@@ -26,17 +26,23 @@ const Layout = () => {
         ],
         BackofficeMedewerker: [
             { to: "/instellingen", label: "Instellingen" },
-            { to: "/BackOfficeMedewerker", label: "BackOffice Medewerker" },
+            { to: "/BackOfficeVerhuuraanvragen", label: "Huur Verzoeken" },
+            { to: "/SchadeMeldingen", label: "Schademeldingen" },
+            { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken"}
         ],
         FrontofficeMedewerker: [
             { to: "/instellingen", label: "Instellingen" },
             { to: "/FrontOfficeMedewerker", label: "Frontoffice Medewerker" },
-            { to: "/SchadeMeldingen", label: "Schade Meldingen" },
+            { to: "/Scadeclaims", label: "Schadeclaims" },
+            { to: "/VoertuigDetails", label: "Voertuigen" },
+            { to: "/VoertuigInenUitname", label: "Voertuigen Verhuur"}
+
         ],
         WagenparkBeheerder: [
             { to: "/instellingen", label: "Instellingen" },
             { to: "/wagendashboard", label: "Wagen Dashboard" },
             { to: "/wagenbeheer", label: "Wagen Beheer" },
+            { to: "/medewerkerAbonnementDashboard", label: "Beheer abbonoment"},
             { to: "/VerhuurdeVoertuigen", label: "gehuurder voertuigen"}
         ],
     };
