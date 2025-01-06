@@ -56,14 +56,6 @@ function PageRoute() {
 
                         {/* Routes specifiek voor 'particulier' */}
                         <Route
-                            path="particulierHuurderDashBoard"
-                            element={
-                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
-                                    <ParticulierHuurderDashBoard />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
                             path="particulierVoertuigTonen"
                             element={
                                 <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
@@ -166,14 +158,7 @@ function PageRoute() {
 
 
                         {/* Routes specifiek voor 'BackofficeMedewerker' */}
-                        <Route
-                            path="BackOfficeMedewerker"
-                            element={
-                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
-                                    <BackOfficeMedewerker />
-                                </PrivateRoute>
-                            }
-                        />
+                        
                         <Route
                             path="SchadeMeldingen"
                             element={
@@ -199,14 +184,7 @@ function PageRoute() {
                             }
                         />
                         {/* Routes specifiek voor 'FrontofficeMedewerker' */}
-                        <Route
-                            path="FrontofficeMedewerker"
-                            element={
-                                <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
-                                    <FrontOfficeMedewerker />
-                                </PrivateRoute>
-                            }
-                        />
+                        
                         <Route
                             path="VoertuigDetails"
                             element={
