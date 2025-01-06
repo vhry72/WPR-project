@@ -74,6 +74,27 @@ namespace WPR_project.Services
             _emailService.SendEmail(medewerkerEmail, "Welkom bij het bedrijfsabonnement", bericht);
         }
 
+        public void VerwijderMedewerker(Guid bedrijfsId, Guid medewerkerId)
+        {
+            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(bedrijfsId);
+            if (huurder == null)
+                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
+
+            var medewerker = huurder.Medewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
+            if (medewerker == null)
+                throw new KeyNotFoundException("Medewerker niet gevonden.");
+
+            // Verwijder de medewerker
+            huurder.Medewerkers.Remove(medewerker);
+            _zakelijkeHuurderRepository.UpdateZakelijkHuurder(huurder);
+            _zakelijkeHuurderRepository.Save();
+
+            // Bevestiging via e-mail sturen
+            string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent verwijderd uit het bedrijfsabonnement van {huurder.bedrijfsNaam}.";
+            _emailService.SendEmail(medewerker.medewerkerEmail, "Verwijdering uit bedrijfsabonnement", bericht);
+        }
+
+
         public void VerwerkPayAsYouGoBetaling(Guid beheerderId, decimal bedrag)
         {
             var huurder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);

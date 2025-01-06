@@ -8,11 +8,11 @@ const HuurVoertuig = () => {
     const [startDateTime, setStartDateTime] = useState('');
     const [endDateTime, setEndDateTime] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+ 
 
     // URL-parameters ophalen
     const kenteken = new URLSearchParams(location.search).get("kenteken");
     const VoertuigId = new URLSearchParams(location.search).get("VoertuigID");
-    const HuurderId = new URLSearchParams(location.search).get("HuurderID");
     const soortHuurder = new URLSearchParams(location.search).get("SoortHuurder");
 
     // Bereken "nu + 2 uur"
@@ -60,7 +60,7 @@ const HuurVoertuig = () => {
         }
 
         console.log("Reservering verzonden", { kenteken, startDateTime, endDateTime });
-        navigate(`/bevestigingHuur?kenteken=${kenteken}&startdatum=${startDateTime}&einddatum=${endDateTime}&VoertuigID=${VoertuigId}&HuurderID=${HuurderId}&SoortHuurder=${soortHuurder}`);
+        navigate(`/bevestigingHuur?kenteken=${kenteken}&startdatum=${startDateTime}&einddatum=${endDateTime}&VoertuigID=${VoertuigId}&SoortHuurder=${soortHuurder}`);
     };
 
     return (

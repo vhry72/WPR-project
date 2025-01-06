@@ -1,34 +1,85 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
+import axios from 'axios';
 
-function MedewerkerBeheer() {
+function MedewerkerBeheer({ zakelijkeId }) {
     const [medewerkers, setMedewerkers] = useState([]);
+    const [huurderId, setHuurderId] = useState(null);
     const [nieuweMedewerker, setNieuweMedewerker] = useState({
         naam: "",
         email: "",
-        wachtwoord: "",
+        wachtwoord: ""
     });
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setHuurderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    useEffect(() => {
+        // Fetch de huidige medewerkers bij component load
+        const fetchMedewerkers = async () => {
+            try {
+                const response = await axios.get(`/api/abonnement/${zakelijkeId}/medewerkers`);
+                setMedewerkers(response.data);
+            } catch (error) {
+                console.error("Fout bij ophalen van medewerkers:", error);
+            }
+        };
+        fetchMedewerkers();
+    }, [zakelijkeId]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setNieuweMedewerker((prev) => ({ ...prev, [name]: value }));
     };
 
-    const voegMedewerkerToe = () => {
+    const voegMedewerkerToe = async () => {
         if (!nieuweMedewerker.email.endsWith("@bedrijf.nl")) {
             alert("Email moet een bedrijfs-e-mailadres zijn.");
             return;
         }
-        setMedewerkers((prev) => [...prev, nieuweMedewerker]);
-        setNieuweMedewerker({ naam: "", email: "", wachtwoord: "" });
+
+        try {
+            await axios.post(`/api/abonnement/${zakelijkeId}/medewerker/toevoegen`, nieuweMedewerker);
+            setMedewerkers((prev) => [...prev, nieuweMedewerker]);
+            setNieuweMedewerker({ naam: "", email: "", wachtwoord: "" });
+        } catch (error) {
+            alert("Fout bij toevoegen van medewerker.");
+            console.error(error);
+        }
     };
 
-    const verwijderMedewerker = (email) => {
-        setMedewerkers((prev) => prev.filter((m) => m.email !== email));
+    const verwijderMedewerker = async (medewerkerId) => {
+        if (!window.confirm("Weet je zeker dat je deze medewerker wilt verwijderen?")) {
+            return;
+        }
+
+        try {
+            await axios.delete(`/api/abonnement/${zakelijkeId}/medewerker/verwijderen/${medewerkerId}`);
+            setMedewerkers((prev) => prev.filter((m) => m.bedrijfsMedewerkerId !== medewerkerId));
+        } catch (error) {
+            alert("Fout bij verwijderen van medewerker.");
+            console.error(error);
+        }
     };
 
     return (
         <div>
             <h2>Medewerker Beheer</h2>
+
+            {/* Formulier voor het toevoegen van een medewerker */}
             <div>
                 <h3>Voeg een nieuwe medewerker toe</h3>
                 <input
@@ -54,14 +105,16 @@ function MedewerkerBeheer() {
                 />
                 <button onClick={voegMedewerkerToe}>Toevoegen</button>
             </div>
+
+            {/* Lijst met medewerkers */}
             <h3>Huidige Medewerkers</h3>
             <ul>
-                {medewerkers.map((medewerker, index) => (
-                    <li key={index}>
+                {medewerkers.map((medewerker) => (
+                    <li key={medewerker.bedrijfsMedewerkerId}>
                         {medewerker.naam} - {medewerker.email}
-                        <button onClick={() => verwijderMedewerker(medewerker.email)}>
+                        <button onClick={() => verwijderMedewerker(medewerker.bedrijfsMedewerkerId)}>
                             Verwijderen
-                        </button> 
+                        </button>
                     </li>
                 ))}
             </ul>

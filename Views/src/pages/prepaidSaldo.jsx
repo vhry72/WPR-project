@@ -1,13 +1,28 @@
 ﻿import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "../styles/Abonnement.css";
 
 function PrepaidSaldo() {
-    const location = useLocation();
     const [saldo, setSaldo] = useState(0);
-    const [beheerderId, setBeheerderId] = useState(location.state?.beheerderId || null);
+    const [beheerderId, setBeheerderId] = useState(null);
     const [bedrag, setBedrag] = useState(0);
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setBeheerderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
 
     useEffect(() => {
         const fetchSaldo = async () => {

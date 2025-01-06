@@ -7,7 +7,7 @@ const ZakelijkAutoTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
     const navigate = useNavigate();
-    const HuurderId = new URLSearchParams(location.search).get("HuurderID");
+    
 
     useEffect(() => {
         const fetchVoertuigen = async () => {
@@ -33,7 +33,7 @@ const ZakelijkAutoTonen = () => {
     };
 
     const handleVoertuigClick = (kenteken) => {
-        navigate(`/huurVoertuig?kenteken=${kenteken}&VoertuigID=${voertuig.voertuigId}&HuurderID=${HuurderID}&SoortHuurder=Zakelijk`);
+        navigate(`/huurVoertuig?kenteken=${kenteken}&VoertuigID=${voertuig.voertuigId}&SoortHuurder=Zakelijk`);
     };
 
     return (

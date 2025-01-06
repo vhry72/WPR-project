@@ -12,14 +12,30 @@ const AccountwijzigingHuurders = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
-    const location = useLocation();
-    const id = new URLSearchParams(location.search).get("id");
+    const [huurderId, setHuurderId] = useState(null);
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setHuurderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await ParticulierHuurdersRequestService.getById(id);
+                const response = await ParticulierHuurdersRequestService.getById(huurderId);
                 if (response && response.data) {
                     setFormData({
                         name: response.data.particulierNaam,

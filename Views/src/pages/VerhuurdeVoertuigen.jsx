@@ -8,8 +8,7 @@ import { format, isWithinInterval, parseISO } from "date-fns";
 import { nl } from "date-fns/locale";
 
 const VerhuurdeVoertuigen = () => {
-    const [searchParams] = useSearchParams();
-    const wagenparkbeheerderId = searchParams.get("Id");
+    const [wagenparkbeheerderId, setWagenparkbeheerderId] = useState(null);
 
     const [voertuigen, setVoertuigen] = useState([]);
     const [filteredVoertuigen, setFilteredVoertuigen] = useState([]);
@@ -18,6 +17,23 @@ const VerhuurdeVoertuigen = () => {
     const [filterStartDate, setFilterStartDate] = useState("");
     const [filterEndDate, setFilterEndDate] = useState("");
     const [searchTerm, setSearchTerm] = useState(""); // Zoekterm
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setWagenparkbeheerderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
 
     const fetchHuurderNaam = async (huurderId) => {
         try {

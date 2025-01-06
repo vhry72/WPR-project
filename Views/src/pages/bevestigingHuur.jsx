@@ -11,14 +11,31 @@ const BevestigingHuur = () => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [huurderNaam, setHuurderNaam] = useState("");
+    const [huurderId, setHuurderId] = useState(null);]
 
     // Haal parameters uit de URL
     const kenteken = new URLSearchParams(location.search).get("kenteken");
     const VoertuigID = new URLSearchParams(location.search).get("VoertuigID");
-    const HuurderID = new URLSearchParams(location.search).get("HuurderID");
     const SoortHuurder = new URLSearchParams(location.search).get("SoortHuurder");
     const startDate = new URLSearchParams(location.search).get("startdatum");
     const endDate = new URLSearchParams(location.search).get("einddatum");
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setHuurderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
 
     useEffect(() => {
         const fetchHuurderNaam = async () => {
@@ -26,10 +43,10 @@ const BevestigingHuur = () => {
                 let huurderResponse;
 
                 if (SoortHuurder === "Particulier") {
-                    huurderResponse = await ParticulierHuurdersRequestService.getById(HuurderID);
+                    huurderResponse = await ParticulierHuurdersRequestService.getById(huurderId);
                     console.log("Particulier Huurder Data:", huurderResponse);
                 } else if (SoortHuurder === "Zakelijk") {
-                    huurderResponse = await BedrijfsMedewerkerRequestService.getById(HuurderID);
+                    huurderResponse = await BedrijfsMedewerkerRequestService.getById(huurderId);
                     console.log("Zakelijk Huurder Data:", huurderResponse);
                 }
 
@@ -60,14 +77,14 @@ const BevestigingHuur = () => {
         try {
             // Controleer huurder op basis van SoortHuurder
             console.log("Controleer actief huurverzoek...");
-            const checkResponse = await HuurVerzoekRequestService.checkActive(HuurderID);
+            const checkResponse = await HuurVerzoekRequestService.checkActive(huurderId);
             if (checkResponse.data.hasActiveRequest) {
                 throw new Error("Je hebt al een actief huurverzoek en kunt niet nogmaals huren.");
             }
 
             console.log("Maak nieuw huurverzoek...");
             const huurverzoek = {
-                HuurderID: HuurderID,
+                HuurderID: huurderId,
                 voertuigId: VoertuigID,
                 beginDate: startDate,
                 endDate: endDate,
