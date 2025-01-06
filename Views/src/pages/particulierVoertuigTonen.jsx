@@ -7,27 +7,7 @@ import JwtService from "../services/JwtService"; // Importeer de nieuwe JWT-serv
 const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
-    const [huurderId, setHuurderId] = useState(null);
     const navigate = useNavigate();
-
-    // Haal het huurderID op via de API bij mount
-    useEffect(() => {
-        const fetchUserId = async () => {
-            try {
-                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
-                if (userId) {
-                    setHuurderId(userId);
-                    console.log(huurderId);
-                } else {
-                    console.error("Huurder ID kon niet worden opgehaald via de API.");
-                }
-            } catch (error) {
-                console.error("Fout bij het ophalen van de huurder ID:", error);
-            }
-        };
-
-        fetchUserId();
-    }, []);
 
     const handleChange = (event) => {
         setFilterType(event.target.value);
@@ -53,12 +33,8 @@ const ParticulierVoertuigTonen = () => {
     };
 
     const handleVoertuigClick = (voertuig) => {
-        if (!huurderId) {
-            alert("Huurder ID niet gevonden.");
-            return;
-        }
         navigate(
-            `/huurVoertuig?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}&HuurderID=${huurderId}&SoortHuurder=Particulier`
+            `/huurVoertuig?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}&SoortHuurder=Particulier`
         );
     };
 

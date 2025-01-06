@@ -18,16 +18,33 @@ export const IconWithDot = ({ showDot }) => {
 
 // ZakelijkHuurderDashBoard Component
 export const ZakelijkHuurderDashBoard = () => {
-    const location = useLocation();
-    const HuurderId = new URLSearchParams(location.search).get("HuurderID");
+    const [huurderId, setHuurderId] = useState(null);]
 
     // State to control whether the red dot should be shown
     const [showDot, setShowDot] = useState(false);
     const [error, setError] = useState(null);
 
+    // Haal het huurderID op via de API bij mount
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setHuurderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
     useEffect(() => {
         // Check if there are any unanswered requests or notifications
-        axios.get(`https://localhost:5033/api/Huurverzoek/check-Beantwoorde/${HuurderId}`)
+        axios.get(`https://localhost:5033/api/Huurverzoek/check-Beantwoorde/${huurderId}`)
             .then(response => {
                 // Assuming the API response indicates if the red dot should be shown
                 if (response.data && response.data.showDot) {
@@ -40,18 +57,18 @@ export const ZakelijkHuurderDashBoard = () => {
                 setError(err.message);
                 console.error("Error fetching data:", err);
             });
-    }, [HuurderId]); // Run the effect when HuurderId changes
+    }, [huurderId]); // Run the effect when HuurderId changes
 
     return (
         <div className="index-container">
             <div className="options">
-                <Link to={`/ZakelijkeAutoTonen?HuurderID=${HuurderId}`} className="btn">
+                <Link to={`/ZakelijkeAutoTonen`} className="btn">
                     Huur Auto
                 </Link>
-                <Link to={`/accountwijzigingHuurders?HuurderID=${HuurderId}`} className="btn">
+                <Link to={`/accountwijzigingHuurders`} className="btn">
                     Account Wijzigen
                 </Link>
-                <Link to={`/NotificatieZakelijk?HuurderID=${HuurderId}`} className="btn">
+                <Link to={`/NotificatieZakelijk`} className="btn">
                     <IconWithDot showDot={showDot} /> {/* Pass the showDot state as a prop */}
                 </Link>
             </div>

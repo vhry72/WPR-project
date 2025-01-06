@@ -3,14 +3,29 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios';
 
 
-
-
 // ZakelijkHuurderDashBoard Component
 export const ZakelijkHuurderMeldingen = () => {
     const [huurverzoeken, setHuurverzoeken] = useState([]);
-    const location = useLocation();
-    const HuurderId = new URLSearchParams(location.search).get("HuurderID");
+    const [HuurderId, setHuurderId] = useState(null);
     const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setHuurderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
 
     useEffect(() => {
         // Check if there are any answered requests or notifications
@@ -36,7 +51,7 @@ export const ZakelijkHuurderMeldingen = () => {
             ) : (
                 <ul>
                     {meldingen.map((me) => (
-                        <li key={huurverzoek.huurderID}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
+                        <li key={huurverzoek.HuurderID}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
                             <p> Uw verzoek is goedgekeurd. </p>
                         </li>
                     ))}

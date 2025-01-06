@@ -11,11 +11,29 @@ function Abonnement() {
         { id: 2, naam: "Standaard Per jaar", prijs: 80, korting: 10 },
     ]);
     const [huidigAbonnement, setHuidigAbonnement] = useState(null);
+    const [huurderId, setHuurderId] = useState(null);
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                if (userId) {
+                    setHuurderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
 
     useEffect(() => {
         const fetchAbonnement = async () => {
             try {
-                const response = await AbonnementService.getById("beheerderId"); // Vervang met de juiste ID
+                const response = await AbonnementService.getById(huurderId); // Vervang met de juiste ID
                 setHuidigAbonnement(response.data);
             } catch (error) {
                 console.error("Geen huidig abonnement gevonden.");
