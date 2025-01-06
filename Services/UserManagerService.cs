@@ -112,6 +112,35 @@ public class UserManagerService
         }
     }
 
+    public async Task<IdentityUser> FindByIdAsync(string userId)
+    {
+        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        if (user == null)
+        {
+            throw new KeyNotFoundException("Gebruiker niet gevonden.");
+        }
+        return user;
+    }
+
+    public async Task<bool> DeleteAsync(string aspNetUserId)
+    {
+        // Zoek de gebruiker in de AspNetUsers-tabel
+        var user = await _userManager.FindByIdAsync(aspNetUserId);
+        if (user == null)
+        {
+            throw new KeyNotFoundException("Gebruiker niet gevonden.");
+        }
+
+        // Verwijder de gebruiker
+        var result = await _userManager.DeleteAsync(user);
+        if (!result.Succeeded)
+        {
+            throw new Exception($"Fout bij het verwijderen van de gebruiker: {string.Join(", ", result.Errors)}");
+        }
+
+        return true;
+    }
+
 
 
 
@@ -187,12 +216,11 @@ public class UserManagerService
 
 
 
-    public string GenerateJwtToken(string userId, string role)
+    public string GenerateJwtToken(string huurderId, string role)
     {
-        // Claims bevatten alleen UserId en Role
         var claims = new List<Claim>
     {
-        new Claim(JwtRegisteredClaimNames.Sub, userId), // 'sub' claim voor de unieke gebruikers-ID
+        new Claim(JwtRegisteredClaimNames.Sub, huurderId), // 'sub' claim voor de unieke huurder-ID
         new Claim(ClaimTypes.Role, role) // Claim voor de gebruikersrol
     };
 
@@ -208,6 +236,7 @@ public class UserManagerService
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 
 
 

@@ -11,7 +11,7 @@ const instellingen = () => {
                 <Link to="/accountwijzigingHuurders" className="btn" style={{ color: '#FFFFFF', backgroundColor: '#0053ba' }}>
                     Beheer Account
                 </Link>
-                <Link to="/verwijder" className="btn" style={{ color: '#FFFFFF', backgroundColor: '#0053ba' }}>
+                <Link to="/VerwijderAccount" className="btn" style={{ color: '#FFFFFF', backgroundColor: '#0053ba' }}>
                     Verwijder account
                 </Link>
                 </div>

@@ -18,6 +18,7 @@ const JwtService = {
                 return null;
             }
 
+            console.log(response.data);
             const data = await response.json();
             return data; // Retourneert een object met `UserId` en `Role`
         } catch (error) {

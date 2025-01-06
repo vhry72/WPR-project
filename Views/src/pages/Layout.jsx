@@ -24,9 +24,13 @@ const Layout = () => {
             { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },
             { to: "/zakelijkeautotonen", label: "Zakelijke Auto's" },
         ],
-        medewerker: [
+        Backofficemedewerker: [
             { to: "/instellingen", label: "Instellingen" },
             { to: "/BackOfficeMedewerker", label: "BackOffice Medewerker" },
+        ],
+        FrontOfficemedewerker: [
+            { to: "/instellingen", label: "Instellingen" },
+            { to: "/FrontOfficeMedewerker", label: "BackOffice Medewerker" },
             { to: "/SchadeMeldingen", label: "Schade Meldingen" },
         ],
         Wagenparkbeheerder: [
