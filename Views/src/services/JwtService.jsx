@@ -1,4 +1,4 @@
-import axios from "../../node_modules/axios/index";
+
 
 const JwtService = {
     getUserInfo: async () => {
