@@ -17,6 +17,7 @@ const ParticulierVoertuigTonen = () => {
                 const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
                 if (userId) {
                     setHuurderId(userId);
+                    console.log(huurderId);
                 } else {
                     console.error("Huurder ID kon niet worden opgehaald via de API.");
                 }

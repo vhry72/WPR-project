@@ -8,6 +8,8 @@ using WPR_project.Services.Email;
 using Microsoft.Extensions.Logging;
 using QRCoder;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using WPR_project.Data;
 
 
 [ApiController]
@@ -16,6 +18,7 @@ public class AccountController : ControllerBase
 {
     private readonly UserManagerService _userManagerService;
     private readonly UserManager<IdentityUser> _userManager;
+    private readonly GegevensContext _dbContext;
     private readonly IEmailService _emailService;
     private readonly ILogger<AccountController> _logger;
 
@@ -23,10 +26,12 @@ public class AccountController : ControllerBase
         UserManagerService userManagerService,
         UserManager<IdentityUser> userManager,
         IEmailService emailService,
+        GegevensContext dbcontext,
         ILogger<AccountController> logger)
     {
         _userManagerService = userManagerService;
         _userManager = userManager;
+        _dbContext = dbcontext;
         _emailService = emailService;
         _logger = logger;
     }
@@ -166,6 +171,7 @@ public class AccountController : ControllerBase
         try
         {
             // Haal de gebruikersinformatie uit de claims
+            var id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var role = User.FindFirst(ClaimTypes.Role)?.Value;
 
@@ -207,11 +213,30 @@ public class AccountController : ControllerBase
             return Unauthorized("Ongeldige verificatiecode.");
         }
 
-        var roles = await _userManager.GetRolesAsync(user);
-        var role = roles.FirstOrDefault();
+        // Controleer of de gebruiker een particulier of zakelijk huurder is
+        var particulierHuurder = await _dbContext.ParticulierHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
+        var zakelijkHuurder = await _dbContext.ZakelijkHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
 
-        // Genereer een token met alleen id en role
-        var token = _userManagerService.GenerateJwtToken(user.Id, role);
+        string huurderId;
+        string role;
+
+        if (particulierHuurder != null)
+        {
+            huurderId = particulierHuurder.particulierId.ToString();
+            role = "ParticuliereHuurder";
+        }
+        else if (zakelijkHuurder != null)
+        {
+            huurderId = zakelijkHuurder.zakelijkeId.ToString();
+            role = "ZakelijkeHuurder";
+        }
+        else
+        {
+            return Unauthorized("Huurder niet gevonden.");
+        }
+
+        // Genereer een token met de huurder-ID en rol
+        var token = _userManagerService.GenerateJwtToken(huurderId, role);
 
         // Sla de token op in een HttpOnly cookie
         HttpContext.Response.Cookies.Append("jwt", token, new CookieOptions
@@ -224,6 +249,7 @@ public class AccountController : ControllerBase
 
         return Ok(new { Role = role });
     }
+
 
 
 

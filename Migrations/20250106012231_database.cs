@@ -66,6 +66,21 @@ namespace WPR_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BackofficeMedewerkers",
+                columns: table => new
+                {
+                    BackofficeMedewerkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    medewerkerNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    medewerkerEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AspNetUserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BackofficeMedewerkers", x => x.BackofficeMedewerkerId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bedrijven",
                 columns: table => new
                 {
@@ -81,18 +96,18 @@ namespace WPR_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Medewerkers",
+                name: "FrontofficeMedewerkers",
                 columns: table => new
                 {
-                    medewerkerId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FrontofficeMedewerkerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     medewerkerNaam = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     medewerkerEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    medewerkerRol = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AspNetUserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Medewerkers", x => x.medewerkerId);
+                    table.PrimaryKey("PK_FrontofficeMedewerkers", x => x.FrontofficeMedewerkerId);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,7 +165,8 @@ namespace WPR_project.Migrations
                     AbonnementId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     updateDatumAbonnement = table.Column<DateTime>(type: "datetime2", nullable: true),
                     AbonnementType = table.Column<int>(type: "int", nullable: true),
-                    PrepaidSaldo = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true)
+                    PrepaidSaldo = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    AspNetUserId = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -296,40 +312,6 @@ namespace WPR_project.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BackofficeMedewerkers",
-                columns: table => new
-                {
-                    medewerkerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BackofficeMedewerkers", x => x.medewerkerId);
-                    table.ForeignKey(
-                        name: "FK_BackofficeMedewerkers_Medewerkers_medewerkerId",
-                        column: x => x.medewerkerId,
-                        principalTable: "Medewerkers",
-                        principalColumn: "medewerkerId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FrontofficeMedewerkers",
-                columns: table => new
-                {
-                    medewerkerId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FrontofficeMedewerkers", x => x.medewerkerId);
-                    table.ForeignKey(
-                        name: "FK_FrontofficeMedewerkers_Medewerkers_medewerkerId",
-                        column: x => x.medewerkerId,
-                        principalTable: "Medewerkers",
-                        principalColumn: "medewerkerId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Huurverzoeken",
                 columns: table => new
                 {
@@ -405,6 +387,7 @@ namespace WPR_project.Migrations
                     wachtwoord = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     zakelijkeHuurderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     WagenparkBeheerderbeheerderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AspNetUserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AbonnementId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -560,9 +543,6 @@ namespace WPR_project.Migrations
 
             migrationBuilder.DropTable(
                 name: "ZakelijkHuurders");
-
-            migrationBuilder.DropTable(
-                name: "Medewerkers");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

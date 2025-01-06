@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WPR_project.DTO_s;
 using WPR_project.Models;
@@ -11,10 +12,12 @@ namespace WPR_project.Controllers
     public class ZakelijkeHuurderController : ControllerBase
     {
         private readonly ZakelijkeHuurderService _service;
+        private readonly UserManagerService _userManager;
 
-        public ZakelijkeHuurderController(ZakelijkeHuurderService service)
+        public ZakelijkeHuurderController(ZakelijkeHuurderService service, UserManagerService userManager)
         {
             _service = service;
+            _userManager = userManager;
         }
 
 
@@ -90,21 +93,57 @@ namespace WPR_project.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+        
         [HttpDelete("{id}")]
         public IActionResult DeleteZakelijkeHuurder(Guid id)
         {
             try
             {
+                // Haal de zakelijke huurder op
+                var zakelijkeHuurder = _service.GetZakelijkHuurderById(id);
+                if (zakelijkeHuurder == null)
+                {
+                    return NotFound("Zakelijke huurder niet gevonden.");
+                }
+
+                // Haal het AspNetUsersId op
+                var aspNetUserId = zakelijkeHuurder.AspNetUserId;
+                if(aspNetUserId == null)
+                {
+                    return NotFound("Asp User niet gevonden");
+                }
+
+
+                // Verwijder de zakelijke huurder
                 _service.Delete(id);
+
+                // Zoek de gebruiker in AspNetUsers
+                var user = _userManager.FindByIdAsync(aspNetUserId).Result;
+                if (user == null)
+                {
+                    return NotFound("De gekoppelde gebruiker in AspNetUsers is niet gevonden.");
+                }
+
+                // Verwijder de gebruiker uit AspNetUsers
+                var result = _userManager.DeleteAsync(aspNetUserId).Result;
+                if (!result)
+                {
+                    return StatusCode(500, "Er is een fout opgetreden bij het verwijderen van de gebruiker.");
+                }
             }
             catch (KeyNotFoundException)
             {
                 return NotFound("Zakelijke huurder niet gevonden.");
             }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Er is een fout opgetreden: {ex.Message}");
+            }
 
             return NoContent();
         }
+
+
 
         [Authorize(Roles = "ZakelijkHuurder")]
         [HttpPost("{id}/voegmedewerker")]
