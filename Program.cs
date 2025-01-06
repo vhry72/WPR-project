@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using WPR_project.Data;
 using WPR_project.Repositories;
 using WPR_project.Services;
@@ -17,7 +15,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",
 
-        policy => policy.WithOrigins("https://localhost:5174")
+        policy => policy.WithOrigins("https://localhost:5173")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());

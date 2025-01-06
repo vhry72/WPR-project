@@ -15,6 +15,7 @@ const ZakelijkAutoTonen = () => {
                 console.log("Voertuigen worden opgevraagd");
                 const response = await VoertuigRequestService.getAll(filterType);
                 setVoertuigen(response);
+                console.log(response);
             } catch (error) {
                 console.error("Het is niet gelukt om de voertuigtype op te halen", error);
             }
@@ -32,8 +33,11 @@ const ZakelijkAutoTonen = () => {
         setVoertuigen(sortedVoertuigen);
     };
 
-    const handleVoertuigClick = (kenteken) => {
-        navigate(`/huurVoertuig?kenteken=${kenteken}&VoertuigID=${voertuig.voertuigId}&SoortHuurder=Zakelijk`);
+
+    const handleVoertuigClick = (voertuig) => {
+        navigate(
+            `/huurVoertuig?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}&SoortHuurder=Zakelijk`
+        );
     };
 
     return (
@@ -61,14 +65,23 @@ const ZakelijkAutoTonen = () => {
                 <tbody>
                     {voertuigen.map((voertuig, index) => (
                         <tr key={index}>
-                            <td onClick={() => handleVoertuigClick(voertuig.kenteken)} style={{ cursor: 'pointer', color: 'blue', textDecoration: 'underline' }}>{voertuig.merk}</td>
+                            <td
+                                onClick={() => handleVoertuigClick(voertuig)}
+                                style={{
+                                    cursor: "pointer",
+                                    color: "blue",
+                                    textDecoration: "underline",
+                                }}
+                            >
+                                {voertuig.merk}
+                            </td>
                             <td>{voertuig.model}</td>
                             <td>{voertuig.prijsPerDag}</td>
                             <td>{voertuig.voertuigType}</td>
                             <td>{voertuig.bouwjaar}</td>
                             <td>{voertuig.kenteken}</td>
                             <td>{voertuig.kleur}</td>
-                            <td>{voertuig.beschikbaar ? "Nee" : "Ja"}</td>
+                            <td>{voertuig.voertuigBeschikbaar ? "Ja" : "Nee"}</td>
                         </tr>
                     ))}
                 </tbody>

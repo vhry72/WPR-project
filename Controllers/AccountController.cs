@@ -200,7 +200,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register-bedrijfsmedewerker")]
-    public async Task<IActionResult> RegisterBedrijfsMedewerker([FromBody] BedrijfsMedewerkers dto)
+    public async Task<IActionResult> RegisterBedrijfsMedewerker([FromBody] BedrijfsmedewerkerRegDTO dto)
     {
         if (dto == null)
         {
@@ -236,7 +236,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register-wagenparkbeheerder")]
-    public async Task<IActionResult> RegisterWagenparkbeheerder([FromBody] WagenparkBeheerder dto)
+    public async Task<IActionResult> RegisterWagenparkbeheerder([FromBody] WagenparkBeheerderDTO dto)
     {
         if (dto == null)
         {
@@ -291,7 +291,7 @@ public class AccountController : ControllerBase
         {
             return Unauthorized("E-mail is niet bevestigd. Controleer je inbox voor de bevestigingsmail.");
         }
-
+       
         var passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
         if (!passwordValid)
         {

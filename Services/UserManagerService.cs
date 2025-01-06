@@ -200,7 +200,7 @@ public class UserManagerService
         }
     }
 
-    public async Task<BedrijfsMedewerkers> RegisterBedrijfsMedewerker(BedrijfsMedewerkers dto)
+    public async Task<BedrijfsMedewerkers> RegisterBedrijfsMedewerker(BedrijfsmedewerkerRegDTO dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
@@ -237,7 +237,7 @@ public class UserManagerService
         }
     }
 
-    public async Task<WagenparkBeheerder> RegisterWagenParkBeheerder(WagenparkBeheerder dto)
+    public async Task<WagenparkBeheerder> RegisterWagenParkBeheerder(WagenparkBeheerderDTO dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
 
@@ -256,11 +256,6 @@ public class UserManagerService
                 Adres = dto.Adres,
                 KVKNummer = dto.KVKNummer,
                 AbonnementId = dto.AbonnementId,
-                AbonnementType = dto.AbonnementType,
-                HuidigAbonnement = dto.HuidigAbonnement,
-                updateDatumAbonnement = dto.updateDatumAbonnement,
-                PrepaidSaldo = dto.PrepaidSaldo,
-                MedewerkerLijst = dto.MedewerkerLijst,
                 telefoonNummer = dto.telefoonNummer,
                 wachtwoord = hashedPassword,
                 AspNetUserId = user.Id,

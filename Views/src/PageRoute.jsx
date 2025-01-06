@@ -74,7 +74,7 @@ function PageRoute() {
                         <Route
                             path="bevestigingHuur"
                             element={
-                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
+                                <PrivateRoute allowedRoles={["ParticuliereHuurder", "BedrijfsMedewerker"]}>
                                     <BevestigingHuur />
                                 </PrivateRoute>
                             }
@@ -83,7 +83,7 @@ function PageRoute() {
                         <Route
                             path="huurVoertuig"
                             element={
-                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
+                                <PrivateRoute allowedRoles={["ParticuliereHuurder", "BedrijfsMedewerker"]}>
                                     <HuurVoertuig />
                                 </PrivateRoute>
                             }
@@ -100,23 +100,6 @@ function PageRoute() {
 
                         {/* Routes specifiek voor 'zakelijk' */}
                         <Route
-                            path="zakelijkHuurderDashBoard"
-                            element={
-                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
-                                    <ZakelijkHuurderDashBoard />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="zaakdashboard"
-                            element={
-                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
-                                    <Zaakdashboard />
-                                </PrivateRoute>
-                            }
-                        />
-
-                        <Route
                             path="abonnement"
                             element={
                                 <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
@@ -124,39 +107,12 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
-                        <Route
-                            path="bedrijfsabonnement"
-                            element={
-                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
-                                    <BedrijfsAbonnement />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="payment"
-                            element={
-                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
-                                    <Payment />
-                                </PrivateRoute>
-                            }
-                        />
-
-                        {/* Routes specifiek voor 'bedrijfsmedewerker' */}
 
                         <Route
-                            path="zakelijkeautotonen"
+                            path="accountwijzigingHuurders"
                             element={
-                                <PrivateRoute allowedRoles={["Bedrijfsmedewerker"]}>
-                                    <ZakelijkAutoTonen />
-                                </PrivateRoute>
-                            }
-                        />
-
-                        <Route
-                            path="huurVoertuig"
-                            element={
-                                <PrivateRoute allowedRoles={["Bedrijfsmedewerker"]}>
-                                    <HuurVoertuig />
+                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
+                                    <AccountwijzigingHuurders />
                                 </PrivateRoute>
                             }
                         />
@@ -164,18 +120,56 @@ function PageRoute() {
                         <Route
                             path="accountwijzigingHuurders"
                             element={
-                                <PrivateRoute allowedRoles={["Bedrijfsmedewerker"]}>
+                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
+                                    <AccountwijzigingHuurders />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="accountwijzigingHuurders"
+                            element={
+                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
+                                    <AccountwijzigingHuurders />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="accountwijzigingHuurders"
+                            element={
+                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
+                                    <AccountwijzigingHuurders />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        {/* Routes specifiek voor 'bedrijfsmedewerker' */}
+
+                        <Route
+                            path="ZakelijkAutoTonen"
+                            element={
+                                <PrivateRoute allowedRoles={["BedrijfsMedewerker"]}>
+                                    <ZakelijkAutoTonen />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="accountwijzigingHuurders"
+                            element={
+                                <PrivateRoute allowedRoles={["BedrijfsMedewerker"]}>
                                     <AccountwijzigingHuurders />
                                 </PrivateRoute>
                             }
                         />
 
 
-                        {/* Routes specifiek voor 'medewerker' */}
+                        {/* Routes specifiek voor 'BackofficeMedewerker' */}
                         <Route
                             path="BackOfficeMedewerker"
                             element={
-                                <PrivateRoute allowedRoles={["medewerker"]}>
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
                                     <BackOfficeMedewerker />
                                 </PrivateRoute>
                             }
@@ -183,7 +177,7 @@ function PageRoute() {
                         <Route
                             path="SchadeMeldingen"
                             element={
-                                <PrivateRoute allowedRoles={["medewerker"]}>
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker", "FrontofficeMedewerker"]}>
                                     <SchadeMeldingen />
                                 </PrivateRoute>
                             }
@@ -191,7 +185,7 @@ function PageRoute() {
                         <Route
                             path="BackOfficeVerhuurAanvragen"
                             element={
-                                <PrivateRoute allowedRoles={["medewerker"]}>
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
                                     <BackOfficeVerhuurAanvragen />
                                 </PrivateRoute>
                             }
@@ -199,8 +193,33 @@ function PageRoute() {
                         <Route
                             path="VerhuurGegevens"
                             element={
-                                <PrivateRoute allowedRoles={["medewerker"]}>
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
                                     <VerhuurGegevens />
+                                </PrivateRoute>
+                            }
+                        />
+                        {/* Routes specifiek voor 'FrontofficeMedewerker' */}
+                        <Route
+                            path="FrontofficeMedewerker"
+                            element={
+                                <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
+                                    <FrontOfficeMedewerker />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="VoertuigDetails"
+                            element={
+                                <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
+                                    <VoertuigDetails />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="VoeruigInenUitname"
+                            element={
+                                <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
+                                    <VoertuigInEnUitname />
                                 </PrivateRoute>
                             }
                         />
@@ -209,7 +228,7 @@ function PageRoute() {
                         <Route
                             path="wagendashboard"
                             element={
-                                <PrivateRoute allowedRoles={["Wagenparkbeheerder"]}>
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <Wagendashboard />
                                 </PrivateRoute>
                             }
@@ -217,7 +236,7 @@ function PageRoute() {
                         <Route
                             path="wagenbeheer"
                             element={
-                                <PrivateRoute allowedRoles={["Wagenparkbeheerder"]}>
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <Wagenbeheer />
                                 </PrivateRoute>
                             }
@@ -225,7 +244,7 @@ function PageRoute() {
                         <Route
                             path="abonnement"
                             element={
-                                <PrivateRoute allowedRoles={["Wagenparkbeheerder"]}>
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <Abonnement />
                                 </PrivateRoute>
                             }
@@ -233,7 +252,7 @@ function PageRoute() {
                         <Route
                             path="bedrijfsabonnement"
                             element={
-                                <PrivateRoute allowedRoles={["Wagenparkbeheerder"]}>
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <BedrijfsAbonnement />
                                 </PrivateRoute>
                             }
@@ -241,7 +260,7 @@ function PageRoute() {
                         <Route
                             path="payment"
                             element={
-                                <PrivateRoute allowedRoles={["Wagenparkbeheerder"]}>
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <Payment />
                                 </PrivateRoute>
                             }

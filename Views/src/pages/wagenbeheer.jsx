@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import WagenparkService from "../services/requests/WagenparkService";
+import BedrijfsMedewerkerRequestService from "../services/requests/bedrijfsMedewerkerRequestService"
 import "../styles/styles.css";
 import "../styles/Wagenparkbeheerder.css";
 import "../styles/Notificatie.css";
@@ -19,6 +20,7 @@ const WagenbeheerDashboard = () => {
             try {
                 const data = await WagenparkService.getMedewerkers();
                 setMedewerkers(data);
+                console.log(data);
             } catch (error) {
                 setNotificatie(error.message);
                 setTimeout(() => setNotificatie(""), 3000);

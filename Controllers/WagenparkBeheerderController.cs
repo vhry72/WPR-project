@@ -82,29 +82,6 @@ namespace WPR_project.Controllers
         /// <summary>
         /// Voegt een nieuwe wagenparkbeheerder toe
         /// </summary>
-        [HttpPost]
-        public ActionResult AddBeheerder([FromBody] WagenparkBeheerderDTO beheerderDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new
-                {
-                    Message = "Ongeldige invoer.",
-                    Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)
-                });
-            }
-
-            var beheerder = new WagenparkBeheerder
-            {
-                beheerderId = Guid.NewGuid(),
-                beheerderNaam = beheerderDTO.beheerderNaam,
-                bedrijfsEmail = beheerderDTO.beheerderEmail,
-                wachtwoord = beheerderDTO.wachtwoord
-            };
-
-            _service.AddWagenparkBeheerder(beheerder);
-            return CreatedAtAction(nameof(GetBeheerderById), new { id = beheerder.beheerderId }, beheerder);
-        }
 
         /// <summary>
         /// Wijzigt een bestaande wagenparkbeheerder

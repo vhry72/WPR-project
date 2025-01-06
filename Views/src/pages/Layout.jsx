@@ -20,23 +20,24 @@ const Layout = () => {
             { to: "/zaakdashboard", label: "Zaak Dashboard" },
             { to: "/zakelijkeautotonen", label: "Zakelijke Auto's" },
         ],
-        Bedrijfsmedewerker: [
+        BedrijfsMedewerker: [
             { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },
-            { to: "/zakelijkeautotonen", label: "Zakelijke Auto's" },
+            { to: "/ZakelijkAutoTonen", label: "Zakelijke Auto's" },
         ],
         BackofficeMedewerker: [
             { to: "/instellingen", label: "Instellingen" },
             { to: "/BackOfficeMedewerker", label: "BackOffice Medewerker" },
         ],
-        FrontOfficeMedewerker: [
+        FrontofficeMedewerker: [
             { to: "/instellingen", label: "Instellingen" },
             { to: "/FrontOfficeMedewerker", label: "Frontoffice Medewerker" },
             { to: "/SchadeMeldingen", label: "Schade Meldingen" },
         ],
-        Wagenparkbeheerder: [
+        WagenparkBeheerder: [
             { to: "/instellingen", label: "Instellingen" },
             { to: "/wagendashboard", label: "Wagen Dashboard" },
             { to: "/wagenbeheer", label: "Wagen Beheer" },
+            { to: "/VerhuurdeVoertuigen", label: "gehuurder voertuigen"}
         ],
     };
 
@@ -55,7 +56,7 @@ const Layout = () => {
         <>
             <header>
                 <nav className="navbar">
-                    <Link to="/Index" className="nav-link">Home</Link>
+                    <Link to="/" className="nav-link">Home</Link>
                     {!userRole && <Link to="/register" className="nav-link">Aanmelden</Link>}
                     {!userRole && <Link to="/login" className="nav-link">Inloggen</Link>}
                     {userRole &&

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useSearchParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 import styles from "../styles/VerhuurdeVoertuigen.module.css";
@@ -10,73 +9,68 @@ import JwtService from "../services/JwtService";
 
 const VerhuurdeVoertuigen = () => {
     const [wagenparkbeheerderId, setWagenparkbeheerderId] = useState(null);
-
     const [voertuigen, setVoertuigen] = useState([]);
     const [filteredVoertuigen, setFilteredVoertuigen] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [filterStartDate, setFilterStartDate] = useState("");
     const [filterEndDate, setFilterEndDate] = useState("");
-    const [searchTerm, setSearchTerm] = useState(""); // Zoekterm
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
-        const fetchUserId = async () => {
+        const executeSteps = async () => {
             try {
-                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
-                if (userId) {
-                    setWagenparkbeheerderId(userId);
-                } else {
-                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                const userId = await fetchUserId();
+                if (!userId) {
+                    setError("Geen WagenparkbeheerderID gevonden.");
+                    setLoading(false);
+                    return;
                 }
+
+                setWagenparkbeheerderId(userId);
+
+                await fetchVoertuigen(userId);
             } catch (error) {
-                console.error("Fout bij het ophalen van de huurder ID:", error);
+                console.error("Er is een fout opgetreden:", error);
+                setError("Er is een fout opgetreden tijdens het laden van de gegevens.");
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchUserId();
-    }, []);
+        executeSteps();
 
-    const fetchHuurderNaam = async (huurderId) => {
-        try {
-            const response = await axios.get(
-                `https://localhost:5033/api/BedrijfsMedewerkers/${huurderId}`
-            );
-            return response.data.medewerkerNaam || "Onbekend";
-        } catch (error) {
-            console.error(`Fout bij ophalen van naam voor HuurderID: ${huurderId}`, error);
-            return "Onbekend";
-        }
-    };
+        const interval = setInterval(() => {
+            if (wagenparkbeheerderId) {
+                fetchVoertuigen(wagenparkbeheerderId);
+            }
+        }, 30000);
 
-    const fetchVoertuigGegevens = async (voertuigId) => {
+        return () => clearInterval(interval);
+    }, [wagenparkbeheerderId]);
+
+    const fetchUserId = async () => {
         try {
-            const response = await axios.get(`https://localhost:5033/api/Voertuig/${voertuigId}`);
-            return response.data || null;
+            const userId = await JwtService.getUserId();
+            console.log("Ophalen van userId succesvol:", userId);
+            return userId;
         } catch (error) {
-            console.error(
-                `Fout bij ophalen van voertuiggegevens voor VoertuigID: ${voertuigId}`,
-                error
-            );
+            console.error("Fout bij het ophalen van de userId:", error);
             return null;
         }
     };
 
-    const fetchVoertuigen = async () => {
-        if (!wagenparkbeheerderId) {
-            setError("Geen WagenparkbeheerderID opgegeven in de URL.");
-            setLoading(false);
-            return;
-        }
-
+    const fetchVoertuigen = async (userId) => {
         try {
+            console.log("Ophalen voertuigen voor wagenparkbeheerderId:", userId);
+
             const medewerkersResponse = await axios.get(
-                `https://localhost:5033/api/WagenparkBeheerder/${wagenparkbeheerderId}/medewerkers`
+                `https://localhost:5033/api/WagenparkBeheerder/${userId}/medewerkers`
             );
             const medewerkerIds = medewerkersResponse.data;
 
             if (!medewerkerIds.length) {
                 setError("Geen medewerkers gevonden voor deze wagenparkbeheerder.");
-                setLoading(false);
                 return;
             }
 
@@ -110,46 +104,35 @@ const VerhuurdeVoertuigen = () => {
             setVoertuigen(voertuigenMetHuurdata);
             setFilteredVoertuigen(voertuigenMetHuurdata);
         } catch (error) {
-            console.error("Fout bij het ophalen van gegevens:", error);
-            setError("Er is een fout opgetreden bij het ophalen van gegevens.");
-        } finally {
-            setLoading(false);
+            console.error("Fout bij het ophalen van voertuigen:", error);
+            setError("Er is een fout opgetreden bij het ophalen van de voertuigen.");
         }
     };
 
-    useEffect(() => {
-        fetchVoertuigen(); // Initieel ophalen van gegevens
-
-        // Periodiek ophalen van gegevens (polling)
-        const interval = setInterval(() => {
-            fetchVoertuigen();
-        }, 30000); // Elke 30 seconden
-
-        return () => clearInterval(interval); // Opruimen bij unmounten
-    }, [wagenparkbeheerderId]);
-
-    useEffect(() => {
-        // Filter op datum en zoekterm
-        let gefilterdeVoertuigen = voertuigen;
-
-        if (filterStartDate && filterEndDate) {
-            const start = parseISO(filterStartDate);
-            const end = parseISO(filterEndDate);
-
-            gefilterdeVoertuigen = gefilterdeVoertuigen.filter((voertuig) =>
-                isWithinInterval(new Date(voertuig.beginDate), { start, end }) ||
-                isWithinInterval(new Date(voertuig.endDate), { start, end })
+    const fetchHuurderNaam = async (wagenparkbeheerderId) => {
+        try {
+            const response = await axios.get(
+                `https://localhost:5033/api/BedrijfsMedewerkers/${wagenparkbeheerderId}`
             );
+            return response.data.medewerkerNaam || "Onbekend";
+        } catch (error) {
+            console.error(`Fout bij ophalen van naam voor HuurderID: ${wagenparkbeheerderId}`, error);
+            return "Onbekend";
         }
+    };
 
-        if (searchTerm) {
-            gefilterdeVoertuigen = gefilterdeVoertuigen.filter((voertuig) =>
-                voertuig.huurderNaam.toLowerCase().includes(searchTerm.toLowerCase())
+    const fetchVoertuigGegevens = async (voertuigId) => {
+        try {
+            const response = await axios.get(`https://localhost:5033/api/Voertuig/${voertuigId}`);
+            return response.data || null;
+        } catch (error) {
+            console.error(
+                `Fout bij ophalen van voertuiggegevens voor VoertuigID: ${voertuigId}`,
+                error
             );
+            return null;
         }
-
-        setFilteredVoertuigen(gefilterdeVoertuigen);
-    }, [voertuigen, filterStartDate, filterEndDate, searchTerm]);
+    };
 
     const formatDate = (datetime) => {
         try {
@@ -221,6 +204,28 @@ const VerhuurdeVoertuigen = () => {
 
         doc.save("verhuurde_voertuigen.pdf");
     };
+
+    useEffect(() => {
+        let gefilterdeVoertuigen = voertuigen;
+
+        if (filterStartDate && filterEndDate) {
+            const start = parseISO(filterStartDate);
+            const end = parseISO(filterEndDate);
+
+            gefilterdeVoertuigen = gefilterdeVoertuigen.filter((voertuig) =>
+                isWithinInterval(new Date(voertuig.beginDate), { start, end }) ||
+                isWithinInterval(new Date(voertuig.endDate), { start, end })
+            );
+        }
+
+        if (searchTerm) {
+            gefilterdeVoertuigen = gefilterdeVoertuigen.filter((voertuig) =>
+                voertuig.huurderNaam.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        setFilteredVoertuigen(gefilterdeVoertuigen);
+    }, [voertuigen, filterStartDate, filterEndDate, searchTerm]);
 
     if (loading) {
         return <p className={`${styles.message} ${styles.loading}`}>Gegevens worden geladen...</p>;
