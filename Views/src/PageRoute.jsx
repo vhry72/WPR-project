@@ -36,6 +36,7 @@ import { UserProvider } from "./context/UserContext"; // Context import
 import EmailConfirmation from "./pages/EmailConformation";
 import PrivateRoute from "./pages/PrivateRoute";
 import VerhuurdeVoertuigen from "./pages/VerhuurdeVoertuigen";
+import VerwijderAccount from "./pages/VerwijderAccount";
 
 
 function PageRoute() {
@@ -51,6 +52,7 @@ function PageRoute() {
                         <Route path="email-confirmation" element={<EmailConfirmation />} />
                         <Route path="VerhuurdeVoertuigen" element={<VerhuurdeVoertuigen/> } />
                         <Route path="login" element={<LoginVoorWijziging />} />
+                        <Route path="VerwijderAccount" element={<VerwijderAccount />} />
 
                         {/* Routes specifiek voor 'particulier' */}
                         <Route

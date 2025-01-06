@@ -1,7 +1,8 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import JwtService from "../services/JwtService"; // Zorg ervoor dat de service correct is geïmporteerd
+import JwtService from "../services/JwtService"; // Zorg ervoor dat de service correct is geÃ¯mporteerd
+
 
 const VerwijderAccount = () => {
     const [huurderId, setHuurderId] = useState(null);
@@ -11,10 +12,10 @@ const VerwijderAccount = () => {
         const fetchUserId = async () => {
             try {
                 const userId = await JwtService.getUserId();
+
                 if (userId ) {
                     setHuurderId(userId);
                     console.log(huurderId);
-                    
                 } else {
                     console.error("Huurder ID kon niet worden opgehaald via de API.");
                 }
@@ -31,6 +32,7 @@ const VerwijderAccount = () => {
             try {
                 await axios.delete(`https://localhost:5033//api/ZakelijkeHuurder/${huurderId}`);
                 alert("Account succesvol verwijderd.");
+
                 navigate("/");
             } catch (error) {
                 console.error("Fout bij het verwijderen van het account:", error);

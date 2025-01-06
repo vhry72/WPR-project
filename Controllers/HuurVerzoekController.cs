@@ -176,9 +176,9 @@ public class HuurverzoekController : ControllerBase
             return NotFound(new { Message = "Huurverzoek niet gevonden." });
         }
     }
-    
+
     [HttpPut("keuring/{id}/{approved}")]
-    public IActionResult WeigerRequest(Guid id, bool approved, bool isBevestigd)
+    public IActionResult WeigerRequest(Guid id, bool approved)
     {
         try
         {
@@ -188,20 +188,37 @@ public class HuurverzoekController : ControllerBase
                 return NotFound(new { Message = "Huurverzoek niet gevonden." });
             }
 
-            huurverzoek.approved = approved; // Update de goedkeuring
-            huurverzoek.isBevestigd = true; //update de bevestiging
-            
-            _service.Update(id, huurverzoek); // Pas de update correct toe
-            return Ok(new { Message = "Huurverzoek Afgekeurd." });
+            // Update de goedkeuring en bevestiging
+            huurverzoek.approved = approved;
+            huurverzoek.isBevestigd = true;
+
+            _service.Update(id, huurverzoek);
+
+            // Haal e-mail op op basis van huurderID
+            var email = _service.GetEmailByHuurderId(huurverzoek.HuurderID);
+
+            string subject = "Bevestiging van uw huurverzoek";
+            string body = approved
+                ? $"Beste gebruiker,<br/><br/>Uw huurverzoek is goedgekeurd.<br/>" +
+                  $"Startdatum: {huurverzoek.beginDate}<br/>Einddatum: {huurverzoek.endDate}<br/><br/>" +
+                  "Met vriendelijke groet,<br/>Het Team"
+                : $"Beste gebruiker,<br/><br/>Uw huurverzoek is afgekeurd.<br/><br/>" +
+                  "Met vriendelijke groet,<br/>Het Team";
+
+            _emailService.SendEmail(email, subject, body);
+
+            return approved
+                ? Ok(new { Message = "Huurverzoek goedgekeurd." })
+                : Ok(new { Message = "Huurverzoek afgekeurd." });
         }
         catch (Exception ex)
         {
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
-    
 
 }
+
 
 
 

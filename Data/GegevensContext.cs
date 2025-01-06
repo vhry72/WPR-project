@@ -30,19 +30,12 @@ namespace WPR_project.Data
         {
 
             //Configuratie voor Medewerkers
-            modelBuilder.Entity<Medewerker>().ToTable("Medewerkers");
-            modelBuilder.Entity<BackofficeMedewerker>().ToTable("BackofficeMedewerkers");
-            modelBuilder.Entity<FrontofficeMedewerker>().ToTable("FrontofficeMedewerkers");
-
-            modelBuilder.Entity<Medewerker>()
-                .HasKey(v => v.medewerkerId);
-
             modelBuilder.Entity<BackofficeMedewerker>()
-                .HasBaseType<Medewerker>();
+                .HasKey(b => b.BackofficeMedewerkerId);
 
 
             modelBuilder.Entity<FrontofficeMedewerker>()
-                .HasBaseType<Medewerker>();
+                .HasKey(b => b.FrontofficeMedewerkerId);
 
             // Voertuig Configuratie
             modelBuilder.Entity<Voertuig>()

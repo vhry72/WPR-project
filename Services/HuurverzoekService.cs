@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace WPR_project.Services;
 
-public class HuurverzoekService
+public class HuurverzoekService 
 {
 
 
