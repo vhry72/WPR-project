@@ -10,11 +10,13 @@ public class HuurverzoekController : ControllerBase
 {
     private readonly HuurverzoekService _service;
     private readonly IEmailService _emailService;
+    private readonly VoertuigService _voertuigService;
 
-    public HuurverzoekController(HuurverzoekService service, IEmailService emailService)
+    public HuurverzoekController(HuurverzoekService service, IEmailService emailService, VoertuigService voertuigService)
     {
         _service = service;
         _emailService = emailService;
+        _voertuigService = voertuigService;
     }
 
     [HttpGet("check-active/{huurderId}")]
@@ -30,46 +32,52 @@ public class HuurverzoekController : ControllerBase
         return Ok(new { hasActiveRequest });
     }
 
-    [HttpPost("verzoek")]
-    public IActionResult Verzoek([FromBody] Huurverzoek huurverzoek)
+    [HttpPost]
+    public IActionResult CreateHuurVerzoek([FromBody] HuurVerzoekDTO huurVerzoekDto)
     {
-        if (!ModelState.IsValid)
+        if (huurVerzoekDto == null || huurVerzoekDto.VoertuigId == Guid.Empty)
         {
-            return BadRequest(new
-            {
-                Message = "Validatiefout",
-                Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
-            });
+            return BadRequest("Voertuig-ID is verplicht.");
         }
 
-        try
+        var voertuig = _voertuigService.GetById(huurVerzoekDto.VoertuigId);
+        if (voertuig == null)
         {
-            // Verwerk het huurverzoek
-            huurverzoek.approved = false;
-            _service.Add(huurverzoek);
-
-            // Haal e-mail op op basis van huurderID
-            var email = _service.GetEmailByHuurderId(huurverzoek.HuurderID);
-
-            // Verstuur een bevestigingsmail
-            var subject = "Bevestiging van uw huurverzoek";
-            var body = $"Beste gebruiker,<br/><br/>Uw huurverzoek is succesvol geregistreerd.<br/>" +
-                       $"Startdatum: {huurverzoek.beginDate}<br/>Einddatum: {huurverzoek.endDate}<br/><br/>" +
-                       "Met vriendelijke groet,<br/>Het Team";
-
-            _emailService.SendEmail(email, subject, body);
-
-            return Ok(new { Message = "Huurverzoek succesvol ingediend. Wij nemen zo snel mogelijk contact op." });
+            return NotFound("Voertuig niet gevonden.");
         }
-        catch (ArgumentException ex)
+
+        var huurVerzoek = new Huurverzoek
         {
-            return BadRequest(new { Message = ex.Message });
-        }
-        catch (Exception ex)
+            HuurderID = huurVerzoekDto.HuurderID,
+            VoertuigId = voertuig.voertuigId,
+            beginDate = huurVerzoekDto.beginDate,
+            endDate = huurVerzoekDto.endDate,
+            approved = false,
+            isBevestigd = false
+        };
+
+        _service.Add(huurVerzoek);
+
+        // Haal e-mailadres op op basis van huurderID
+        var email = _service.GetEmailByHuurderId(huurVerzoek.HuurderID);
+        if (string.IsNullOrWhiteSpace(email))
         {
-            return StatusCode(500, new { Message = "Interne serverfout.", Error = ex.Message });
+            return NotFound("E-mailadres voor de huurder kon niet worden gevonden.");
         }
+
+        // Verstuur een bevestigingsmail
+        var subject = "Bevestiging van uw huurverzoek";
+        var body = $@"Beste gebruiker,<br/><br/>
+                  Uw huurverzoek is succesvol geregistreerd.<br/>
+                  Startdatum: {huurVerzoek.beginDate:dd-MM-yyyy}<br/>
+                  Einddatum: {huurVerzoek.endDate:dd-MM-yyyy}<br/><br/>
+                  Met vriendelijke groet,<br/>Het Team";
+
+        _emailService.SendEmail(email, subject, body);
+
+        return Ok(new { Message = "Huurverzoek succesvol ingediend. Een bevestiging is verzonden naar uw e-mailadres." });
     }
+
 
 
     [HttpGet]
@@ -176,9 +184,9 @@ public class HuurverzoekController : ControllerBase
             return NotFound(new { Message = "Huurverzoek niet gevonden." });
         }
     }
-    
+
     [HttpPut("keuring/{id}/{approved}")]
-    public IActionResult WeigerRequest(Guid id, bool approved, bool isBevestigd)
+    public IActionResult WeigerRequest(Guid id, bool approved)
     {
         try
         {
@@ -188,20 +196,37 @@ public class HuurverzoekController : ControllerBase
                 return NotFound(new { Message = "Huurverzoek niet gevonden." });
             }
 
-            huurverzoek.approved = approved; // Update de goedkeuring
-            huurverzoek.isBevestigd = true; //update de bevestiging
-            
-            _service.Update(id, huurverzoek); // Pas de update correct toe
-            return Ok(new { Message = "Huurverzoek Afgekeurd." });
+            // Update de goedkeuring en bevestiging
+            huurverzoek.approved = approved;
+            huurverzoek.isBevestigd = true;
+
+            _service.Update(id, huurverzoek);
+
+            // Haal e-mail op op basis van huurderID
+            var email = _service.GetEmailByHuurderId(huurverzoek.HuurderID);
+
+            string subject = "Bevestiging van uw huurverzoek";
+            string body = approved
+                ? $"Beste gebruiker,<br/><br/>Uw huurverzoek is goedgekeurd.<br/>" +
+                  $"Startdatum: {huurverzoek.beginDate}<br/>Einddatum: {huurverzoek.endDate}<br/><br/>" +
+                  "Met vriendelijke groet,<br/>Het Team"
+                : $"Beste gebruiker,<br/><br/>Uw huurverzoek is afgekeurd.<br/><br/>" +
+                  "Met vriendelijke groet,<br/>Het Team";
+
+            _emailService.SendEmail(email, subject, body);
+
+            return approved
+                ? Ok(new { Message = "Huurverzoek goedgekeurd." })
+                : Ok(new { Message = "Huurverzoek afgekeurd." });
         }
         catch (Exception ex)
         {
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
-    
 
 }
+
 
 
 
