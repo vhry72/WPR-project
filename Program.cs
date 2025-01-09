@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using WPR_project.Data;
 using WPR_project.Repositories;
 using WPR_project.Services;

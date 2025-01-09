@@ -82,6 +82,7 @@ namespace WPR_project.Controllers
         /// <summary>
         /// Voegt een nieuwe wagenparkbeheerder toe
         /// </summary>
+
         [HttpPost]
         public ActionResult AddBeheerder([FromBody] WagenparkBeheerderDTO beheerderDTO)
         {
@@ -105,6 +106,7 @@ namespace WPR_project.Controllers
             _service.AddWagenparkBeheerder(beheerder);
             return CreatedAtAction(nameof(GetBeheerderById), new { id = beheerder.beheerderId }, beheerder);
         }
+
 
         /// <summary>
         /// Wijzigt een bestaande wagenparkbeheerder

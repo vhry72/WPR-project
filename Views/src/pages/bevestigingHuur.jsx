@@ -114,7 +114,7 @@ const BevestigingHuur = () => {
             await VoertuigRequestService.update(VoertuigID, voertuigUpdate);
 
             alert(`Huurverzoek succesvol bevestigd voor ${huurderNaam}!`);
-            navigate("/home");
+            navigate("/");
         } catch (error) {
             console.error("Fout tijdens bevestiging:", error);
             setErrorMessage(error.response?.data?.Message || error.message || "Er is een fout opgetreden.");

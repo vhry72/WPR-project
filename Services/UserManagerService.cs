@@ -200,7 +200,7 @@ public class UserManagerService
         }
     }
 
-    public async Task<BedrijfsMedewerkers> RegisterBedrijfsMedewerker(BedrijfsMedewerkers dto)
+    public async Task<BedrijfsMedewerkers> RegisterBedrijfsMedewerker(BedrijfsmedewerkerRegDTO dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
 

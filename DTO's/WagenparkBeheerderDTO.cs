@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using WPR_project.Models;
 
 namespace WPR_project.DTO_s
@@ -24,11 +25,13 @@ namespace WPR_project.DTO_s
         public string KVKNummer { get; set; }
 
 
+
         public string telefoonNummer { get; set; }
 
         [Required(ErrorMessage = "wachtwoord is verplicht.")]
         [MinLength(8, ErrorMessage = "wachtwoord moet minimaal 8 tekens bevatten.")]
         public string wachtwoord { get; set; }
+
 
         public Guid? AbonnementId { get; set; }
 
@@ -38,6 +41,7 @@ namespace WPR_project.DTO_s
 
         [Required]
         public string AspNetUserId { get; set; }
+
 
         public Guid zakelijkeId { get; set; }
 
