@@ -236,7 +236,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register-wagenparkbeheerder")]
-    public async Task<IActionResult> RegisterWagenparkbeheerder([FromBody] WagenparkBeheerder dto)
+    public async Task<IActionResult> RegisterWagenparkbeheerder([FromBody] WagenparkBeheerderDTO dto)
     {
         if (dto == null)
         {

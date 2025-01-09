@@ -98,7 +98,7 @@ namespace WPR_project.Controllers
             {
                 beheerderId = Guid.NewGuid(),
                 beheerderNaam = beheerderDTO.beheerderNaam,
-                bedrijfsEmail = beheerderDTO.beheerderEmail,
+                bedrijfsEmail = beheerderDTO.bedrijfsEmail,
                 wachtwoord = beheerderDTO.wachtwoord
             };
 

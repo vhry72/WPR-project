@@ -52,5 +52,7 @@ namespace WPR_project.Models
 
         [Required]
         public string AspNetUserId { get; set; }
+
+        public Guid zakelijkeId { get; set; }
     }
 }
