@@ -1,7 +1,7 @@
 ﻿import { Link, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import axios from 'axios';
-import JwtService from "../services/JwtService";
+import JwtService from "../../services/JwtService";
 
 
 // ZakelijkHuurderDashBoard Component

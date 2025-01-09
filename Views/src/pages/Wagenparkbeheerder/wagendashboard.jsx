@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import axios from "axios";
-import "../styles/styles.css";
+import "../../styles/styles.css";
 
 const wagendashboard = () => {
     const navigate = useNavigate();

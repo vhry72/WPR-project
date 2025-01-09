@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-import "../styles/styles.css";
+import "../../styles/styles.css";
 
 const zaakdashboard = () => {
     console.log("zaakdashboard component wordt gerenderd");

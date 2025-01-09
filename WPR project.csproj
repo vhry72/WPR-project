@@ -8,6 +8,17 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Views\src\hooks\**" />
+	  <Compile Remove="Views\src\NewFolder\**" />
+	  <Content Remove="Views\src\hooks\**" />
+	  <Content Remove="Views\src\NewFolder\**" />
+	  <EmbeddedResource Remove="Views\src\hooks\**" />
+	  <EmbeddedResource Remove="Views\src\NewFolder\**" />
+	  <None Remove="Views\src\hooks\**" />
+	  <None Remove="Views\src\NewFolder\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
 		<PackageReference Include="coverlet.collector" Version="6.0.0">
 			<PrivateAssets>all</PrivateAssets>
@@ -39,8 +50,6 @@
 
 	<ItemGroup>
 		<Folder Include="Migrations\" />
-		<Folder Include="Views\src\hooks\" />
-		<Folder Include="Views\src\NewFolder\" />
 		<Folder Include="Views\src\Utils\" />
 	</ItemGroup>
 

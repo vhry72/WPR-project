@@ -269,8 +269,8 @@ h3 {
     background-size: cover; /* Zorgt ervoor dat de achtergrondafbeelding volledig wordt bedekt */
     background-position: center; /* Centreert de afbeelding */
     background-repeat: no-repeat; /* Voorkomt dat de afbeelding wordt herhaald */
-    color: white; /* Zet de tekstkleur op wit */
-    height: 700px; /* Hoogte van de hero-sectie */
+    color: white; 
+    height: 336px; 
     display: flex; /* Maakt gebruik van flexbox */
     align-items: center; /* Centreert inhoud verticaal */
     justify-content: center; /* Centreert inhoud horizontaal */
@@ -332,37 +332,47 @@ h3 {
 
 /* Services */
 .services {
-    padding: 50px 0;
-    border-radius: 30px;
+    padding: 30px;
+    border-radius: 0;
     text-align: center;
     background-color: #0c2067;
+    width: 100%; 
+    box-sizing: border-box; 
 }
 
 .service-list {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap; 
+    gap: 0px; 
 }
 
 .service {
-    width: 22%;
-    background-color: #f4f4f4;
-    padding: 20px;
+    width: 20%; /* Kleinere breedte voor de kaarten */
+    padding: 15px; /* Minder binnenruimte in de kaarten */
+    background-color: white;
     border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Minder uitgesproken schaduw */
 }
 
     .service img {
-        width: 150px;
-        margin-bottom: 20px;
+        width: 100%; /* Afbeeldingen kleiner passend maken */
+        border-radius: 10px;
     }
 
+    .service h3 {
+        font-size: 1.2rem; /* Kleinere titeltekst */
+    }
 
-/* Footer */
-footer {
+    .service p {
+        font-size: 1rem; /* Kleinere beschrijvingstekst */
+    }
+
+.footer-text {
+    text-align: center;
+    padding: 20px;
     background-color: #333;
     color: white;
-    text-align: center;
-    padding: 10px 0;
-    margin-top: 30px;
 }
 
 .subscription-container {
@@ -387,13 +397,13 @@ footer {
 }
 
     .option:hover {
-        background-color: black; /* Zwarte achtergrond bij hover */
-        color: white; /* Witte tekst bij hover */
+        background-color: black; 
+        color: white; 
     }
 
     .option.selected {
-        background-color: #007BFF; /* Blauw als geselecteerd */
-        color: white; /* Witte tekst als geselecteerd */
+        background-color: #007BFF; 
+        color: white; 
         border-color: #0056b3;
     }
 
@@ -409,5 +419,5 @@ footer {
 }
 
     .subscription-button:hover {
-        background-color: #0056b3; /* Donkerder blauw bij hover */
+        background-color: #0056b3; 
     }

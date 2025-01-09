@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AbonnementService from "../services/requests/AbonnementService";
-import "../styles/Abonnement.css";
+import AbonnementService from "../../services/requests/AbonnementService";
+import "../../styles/Abonnement.css";
 
 function Abonnement() {
     const navigate = useNavigate();
