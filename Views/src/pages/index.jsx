@@ -5,7 +5,7 @@ import "../styles/navigatieBalk.css";
 
 const Index = () => {
     useEffect(() => {
-        console.log("Navigeert naar Home");
+        console.log("Navigeert naar Index pagina");
     }, []);
 
     return (
@@ -14,17 +14,6 @@ const Index = () => {
                 <div className="hero-text-container">
                     <h1>Welkom bij CarAndAll!</h1>
                     <p>Ontdek de beste diensten die we aanbieden!</p>
-                </div>
-
-                {/* Toegankelijke knop met aria-label */}
-                <div className="ontdek-btn">
-                    <a
-                        href="#services"
-                        className="cta"
-                        aria-label="Ontdek meer over onze diensten"
-                    >
-                        Ontdek Meer
-                    </a>
                 </div>
             </div>
 
@@ -71,7 +60,7 @@ const Index = () => {
             </section>
 
             {/* Footer Section */}
-            <footer>
+            <footer className = "footer-text">
                 <p>&copy; 2024 CarAndAll. Alle rechten voorbehouden.</p>
             </footer>
         </>

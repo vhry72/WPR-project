@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import WagenparkService from "../services/requests/WagenparkService";
-import BedrijfsMedewerkerRequestService from "../services/requests/bedrijfsMedewerkerRequestService"
-import "../styles/styles.css";
-import "../styles/Wagenparkbeheerder.css";
-import "../styles/Notificatie.css";
+import WagenparkService from "../../services/requests/WagenparkService";
+import BedrijfsMedewerkerRequestService from "../../services/requests/bedrijfsMedewerkerRequestService"
+import "../../styles/styles.css";
+import "../../styles/Wagenparkbeheerder.css";
+import "../../styles/Notificatie.css";
 
 const WagenbeheerDashboard = () => {
     const [medewerkers, setMedewerkers] = useState([]);

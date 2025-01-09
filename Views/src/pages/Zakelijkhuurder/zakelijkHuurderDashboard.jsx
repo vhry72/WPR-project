@@ -2,8 +2,8 @@ import { Link, useLocation } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { FaBell } from 'react-icons/fa';
 import axios from 'axios';
-import "../styles/Notificatie.css"; // Ensure you have your CSS imported
-import JwtService from "../services/JwtService";
+import "../../styles/Notificatie.css"; // Ensure you have your CSS imported
+import JwtService from "../../services/JwtService";
 
 // IconWithDot Component
 export const IconWithDot = ({ showDot }) => {
