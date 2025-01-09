@@ -70,7 +70,7 @@ public class UserManagerService
                 particulierId = Guid.NewGuid(),
                 particulierEmail = dto.particulierEmail,
                 particulierNaam = dto.particulierNaam,
-                wachtwoord = hashedPassword, // Zorg ervoor dat dit gehasht is
+                wachtwoord = dto.wachtwoord, // Zorg ervoor dat dit gehasht is
                 adress = dto.adress,
                 postcode = dto.postcode,
                 woonplaats = dto.woonplaats,
@@ -146,7 +146,7 @@ public class UserManagerService
                 BackofficeMedewerkerId = Guid.NewGuid(),
                 medewerkerEmail = dto.medewerkerEmail,
                 medewerkerNaam = dto.medewerkerNaam,
-                wachtwoord = hashedPassword,
+                wachtwoord = dto.wachtwoord,
                 AspNetUserId = user.Id,
                 IsEmailBevestigd = false,
                 EmailBevestigingToken = Guid.NewGuid()
@@ -181,7 +181,7 @@ public class UserManagerService
                 FrontofficeMedewerkerId = Guid.NewGuid(),
                 medewerkerEmail = dto.medewerkerEmail,
                 medewerkerNaam = dto.medewerkerNaam,
-                wachtwoord = hashedPassword,
+                wachtwoord = dto.wachtwoord,
                 AspNetUserId = user.Id,
                 IsEmailBevestigd = false,
                 EmailBevestigingToken = Guid.NewGuid()
@@ -216,7 +216,7 @@ public class UserManagerService
                 bedrijfsMedewerkerId = Guid.NewGuid(),
                 medewerkerEmail = dto.medewerkerEmail,
                 medewerkerNaam = dto.medewerkerNaam,
-                wachtwoord = hashedPassword,
+                wachtwoord = dto.wachtwoord,
                 zakelijkeHuurderId = dto.zakelijkeHuurderId,
                 WagenparkBeheerderbeheerderId = dto.WagenparkBeheerderbeheerderId,
                 AspNetUserId = user.Id,
@@ -257,7 +257,8 @@ public class UserManagerService
                 KVKNummer = dto.KVKNummer,
                 AbonnementId = dto.AbonnementId,
                 telefoonNummer = dto.telefoonNummer,
-                wachtwoord = hashedPassword,
+                wachtwoord = dto.wachtwoord,
+                zakelijkeId = dto.zakelijkeId,
                 AspNetUserId = user.Id,
                 IsEmailBevestigd = false,
                 EmailBevestigingToken = Guid.NewGuid()
@@ -354,7 +355,7 @@ public class UserManagerService
                 AspNetUserId = user.Id, // Koppel IdentityUser ID
                 IsEmailBevestigd = false,
                 EmailBevestigingToken = Guid.NewGuid(),
-                wachtwoord = hashedPassword // Handmatig gehasht wachtwoord
+                wachtwoord = dto.wachtwoord // Handmatig gehasht wachtwoord
             };
 
             _dbContext.ZakelijkHuurders.Add(huurder);

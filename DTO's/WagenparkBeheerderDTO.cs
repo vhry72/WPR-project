@@ -25,8 +25,7 @@ namespace WPR_project.DTO_s
         public string KVKNummer { get; set; }
 
 
-        [Required(ErrorMessage = "Telefoonnummer is verplicht.")]
-        
+
         public string telefoonNummer { get; set; }
 
         [Required(ErrorMessage = "wachtwoord is verplicht.")]
@@ -42,6 +41,9 @@ namespace WPR_project.DTO_s
 
         [Required]
         public string AspNetUserId { get; set; }
+
+
+        public Guid zakelijkeId { get; set; }
 
     }
 }
