@@ -73,6 +73,20 @@ namespace WPR_project.Controllers
                 return NotFound(ex.Message);
             }
         }
+        [HttpGet("getByKenteken/{kenteken}")]
+        public IActionResult GetVoertuigbyKenteken(string kenteken)
+        {
+            try
+            {
+                var voertuig = _voertuigService.GetVoertuigByKenteken(kenteken);
+                return Ok(voertuig);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
 
         [HttpGet("/checkstatus/{id}")]
         public IActionResult GetVoertuigStatus(Guid id)
@@ -128,6 +142,6 @@ namespace WPR_project.Controllers
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
             }
         }
-        
+
     }
 }

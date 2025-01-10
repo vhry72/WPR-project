@@ -7,6 +7,7 @@ using WPR_project.Data;
 using WPR_project.Repositories;
 using WPR_project.Services;
 using WPR_project.Services.Email;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,13 @@ builder.Services.AddCors(options =>
                         .AllowAnyHeader()
                         .AllowCredentials());
 });
+
+builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+        });
+
 
 // Database setup
 builder.Services.AddDbContext<GegevensContext>(options =>

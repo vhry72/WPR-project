@@ -114,7 +114,7 @@ namespace WPR_project.Services
                 Status = h.Status,
                 Opmerkingen = h.Opmerkingen,
                 VoertuigId = h.VoertuigId,
-                Voertuig = h.Voertuig
+                
             });
         }
 
@@ -133,7 +133,7 @@ namespace WPR_project.Services
                 Status = s.Status,
                 Opmerkingen = s.Opmerkingen,
                 VoertuigId= s.VoertuigId,
-                Voertuig= s.Voertuig
+                
             }).ToList();
 
             return schademeldingDtos;
@@ -150,7 +150,7 @@ namespace WPR_project.Services
             schademelding.Datum= DTO.Datum;
             schademelding.Status= DTO.Status;
             schademelding.Opmerkingen= DTO.Opmerkingen;
-            schademelding.Voertuig= DTO.Voertuig;
+            schademelding.SoortOnderhoud = DTO.SoortOnderhoud;
             schademelding.VoertuigId = DTO.VoertuigId;
 
             _schaderepository.updateSchademelding(schademelding);
@@ -165,10 +165,7 @@ namespace WPR_project.Services
                 Datum = schademelding.Datum,
                 Opmerkingen = schademelding.Opmerkingen,
                 Status = schademelding.Status,
-                Voertuig = schademelding.Voertuig,
                 VoertuigId = schademelding.VoertuigId
-
-
             };
 
             _schaderepository.Add(melding);

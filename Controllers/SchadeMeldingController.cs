@@ -42,6 +42,7 @@ namespace WPR_project.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+        
 
         // Ophalen van alle schademeldingen van een specifiek voertuig
         [HttpGet("{voertuigId}")]

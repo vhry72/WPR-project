@@ -7,6 +7,7 @@ namespace WPR_project.Models
 {
     public class Voertuig
     {
+        
         [Key]
         public Guid voertuigId { get; set; }
 
@@ -40,8 +41,9 @@ namespace WPR_project.Models
 
         [Required]
         public bool voertuigBeschikbaar { get; set; }
-
         public VoertuigStatus voertuigStatus { get; set; }
+
+
 
         [JsonIgnore]
         public ICollection<Schademelding> Schademeldingen { get; set; }
