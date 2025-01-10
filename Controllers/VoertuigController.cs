@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using WPR_project.Models;
 using WPR_project.Services;
 using WPR_project.DTO_s;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
 {
@@ -140,6 +141,38 @@ namespace WPR_project.Controllers
             catch (Exception ex)
             {
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
+            }
+        }
+        [HttpDelete("verwijderVoertuig{id}")]
+        public IActionResult DeleteVoertuig(Guid id)
+        {
+            try
+            {
+                _voertuigService.Delete(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+        }
+        
+        [HttpPost("maakVoertuig")]
+        public IActionResult maakVoertuig([FromBody] VoertuigDTO voertuig)
+        {
+            if (voertuig == null)
+            {
+                return BadRequest(new { Message = "Invalid data" });
+            }
+
+            try
+            {
+                _voertuigService.newVoertuig(voertuig);
+                return Ok(new { Message = "Voertuig succesvol aangemaakt" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
             }
         }
 

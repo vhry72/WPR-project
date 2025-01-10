@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 namespace WPR_project.Models
 {
     public class FrontofficeMedewerker 
@@ -14,5 +15,7 @@ namespace WPR_project.Models
 
         [Required]
         public string AspNetUserId { get; set; }
+        [JsonIgnore] // Zorg ervoor dat Medewerkers niet wordt opgenomen in de JSON
+        public List<FrontofficeMedewerker>? FrontofficeMedewerkers { get; set; } = new List<FrontofficeMedewerker>();
     }
 }

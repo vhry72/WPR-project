@@ -30,11 +30,14 @@ import FrontOfficeMedewerker from "./pages/FrontOfficeMedewerker/FrontOfficeMede
 import VoertuigDetails from "./pages/FrontOfficeMedewerker/VoertuigDetails";
 import VoertuigInEnUitname from "./pages/FrontOfficeMedewerker/VoertuigInenUitname";
 import { UserProvider } from "./context/UserContext"; // Context import
-import EmailConfirmation from "./pages/EmailConformation";
-import PrivateRoute from "./pages/PrivateRoute";
-import VerhuurdeVoertuigen from "./pages/VerhuurdeVoertuigen";
-import VerwijderAccount from "./pages/VerwijderAccount";
+import EmailConfirmation from "./pages/Beveiliging/EmailConformation";
+import PrivateRoute from "./pages/Beveiliging/PrivateRoute";
+import VerhuurdeVoertuigen from "./pages/Voertuigen/VerhuurdeVoertuigen";
+import VerwijderAccount from "./pages/AccountBeheer/VerwijderAccount";
 import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
+import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
+import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
+
 
 
 
@@ -266,7 +269,8 @@ function PageRoute() {
                         <Route path="VoertuigDetails" element={<VoertuigDetails />} />
                         <Route path="VoertuigInenUitname" element={<VoertuigInEnUitname />} />
                         <Route path="BackOfficeMedewerker/SchadeClaimMaken" element={<SchadeClaimMaken/> } />
-
+                        <Route path="VoertuigTonen" element={<VoertuigTonen />} />
+                        <Route path="VoertuigDetailsBackOffice/:voertuigId" element={<VoertuigDetailsBackOffice />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
