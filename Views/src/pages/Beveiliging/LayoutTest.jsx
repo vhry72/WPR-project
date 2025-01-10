@@ -1,5 +1,5 @@
 ﻿import { Outlet, Link } from "react-router-dom";
-import "../styles/navigatieBalk.css";
+import "../../styles/navigatieBalk.css";
 
 export const Layout = () => {
     return (

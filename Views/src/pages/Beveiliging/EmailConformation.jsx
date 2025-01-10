@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import React from "react";
-import "../styles//emailConformation.css";
+import "../../styles/emailConformation.css";
 
 
 const EmailConfirmation = () => {

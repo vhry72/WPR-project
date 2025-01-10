@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import apiService from "../services/apiService";
-import "../styles/Login.css";
+import apiService from "../../services/apiService";
+import "../../styles/Login.css";
 import axios from "axios";
 import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../../context/UserContext";
 import { toast } from 'react-toastify';
 
 
