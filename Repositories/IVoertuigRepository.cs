@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 
 namespace WPR_project.Repositories
@@ -18,6 +19,9 @@ namespace WPR_project.Repositories
         Voertuig GetVoertuigByKenteken(string kenteken);
         public Voertuig GetByID(Guid Id);
         void updateVoertuig(Voertuig voertuig);
+        void Delete(Guid id);
+        void Add(Voertuig voertuig);
+        void Save();
         
     }
 }

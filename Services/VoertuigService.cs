@@ -115,5 +115,26 @@ namespace WPR_project.Services
         {
             return _voertuigRepository.GetAllVoertuigen();
         }
+        public void Delete(Guid id)
+        {
+            var voertuig = _voertuigRepository.GetByID(id);
+            if (voertuig == null) throw new KeyNotFoundException("Voertuig niet gevonden.");
+
+            _voertuigRepository.Delete(id);
+            _voertuigRepository.Save();
+        }
+        public void newVoertuig(VoertuigDTO voertuig)
+        {
+
+            var voertuig1 = new Voertuig
+            {
+                voertuigId = Guid.NewGuid(),
+                voertuigBeschikbaar = voertuig.voertuigBeschikbaar,
+                voertuigType = voertuig.voertuigType
+            };
+
+            _voertuigRepository.Add(voertuig1);
+            _voertuigRepository.Save();
+        }
     }
 }

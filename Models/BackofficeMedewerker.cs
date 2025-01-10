@@ -4,7 +4,7 @@ namespace WPR_project.Models
 {
     public class BackofficeMedewerker
     {
-        public Guid BackofficeMedewerkerId { get; set; }
+        public Guid BackofficeMedewerkerId { get; set; } 
         public string medewerkerNaam { get; set; }
         public string medewerkerEmail { get; set; }
 

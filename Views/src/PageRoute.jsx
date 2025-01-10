@@ -35,6 +35,9 @@ import PrivateRoute from "./pages/Beveiliging/PrivateRoute";
 import VerhuurdeVoertuigen from "./pages/Voertuigen/VerhuurdeVoertuigen";
 import VerwijderAccount from "./pages/Accountbeheer/VerwijderAccount";
 import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
+import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
+import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
+
 
 
 
@@ -258,7 +261,8 @@ function PageRoute() {
                         <Route path="VoertuigDetails" element={<VoertuigDetails />} />
                         <Route path="VoertuigInenUitname" element={<VoertuigInEnUitname />} />
                         <Route path="BackOfficeMedewerker/SchadeClaimMaken" element={<SchadeClaimMaken/> } />
-
+                        <Route path="VoertuigTonen" element={<VoertuigTonen />} />
+                        <Route path="VoertuigDetailsBackOffice/:voertuigId" element={<VoertuigDetailsBackOffice />} />
                     </Route>
                 </Routes>
             </BrowserRouter>

@@ -101,7 +101,22 @@ namespace WPR_project.Repositories
             _context.Voertuigen.Update(voertuig);
             _context.SaveChanges();
         }
-       
+        public void Delete(Guid id)
+        {
+            var voertuig = _context.Voertuigen.Find(id);
+            if (voertuig != null)
+            {
+                _context.Voertuigen.Remove(voertuig);
+            }
+        }
+        public void Add(Voertuig voertuig)
+        {
+            _context.Voertuigen.Add(voertuig);
+        }
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
 
     }
 }
