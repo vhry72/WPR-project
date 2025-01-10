@@ -1,28 +1,25 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./pages/LayoutTest";
+import Layout from "./pages/Beveiliging/LayoutTest";
 //import Layout from "./pages/Layout";
-import Register from "./pages/register";
+import Register from "./pages/Accountbeheer/register";
 /*import Login from "./pages/login";*/
 import Index from "./pages/Index";
-/*import StartLogin from "./pages/StartLogin";*/
 import Abonnement from "./pages/AbonnementBeheer/abonnement";
-import Payment from "./pages/payment";
 import BedrijfsAbonnement from "./pages/AbonnementBeheer/bedrijfsabonnement";
 /*import MedewerkerAbonnementDashboard from "./pages/medewerkerAbonnementDashboard";*/
 import Zaakdashboard from "./pages/Zakelijkhuurder/zaakdashboard";
 /*import Wagenparklogin from "./pages/wagenparklogin";*/
 import Wagendashboard from "./pages/Wagenparkbeheerder/wagendashboard";
 import ZakelijkAutoTonen from "./pages/Zakelijkhuurder/ZakelijkAutoTonen";
-import AccountwijzigingHuurders from "./pages/accountwijzigingHuurders";
-import Instellingen from "./pages/instellingen";
+import AccountwijzigingHuurders from "./pages/Accountbeheer/accountwijzigingHuurders";
+import Instellingen from "./pages/Accountbeheer/instellingen";
 import Wagenbeheer from "./pages/Wagenparkbeheerder/wagenbeheer";
 import ParticulierVoertuigTonen from "./pages/Particulierhuurder/particulierVoertuigTonen";
-import LoginVoorWijziging from "./pages/LoginVoorWijziging";
-import TestPage from "./pages/testPage";
-import HuurVoertuig from "./pages/huurVoertuig";
+import LoginVoorWijziging from "./pages/Beveiliging/LoginVoorWijziging";
+import HuurVoertuig from "./pages/Voertuigen/huurVoertuig";
 import ZakelijkHuurderDashBoard from "./pages/Zakelijkhuurder/zakelijkHuurderDashboard";
 import ParticulierHuurderDashBoard from "./pages/Particulierhuurder/particulierHuurderDashBoard";
-import BevestigingHuur from "./pages/bevestigingHuur";
+import BevestigingHuur from "./pages/Voertuigen/bevestigingHuur";
 import BackOfficeMedewerker from "./pages/BackOfficeMedewerker/BackOfficeMedewerker";
 import BackOfficeVerhuurAanvragen from "./pages/BackOfficeMedewerker/BackOfficeVerhuurAanvragen";
 import VerhuurGegevens from "./pages/BackOfficeMedewerker/VerhuurGegevens";
@@ -33,10 +30,10 @@ import FrontOfficeMedewerker from "./pages/FrontOfficeMedewerker/FrontOfficeMede
 import VoertuigDetails from "./pages/FrontOfficeMedewerker/VoertuigDetails";
 import VoertuigInEnUitname from "./pages/FrontOfficeMedewerker/VoertuigInenUitname";
 import { UserProvider } from "./context/UserContext"; // Context import
-import EmailConfirmation from "./pages/EmailConformation";
-import PrivateRoute from "./pages/PrivateRoute";
-import VerhuurdeVoertuigen from "./pages/VerhuurdeVoertuigen";
-import VerwijderAccount from "./pages/VerwijderAccount";
+import EmailConfirmation from "./pages/Beveiliging/EmailConformation";
+import PrivateRoute from "./pages/Beveiliging/PrivateRoute";
+import VerhuurdeVoertuigen from "./pages/Voertuigen/VerhuurdeVoertuigen";
+import VerwijderAccount from "./pages/Accountbeheer/VerwijderAccount";
 
 
 function PageRoute() {
@@ -47,7 +44,6 @@ function PageRoute() {
                     <Route path="/" element={<Layout />}>
                         {/* Openbare routes */}
                         <Route index element={<Index />} />
-                        {/*<Route path="startLogin" element={<StartLogin />} />*/}
                         <Route path="register" element={<Register />} />
                         <Route path="email-confirmation" element={<EmailConfirmation />} />
                         <Route path="VerhuurdeVoertuigen" element={<VerhuurdeVoertuigen/> } />
@@ -235,19 +231,12 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
-                        <Route
-                            path="payment"
-                            element={
-                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
-                                    <Payment />
-                                </PrivateRoute>
-                            }
-                        />
+                       
 
 
 
                         {/* Openbare pagina's */}
-                        <Route path="testPage" element={<TestPage />} />
+                        
                         <Route path="instellingen" element={<Instellingen />} />
                         <Route path="accountwijzigingHuurders" element={<AccountwijzigingHuurders />} />
                         <Route path="particulierVoertuigTonen" element={<ParticulierVoertuigTonen />} />

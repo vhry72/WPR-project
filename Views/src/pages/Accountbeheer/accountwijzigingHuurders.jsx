@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import "../styles/styles.css";
-import ParticulierHuurdersRequestService from "../services/requests/ParticulierHuurderRequestService";
+import "../../styles/styles.css";
+import ParticulierHuurdersRequestService from "../../services/requests/ParticulierHuurderRequestService";
 import { useNavigate, useLocation } from "react-router-dom";
-import JwtService from "../services/JwtService"; 
+import JwtService from "../../services/JwtService"; 
 import axios from "axios";
 
 const AccountwijzigingHuurders = () => {

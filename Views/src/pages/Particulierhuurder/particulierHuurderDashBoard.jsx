@@ -6,7 +6,6 @@ const ZakelijkHuurderDashBoard = () => {
     
 
     return (
-        <>
             <div className="index-container">
                 <div className="options">
                     <Link to={`/particulierVoertuigTonen`} className="btn">
@@ -17,7 +16,6 @@ const ZakelijkHuurderDashBoard = () => {
                     </Link>
                 </div>
             </div>
-        </>
     );
 };
 
