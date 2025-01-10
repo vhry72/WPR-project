@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./pages/Beveiliging/LayoutTest";
-//import Layout from "./pages/Layout";
+/*import Layout from "./pages/Beveiliging/LayoutTest";*/
+import Layout from "./pages/Beveiliging/Layout";
 import Register from "./pages/Accountbeheer/register";
 /*import Login from "./pages/login";*/
 import Index from "./pages/Index";
@@ -33,7 +33,7 @@ import { UserProvider } from "./context/UserContext"; // Context import
 import EmailConfirmation from "./pages/Beveiliging/EmailConformation";
 import PrivateRoute from "./pages/Beveiliging/PrivateRoute";
 import VerhuurdeVoertuigen from "./pages/Voertuigen/VerhuurdeVoertuigen";
-import VerwijderAccount from "./pages/AccountBeheer/VerwijderAccount";
+import VerwijderAccount from "./pages/Accountbeheer/VerwijderAccount";
 import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
 import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
 import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
@@ -96,7 +96,7 @@ function PageRoute() {
                         <Route
                             path="abonnement"
                             element={
-                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
+                                <PrivateRoute allowedRoles={["ZakelijkeHuurder", "WagenparkBeheerder"]}>
                                     <Abonnement />
                                 </PrivateRoute>
                             }
@@ -226,14 +226,6 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <Wagenbeheer />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="abonnement"
-                            element={
-                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
-                                    <Abonnement />
                                 </PrivateRoute>
                             }
                         />

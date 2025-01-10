@@ -33,7 +33,7 @@ function Abonnement() {
     useEffect(() => {
         const fetchAbonnement = async () => {
             try {
-                const response = await AbonnementService.getById(huurderId); // Vervang met de juiste ID
+                const response = await AbonnementService.getById(huurderId); 
                 setHuidigAbonnement(response.data);
             } catch (error) {
                 console.error("Geen huidig abonnement gevonden.");
@@ -46,7 +46,7 @@ function Abonnement() {
         if (huidigAbonnement) {
             navigate(`/bedrijfsabonnement`, { state: { wijzigAbonnement: option } });
         } else {
-            navigate(`/bedrijfsabonnement`, { state: { selectedAbonnement: option } });
+            navigate(`/bedrijfsabonnement?abonnementId=`, { state: { selectedAbonnement: option } });
         }
     };
 

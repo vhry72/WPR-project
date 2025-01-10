@@ -99,7 +99,7 @@ namespace WPR_project.Services
                 medewerkerNaam = medewerkerNaam,
                 medewerkerEmail = medewerkerEmail,
                 wachtwoord = wachtwoord, // Sla dit veilig op (versleutel bijvoorbeeld)
-                zakelijkeHuurderId = zakelijkeId
+                zakelijkeId = zakelijkeId
             };
 
             // Voeg de medewerker toe aan de huurder
@@ -113,8 +113,6 @@ namespace WPR_project.Services
             string bericht = $"Beste {medewerkerNaam},\n\nU bent toegevoegd aan het bedrijfsaccount van {huurder.bedrijfsNaam}.";
             _emailService.SendEmail(medewerkerEmail, "Welkom bij het bedrijfsaccount", bericht);
         }
-
-
 
         // Verwijder een medewerker van een zakelijke huurder
         public void VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
@@ -146,33 +144,6 @@ namespace WPR_project.Services
             return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
         }
 
-
-        // Voeg een medewerker toe aan een abonnement
-        public void VoegMedewerkerAanAbonnementToe(Guid zakelijkeId, Guid medewerkerId, Guid abonnementId)
-        {
-            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
-            if (huurder == null)
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
-
-            var medewerker = huurder.Medewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
-            if (medewerker == null)
-                throw new KeyNotFoundException("Medewerker niet gevonden.");
-
-            var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
-            if (abonnement == null)
-                throw new KeyNotFoundException("Abonnement niet gevonden.");
-
-            if (abonnement.Medewerkers == null)
-                abonnement.Medewerkers = new List<BedrijfsMedewerkers>();
-
-            abonnement.Medewerkers.Add(medewerker);
-            _abonnementRepository.UpdateAbonnement(abonnement);
-            _abonnementRepository.Save();
-
-            string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent toegevoegd aan het abonnement {abonnement.Naam}.";
-            _emailService.SendEmail(medewerker.medewerkerEmail, "Toegevoegd aan abonnement", bericht);
-        }
-
         // Haal alle medewerkers van een zakelijke huurder op
         public IEnumerable<BedrijfsMedewerkers> GetMedewerkers(Guid zakelijkeId)
         {
@@ -186,12 +157,16 @@ namespace WPR_project.Services
         // Haal alle abonnementen van een zakelijke huurder op
         public IEnumerable<Abonnement> GetAbonnementen(Guid beheerderId)
         {
-            var huurder = _repository.getBeheerderById(beheerderId);
-            if (huurder == null)
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
+            var beheerder = _repository.getBeheerderById(beheerderId);
+            if (beheerder == null)
+                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
 
-            return _abonnementRepository.GetAllAbonnementen().Where(a => a.WagenparkBeheerders.Contains(huurder));
+            // Correct filteren van abonnementen die gekoppeld zijn aan de beheerder
+            return _abonnementRepository.GetAllAbonnementen()
+                .Where(a => a.beheerderId == beheerderId)
+                .ToList(); // Returnt een lijst met gefilterde abonnementen
         }
+
 
         public List<Guid> GetMedewerkersIdsByWagenparkbeheerder(Guid wagenparkbeheerderId)
         {

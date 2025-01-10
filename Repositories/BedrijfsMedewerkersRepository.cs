@@ -44,8 +44,8 @@ namespace WPR_project.Repositories
         }
         public BedrijfsMedewerkers GetByEmailAndPassword(string email, string password)
         {
-            return _context.BedrijfsMedewerkers
-                           .FirstOrDefault(h => h.medewerkerEmail == email && h.wachtwoord == password);
+            return _context.BedrijfsMedewerkers.
+                FirstOrDefault(h => h.medewerkerEmail == email && h.wachtwoord == password);
         }
 
         public void Update(BedrijfsMedewerkers bedrijfsMedewerkers)

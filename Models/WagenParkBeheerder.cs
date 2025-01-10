@@ -26,8 +26,6 @@ namespace WPR_project.Models
         [RegularExpression(@"^\d{8}$", ErrorMessage = "KVK-nummer moet een 8-cijferig getal zijn.")]
         public string KVKNummer { get; set; }
 
-
-        
         public string telefoonNummer { get; set; }
 
         [Required(ErrorMessage = "wachtwoord is verplicht.")]
@@ -47,7 +45,6 @@ namespace WPR_project.Models
 
         [Precision(18, 2)]
         public decimal? PrepaidSaldo { get; set; } = 0;
-        public List<BedrijfsMedewerkers>? MedewerkerLijst { get; set; } = new List<BedrijfsMedewerkers>();
 
         [Required]
         public string AspNetUserId { get; set; }

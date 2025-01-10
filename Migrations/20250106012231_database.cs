@@ -459,7 +459,7 @@ namespace WPR_project.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_BedrijfsMedewerkers_WagenparkBeheerderbeheerderId",
                 table: "BedrijfsMedewerkers",
-                column: "WagenparkBeheerderbeheerderId");
+                column: "beheerderId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BedrijfsMedewerkers_zakelijkeHuurderId",

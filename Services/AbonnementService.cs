@@ -57,7 +57,7 @@ namespace WPR_project.Services
                 bedrijfsMedewerkerId = Guid.NewGuid(),
                 medewerkerNaam = medewerkerNaam,
                 medewerkerEmail = medewerkerEmail,
-                zakelijkeHuurderId = huurder.zakelijkeId
+                zakelijkeId = huurder.zakelijkeId
             };
 
             huurder.Medewerkers.Add(medewerker);
@@ -185,7 +185,7 @@ namespace WPR_project.Services
             if (beheerder.HuidigAbonnement != null)
             {
                 var huidigAbonnement = beheerder.HuidigAbonnement;
-                huidigAbonnement.WagenparkBeheerders.Remove(beheerder);
+                huidigAbonnement.WagenparkBeheerders = null;
                 _abonnementRepository.UpdateAbonnement(huidigAbonnement);
             }
 
@@ -193,8 +193,6 @@ namespace WPR_project.Services
             beheerder.AbonnementId = nieuwAbonnement.AbonnementId;
             beheerder.AbonnementType = abonnementType;
             beheerder.updateDatumAbonnement = DateTime.Now;
-
-            nieuwAbonnement.WagenparkBeheerders.Add(beheerder);
 
             _abonnementRepository.UpdateAbonnement(nieuwAbonnement);
             _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
@@ -297,25 +295,27 @@ namespace WPR_project.Services
             // Verstuur de e-mail
             _emailService.SendEmail(beheerder.bedrijfsEmail, subject, body);
         }
-
-        public AbonnementVerzoek GetAbonnementDetails(Guid abonnementId)
+        public Abonnement GetAbonnementDetails(Guid abonnementId)
         {
             var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
             if (abonnement == null)
                 throw new KeyNotFoundException("Abonnement niet gevonden.");
 
-            // Stel een AbonnementVerzoek object samen met alle details
-            return new AbonnementVerzoek
-            {
-                AbonnementId = abonnement.AbonnementId,
-                AbonnementType = abonnement.AbonnementType,
-                aantalDagen = abonnement.WagenparkBeheerders.Count, // Aanpassen als de business logica anders is
-                korting = 10m, // Hardcoded voor nu, je kunt dit vervangen door dynamische logica
-                details = $"Dit abonnement bevat extra voordelen voor bedrijfsgebruikers: {abonnement.Naam}.",
-                directZichtbaar = false,
-                volgendePeriode = true
-            };
-        }
+            // Bereken het aantal dagen tussen de begin- en vervaldatum
+            int aantalDagen = (abonnement.vervaldatum - abonnement.beginDatum).Days;
 
+            // Update het abonnement object met de berekende waarde
+            abonnement.AantalDagen = aantalDagen;
+            abonnement.korting = 10m;
+            abonnement.details = $"Dit abonnement bevat extra voordelen voor bedrijfsgebruikers: {abonnement.Naam}.";
+            abonnement.directZichtbaar = false;
+
+            // Sla de wijzigingen op in de database
+            _abonnementRepository.UpdateAbonnement(abonnement);
+            _abonnementRepository.Save();
+
+            // Retourneer het bijgewerkte abonnement
+            return abonnement;
+        }
     }
 }

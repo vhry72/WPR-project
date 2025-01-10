@@ -3,6 +3,8 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import "../../styles/Abonnement.css";
 
+const API_URL = 'https://localhost:5033/api/Abonnement'; // Pas dit aan naar jouw API-base-URL
+
 function BedrijfsAbonnement() {
     const location = useLocation();
     const [betaalMethode, setBetaalMethode] = useState(null);
@@ -23,7 +25,7 @@ function BedrijfsAbonnement() {
 
         try {
             // API-aanroep naar backend om factuur te versturen
-            await axios.post(`/api/abonnement/${abonnement.id}/factuur/stuur`, {
+            await axios.post(`${API_URL}/${abonnement.beheerderId}/factuur/stuur`, {
                 betaalMethode,
             });
             setFactuurVerstuurd(true);

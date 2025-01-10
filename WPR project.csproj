@@ -10,12 +10,16 @@
 	<ItemGroup>
 	  <Compile Remove="Views\src\hooks\**" />
 	  <Compile Remove="Views\src\NewFolder\**" />
+	  <Compile Remove="Views\src\Utils\**" />
 	  <Content Remove="Views\src\hooks\**" />
 	  <Content Remove="Views\src\NewFolder\**" />
+	  <Content Remove="Views\src\Utils\**" />
 	  <EmbeddedResource Remove="Views\src\hooks\**" />
 	  <EmbeddedResource Remove="Views\src\NewFolder\**" />
+	  <EmbeddedResource Remove="Views\src\Utils\**" />
 	  <None Remove="Views\src\hooks\**" />
 	  <None Remove="Views\src\NewFolder\**" />
+	  <None Remove="Views\src\Utils\**" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -50,7 +54,6 @@
 
 	<ItemGroup>
 		<Folder Include="Migrations\" />
-		<Folder Include="Views\src\Utils\" />
 	</ItemGroup>
 
 	

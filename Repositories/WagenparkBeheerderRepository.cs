@@ -49,7 +49,7 @@ namespace WPR_project.Repositories
         {
             // Haal alleen de IDs van de medewerkers op die gekoppeld zijn aan het gegeven wagenparkbeheerderId
             var medewerkerIds = _context.BedrijfsMedewerkers
-                .Where(m => m.WagenparkBeheerderbeheerderId == wagenparkbeheerderId) // Let op de correcte propertynaam
+                .Where(m => m.beheerderId == wagenparkbeheerderId) // Let op de correcte propertynaam
                 .Select(m => m.bedrijfsMedewerkerId)
                 .ToList();
 
