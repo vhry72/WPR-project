@@ -13,13 +13,15 @@ namespace WPR_project.Controllers
     public class AbonnementController : ControllerBase
     {
         private readonly AbonnementService _service;
-        private readonly WagenparkBeheerderRepository _wagenparkBeheerderRepository;
+        private readonly WagenparkBeheerderService _WagenparkService;
+        private readonly ZakelijkeHuurderService _zakelijkeHuurderService;
 
 
-        public AbonnementController(AbonnementService service, WagenparkBeheerderRepository wagenparkBeheerderRepository)
+        public AbonnementController(AbonnementService service, WagenparkBeheerderService WagenparkbeheerderService, ZakelijkeHuurderService zakelijkeHuurderService)
         {
             _service = service;
-            _wagenparkBeheerderRepository = wagenparkBeheerderRepository;
+            _WagenparkService = WagenparkbeheerderService;
+            _zakelijkeHuurderService = zakelijkeHuurderService;
         }
 
         // Haalt alle beschikbare abonnementen op.
@@ -73,66 +75,67 @@ namespace WPR_project.Controllers
         }
 
         [HttpPost("{beheerderId}/abonnement/maken")]
-        public IActionResult MaakBedrijfsAbonnement(Guid beheerderId, [FromBody] AbonnementDTO abonnementSoort)
+        public IActionResult MaakBedrijfsAbonnement(Guid beheerderId, [FromBody] AbonnementDTO abonnementDto)
         {
-            if (abonnementSoort == null)
+            if (abonnementDto == null)
             {
                 return BadRequest(new { Error = "Het verzoek mag niet null zijn." });
             }
 
-            if (abonnementSoort.AbonnementId == Guid.Empty)
+            if (string.IsNullOrEmpty(abonnementDto.Naam) || abonnementDto.Kosten <= 0)
             {
-                return BadRequest(new { Error = "Een geldig AbonnementId is vereist." });
+                return BadRequest(new { Error = "Een geldig abonnementnaam en kosten zijn vereist." });
+            }
+
+            if (abonnementDto.zakelijkeId == Guid.Empty)
+            {
+                return BadRequest(new { Error = "Een geldig zakelijkeId is vereist." });
             }
 
             try
             {
-                // Stap 1: Controleer of de beheerder bestaat
-                var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+                // Controleer of de beheerder bestaat
+                var beheerder = _WagenparkService.GetBeheerderById(beheerderId);
                 if (beheerder == null)
                 {
                     return NotFound(new { Error = "Wagenparkbeheerder niet gevonden." });
                 }
 
-                // Stap 2: Verwerk de betalingsmethode en wijzig het abonnement
-                if (abonnementSoort.Type == AbonnementType.PayAsYouGo)
+                // Controleer of de zakelijke ID geldig is
+                var zakelijkeHuurder = _zakelijkeHuurderService.GetZakelijkHuurderById(abonnementDto.zakelijkeId);
+                if (zakelijkeHuurder == null)
                 {
-                    _service.VerwerkPayAsYouGoBetaling(beheerderId, abonnementSoort.Kosten);
-                }
-                else if (abonnementSoort.Type == AbonnementType.PrepaidSaldo)
-                {
-                    _service.LaadPrepaidSaldoOp(beheerderId, abonnementSoort.Kosten);
-                }
-                else
-                {
-                    return BadRequest(new { Error = "Ongeldige betalingsmethode." });
+                    return NotFound(new { Error = "Zakelijke huurder niet gevonden." });
                 }
 
-                // Stap 3: Wijzig het abonnement met de juiste voorwaarden
-                if (abonnementSoort.directZichtbaar == true)
+                // Maak een nieuw abonnement aan
+                var nieuwAbonnement = new Abonnement
                 {
-                    _service.WijzigAbonnementMetDirecteKosten(beheerderId, abonnementSoort.AbonnementId, abonnementSoort.Type);
-                }
-                else
-                {
-                    _service.WijzigAbonnementVanafVolgendePeriode(beheerderId, abonnementSoort.AbonnementId, abonnementSoort.Type);
-                }
+                    AbonnementId = Guid.NewGuid(),
+                    Naam = abonnementDto.Naam,
+                    beginDatum = DateTime.Now,
+                    vervaldatum = DateTime.Now.AddYears(1),
+                    Kosten = abonnementDto.Kosten,
+                    AbonnementTermijnen = abonnementDto.AbonnementTermijnen,
+                    AbonnementType = abonnementDto.Type,
+                    zakelijkeId = abonnementDto.zakelijkeId,
+                    korting = abonnementDto.korting
+                };
 
-                // Stap 4: Bevestigingsmails verzenden
-                _service.StuurBevestigingsEmail(beheerderId, abonnementSoort.AbonnementId);
-                _service.StuurFactuurEmail(beheerderId, abonnementSoort.AbonnementId);
+                // Voeg het abonnement toe via de service
+                _service.AddAbonnement(nieuwAbonnement);
 
-                return Ok(new { Message = "Bedrijfsabonnement succesvol aangemaakt en verwerkt." });
+                // Beheerder koppelen aan abonnement
+                _WagenparkService.UpdateWagenParkBeheerderAbonnement(beheerderId, nieuwAbonnement.AbonnementId);
+
+                return Ok(new { Message = "Bedrijfsabonnement succesvol aangemaakt.", AbonnementId = nieuwAbonnement.AbonnementId });
             }
-            catch (KeyNotFoundException ex)
+            catch (Exception ex)
             {
-                return NotFound(new { Error = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return BadRequest(new { Error = ex.Message });
+                return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
             }
         }
+
 
 
         //hier moet nog een Get endpoint komen om het abonnement van het bedrijf te weergeven

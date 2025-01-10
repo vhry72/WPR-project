@@ -26,6 +26,18 @@ namespace WPR_project.Repositories
             }
         }
 
+        public Guid GetZakelijkeId(Guid id)
+        {
+            var zakelijkeId = _context.WagenparkBeheerders
+                .Where(m => m.beheerderId == id)
+                .Select(m => m.zakelijkeId)
+                .FirstOrDefault();
+
+            return zakelijkeId != default ? zakelijkeId : Guid.Empty;
+        }
+
+
+
         public IEnumerable<WagenparkBeheerder> GetWagenparkBeheerders()
         {
             return _context.WagenparkBeheerders.ToList();

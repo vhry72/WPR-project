@@ -43,16 +43,30 @@ namespace WPR_project.Controllers
             return Ok(beheerder);
         }
 
-        [HttpGet("verhuurdevoertuigen/{medewerkerId}")]
-        public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
+        [HttpGet("{id}/zakelijkeId")]
+        public ActionResult<ZakelijkHuurderIdDTO> GetZakelijkeID(Guid id)
         {
             try
             {
-                var huurverzoeken = _service.GetVerhuurdeVoertuigen(medewerkerId);
-                return Ok(huurverzoeken);
+                var zakelijkeId = _service.GetZakelijkeId(id);
+                return Ok(new ZakelijkHuurderIdDTO { ZakelijkeId = zakelijkeId });
             }
             catch (KeyNotFoundException ex)
             {
+                return NotFound(new { Message = ex.Message });
+            }
+        }
+
+        [HttpGet("verhuurdevoertuigen/{medewerkerId}")]
+            public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
+            {
+                try
+             {
+                var huurverzoeken = _service.GetVerhuurdeVoertuigen(medewerkerId);
+                return Ok(huurverzoeken);
+                 }
+            catch (KeyNotFoundException ex)
+                {
                 return NotFound(ex.Message);
             }
         }
@@ -215,14 +229,6 @@ namespace WPR_project.Controllers
                 return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
             }
         }
-
-        //test endpoint
-        [HttpPost("test")]
-        public IActionResult Test([FromBody] object body)
-        {
-            return Ok(body);
-        }
-
 
         /// <summary>
         /// verwijderen van een medewerker van een zakelijke huurder

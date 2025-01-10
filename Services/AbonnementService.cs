@@ -97,7 +97,7 @@ namespace WPR_project.Services
 
         public void VerwerkPayAsYouGoBetaling(Guid beheerderId, decimal bedrag)
         {
-            var huurder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            var huurder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
             if (huurder == null)
                 throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
 
@@ -117,9 +117,21 @@ namespace WPR_project.Services
             _emailService.SendEmail(huurder.bedrijfsEmail, "Betaling bevestigd", bericht);
         }
 
+        public void AddAbonnement(Abonnement abonnement)
+        {
+            if (abonnement == null)
+            {
+                throw new ArgumentNullException(nameof(abonnement), "Abonnement mag niet null zijn.");
+            }
+
+            _abonnementRepository.AddAbonnement(abonnement);
+            _abonnementRepository.Save();
+        }
+
+
         public void VerwerkPrepaidBetaling(Guid beheerderId, decimal kosten)
         {
-            var huurder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            var huurder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
             if (huurder == null)
                 throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
 
@@ -146,7 +158,7 @@ namespace WPR_project.Services
         }
         public void LaadPrepaidSaldoOp(Guid beheerderId, decimal bedrag)
         {
-            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
             if (beheerder == null)
                 throw new KeyNotFoundException("Zakelijke beheerder niet gevonden.");
 
@@ -171,7 +183,7 @@ namespace WPR_project.Services
 
         public void WijzigAbonnement(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
         {
-            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
             if (beheerder == null)
                 throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden");
 
@@ -210,7 +222,7 @@ namespace WPR_project.Services
 
         public void WijzigAbonnementMetDirecteKosten(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
         {
-            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
             if (beheerder == null) throw new KeyNotFoundException("Beheerder niet gevonden.");
 
             var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
@@ -226,7 +238,7 @@ namespace WPR_project.Services
 
         public void WijzigAbonnementVanafVolgendePeriode(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
         {
-            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
             if (beheerder == null) throw new KeyNotFoundException("Beheerder niet gevonden.");
 
             var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
@@ -243,7 +255,7 @@ namespace WPR_project.Services
 
         public void StuurFactuurEmail(Guid beheerderId, Guid abonnementId)
         {
-            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
             if (beheerder == null)
                 throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
             var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
@@ -270,7 +282,7 @@ namespace WPR_project.Services
         public void StuurBevestigingsEmail(Guid beheerderId, Guid abonnementId)
         {
             // Haal de WagenparkBeheerder en Abonnement op
-            var beheerder = _wagenparkBeheerderRepository.getBeheerderById(beheerderId);
+            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
                if (beheerder == null) {
                 throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
             }

@@ -39,7 +39,7 @@ namespace WPR_project.Services
 
         public WagenparkBeheerder GetBeheerderById(Guid id)
         {
-            return _repository.getBeheerderById(id);
+            return _repository.GetBeheerderById(id);
         }
 
         public void AddWagenparkBeheerder(WagenparkBeheerder beheerder)
@@ -48,9 +48,26 @@ namespace WPR_project.Services
             _repository.Save();
         }
 
+        public void UpdateWagenParkBeheerderAbonnement(Guid id, Guid abonnementId)
+        {
+            var existingBeheerder = _repository.GetBeheerderById(id);
+            if (existingBeheerder != null)
+            {
+                existingBeheerder.AbonnementId = abonnementId;
+                
+
+                _repository.UpdateWagenparkBeheerder(existingBeheerder);
+                _repository.Save();
+            }
+            else
+            {
+                throw new KeyNotFoundException("Beheerder niet gevonden.");
+            }
+        }
+
         public void UpdateWagenparkBeheerder(Guid id, WagenparkBeheerder beheerder)
         {
-            var existingBeheerder = _repository.getBeheerderById(id);
+            var existingBeheerder = _repository.GetBeheerderById(id);
             if (existingBeheerder != null)
             {
                 existingBeheerder.beheerderNaam = beheerder.beheerderNaam;
@@ -68,7 +85,7 @@ namespace WPR_project.Services
 
         public void DeleteWagenparkBeheerder(Guid id)
         {
-            var beheerder = _repository.getBeheerderById(id);
+            var beheerder = _repository.GetBeheerderById(id);
             if (beheerder != null)
             {
                 _repository.DeleteWagenparkBeheerder(id);
@@ -79,6 +96,18 @@ namespace WPR_project.Services
                 throw new KeyNotFoundException("Beheerder niet gevonden.");
             }
         }
+
+        public Guid GetZakelijkeId(Guid id)
+        {
+            var zakelijkeId = _repository.GetZakelijkeId(id);
+            if (zakelijkeId == Guid.Empty)
+            {
+                throw new KeyNotFoundException("Zakelijke ID niet gevonden.");
+            }
+
+            return zakelijkeId;
+        }
+
 
         // Voeg een medewerker toe aan een zakelijke huurder
         public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerNaam, string medewerkerEmail, string wachtwoord)
@@ -157,7 +186,7 @@ namespace WPR_project.Services
         // Haal alle abonnementen van een zakelijke huurder op
         public IEnumerable<Abonnement> GetAbonnementen(Guid beheerderId)
         {
-            var beheerder = _repository.getBeheerderById(beheerderId);
+            var beheerder = _repository.GetBeheerderById(beheerderId);
             if (beheerder == null)
                 throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
 
