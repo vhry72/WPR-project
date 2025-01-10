@@ -73,27 +73,31 @@ namespace WPR_project.Repositories
 
         public VoertuigStatus GetVoertuigStatus(Guid voertuigId)
         {
-            var voertuig = _context.Voertuigen
-                .Include(v => v.voertuigStatus)
-                .FirstOrDefault(v => v.voertuigId == voertuigId);
+            var status = _context.VoertuigStatussen
+                .FirstOrDefault(vs => vs.voertuigId == voertuigId);
 
-            if (voertuig == null || voertuig.voertuigStatus == null)
+            if (status == null)
             {
-                throw new KeyNotFoundException("Voertuig of status niet gevonden.");
+                throw new KeyNotFoundException("Voertuigstatus niet gevonden.");
             }
 
-            return voertuig.voertuigStatus;
+            return status;
         }
-        public Voertuig GetByID(Guid id)
 
-        {
-            return _context.Voertuigen.Find(id);
-        }
-        public IQueryable<Voertuig> GetAllVoertuigen()
+
+        public Voertuig GetByID(Guid id)
         {
             return _context.Voertuigen
-            .Include(h => h.voertuigStatus);
+                .FirstOrDefault(v => v.voertuigId == id) ?? throw new KeyNotFoundException("Voertuig niet gevonden.");
+        }
 
+        public IQueryable<Voertuig> GetAllVoertuigen()
+        {
+
+            var voertuigen = _context.Voertuigen.AsQueryable();
+
+
+            return voertuigen;
         }
 
         public void updateVoertuig(Voertuig voertuig)
