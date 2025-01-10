@@ -30,10 +30,10 @@ import FrontOfficeMedewerker from "./pages/FrontOfficeMedewerker/FrontOfficeMede
 import VoertuigDetails from "./pages/FrontOfficeMedewerker/VoertuigDetails";
 import VoertuigInEnUitname from "./pages/FrontOfficeMedewerker/VoertuigInenUitname";
 import { UserProvider } from "./context/UserContext"; // Context import
-import EmailConfirmation from "./pages/EmailConformation";
-import PrivateRoute from "./pages/PrivateRoute";
-import VerhuurdeVoertuigen from "./pages/VerhuurdeVoertuigen";
-import VerwijderAccount from "./pages/VerwijderAccount";
+import EmailConfirmation from "./pages/Beveiliging/EmailConformation";
+import PrivateRoute from "./pages/Beveiliging/PrivateRoute";
+import VerhuurdeVoertuigen from "./pages/Voertuigen/VerhuurdeVoertuigen";
+import VerwijderAccount from "./pages/Accountbeheer/VerwijderAccount";
 import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
 
 
