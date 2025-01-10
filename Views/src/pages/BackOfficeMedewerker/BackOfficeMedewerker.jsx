@@ -21,6 +21,9 @@ const BackOfficeMedewerker = () => {
                     <Link to="/Schadeclaims" className="btn">
                         Schade claims
                     </Link>
+                    <Link to="SchadeClaimMaken" className="btn">
+                        Maak schadeClaim
+                    </Link>
                 </div>
             </div>
         </>

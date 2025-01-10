@@ -54,10 +54,10 @@ const SchadeClaimsList = () => {
                 <ul>
                     {schademeldingen.map((schademelding) => (
                         <li key={schademelding.schademeldingId}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
-                            <p>Voertuig: {schademelding.voertuig.merk} {schademelding.voertuig.model}</p>
                             <p>Status: {schademelding.status}</p>
                             <p>Beschrijving: {schademelding.beschrijving}</p>
                             <p>Datum: {new Date(schademelding.datum).toLocaleDateString()}</p>
+                            <p>soort onderoud: { schademelding.soortOnderhoud}</p>
                             <button onClick={() => inBehandeling(schademelding.schademeldingId)}>
                                 Zet op In Behandeling.
                             </button>

@@ -19,6 +19,7 @@ namespace WPR_project.Models
 
         public string Opmerkingen { get; set; } 
 
+        public SoortOnderhoud SoortOnderhoud { get; set; }
         
         [Required]
         public Guid VoertuigId { get; set; }

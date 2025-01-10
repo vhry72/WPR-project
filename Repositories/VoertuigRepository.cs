@@ -48,7 +48,15 @@ namespace WPR_project.Repositories
             }
             return voertuig;
         }
-
+        public Voertuig GetVoertuigByKenteken(string kenteken)
+        {
+            var voertuig = _context.Voertuigen.FirstOrDefault(v => v.kenteken == kenteken);
+            if (voertuig== null)
+            {
+                throw new KeyNotFoundException($"Voertuig met kenteken: {kenteken} is niet gevonden.");
+            }
+            return voertuig;
+        }
 
         public IEnumerable<Voertuig> GetVoertuigTypeVoertuigen(string voertuigType)
         {
