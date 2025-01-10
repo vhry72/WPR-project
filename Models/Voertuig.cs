@@ -7,7 +7,7 @@ namespace WPR_project.Models
 {
     public class Voertuig
     {
-        
+
         [Key]
         public Guid voertuigId { get; set; }
 
@@ -33,17 +33,16 @@ namespace WPR_project.Models
         [Required]
         public string kenteken { get; set; }
 
-        
+
         public DateTime? startDatum { get; set; }
 
-        
+
         public DateTime? eindDatum { get; set; }
 
         [Required]
         public bool voertuigBeschikbaar { get; set; }
-        public VoertuigStatus voertuigStatus { get; set; }
 
-
+        public string? notitie { get; set; }
 
         [JsonIgnore]
         public ICollection<Schademelding> Schademeldingen { get; set; }

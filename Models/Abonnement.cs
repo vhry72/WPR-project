@@ -20,10 +20,10 @@ public class Abonnement
     [Precision(18, 2)]
     public decimal Kosten { get; set; }
 
-    public Guid beheerderId { get; set; }
+    public Guid zakelijkeId { get; set; }
 
-    [ForeignKey(nameof(beheerderId))]
-    public WagenparkBeheerder WagenparkBeheerders { get; set; }
+    [ForeignKey(nameof(zakelijkeId))]
+    public ZakelijkHuurder ZakelijkHuurder { get; set; }
 
     public AbonnementType AbonnementType { get; set; }
 

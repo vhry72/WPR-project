@@ -39,9 +39,7 @@ namespace WPR_project.Data
 
             // Voertuig Configuratie
             modelBuilder.Entity<Voertuig>()
-               .HasOne(v => v.voertuigStatus)
-               .WithOne(vs => vs.voertuig)
-               .HasForeignKey<VoertuigStatus>(vs => vs.voertuigId);
+             .HasKey(v => v.voertuigId);
 
 
 
@@ -66,9 +64,11 @@ namespace WPR_project.Data
             modelBuilder.Entity<BedrijfsMedewerkers>()
                 .HasKey(b => b.bedrijfsMedewerkerId);
 
-            // VoertuigStatus Configuratie
             modelBuilder.Entity<VoertuigStatus>()
-                .HasKey(vs => vs.VoertuigStatusId);
+            .HasOne(vs => vs.voertuig)
+            .WithMany() // Geen navigatie-eigenschap in Voertuig
+            .HasForeignKey(vs => vs.voertuigId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             // ZakelijkHuurder Configuratie
             modelBuilder.Entity<ZakelijkHuurder>()

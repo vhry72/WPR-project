@@ -12,7 +12,7 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    [Migration("20250106012231_database")]
+    [Migration("20250110203123_database")]
     partial class database
     {
         /// <inheritdoc />
@@ -31,6 +31,12 @@ namespace WPR_project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int?>("AantalDagen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AbonnementTermijnen")
+                        .HasColumnType("int");
+
                     b.Property<int>("AbonnementType")
                         .HasColumnType("int");
 
@@ -42,11 +48,29 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("beginDatum")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("begindatum");
+
+                    b.Property<string>("details")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool?>("directZichtbaar")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("korting")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<DateTime>("vervaldatum")
                         .HasColumnType("datetime2")
                         .HasColumnName("vervaldatum");
 
+                    b.Property<Guid>("zakelijkeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("AbonnementId");
+
+                    b.HasIndex("zakelijkeId");
 
                     b.ToTable("Abonnementen");
                 });
@@ -259,6 +283,12 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("EmailBevestigingToken")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsEmailBevestigd")
+                        .HasColumnType("bit");
+
                     b.Property<string>("medewerkerEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -306,12 +336,15 @@ namespace WPR_project.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AbonnementId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("AspNetUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EmailBevestigingToken")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsEmailBevestigd")
+                        .HasColumnType("bit");
 
                     b.Property<Guid>("beheerderId")
                         .HasColumnType("uniqueidentifier");
@@ -329,16 +362,14 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("zakelijkeHuurderId")
+                    b.Property<Guid>("zakelijkeId")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("bedrijfsMedewerkerId");
 
-                    b.HasIndex("AbonnementId");
-
                     b.HasIndex("beheerderId");
 
-                    b.HasIndex("zakelijkeHuurderId");
+                    b.HasIndex("zakelijkeId");
 
                     b.ToTable("BedrijfsMedewerkers");
                 });
@@ -353,6 +384,15 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("EmailBevestigingToken")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("FrontofficeMedewerkerId1")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsEmailBevestigd")
+                        .HasColumnType("bit");
+
                     b.Property<string>("medewerkerEmail")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -366,6 +406,8 @@ namespace WPR_project.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("FrontofficeMedewerkerId");
+
+                    b.HasIndex("FrontofficeMedewerkerId1");
 
                     b.ToTable("FrontofficeMedewerkers");
                 });
@@ -472,6 +514,9 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("SoortOnderhoud")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -514,6 +559,10 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("notitie")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<decimal>("prijsPerDag")
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
@@ -553,8 +602,7 @@ namespace WPR_project.Migrations
 
                     b.HasKey("VoertuigStatusId");
 
-                    b.HasIndex("voertuigId")
-                        .IsUnique();
+                    b.HasIndex("voertuigId");
 
                     b.ToTable("VoertuigStatussen");
                 });
@@ -579,6 +627,12 @@ namespace WPR_project.Migrations
                     b.Property<string>("AspNetUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EmailBevestigingToken")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsEmailBevestigd")
+                        .HasColumnType("bit");
 
                     b.Property<string>("KVKNummer")
                         .IsRequired()
@@ -607,6 +661,9 @@ namespace WPR_project.Migrations
                     b.Property<string>("wachtwoord")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("zakelijkeId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("beheerderId");
 
@@ -659,6 +716,17 @@ namespace WPR_project.Migrations
                     b.HasKey("zakelijkeId");
 
                     b.ToTable("ZakelijkHuurders");
+                });
+
+            modelBuilder.Entity("Abonnement", b =>
+                {
+                    b.HasOne("ZakelijkHuurder", "ZakelijkHuurder")
+                        .WithMany()
+                        .HasForeignKey("zakelijkeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ZakelijkHuurder");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -714,23 +782,28 @@ namespace WPR_project.Migrations
 
             modelBuilder.Entity("WPR_project.Models.BedrijfsMedewerkers", b =>
                 {
-                    b.HasOne("Abonnement", null)
-                        .WithMany("Medewerkers")
-                        .HasForeignKey("AbonnementId");
-
-                    b.HasOne("WPR_project.Models.WagenparkBeheerder", null)
-                        .WithMany("MedewerkerLijst")
+                    b.HasOne("WPR_project.Models.WagenparkBeheerder", "WagenparkBeheerder")
+                        .WithMany()
                         .HasForeignKey("beheerderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ZakelijkHuurder", "ZakelijkeHuurder")
                         .WithMany("Medewerkers")
-                        .HasForeignKey("zakelijkeHuurderId")
+                        .HasForeignKey("zakelijkeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("WagenparkBeheerder");
+
                     b.Navigation("ZakelijkeHuurder");
+                });
+
+            modelBuilder.Entity("WPR_project.Models.FrontofficeMedewerker", b =>
+                {
+                    b.HasOne("WPR_project.Models.FrontofficeMedewerker", null)
+                        .WithMany("FrontofficeMedewerkers")
+                        .HasForeignKey("FrontofficeMedewerkerId1");
                 });
 
             modelBuilder.Entity("WPR_project.Models.Huurverzoek", b =>
@@ -767,8 +840,8 @@ namespace WPR_project.Migrations
             modelBuilder.Entity("WPR_project.Models.VoertuigStatus", b =>
                 {
                     b.HasOne("WPR_project.Models.Voertuig", "voertuig")
-                        .WithOne("voertuigStatus")
-                        .HasForeignKey("WPR_project.Models.VoertuigStatus", "voertuigId")
+                        .WithMany()
+                        .HasForeignKey("voertuigId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -778,30 +851,20 @@ namespace WPR_project.Migrations
             modelBuilder.Entity("WPR_project.Models.WagenparkBeheerder", b =>
                 {
                     b.HasOne("Abonnement", "HuidigAbonnement")
-                        .WithMany("WagenparkBeheerders")
+                        .WithMany()
                         .HasForeignKey("AbonnementId");
 
                     b.Navigation("HuidigAbonnement");
                 });
 
-            modelBuilder.Entity("Abonnement", b =>
+            modelBuilder.Entity("WPR_project.Models.FrontofficeMedewerker", b =>
                 {
-                    b.Navigation("Medewerkers");
-
-                    b.Navigation("WagenparkBeheerders");
+                    b.Navigation("FrontofficeMedewerkers");
                 });
 
             modelBuilder.Entity("WPR_project.Models.Voertuig", b =>
                 {
                     b.Navigation("Schademeldingen");
-
-                    b.Navigation("voertuigStatus")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("WPR_project.Models.WagenparkBeheerder", b =>
-                {
-                    b.Navigation("MedewerkerLijst");
                 });
 
             modelBuilder.Entity("ZakelijkHuurder", b =>

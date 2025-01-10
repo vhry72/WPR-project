@@ -163,7 +163,7 @@ namespace WPR_project.Services
 
             // Correct filteren van abonnementen die gekoppeld zijn aan de beheerder
             return _abonnementRepository.GetAllAbonnementen()
-                .Where(a => a.beheerderId == beheerderId)
+                .Where(a => a.zakelijkeId == beheerderId)
                 .ToList(); // Returnt een lijst met gefilterde abonnementen
         }
 

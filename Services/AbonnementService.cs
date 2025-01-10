@@ -185,7 +185,7 @@ namespace WPR_project.Services
             if (beheerder.HuidigAbonnement != null)
             {
                 var huidigAbonnement = beheerder.HuidigAbonnement;
-                huidigAbonnement.WagenparkBeheerders = null;
+                huidigAbonnement.ZakelijkHuurder = null;
                 _abonnementRepository.UpdateAbonnement(huidigAbonnement);
             }
 
