@@ -9,7 +9,8 @@
 
         public string merk { get; set; }
         public string model { get; set; }
-
+        public string kenteken { get; set; }
+        public string voertuigType { get; set; }
         public VoertuigStatusDTO voertuigStatus { get; set; }
 
     }

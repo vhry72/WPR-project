@@ -43,6 +43,16 @@ namespace WPR_project.Services
 
             return voertuig;
         }
+        public Voertuig GetVoertuigByKenteken(String kenteken)
+        {
+            var voertuig = _voertuigRepository.GetVoertuigByKenteken(kenteken);
+            if (voertuig == null)
+            {
+                throw new KeyNotFoundException("Voertuig niet gevonden");
+            }
+
+            return voertuig;
+        }
 
         public IEnumerable<Voertuig> GetVoertuigTypeVoertuigen(string voertuigType)
         { 
