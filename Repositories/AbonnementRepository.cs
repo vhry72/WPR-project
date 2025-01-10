@@ -39,7 +39,6 @@ namespace WPR_project.Repositories
         public Abonnement GetAbonnementById(Guid id)
         {
             return _context.Abonnementen
-         .Include(a => a.WagenparkBeheerders)
          .FirstOrDefault(a => a.AbonnementId == id);
         }
 

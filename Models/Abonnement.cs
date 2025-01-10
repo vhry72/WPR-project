@@ -18,7 +18,5 @@ public class Abonnement
 
     public AbonnementType AbonnementType { get; set; }
 
-    public ICollection<WagenparkBeheerder> WagenparkBeheerders { get; set; } = new List<WagenparkBeheerder>();
-
-    public ICollection<BedrijfsMedewerkers> Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();
+    public AbonnementTermijnen AbonnementTermijnen { get; set; }
 }

@@ -190,7 +190,7 @@ namespace WPR_project.Services
             if (huurder == null)
                 throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
 
-            return _abonnementRepository.GetAllAbonnementen().Where(a => a.WagenparkBeheerders.Contains(huurder));
+            return _abonnementRepository.GetAllAbonnementen().Where(a => a.AbonnementId.Contains(huurder));
         }
 
         public List<Guid> GetMedewerkersIdsByWagenparkbeheerder(Guid wagenparkbeheerderId)

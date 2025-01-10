@@ -176,7 +176,7 @@ namespace WPR_project.Controllers
         }
 
 
-        // haalt de huiderige abonnement op van de beheerder
+        // haalt de huidige abonnement op van de beheerder
         [HttpGet("{beheerderId}/huidig-abonnement")]
         public IActionResult GetHuidigAbonnement(Guid beheerderId)
         {

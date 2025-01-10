@@ -313,7 +313,7 @@ namespace WPR_project.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("WagenparkBeheerderbeheerderId")
+                    b.Property<Guid>("beheerderId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("medewerkerEmail")
@@ -336,7 +336,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("AbonnementId");
 
-                    b.HasIndex("WagenparkBeheerderbeheerderId");
+                    b.HasIndex("beheerderId");
 
                     b.HasIndex("zakelijkeHuurderId");
 
@@ -720,7 +720,7 @@ namespace WPR_project.Migrations
 
                     b.HasOne("WPR_project.Models.WagenparkBeheerder", null)
                         .WithMany("MedewerkerLijst")
-                        .HasForeignKey("WagenparkBeheerderbeheerderId")
+                        .HasForeignKey("beheerderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -57,7 +57,7 @@ namespace WPR_project.Services
                 bedrijfsMedewerkerId = Guid.NewGuid(),
                 medewerkerNaam = medewerkerNaam,
                 medewerkerEmail = medewerkerEmail,
-                zakelijkeHuurderId = huurder.zakelijkeId
+                zakelijkeId = huurder.zakelijkeId
             };
 
             huurder.Medewerkers.Add(medewerker);

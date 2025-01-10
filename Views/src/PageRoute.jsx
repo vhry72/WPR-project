@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./pages/Beveiliging/LayoutTest";
-//import Layout from "./pages/Layout";
+/*import Layout from "./pages/Beveiliging/LayoutTest";*/
+import Layout from "./pages/Beveiliging/Layout";
 import Register from "./pages/Accountbeheer/register";
 /*import Login from "./pages/login";*/
 import Index from "./pages/Index";
@@ -90,7 +90,7 @@ function PageRoute() {
                         <Route
                             path="abonnement"
                             element={
-                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
+                                <PrivateRoute allowedRoles={["ZakelijkeHuurder", "WagenparkBeheerder"]}>
                                     <Abonnement />
                                 </PrivateRoute>
                             }
@@ -212,14 +212,6 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <Wagenbeheer />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="abonnement"
-                            element={
-                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
-                                    <Abonnement />
                                 </PrivateRoute>
                             }
                         />

@@ -1,5 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WPR_project.Models
 {
@@ -19,20 +20,23 @@ namespace WPR_project.Models
         public Guid EmailBevestigingToken { get; set; }
 
         public bool IsEmailBevestigd { get; set; } = false;
-
+        
         [Required(ErrorMessage = "wachtwoord is verplicht.")]
         [MinLength(8, ErrorMessage = "wachtwoord moet minimaal 8 tekens bevatten.")]
         [RegularExpression(@"^(?=.*[A-Z])(?=.*[!@#$&*]).+$",
             ErrorMessage = "wachtwoord moet minstens één hoofdletter en één uniek teken bevatten.")]
         public string wachtwoord { get; set; }
 
+        
         [Required(ErrorMessage = "Zakelijke huurder ID is verplicht.")]
-        public Guid zakelijkeHuurderId { get; set; } // Buitenlandse sleutel voor relatie
+        public Guid zakelijkeId { get; set; } // Buitenlandse sleutel voor relatie
 
-        public Guid WagenparkBeheerderbeheerderId { get; set; }
-
-        // Navigatie-eigenschap naar de gerelateerde ZakelijkeHuurder
+        [ForeignKey(nameof(zakelijkeId))]
         public ZakelijkHuurder ZakelijkeHuurder { get; set; }
+
+        public Guid beheerderId { get; set; }
+        [ForeignKey(nameof(beheerderId))]
+        public WagenparkBeheerder WagenparkBeheerder { get; set; }
 
         [Required]
         public string AspNetUserId { get; set; }

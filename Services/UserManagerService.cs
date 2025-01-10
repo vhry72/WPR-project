@@ -218,7 +218,7 @@ public class UserManagerService
                 medewerkerNaam = dto.medewerkerNaam,
                 wachtwoord = dto.wachtwoord,
                 zakelijkeHuurderId = dto.zakelijkeHuurderId,
-                WagenparkBeheerderbeheerderId = dto.WagenparkBeheerderbeheerderId,
+                beheerderId = dto.WagenparkBeheerderbeheerderId,
                 AspNetUserId = user.Id,
                 IsEmailBevestigd = false,
                 EmailBevestigingToken = Guid.NewGuid()
