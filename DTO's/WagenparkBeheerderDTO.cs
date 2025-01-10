@@ -33,8 +33,6 @@ namespace WPR_project.DTO_s
         public string wachtwoord { get; set; }
 
 
-        public Guid? AbonnementId { get; set; }
-
         public Guid EmailBevestigingToken { get; set; }
 
         public bool IsEmailBevestigd { get; set; } = false;

@@ -255,7 +255,6 @@ public class UserManagerService
                 beheerderNaam = dto.beheerderNaam,
                 Adres = dto.Adres,
                 KVKNummer = dto.KVKNummer,
-                AbonnementId = dto.AbonnementId,
                 telefoonNummer = dto.telefoonNummer,
                 wachtwoord = dto.wachtwoord,
                 zakelijkeId = dto.zakelijkeId,

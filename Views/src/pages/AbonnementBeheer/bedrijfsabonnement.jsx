@@ -1,33 +1,85 @@
-﻿import React, { useState } from "react";
+﻿import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
+import JwtService from "../../services/JwtService";
 import "../../styles/Abonnement.css";
 
-const API_URL = 'https://localhost:5033/api/Abonnement'; // Pas dit aan naar jouw API-base-URL
+const API_URL = "https://localhost:5033/api/Abonnement";
 
 function BedrijfsAbonnement() {
     const location = useLocation();
     const [betaalMethode, setBetaalMethode] = useState(null);
     const [factuurVerstuurd, setFactuurVerstuurd] = useState(false);
-    const abonnement = location.state?.selectedAbonnement;
+    const [beheerderId, setBeheerderId] = useState(null);
+    const [zakelijkeId, setZakelijkeId] = useState(null); // Correct gebruik van useState
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-    // Functie om korting te berekenen
-    const berekenKorting = (prijs, korting) => {
-        return prijs - (prijs * korting) / 100;
-    };
+    const abonnement = location.state?.selectedAbonnement || location.state?.wijzigAbonnement;
 
-    // Verwerk factuur en stuur deze naar de backend
+    useEffect(() => {
+        const fetchBeheerderId = async () => {
+            try {
+                const userId = await JwtService.getUserId();
+                if (userId) {
+                    setBeheerderId(userId);
+                } else {
+                    console.error("Beheerder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de beheerder ID:", error);
+            }
+        };
+
+        fetchBeheerderId();
+    }, []);
+
+    useEffect(() => {
+        const fetchZakelijkeId = async () => {
+            setIsLoading(true);
+            setError(null);
+
+            try {
+                const response = await axios.get(
+                    `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/zakelijkeId`
+                );
+                setZakelijkeId(response.data.zakelijkeId); // Veronderstel dat zakelijkeId juist is in de API-respons
+            } catch (error) {
+                console.error("Fout bij het ophalen van de zakelijke ID:", error);
+                setError("Kan zakelijke ID niet ophalen. Controleer de API of netwerkverbinding.");
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        if (beheerderId) {
+            fetchZakelijkeId();
+        }
+    }, [beheerderId]);
+
     const handleFactuur = async () => {
         if (!betaalMethode) {
             alert("Selecteer een betaalmethode.");
             return;
         }
 
+        if (!abonnement || !zakelijkeId || !beheerderId) {
+            alert("Alle gegevens zijn niet beschikbaar. Controleer of alles correct is geladen.");
+            return;
+        }
+
         try {
-            // API-aanroep naar backend om factuur te versturen
-            await axios.post(`${API_URL}/${abonnement.beheerderId}/factuur/stuur`, {
-                betaalMethode,
-            });
+            const payload = {
+                naam: abonnement.naam,
+                kosten: abonnement.prijs,
+                zakelijkeId: zakelijkeId,
+                type: betaalMethode,
+                abonnementTermijnen: abonnement.termijn,
+                korting: abonnement.korting,
+            };
+
+            console.log(payload);
+            await axios.post(`${API_URL}/${beheerderId}/abonnement/maken`, payload);
             setFactuurVerstuurd(true);
         } catch (error) {
             console.error("Fout bij het versturen van de factuur:", error);
@@ -35,7 +87,6 @@ function BedrijfsAbonnement() {
         }
     };
 
-    // Weergave wanneer factuur is verstuurd
     if (factuurVerstuurd) {
         return (
             <div className="bedrijf-abonnement-container">
@@ -54,29 +105,26 @@ function BedrijfsAbonnement() {
                     <span>(Korting: {abonnement?.korting}%)</span>
                 )}
             </h3>
-            <h3>
-                Effectieve prijs na korting: €
-                {berekenKorting(abonnement?.prijs, abonnement?.korting).toFixed(2)}
-            </h3>
             <div className="abonnement-type-selector">
                 <h3>Kies een betaalmethode:</h3>
                 <button
-                    className={`abonnement-button ${betaalMethode === "pay-as-you-go" ? "selected" : ""
+                    className={`abonnement-button ${betaalMethode === "PayAsYouGo" ? "selected" : ""
                         }`}
-                    onClick={() => setBetaalMethode("pay-as-you-go")}
+                    onClick={() => setBetaalMethode("PayAsYouGo")}
                 >
-                    Pay-as-you-go
+                    PayAsYouGo
                 </button>
                 <button
-                    className={`abonnement-button ${betaalMethode === "prepaid" ? "selected" : ""
+                    className={`abonnement-button ${betaalMethode === "PrepaidSaldo" ? "selected" : ""
                         }`}
-                    onClick={() => setBetaalMethode("prepaid")}
+                    onClick={() => setBetaalMethode("PrepaidSaldo")}
                 >
-                    Prepaid
+                    PrepaidSaldo
                 </button>
             </div>
-            <button onClick={handleFactuur} className="create-subscription-button">
-                Stuur Factuur
+            {error && <p className="error-message">{error}</p>}
+            <button onClick={handleFactuur} className="create-subscription-button" disabled={isLoading}>
+                {isLoading ? "Laden..." : "Activeer Abonnement"}
             </button>
         </div>
     );

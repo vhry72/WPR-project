@@ -1,61 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import AbonnementService from "../../services/requests/AbonnementService";
+import JwtService from "../../services/JwtService";
 import "../../styles/Abonnement.css";
 
 function Abonnement() {
     const navigate = useNavigate();
     const [abonnementOptions] = useState([
-        { id: 0, naam: "Standaard Maandelijks", prijs: 10, korting: 0 },
-        { id: 1, naam: "Standaard Per kwartaal", prijs: 25, korting: 5 },
-        { id: 2, naam: "Standaard Per jaar", prijs: 80, korting: 10 },
+        { id: 0, naam: "Standaard Maandelijks", prijs: 10, korting: 0, termijn: "Maandelijks" },
+        { id: 1, naam: "Standaard Per kwartaal", prijs: 25, korting: 5, termijn: "Kwartaal" },
+        { id: 2, naam: "Standaard Per jaar", prijs: 80, korting: 10, termijn: "Jaarlijks" },
     ]);
-    const [huidigAbonnement, setHuidigAbonnement] = useState(null);
-    const [huurderId, setHuurderId] = useState(null);
+    const [beheerderId, setBeheerderId] = useState(null);
 
+    // Haal het beheerder ID op bij het laden van de component
     useEffect(() => {
-        const fetchUserId = async () => {
+        const fetchBeheerderId = async () => {
             try {
-                const userId = await JwtService.getUserId(); // Haal de gebruikers-ID op via de API
+                const userId = await JwtService.getUserId();
                 if (userId) {
-                    setHuurderId(userId);
+                    setBeheerderId(userId);
                 } else {
-                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                    console.error("Beheerder ID kon niet worden opgehaald via de API.");
                 }
             } catch (error) {
-                console.error("Fout bij het ophalen van de huurder ID:", error);
+                console.error("Fout bij het ophalen van de beheerder ID:", error);
             }
         };
 
-        fetchUserId();
+        fetchBeheerderId();
     }, []);
 
-    useEffect(() => {
-        const fetchAbonnement = async () => {
-            try {
-                const response = await AbonnementService.getById(huurderId); 
-                setHuidigAbonnement(response.data);
-            } catch (error) {
-                console.error("Geen huidig abonnement gevonden.");
-            }
-        };
-        fetchAbonnement();
-    }, []);
-
+    // Selecteer een abonnement en navigeer naar de bedrijfsabonnementpagina
     const handleSelect = (option) => {
-        if (huidigAbonnement) {
-            navigate(`/bedrijfsabonnement`, { state: { wijzigAbonnement: option } });
-        } else {
-            navigate(`/bedrijfsabonnement?abonnementId=`, { state: { selectedAbonnement: option } });
-        }
+        navigate(`/bedrijfsabonnement`, { state: { selectedAbonnement: option } });
     };
 
     return (
         <div className="subscription-container">
-            <h1>{huidigAbonnement ? "Wijzig je Abonnement" : "Kies je Abonnement"}</h1>
-            {huidigAbonnement && (
-                <p>Huidig abonnement: {huidigAbonnement.naam} - €{huidigAbonnement.prijs}</p>
-            )}
+            <h1>Kies je Abonnement</h1>
             <div className="subscription-options">
                 {abonnementOptions.map((option) => (
                     <div

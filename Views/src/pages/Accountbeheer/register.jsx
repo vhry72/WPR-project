@@ -33,12 +33,12 @@ const Register = () => {
     }, [qrCode]);
 
     const handleChange = (e) => {
-        const { veld, value } = e.target;
+        const { name, value } = e.target;
 
-        if (veld === "postcode") {
-            setFormData({ ...formData, [veld]: value.replace(/^\s+|\s+$/g, "") });
+        if (name === "postcode") {
+            setFormData({ ...formData, [name]: value.replace(/^\s+|\s+$/g, "") });
         } else {
-            setFormData({ ...formData, [veld]: value });
+            setFormData({ ...formData, [name]: value });
         }
     };
 

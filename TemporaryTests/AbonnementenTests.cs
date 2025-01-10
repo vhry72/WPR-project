@@ -60,7 +60,7 @@ namespace WPR_project.TemporaryTests
             };
 
             _wagenparkBeheerderRepositoryMock
-                .Setup(repo => repo.getBeheerderById(beheerderId))
+                .Setup(repo => repo.GetBeheerderById(beheerderId))
                 .Returns(wagenparkBeheerder);
 
             _abonnementRepositoryMock
@@ -99,7 +99,7 @@ namespace WPR_project.TemporaryTests
             };
 
             _wagenparkBeheerderRepositoryMock
-                .Setup(repo => repo.getBeheerderById(beheerderId))
+                .Setup(repo => repo.GetBeheerderById(beheerderId))
                 .Returns(wagenparkBeheerder);
 
             _abonnementRepositoryMock
@@ -125,7 +125,7 @@ namespace WPR_project.TemporaryTests
             var nieuwAbonnementId = Guid.NewGuid();
 
             _wagenparkBeheerderRepositoryMock
-                .Setup(repo => repo.getBeheerderById(beheerderId))
+                .Setup(repo => repo.GetBeheerderById(beheerderId))
                 .Returns((WagenparkBeheerder)null);
 
             // Act
