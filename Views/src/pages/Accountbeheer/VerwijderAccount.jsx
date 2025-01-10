@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import JwtService from "../services/JwtService"; 
+import JwtService from "../../services/JwtService"; 
 
 
 const VerwijderAccount = () => {

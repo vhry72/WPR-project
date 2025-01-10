@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import ParticulierHuurdersRequestService from "../services/requests/ParticulierHuurderRequestService";
-import ZakelijkeHuurderRequestService from "../services/requests/ZakelijkeHuurderRequestService";
-import "../styles/Register.css";
+import ParticulierHuurdersRequestService from "../../services/requests/ParticulierHuurderRequestService";
+import ZakelijkeHuurderRequestService from "../../services/requests/ZakelijkeHuurderRequestService";
+import "../../styles/Register.css";
 
 const Register = () => {
     const [formData, setFormData] = useState({

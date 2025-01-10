@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import ParticulierHuurdersRequestService from '../services/requests/ParticulierHuurderRequestService';
-import BedrijfsMedewerkerRequestService from '../services/requests/bedrijfsMedewerkerRequestService';
-import VoertuigRequestService from '../services/requests/VoertuigRequestService';
-import HuurVerzoekRequestService from '../services/requests/HuurVerzoekRequestService';
-import JwtService from "../services/JwtService";
+import ParticulierHuurdersRequestService from '../../services/requests/ParticulierHuurderRequestService';
+import BedrijfsMedewerkerRequestService from '../../services/requests/bedrijfsMedewerkerRequestService';
+import VoertuigRequestService from '../../services/requests/VoertuigRequestService';
+import HuurVerzoekRequestService from '../../services/requests/HuurVerzoekRequestService';
+import JwtService from "../../services/JwtService";
 
 const BevestigingHuur = () => {
     const navigate = useNavigate();
