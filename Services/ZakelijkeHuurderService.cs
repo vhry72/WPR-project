@@ -68,6 +68,18 @@ namespace WPR_project.Services
             return true;
         }
 
+        public Guid GetAbonnementIdByZakelijkeHuurder(Guid id)
+        {
+            var AbonnementID = _repository.GetAbonnementIdByZakelijkeHuurder(id);
+            if (AbonnementID == Guid.Empty)
+            {
+                throw new KeyNotFoundException("Abonnement ID niet gevonden.");
+            }
+
+            return AbonnementID;
+        }
+    
+
         // Voeg een zakelijke huurder toe (zonder e-mailverificatie)
         public void AddZakelijkeHuurder(ZakelijkHuurder huurder)
         {

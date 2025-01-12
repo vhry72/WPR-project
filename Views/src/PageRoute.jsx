@@ -38,6 +38,7 @@ import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
 import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
 import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
 import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
+import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderForm";
 
 
 
@@ -99,6 +100,15 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["ZakelijkeHuurder", "WagenparkBeheerder"]}>
                                     <Abonnement />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="WagenparkBeheerderForm"
+                            element={
+                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
+                                    <WagenparkBeheerderForm />
                                 </PrivateRoute>
                             }
                         />

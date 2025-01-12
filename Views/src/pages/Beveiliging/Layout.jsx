@@ -19,6 +19,7 @@ const Layout = () => {
             { to: "/instellingen", label: "Instellingen" },
             { to: "/zaakdashboard", label: "Zaak Dashboard" },
             { to: "/zakelijkeautotonen", label: "Zakelijke Auto's" },
+            { to : "WagenparkBeheerderForm", label : "Voeg een Wagenparkmedewerker toe"}
         ],
         BedrijfsMedewerker: [
             { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },

@@ -13,15 +13,22 @@ namespace WPR_project.Controllers
     {
         private readonly ZakelijkeHuurderService _service;
         private readonly UserManagerService _userManager;
+        private readonly AbonnementService _abonnementService;
 
-        public ZakelijkeHuurderController(ZakelijkeHuurderService service, UserManagerService userManager)
+        public ZakelijkeHuurderController
+            (
+            ZakelijkeHuurderService service,
+            UserManagerService userManager,
+            AbonnementService abonnementService
+            )
         {
             _service = service;
             _userManager = userManager;
+            _abonnementService = abonnementService;
         }
 
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+       
         [HttpGet("verify")]
         public IActionResult VerifyEmail(Guid token)
         {
@@ -39,7 +46,7 @@ namespace WPR_project.Controllers
             return Ok("Je e-mail is succesvol bevestigd. Je kunt nu inloggen.");
         }
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+        
         [HttpGet]
         public ActionResult<IEnumerable<ZakelijkHuurder>> GetAllZakelijkeHuurders()
         {
@@ -47,7 +54,7 @@ namespace WPR_project.Controllers
             return Ok(huurders);
         }
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+       
         [HttpGet("{id}")]
         public ActionResult<ZakelijkHuurder> GetZakelijkHuurderById(Guid id)
         {
@@ -59,7 +66,19 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+        [HttpGet("{id}/AbonnementId")]
+        public IActionResult GetAbonnementIdByZakelijkeHuurder(Guid id)
+        {
+            var huurder = _service.GetAbonnementIdByZakelijkeHuurder(id);
+            var abonnement = _abonnementService.GetAbonnementById(huurder);
+            if (huurder == null)
+            {
+                return NotFound("Zakelijke huurder niet gevonden.");
+            }
+            return Ok(abonnement);
+        }
+
+
         [HttpPost]
         public ActionResult AddZakelijkeHuurder([FromBody] ZakelijkHuurder zakelijkHuurder)
         {
@@ -72,7 +91,7 @@ namespace WPR_project.Controllers
             return CreatedAtAction(nameof(GetZakelijkHuurderById), new { id = zakelijkHuurder.zakelijkeId }, zakelijkHuurder);
         }
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+       
         [HttpPut("{id}")]
         public IActionResult UpdateZakelijkeHuurder(Guid id, [FromBody] ZakelijkHuurder zakelijkHuurder)
         {
@@ -145,7 +164,7 @@ namespace WPR_project.Controllers
 
 
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+      
         [HttpPost("{id}/voegmedewerker")]
         public IActionResult VoegMedewerkerToe(Guid id, [FromBody] BedrijfsMedewerkers medewerker)
         {
@@ -169,7 +188,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+      
         [HttpDelete("{id}/verwijdermedewerker")]
         public IActionResult VerwijderMedewerker(Guid id, [FromBody] string medewerkerEmail)
         {
@@ -193,7 +212,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [Authorize(Roles = "ZakelijkHuurder")]
+
         [HttpPost("{zakelijkeHuurderId}/wagenparkbeheerder")]
         public IActionResult AddWagenparkBeheerder(Guid zakelijkeHuurderId, [FromBody] WagenparkBeheerder beheerder)
         {
