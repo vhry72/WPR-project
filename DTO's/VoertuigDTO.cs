@@ -7,11 +7,15 @@
         public DateTime? EindDatum { get; set; }
         public bool voertuigBeschikbaar { get; set; }
 
+        public string kleur { get; set; }
         public string merk { get; set; }
         public string model { get; set; }
         public string kenteken { get; set; }
+        public int bouwjaar { get; set; }
+        public decimal prijsPerDag { get; set; }
         public string voertuigType { get; set; }
-        public VoertuigStatusDTO voertuigStatus { get; set; }
+        public string? notitie { get; set; }
+        
 
     }
 }

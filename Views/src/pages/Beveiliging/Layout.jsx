@@ -28,13 +28,13 @@ const Layout = () => {
             { to: "/instellingen", label: "Instellingen" },
             { to: "/BackOfficeVerhuuraanvragen", label: "Huur Verzoeken" },
             { to: "/SchadeMeldingen", label: "Schademeldingen" },
-            { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken"}
+            { to: "/Schadeclaims", label: "Schade claims" },
+            { to: "/VoertuigTonen", label: "Wagenpark beheren"}
         ],
         FrontofficeMedewerker: [
             { to: "/instellingen", label: "Instellingen" },
-            { to: "/FrontOfficeMedewerker", label: "Frontoffice Medewerker" },
-            { to: "/Scadeclaims", label: "Schadeclaims" },
-            { to: "/VoertuigDetails", label: "Voertuigen" },
+            { to: "/Schadeclaims", label: "Schadeclaims" },
+            { to: "/VoertuigDetails", label: "Voertuig Gegevens" },
             { to: "/VoertuigInenUitname", label: "Voertuigen Verhuur"}
 
         ],
