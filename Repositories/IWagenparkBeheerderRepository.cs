@@ -12,6 +12,8 @@ namespace WPR_project.Repositories
 
         Guid GetZakelijkeId(Guid id);
 
+        Guid GetAbonnementId(Guid id);
+
         List<Guid> GetMedewerkersIdsByWagenparkbeheerder(Guid wagenparkbeheerderId);
 
         //sla op 

@@ -57,6 +57,20 @@ namespace WPR_project.Controllers
             }
         }
 
+        [HttpGet("{id}/AbonnementId")]
+        public ActionResult<AbonnementIdDTO> GetAbonnementID(Guid id)
+        {
+            try
+            {
+                var AbonnementID = _service.GetAbonnementId(id);
+                return Ok(new AbonnementIdDTO { AbonnementId = AbonnementID });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+        }
+
         [HttpGet("verhuurdevoertuigen/{medewerkerId}")]
             public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
             {

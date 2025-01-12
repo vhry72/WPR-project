@@ -37,6 +37,7 @@ import VerwijderAccount from "./pages/Accountbeheer/VerwijderAccount";
 import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
 import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
 import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
+import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
 
 
 
@@ -234,6 +235,14 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <BedrijfsAbonnement />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="WijzigBedrijfsAbonnement"
+                            element={
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
+                                    <WijzigBedrijfsAbonnement />
                                 </PrivateRoute>
                             }
                         />

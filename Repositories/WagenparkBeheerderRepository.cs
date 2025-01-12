@@ -36,6 +36,16 @@ namespace WPR_project.Repositories
             return zakelijkeId != default ? zakelijkeId : Guid.Empty;
         }
 
+        public Guid GetAbonnementId(Guid id)
+        {
+            var AbonnementId = _context.WagenparkBeheerders
+                .Where(m => m.beheerderId == id)
+                .Select(m => m.AbonnementId)
+                .FirstOrDefault();
+
+            return AbonnementId ?? Guid.Empty;
+        }
+
 
 
         public IEnumerable<WagenparkBeheerder> GetWagenparkBeheerders()
