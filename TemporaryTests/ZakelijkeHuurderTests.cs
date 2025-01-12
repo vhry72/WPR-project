@@ -39,7 +39,8 @@ namespace WPR_project.TemporaryTests
                 KVKNummer = 12345678,
                 wachtwoord = "Password123!",
                 telNummer = "+31612345678",
-                EmailBevestigingToken = Guid.NewGuid()
+                EmailBevestigingToken = Guid.NewGuid(),
+                AspNetUserId = "De Guid komt hier terecht"
             };
 
             // Act

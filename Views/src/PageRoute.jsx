@@ -4,6 +4,7 @@ import Layout from "./pages/Beveiliging/Layout";
 import Register from "./pages/Accountbeheer/register";
 /*import Login from "./pages/login";*/
 import Index from "./pages/Index";
+import Privacyverklaring from "./pages/Beveiliging/Privacyverklaring";
 import Abonnement from "./pages/AbonnementBeheer/abonnement";
 import BedrijfsAbonnement from "./pages/AbonnementBeheer/bedrijfsabonnement";
 /*import MedewerkerAbonnementDashboard from "./pages/medewerkerAbonnementDashboard";*/
@@ -58,6 +59,7 @@ function PageRoute() {
                         <Route path="VerhuurdeVoertuigen" element={<VerhuurdeVoertuigen/> } />
                         <Route path="login" element={<LoginVoorWijziging />} />
                         <Route path="VerwijderAccount" element={<VerwijderAccount />} />
+                        <Route path="privacyverklaring" element={<Privacyverklaring />} />
                         
 
                         {/* Routes specifiek voor 'particulier' */}
