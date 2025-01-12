@@ -40,6 +40,7 @@ import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDeta
 import VoertuigNotitieTonen from "./pages/FrontOfficeMedewerker/VoertuigNotitieToevoegen";
 import VoertuigToevoegen from "./pages/BackOfficeMedewerker/VoertuigToevoegen";
 import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
+import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig";
 
 
 
@@ -227,6 +228,14 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
                                     <VoertuigDetails />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="WijzigingenVoertuig/:voertuigId"
+                            element={
+                                <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
+                                    <WijzigingVoertuig/>
                                 </PrivateRoute>
                             }
                         />
