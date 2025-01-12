@@ -81,6 +81,20 @@ namespace WPR_project.Services
             // Sla de wijzigingen op
             _voertuigRepository.updateVoertuig(voertuig);
         }
+        public void veranderGegevens(Guid id, VoertuigWijzigingDTO DTO)
+        {
+            var voertuig = _voertuigRepository.GetVoertuigById(id);
+            if (voertuig == null)
+            {
+                throw new KeyNotFoundException("Voertuig niet gevonden.");
+            }
+
+            voertuig.prijsPerDag = DTO.prijsPerDag;
+            voertuig.kleur = DTO.kleur;
+            voertuig.kenteken = DTO.kenteken;
+
+            _voertuigRepository.updateVoertuig(voertuig);
+        }
         public void UpdateVoertuig(Guid id, VoertuigDTO DTO)
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);
@@ -93,6 +107,7 @@ namespace WPR_project.Services
             voertuig.startDatum = DTO.StartDatum;
             voertuig.eindDatum = DTO.EindDatum;
             voertuig.voertuigBeschikbaar = DTO.voertuigBeschikbaar;
+            voertuig.notitie = DTO.notitie;
 
             // Sla de wijzigingen op
             _voertuigRepository.updateVoertuig(voertuig);
@@ -129,12 +144,22 @@ namespace WPR_project.Services
             var voertuig1 = new Voertuig
             {
                 voertuigId = Guid.NewGuid(),
+                startDatum = voertuig.StartDatum,
+                eindDatum = voertuig.EindDatum,
                 voertuigBeschikbaar = voertuig.voertuigBeschikbaar,
-                voertuigType = voertuig.voertuigType
+                kleur = voertuig.kleur,
+                merk = voertuig.merk,
+                model = voertuig.model,
+                kenteken = voertuig.kenteken,
+                bouwjaar = voertuig.bouwjaar,
+                voertuigType = voertuig.voertuigType,
+                notitie = voertuig.notitie
+                
             };
 
             _voertuigRepository.Add(voertuig1);
             _voertuigRepository.Save();
-        }
+             
+    }
     }
 }

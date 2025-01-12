@@ -29,13 +29,13 @@ const Layout = () => {
             { to: "/instellingen", label: "Instellingen" },
             { to: "/BackOfficeVerhuuraanvragen", label: "Huur Verzoeken" },
             { to: "/SchadeMeldingen", label: "Schademeldingen" },
-            { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken"}
+            { to: "/Schadeclaims", label: "Schade claims" },
+            { to: "/VoertuigTonen", label: "Wagenpark beheren"}
         ],
         FrontofficeMedewerker: [
             { to: "/instellingen", label: "Instellingen" },
-            { to: "/FrontOfficeMedewerker", label: "Frontoffice Medewerker" },
-            { to: "/Scadeclaims", label: "Schadeclaims" },
-            { to: "/VoertuigDetails", label: "Voertuigen" },
+            { to: "/Schadeclaims", label: "Schadeclaims" },
+            { to: "/VoertuigDetails", label: "Voertuig Gegevens" },
             { to: "/VoertuigInenUitname", label: "Voertuigen Verhuur"}
 
         ],
@@ -67,6 +67,7 @@ const Layout = () => {
                     <Link to="/" className="nav-link">Home</Link>
                     {!userRole && <Link to="/register" className="nav-link">Aanmelden</Link>}
                     {!userRole && <Link to="/login" className="nav-link">Inloggen</Link>}
+                    {userRole && <Link to="/Privacyverklaring" className="nav-link">Privacyverklaring</Link>}
                     {userRole &&
                         navLinks[userRole]?.map((link, index) => (
                             <Link key={index} to={link.to} className="nav-link">
