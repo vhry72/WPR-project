@@ -52,4 +52,3 @@ const VoertuigNotities = () => {
 };
 
 export default VoertuigNotities;
-o
