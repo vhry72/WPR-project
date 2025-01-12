@@ -41,7 +41,9 @@ import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDeta
 import VoertuigNotitieTonen from "./pages/FrontOfficeMedewerker/VoertuigNotitieToevoegen";
 import VoertuigToevoegen from "./pages/BackOfficeMedewerker/VoertuigToevoegen";
 import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
+import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderForm";
 import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig";
+
 
 
 
@@ -104,6 +106,15 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["ZakelijkeHuurder", "WagenparkBeheerder"]}>
                                     <Abonnement />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="WagenparkBeheerderForm"
+                            element={
+                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
+                                    <WagenparkBeheerderForm />
                                 </PrivateRoute>
                             }
                         />

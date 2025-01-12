@@ -22,9 +22,11 @@ namespace WPR_project.DTO_s
 
         [Required(ErrorMessage = "KVK-nummer is verplicht.")]
         [RegularExpression(@"^\d{8}$", ErrorMessage = "KVK-nummer moet een 8-cijferig getal zijn.")]
-        public string KVKNummer { get; set; }
+        public string kvkNummer { get; set; }
 
+        public Guid AbonnementId { get; set; }
 
+        public AbonnementType? AbonnementType { get; set; }
 
         public string telefoonNummer { get; set; }
 

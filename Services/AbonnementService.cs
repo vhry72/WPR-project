@@ -34,6 +34,11 @@ namespace WPR_project.Services
             return _abonnementRepository.GetBijnaVerlopenAbonnementen();
         }
 
+        public Abonnement GetAbonnementById(Guid id)
+        {
+            return _abonnementRepository.GetAbonnementById(id);
+        }
+
         public void VoegMedewerkerToe(Guid bedrijfsId, string medewerkerNaam, string medewerkerEmail)
         {
             if (string.IsNullOrWhiteSpace(medewerkerEmail) || !medewerkerEmail.Contains("@"))
