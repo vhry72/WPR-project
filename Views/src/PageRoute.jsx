@@ -6,6 +6,7 @@ import Register from "./pages/Accountbeheer/register";
 import Index from "./pages/Index";
 import Abonnement from "./pages/AbonnementBeheer/abonnement";
 import BedrijfsAbonnement from "./pages/AbonnementBeheer/bedrijfsabonnement";
+import AbonnementWijzigen from "./pages/AbonnementBeheer/WijzigAbonnement";
 /*import MedewerkerAbonnementDashboard from "./pages/medewerkerAbonnementDashboard";*/
 import Zaakdashboard from "./pages/Zakelijkhuurder/zaakdashboard";
 /*import Wagenparklogin from "./pages/wagenparklogin";*/
@@ -236,6 +237,14 @@ function PageRoute() {
                                     <BedrijfsAbonnement />
                                 </PrivateRoute>
                             }
+                        />
+                        <Route 
+                            path="WijzigAbonnement"
+                            element={
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
+                                    <AbonnementWijzigen />
+                                </PrivateRoute>
+                                }
                         />
                        
 

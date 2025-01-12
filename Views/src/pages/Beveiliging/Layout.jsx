@@ -43,6 +43,7 @@ const Layout = () => {
             { to: "/wagendashboard", label: "Wagen Dashboard" },
             { to: "/wagenbeheer", label: "Wagen Beheer" },
             { to: "/abonnement", label: "Kies Abonnement" },
+            { to: "/WijzigAbonnement", label: "Wijzig Abonnement" },
             { to: "/medewerkerAbonnementDashboard", label: "Beheer abonnement"},
             { to: "/VerhuurdeVoertuigen", label: "gehuurde voertuigen"}
         ],

@@ -235,15 +235,15 @@ namespace WPR_project.Controllers
             }
         }
 
-        [HttpPost("{beheerderId}/abonnement/wijzig")]
-        public IActionResult WijzigAbonnement(Guid beheerderId, [FromBody] Abonnement abonnement)
+        [HttpPost("{beheerderId}/abonnement/wijzig/[id]")]
+        public IActionResult WijzigAbonnement(Guid beheerderId, [FromBody] AbonnementWijzigDTO abonnement)
         {
             if (abonnement == null)
             {
                 return BadRequest(new { Error = "Het verzoek mag niet leeg zijn." });
             }
 
-            if (abonnement.AbonnementId == Guid.Empty)
+            if (abonnement.abonnementId == Guid.Empty)
             {
                 return BadRequest(new { Error = "Een geldig abonnementId is vereist." });
             }
@@ -253,11 +253,11 @@ namespace WPR_project.Controllers
                 // Controle of directZichtbaar of volgendePeriode correct zijn ingesteld
                 if (abonnement.directZichtbaar == true)
                 {
-                    _service.WijzigAbonnementMetDirecteKosten(beheerderId, abonnement.AbonnementId, abonnement.AbonnementType);
+                    _service.WijzigAbonnementMetDirecteKosten(beheerderId, abonnement.abonnementId, abonnement.abonnementType);
                 }
-                else if (abonnement.AantalDagen.HasValue && abonnement.AantalDagen > 0)
+                else if (abonnement.aantalDagen.HasValue && abonnement.aantalDagen > 0)
                 {
-                    _service.WijzigAbonnementVanafVolgendePeriode(beheerderId, abonnement.AbonnementId, abonnement.AbonnementType);
+                    _service.WijzigAbonnementVanafVolgendePeriode(beheerderId, abonnement.abonnementId, abonnement.abonnementType);
                 }
                 else
                 {

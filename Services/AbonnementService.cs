@@ -199,10 +199,10 @@ namespace WPR_project.Services
                 var huidigAbonnement = beheerder.HuidigAbonnement;
                 huidigAbonnement.ZakelijkHuurder = null;
                 _abonnementRepository.UpdateAbonnement(huidigAbonnement);
+
             }
 
             beheerder.HuidigAbonnement = nieuwAbonnement;
-            beheerder.AbonnementId = nieuwAbonnement.AbonnementId;
             beheerder.AbonnementType = abonnementType;
             beheerder.updateDatumAbonnement = DateTime.Now;
 
