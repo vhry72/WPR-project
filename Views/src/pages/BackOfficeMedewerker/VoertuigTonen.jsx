@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/ParticulierVoertuigTonen.css";
 import VoertuigRequestService from "../../services/requests/VoertuigRequestService";
-
 
 const VoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
@@ -33,9 +32,11 @@ const VoertuigTonen = () => {
     };
 
     const handleVoertuigClick = (voertuig) => {
-        navigate(`/VoertuigDetails?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}`);
+        navigate(`/VoertuigDetailsBackOffice/${voertuig.voertuigId}`); // Gebruik routeparameters
     };
-
+    const handleMaakVoertuigClick = () => {
+        navigate(`/VoertuigToevoegen`); // Gebruik routeparameters
+    };
 
     return (
         <div className="container">
@@ -61,6 +62,9 @@ const VoertuigTonen = () => {
                 </button>
                 <button onClick={() => handleSort("bouwjaar")} className="sort-button">
                     Sorteer op Bouwjaar
+                </button>
+                <button onClick={handleMaakVoertuigClick}>
+                    Nieuw Voertuig Toevoegen
                 </button>
             </div>
             <table className="styled-table">

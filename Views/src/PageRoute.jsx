@@ -37,6 +37,8 @@ import VerwijderAccount from "./pages/Accountbeheer/VerwijderAccount";
 import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
 import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
 import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
+import VoertuigNotitieTonen from "./pages/FrontOfficeMedewerker/VoertuigNotitieToevoegen";
+import VoertuigToevoegen from "./pages/BackOfficeMedewerker/VoertuigToevoegen";
 
 
 
@@ -170,6 +172,30 @@ function PageRoute() {
                             }
                         />
                         <Route
+                            path="VoertuigTonen"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <VoertuigTonen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="VoertuigToevoegen"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <VoertuigToevoegen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="VoertuigDetailsBackOffice/:voertuigId"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <VoertuigDetailsBackOffice />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
                             path="BackOfficeVerhuurAanvragen"
                             element={
                                 <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
@@ -211,7 +237,14 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
-
+                        <Route
+                            path="VoertuigNotitieToevoegen/:voertuigId"
+                            element={
+                                <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
+                                    <VoertuigNotitieTonen />
+                                </PrivateRoute>
+                            }
+                        />
                         {/* Routes specifiek voor 'wagenparkbeheerder' */}
                         <Route
                             path="wagendashboard"
@@ -260,9 +293,8 @@ function PageRoute() {
                         <Route path="FrontOfficeMedewerker" element={<FrontOfficeMedewerker />} />
                         <Route path="VoertuigDetails" element={<VoertuigDetails />} />
                         <Route path="VoertuigInenUitname" element={<VoertuigInEnUitname />} />
-                        <Route path="BackOfficeMedewerker/SchadeClaimMaken" element={<SchadeClaimMaken/> } />
-                        <Route path="VoertuigTonen" element={<VoertuigTonen />} />
-                        <Route path="VoertuigDetailsBackOffice/:voertuigId" element={<VoertuigDetailsBackOffice />} />
+                        <Route path="BackOfficeMedewerker/SchadeClaimMaken" element={<SchadeClaimMaken />} />
+                       
                     </Route>
                 </Routes>
             </BrowserRouter>
