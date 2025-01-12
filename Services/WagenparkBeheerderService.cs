@@ -108,6 +108,17 @@ namespace WPR_project.Services
             return zakelijkeId;
         }
 
+        public Guid GetAbonnementId(Guid id)
+        {
+            var AbonnementID = _repository.GetAbonnementId(id);
+            if (AbonnementID == Guid.Empty)
+            {
+                throw new KeyNotFoundException("Abonnement ID niet gevonden.");
+            }
+
+            return AbonnementID;
+        }
+
 
         // Voeg een medewerker toe aan een zakelijke huurder
         public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerNaam, string medewerkerEmail, string wachtwoord)

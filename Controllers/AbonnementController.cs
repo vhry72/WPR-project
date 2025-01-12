@@ -236,7 +236,7 @@ namespace WPR_project.Controllers
         }
 
         [HttpPost("{beheerderId}/abonnement/wijzig")]
-        public IActionResult WijzigAbonnement(Guid beheerderId, [FromBody] Abonnement abonnement)
+        public IActionResult WijzigAbonnement(Guid beheerderId, [FromBody] AbonnementWijzigDTO abonnement)
         {
             if (abonnement == null)
             {

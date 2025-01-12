@@ -98,6 +98,7 @@ builder.Services.AddScoped<IBedrijfsMedewerkersRepository, BedrijfsMedewerkersRe
 builder.Services.AddScoped<IHuurVerzoekRepository, HuurVerzoekRepository>();
 builder.Services.AddScoped<ISchademeldingRepository, SchademeldingRepository>();
 builder.Services.AddScoped<IVoertuigStatusRepository, VoertuigStatusRepository>();
+builder.Services.AddScoped<IVoertuigNotitiesRepository, VoertuigNotitiesRepository>();
 
 
 
@@ -110,6 +111,7 @@ builder.Services.AddScoped<AbonnementService>();
 builder.Services.AddScoped<VoertuigService>();
 builder.Services.AddScoped<BedrijfsMedewerkersService>();
 builder.Services.AddScoped<HuurverzoekService>();
+builder.Services.AddScoped<VoertuigNotitiesService>();
 
 builder.Services.AddScoped<SchademeldingService>();
 builder.Services.AddScoped<VoertuigStatusService>();

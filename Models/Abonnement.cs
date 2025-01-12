@@ -34,4 +34,6 @@ public class Abonnement
     public string? details { get; set; }
 
     public int? AantalDagen { get; set; }
+
+    public DateTime? updateDatum { get; set; }
 }
