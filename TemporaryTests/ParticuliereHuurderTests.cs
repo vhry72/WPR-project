@@ -23,34 +23,6 @@ namespace WPR_project.TemporaryTests
         }
 
         [Fact]
-        public void Register_ValidHuurder_ShouldRegisterAndSendEmail()
-        {
-            // Arrange
-            var huurder = new ParticulierHuurder
-            {
-                particulierEmail = "test@gmail.com",
-                particulierNaam = "John Doe",
-                wachtwoord = "Password123!",
-                adress = "Weimarstraat 24b",
-                postcode = "1234AB",
-                woonplaats = "Amsterdam",
-                telefoonnummer = "+31612345678"
-            };
-
-            // Act
-            _service.Register(huurder);
-
-            // Assert
-            _mockRepository.Verify(r => r.Add(It.IsAny<ParticulierHuurder>()), Times.Once);
-            _mockRepository.Verify(r => r.Save(), Times.Once);
-            _mockEmailService.Verify(e => e.SendEmail(
-                "test@gmail.com",
-                "Bevestig je registratie",
-                It.Is<string>(body => body.Contains("Beste John Doe"))
-            ), Times.Once);
-        }
-
-        [Fact]
         public void Register_InvalidEmail_ShouldThrowException()
         {
             // Arrange

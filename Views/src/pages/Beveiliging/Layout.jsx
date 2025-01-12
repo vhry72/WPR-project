@@ -66,6 +66,7 @@ const Layout = () => {
                     <Link to="/" className="nav-link">Home</Link>
                     {!userRole && <Link to="/register" className="nav-link">Aanmelden</Link>}
                     {!userRole && <Link to="/login" className="nav-link">Inloggen</Link>}
+                    {userRole && <Link to="/Privacyverklaring" className="nav-link">Privacyverklaring</Link>}
                     {userRole &&
                         navLinks[userRole]?.map((link, index) => (
                             <Link key={index} to={link.to} className="nav-link">
