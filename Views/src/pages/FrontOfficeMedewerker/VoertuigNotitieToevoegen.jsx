@@ -1,10 +1,11 @@
 ﻿import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import VoertuigRequestService from "../../services/requests/VoertuigRequestService";
 
 const VoertuigDetails = () => {
     const { voertuigId } = useParams();
+    const navigate = useNavigate();
     const [voertuig, setVoertuig] = useState(null);
     const [error, setError] = useState(null);
     const [notitie, setNotitie] = useState(""); // Notitie state voor de input
@@ -53,6 +54,10 @@ const VoertuigDetails = () => {
             setError(err);
         }
     };
+    const handleWijzigingenInkijkClick = () => {
+        navigate(`/WijzigingenVoertuig/${voertuig.voertuigId}`);
+    };
+
 
 
 
@@ -88,6 +93,9 @@ const VoertuigDetails = () => {
                 </div>
                 <button type="submit">Notitie Bijwerken</button>
             </form>
+            <button onClick= {handleWijzigingenInkijkClick}>
+                Kijk naar Wijzigingen
+            </button>
         </div>
     );
 };
