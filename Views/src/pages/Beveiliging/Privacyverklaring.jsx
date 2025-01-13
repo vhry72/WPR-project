@@ -5,18 +5,19 @@ const PrivacyPolicy = () => {
     return (
         <div className="privacy-policy-container">
             <h1>Privacyverklaring</h1>
-            <p>Laatst bijgewerkt: [DATUM INVOEGEN]</p>
+            <p>Laatst bijgewerkt: [13/01/2025]</p>
+            <br></br>
 
             <section>
                 <h2>1. Identiteit en contactgegevens</h2>
-                <p>Naam bedrijf: [BEDRIJFSNAAM INVOEGEN]</p>
-                <p>Adres: [ADRES INVOEGEN]</p>
-                <p>Contact: [E-MAIL/TELEFOON INVOEGEN]</p>
+                <p>Naam bedrijf: [CarAndAll]</p>
+                <p>Adres: [Johanna Westerdijkplein 75, Den Haag]</p>
+                <p>Contact: [info@carandall.com]</p>
             </section>
 
             <section>
                 <h2>2. Functionaris voor Gegevensbescherming (FG)</h2>
-                <p>Contactgegevens FG: [NAAM EN CONTACTGEGEVENS INVOEGEN]</p>
+                <p>Contactgegevens FG: Madikh Aslam, m.aslam@gmail.com</p>
             </section>
 
             <section>
@@ -32,12 +33,12 @@ const PrivacyPolicy = () => {
 
             <section>
                 <h2>5. Doorgifte buiten de EU</h2>
-                <p>[INFORMATIE OVER DOORGIFTE BUITEN DE EU INVOEGEN OF VERMELDEN DAT HET NIET VAN TOEPASSING IS]</p>
+                <p>[*Niet van toepassing*]</p>
             </section>
 
             <section>
                 <h2>6. Bewaartermijn</h2>
-                <p>De persoonsgegevens worden bewaard voor: [BEWAARTERMIJN INVOEGEN]</p>
+                <p>De persoonsgegevens worden bewaard voor: [Periode van maximaal 12 maanden]</p>
             </section>
 
             <section>
@@ -47,12 +48,18 @@ const PrivacyPolicy = () => {
 
             <section>
                 <h2>8. Klachten</h2>
-                <p>U kunt een klacht indienen bij de Autoriteit Persoonsgegevens via: [WEBSITE LINK INVOEGEN]</p>
+                <p>
+                    U kunt een klacht indienen bij de Autoriteit Persoonsgegevens via:
+                    <a href="https://www.autoriteitpersoonsgegevens.nl/een-tip-of-klacht-indienen-bij-de-ap" target="_blank" rel="click">
+                        AVG klacht indienen
+                    </a>
+                </p>
             </section>
+
 
             <section>
                 <h2>9. Verplichting gegevensverstrekking</h2>
-                <p>[INFORMATIE OVER OF GEGEVENS VERPLICHT ZIJN INVOEGEN]</p>
+                <p>[Verplichte velden aanwezig]</p>
             </section>
 
             <section>
@@ -66,7 +73,7 @@ const PrivacyPolicy = () => {
             </section>
 
             <footer>
-                <p>© [JAARTAL] [BEDRIJFSNAAM]. Alle rechten voorbehouden.</p>
+                <p>© 2024 CarAndAll. Alle rechten voorbehouden.</p>
             </footer>
         </div>
     );
