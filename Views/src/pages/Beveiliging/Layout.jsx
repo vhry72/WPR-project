@@ -17,9 +17,7 @@ const Layout = () => {
         ],
         ZakelijkeHuurder: [
             { to: "/instellingen", label: "Instellingen" },
-            { to: "/zaakdashboard", label: "Zaak Dashboard" },
-            { to: "/zakelijkeautotonen", label: "Zakelijke Auto's" },
-            { to : "WagenparkBeheerderForm", label : "Voeg een Wagenparkmedewerker toe"}
+            { to : "WagenparkBeheerderForm", label : "Voeg een Wagenparkmedewerker toe"},
         ],
         BedrijfsMedewerker: [
             { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },
@@ -70,7 +68,8 @@ const Layout = () => {
                     <Link to="/" className="nav-link">Home</Link>
                     {!userRole && <Link to="/register" className="nav-link">Aanmelden</Link>}
                     {!userRole && <Link to="/login" className="nav-link">Inloggen</Link>}
-                    {!userRole && <Link to="/Privacyverklaring" className="nav-link">Privacyverklaring</Link>}
+                    {!userRole  && <Link to="/Privacyverklaring" className="nav-link">Privacyverklaring</Link>}
+                    { userRole && <Link to="/Privacyverklaring" className="nav-link">Privacyverklaring</Link>}
                     {userRole &&
                         navLinks[userRole]?.map((link, index) => (
                             <Link key={index} to={link.to} className="nav-link">

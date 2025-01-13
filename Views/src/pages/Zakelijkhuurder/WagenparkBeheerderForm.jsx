@@ -3,6 +3,7 @@ import axios from 'axios';
 import '../../styles/WagenparkBeheerderForm.css';
 import JwtService from '../../services/JwtService';
 import { v4 as uuidv4 } from 'uuid';
+import { toast } from 'react-toastify';
 
 const API_URL = "https://localhost:5033";
 
@@ -20,6 +21,17 @@ const WagenparkBeheerderForm = () => {
     const [AbonnementType, setAbonnementType] = useState('');
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(true);
+
+    const toastId = "abonnement-warning";
+
+    toast.warning(
+        "Je moet een abonnement toevoegen om een wagenparkbeheerder aan te maken.",
+        {
+            toastId, // Voorkomt duplicaten
+            autoClose: 3000,
+        }
+    );
+
 
     useEffect(() => {
         const fetchInitialData = async () => {
@@ -59,15 +71,24 @@ const WagenparkBeheerderForm = () => {
     const fetchAbonnementData = async (id) => {
         try {
             const response = await axios.get(`${API_URL}/api/ZakelijkeHuurder/${id}/AbonnementId`);
-            console.log(response);
             if (response.data) {
                 setAbonnementId(response.data.abonnementId);
                 setAbonnementType(response.data.abonnementType);
             }
         } catch (error) {
-            console.error(error.response);
+            if (error.response && error.response.status === 404) {
+                if (!toast.isActive(toastId)) { // Controleer of de toast al actief is
+                    toast.warning(
+                        "Je moet een abonnement toevoegen om een wagenparkbeheerder aan te maken.",
+                        { toastId }
+                    );
+                }
+            } else {
+                console.error('Er is een fout opgetreden bij het ophalen van het abonnement:', error);
+            }
         }
     };
+
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -80,17 +101,21 @@ const WagenparkBeheerderForm = () => {
         }
     };
 
-    
-
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        if (!AbonnementId) {
+            toast.warning("Je moet een abonnement toevoegen om een wagenparkbeheerder aan te maken.", { autoClose: 3000 });
+            return;
+        }
+
         try {
             const payload = {
                 beheerderId: uuidv4(),
                 beheerderNaam: beheerderNaam,
                 bedrijfsEmail: bedrijfsEmail,
                 adres: adres,
-                kvkNummer: String(KVKNummer), 
+                kvkNummer: String(KVKNummer),
                 abonnementId: AbonnementId,
                 abonnementType: AbonnementType,
                 telefoonNummer: telefoonNummer,
