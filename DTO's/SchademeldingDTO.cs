@@ -10,7 +10,7 @@ namespace WPR_project.DTO_s
         public DateTime Datum { get; set; }
         public string Status { get; set; }
         public string Opmerkingen { get; set; }      
-        public SoortOnderhoud SoortOnderhoud { get; set; }
+      
         public Guid VoertuigId { get; set; }      
         
     }
