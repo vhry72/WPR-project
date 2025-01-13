@@ -38,6 +38,7 @@ import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
 import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
 import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
 import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
+import FrontofficeRegister from "./pages/BackOfficeMedewerker/FrontofficeRegister";
 
 
 
@@ -246,9 +247,16 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
-                       
 
 
+                        <Route
+                            path="FrontofficeRegister"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <FrontofficeRegister />
+                                </PrivateRoute>
+                            }
+                        />
 
                         {/* Openbare pagina's */}
                         

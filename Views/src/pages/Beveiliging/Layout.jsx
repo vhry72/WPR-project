@@ -28,7 +28,8 @@ const Layout = () => {
             { to: "/instellingen", label: "Instellingen" },
             { to: "/BackOfficeVerhuuraanvragen", label: "Huur Verzoeken" },
             { to: "/SchadeMeldingen", label: "Schademeldingen" },
-            { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken"}
+            { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken" },
+            { to: "/FrontofficeRegister", label: "Frontoffice Beheer"}
         ],
         FrontofficeMedewerker: [
             { to: "/instellingen", label: "Instellingen" },
