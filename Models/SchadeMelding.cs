@@ -17,10 +17,12 @@ namespace WPR_project.Models
         [Required]
         public string Status { get; set; } 
 
-        public string Opmerkingen { get; set; } 
+        public string Opmerkingen { get; set; }
 
-        public SoortOnderhoud SoortOnderhoud { get; set; }
-        
+        public Onderhoud? Onderhoud { get; set; }
+
+        public Reparatie? Reparatie { get; set; }
+
         [Required]
         public Guid VoertuigId { get; set; }
 
