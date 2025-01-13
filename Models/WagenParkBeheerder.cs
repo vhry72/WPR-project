@@ -51,6 +51,6 @@ namespace WPR_project.Models
 
         public Guid zakelijkeId { get; set; }
 
-        public int voertuiglimiet { get; set; }
+        public int? voertuiglimiet { get; set; }
     }
 }
