@@ -69,14 +69,25 @@ namespace WPR_project.Controllers
         [HttpGet("{id}/AbonnementId")]
         public IActionResult GetAbonnementIdByZakelijkeHuurder(Guid id)
         {
+            // Haal het abonnement-ID van de zakelijke huurder op   
             var huurder = _service.GetAbonnementIdByZakelijkeHuurder(id);
-            var abonnement = _abonnementService.GetAbonnementById(huurder);
             if (huurder == null)
             {
-                return NotFound("Zakelijke huurder niet gevonden.");
+                return NotFound(new { message = "Zakelijke huurder niet gevonden." });
             }
+
+            // Haal de details van het abonnement op
+            var abonnement = _abonnementService.GetAbonnementById(huurder.Value);
+            if (abonnement == null)
+            {
+                return NotFound("Abonnement niet gevonden.");
+            }
+
+            // Stuur de abonnementsdetails terug
             return Ok(abonnement);
         }
+
+
 
 
         [HttpPost]

@@ -68,15 +68,10 @@ namespace WPR_project.Services
             return true;
         }
 
-        public Guid GetAbonnementIdByZakelijkeHuurder(Guid id)
+        public Guid? GetAbonnementIdByZakelijkeHuurder(Guid id)
         {
-            var AbonnementID = _repository.GetAbonnementIdByZakelijkeHuurder(id);
-            if (AbonnementID == Guid.Empty)
-            {
-                throw new KeyNotFoundException("Abonnement ID niet gevonden.");
-            }
-
-            return AbonnementID;
+            return _repository.GetAbonnementIdByZakelijkeHuurder(id);
+            
         }
     
 

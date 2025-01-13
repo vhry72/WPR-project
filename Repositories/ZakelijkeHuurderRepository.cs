@@ -30,7 +30,7 @@ namespace WPR_project.Repositories
             }
         }
 
-        public Guid GetAbonnementIdByZakelijkeHuurder(Guid id)
+        public Guid? GetAbonnementIdByZakelijkeHuurder(Guid id)
         {
             var abonnementId = _context.Abonnementen
                 .Where(m => m.zakelijkeId == id)
