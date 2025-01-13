@@ -120,7 +120,7 @@ namespace WPR_project.Services
         }
 
 
-        // Voeg een medewerker toe aan een zakelijke huurder
+        // Voeg een medewerker toe 
         public void VoegMedewerkerToe(Guid zakelijkeId, string medewerkerNaam, string medewerkerEmail, string wachtwoord)
         {
             // Controleer of de huurder bestaat
@@ -154,6 +154,49 @@ namespace WPR_project.Services
             _emailService.SendEmail(medewerkerEmail, "Welkom bij het bedrijfsaccount", bericht);
         }
 
+        public void ZetVoertuigenLimiet(Guid beheerderId, int nieuwLimiet)
+        {
+            var beheerder = _repository.GetBeheerderById(beheerderId);
+            if (beheerder == null)
+            {
+                throw new KeyNotFoundException("Beheerder niet gevonden.");
+            }
+            beheerder.voertuiglimiet = nieuwLimiet;
+            _repository.UpdateWagenparkBeheerder(beheerder);
+            _repository.Save();
+        }
+
+        public void VerhoogVoertuigenLimiet(Guid beheerderId, int verhoging)
+        {
+            var beheerder = _repository.GetBeheerderById(beheerderId);
+            if (beheerder == null)
+            {
+                throw new KeyNotFoundException("Beheerder niet gevonden.");
+            }
+            beheerder.voertuiglimiet += verhoging;
+            _repository.UpdateWagenparkBeheerder(beheerder);
+            _repository.Save();
+        }
+
+        public void VerlaagVoertuigenLimiet(Guid beheerderId, int verlaging)
+        {
+            var beheerder = _repository.GetBeheerderById(beheerderId);
+            if (beheerder == null)
+            {
+                throw new KeyNotFoundException("Beheerder niet gevonden.");
+            }
+            if (beheerder.voertuiglimiet - verlaging >= 0)
+            {
+                beheerder.voertuiglimiet -= verlaging;
+                _repository.UpdateWagenparkBeheerder(beheerder);
+                _repository.Save();
+            }
+            else
+            {
+                throw new InvalidOperationException("Limiet kan niet negatief zijn.");
+            }
+        }
+    
         // Verwijder een medewerker van een zakelijke huurder
         public void VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
         {

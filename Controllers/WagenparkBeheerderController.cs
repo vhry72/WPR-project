@@ -194,6 +194,48 @@ namespace WPR_project.Controllers
                 });
             }
 
+            [HttpPost("/zet-limiet")]
+             IActionResult ZetVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int nieuwLimiet)
+            {
+                try
+                {
+                    _service.ZetVoertuigenLimiet(beheerderId, nieuwLimiet);
+                    return Ok("Limiet succesvol ingesteld.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            [HttpPut("/verhoog-limiet")]
+             IActionResult VerhoogVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verhoging)
+            {
+                try
+                {
+                    _service.VerhoogVoertuigenLimiet(beheerderId, verhoging);
+                    return Ok("Limiet succesvol verhoogd.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            [HttpPut("/verlaag-limiet")]
+             IActionResult VerlaagVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verlaging)
+            {
+                try
+                {
+                    _service.VerlaagVoertuigenLimiet(beheerderId, verlaging);
+                    return Ok("Limiet succesvol verlaagd.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
             try
             {
                 // aanroep om medewerker toe te voegen
