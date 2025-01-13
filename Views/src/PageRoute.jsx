@@ -41,8 +41,10 @@ import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDeta
 import VoertuigNotitieTonen from "./pages/FrontOfficeMedewerker/VoertuigNotitieToevoegen";
 import VoertuigToevoegen from "./pages/BackOfficeMedewerker/VoertuigToevoegen";
 import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
+import FrontofficeRegister from "./pages/BackOfficeMedewerker/FrontofficeRegister";
 import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderForm";
 import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig";
+
 
 
 
@@ -301,9 +303,16 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
-                       
 
 
+                        <Route
+                            path="FrontofficeRegister"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <FrontofficeRegister />
+                                </PrivateRoute>
+                            }
+                        />
 
                         {/* Openbare pagina's */}
                         

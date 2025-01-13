@@ -19,3 +19,4 @@ namespace WPR_project.Models
         public List<FrontofficeMedewerker>? FrontofficeMedewerkers { get; set; } = new List<FrontofficeMedewerker>();
     }
 }
+ 
