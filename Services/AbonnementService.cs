@@ -34,6 +34,11 @@ namespace WPR_project.Services
             return _abonnementRepository.GetBijnaVerlopenAbonnementen();
         }
 
+        public Abonnement GetAbonnementById(Guid id)
+        {
+            return _abonnementRepository.GetAbonnementById(id);
+        }
+
         public void VoegMedewerkerToe(Guid bedrijfsId, string medewerkerNaam, string medewerkerEmail)
         {
             if (string.IsNullOrWhiteSpace(medewerkerEmail) || !medewerkerEmail.Contains("@"))
@@ -214,12 +219,6 @@ namespace WPR_project.Services
             StuurFactuurEmail(beheerderId, abonnementId);
         }
 
-        public DateTime BerekenVolgendePeriode()
-        {
-            var huidigeDatum = DateTime.Now;
-            return new DateTime(huidigeDatum.Year, huidigeDatum.Month, 1).AddMonths(1);
-        }
-
         public void WijzigAbonnementMetDirecteKosten(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
         {
             var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
@@ -246,8 +245,6 @@ namespace WPR_project.Services
 
             beheerder.HuidigAbonnement = abonnement;
             beheerder.AbonnementType = abonnementType;
-
-            beheerder.updateDatumAbonnement = BerekenVolgendePeriode();
 
             _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
             _wagenparkBeheerderRepository.Save();

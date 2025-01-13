@@ -1,12 +1,12 @@
 ﻿import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const SchadeClaimsList = () => {
     const [schademeldingen, setSchademeldingen] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-
+    const navigate = useNavigate(); // React Router hook for navigation
 
 
     useEffect(() => {
@@ -38,7 +38,9 @@ const SchadeClaimsList = () => {
             .catch(err => alert(`Fout bij status aanpassing: ${err.message}`));
     };
 
-
+    const handleMaakSchadeClaimClick = () => {
+        navigate(`/SchadeClaimMaken`); // Gebruik routeparameters
+    };
 
 
     if (loading) return <div>Loading...</div>;
@@ -47,7 +49,9 @@ const SchadeClaimsList = () => {
         <div>
             <h1>Schadeclaims</h1>
             {error && <p>{error}</p>} {/* Toon een foutmelding als er een fout optreedt */}
-
+            <button onClick= {handleMaakSchadeClaimClick}>
+                Nieuwe Schadeclaim Toevoegen
+            </button>
             {schademeldingen.length === 0 ? (
                 <p>Geen Schadeclaims op het moment.</p>
             ) : (
@@ -66,9 +70,12 @@ const SchadeClaimsList = () => {
                             </button>
                         </li>
                     ))}
-                </ul>
+                    </ul>
+
             )}
         </div>
+
+
     );
 };
 

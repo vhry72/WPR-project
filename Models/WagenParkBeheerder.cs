@@ -50,5 +50,7 @@ namespace WPR_project.Models
         public string AspNetUserId { get; set; }
 
         public Guid zakelijkeId { get; set; }
+
+        public int? voertuiglimiet { get; set; }
     }
 }

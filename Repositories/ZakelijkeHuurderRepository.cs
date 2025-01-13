@@ -30,6 +30,16 @@ namespace WPR_project.Repositories
             }
         }
 
+        public Guid GetAbonnementIdByZakelijkeHuurder(Guid id)
+        {
+            var abonnementId = _context.Abonnementen
+                .Where(m => m.zakelijkeId == id)
+                .Select(m => m.AbonnementId)
+                .FirstOrDefault();
+
+            return abonnementId != default ? abonnementId : Guid.Empty;
+        }
+
         // Haal alle zakelijke huurders op
         public IEnumerable<ZakelijkHuurder> GetAllZakelijkHuurders()
         {

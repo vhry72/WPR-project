@@ -122,7 +122,23 @@ namespace WPR_project.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
-
+        [HttpPut("veranderGegevens/{id}")]
+        public IActionResult veranderGegevens(Guid id, [FromBody] VoertuigWijzigingDTO DTO)
+        {
+            try
+            {
+                _voertuigService.veranderGegevens(id, DTO);
+                return Ok(new { Message = "Voertuiggegevens succesvol bijgewerkt." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
 
         [HttpPut("veranderBeschikbaar/{id}/{voertuigBeschikbaar}")]
         public IActionResult neemIn(Guid id, bool voertuigBeschikbaar)
@@ -143,7 +159,26 @@ namespace WPR_project.Controllers
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
             }
         }
-        [HttpDelete("verwijderVoertuig{id}")]
+        [HttpPut("maaknotitie/{id}")]
+        public IActionResult maakNotitie(Guid id, [FromBody] VoertuigDTO voertuigNotitieDTO)
+        {
+            try
+            {
+                var voertuig = _voertuigService.GetById(id);
+                if (voertuig == null)
+                {
+                    return NotFound(new { Message = "Voertuig niet gevonden." });
+                }
+                voertuig.notitie = voertuigNotitieDTO.notitie;
+                _voertuigService.UpdateVoertuig(id, voertuig);
+                return Ok(new { Message = "Notitie toegevoegd." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Interne serverfout: {ex.Message}");
+            }
+        }
+        [HttpDelete("verwijderVoertuig/{id}")]
         public IActionResult DeleteVoertuig(Guid id)
         {
             try
@@ -153,7 +188,7 @@ namespace WPR_project.Controllers
             }
             catch (KeyNotFoundException)
             {
-                return NotFound(new { Message = "Huurder niet gevonden." });
+                return NotFound(new { Message = "Voertuig niet gevonden." });
             }
         }
         
@@ -172,8 +207,14 @@ namespace WPR_project.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                // Log the exception (e.g., to a file or monitoring tool)
+                return StatusCode(500, new
+                {
+                    Message = "An error occurred while processing your request.",
+                    Details = ex.InnerException?.Message ?? ex.Message
+                });
             }
+
         }
 
     }

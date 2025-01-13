@@ -9,6 +9,8 @@ namespace WPR_project.Repositories
         ZakelijkHuurder GetZakelijkHuurderById(Guid id);
         ZakelijkHuurder GetZakelijkHuurderByToken(Guid token);
 
+        Guid GetAbonnementIdByZakelijkeHuurder(Guid id);
+
         void AddZakelijkHuurder(ZakelijkHuurder zakelijkHuurder);
         void UpdateZakelijkHuurder(ZakelijkHuurder zakelijkHuurder);
         void DeleteZakelijkHuurder(Guid id);

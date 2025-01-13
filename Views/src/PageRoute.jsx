@@ -4,6 +4,7 @@ import Layout from "./pages/Beveiliging/Layout";
 import Register from "./pages/Accountbeheer/register";
 /*import Login from "./pages/login";*/
 import Index from "./pages/Index";
+import Privacyverklaring from "./pages/Beveiliging/Privacyverklaring";
 import Abonnement from "./pages/AbonnementBeheer/abonnement";
 import BedrijfsAbonnement from "./pages/AbonnementBeheer/bedrijfsabonnement";
 /*import MedewerkerAbonnementDashboard from "./pages/medewerkerAbonnementDashboard";*/
@@ -37,8 +38,14 @@ import VerwijderAccount from "./pages/Accountbeheer/VerwijderAccount";
 import SchadeClaimMaken from "./pages/BackOfficeMedewerker/SchadeClaimMaken";
 import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
 import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
+import VoertuigNotitieTonen from "./pages/FrontOfficeMedewerker/VoertuigNotitieToevoegen";
+import VoertuigToevoegen from "./pages/BackOfficeMedewerker/VoertuigToevoegen";
 import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
 import FrontofficeRegister from "./pages/BackOfficeMedewerker/FrontofficeRegister";
+import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderForm";
+import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig";
+
+
 
 
 
@@ -56,6 +63,7 @@ function PageRoute() {
                         <Route path="VerhuurdeVoertuigen" element={<VerhuurdeVoertuigen/> } />
                         <Route path="login" element={<LoginVoorWijziging />} />
                         <Route path="VerwijderAccount" element={<VerwijderAccount />} />
+                        <Route path="privacyverklaring" element={<Privacyverklaring />} />
                         
 
                         {/* Routes specifiek voor 'particulier' */}
@@ -100,6 +108,15 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["ZakelijkeHuurder", "WagenparkBeheerder"]}>
                                     <Abonnement />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="WagenparkBeheerderForm"
+                            element={
+                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
+                                    <WagenparkBeheerderForm />
                                 </PrivateRoute>
                             }
                         />
@@ -172,6 +189,30 @@ function PageRoute() {
                             }
                         />
                         <Route
+                            path="VoertuigTonen"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <VoertuigTonen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="VoertuigToevoegen"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <VoertuigToevoegen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="VoertuigDetailsBackOffice/:voertuigId"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <VoertuigDetailsBackOffice />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
                             path="BackOfficeVerhuurAanvragen"
                             element={
                                 <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
@@ -206,6 +247,14 @@ function PageRoute() {
                             }
                         />
                         <Route
+                            path="WijzigingenVoertuig/:voertuigId"
+                            element={
+                                <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
+                                    <WijzigingVoertuig/>
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
                             path="VoeruigInenUitname"
                             element={
                                 <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
@@ -213,7 +262,14 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
-
+                        <Route
+                            path="VoertuigNotitieToevoegen/:voertuigId"
+                            element={
+                                <PrivateRoute allowedRoles={["FrontofficeMedewerker"]}>
+                                    <VoertuigNotitieTonen />
+                                </PrivateRoute>
+                            }
+                        />
                         {/* Routes specifiek voor 'wagenparkbeheerder' */}
                         <Route
                             path="wagendashboard"
@@ -277,9 +333,8 @@ function PageRoute() {
                         <Route path="FrontOfficeMedewerker" element={<FrontOfficeMedewerker />} />
                         <Route path="VoertuigDetails" element={<VoertuigDetails />} />
                         <Route path="VoertuigInenUitname" element={<VoertuigInEnUitname />} />
-                        <Route path="BackOfficeMedewerker/SchadeClaimMaken" element={<SchadeClaimMaken/> } />
-                        <Route path="VoertuigTonen" element={<VoertuigTonen />} />
-                        <Route path="VoertuigDetailsBackOffice/:voertuigId" element={<VoertuigDetailsBackOffice />} />
+                        <Route path="BackOfficeMedewerker/SchadeClaimMaken" element={<SchadeClaimMaken />} />
+                       
                     </Route>
                 </Routes>
             </BrowserRouter>

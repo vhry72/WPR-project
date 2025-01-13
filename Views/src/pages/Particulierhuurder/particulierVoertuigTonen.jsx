@@ -8,7 +8,6 @@ const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
     const navigate = useNavigate();
-
     const handleChange = (event) => {
         setFilterType(event.target.value);
     };

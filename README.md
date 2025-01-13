@@ -4,7 +4,7 @@
 voer in de powershell van je IDE: npm install
 
 # start-backend
-start de backend door de https aan te zetten
+start de backend door in visual studio op F5 te drukken (of op de groene knop bovenaan te klikken).
 
 # start-frontend
 na de backend aan te zetten voer je de volgende stappen uit:

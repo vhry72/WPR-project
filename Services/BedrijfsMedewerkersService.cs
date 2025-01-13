@@ -150,7 +150,6 @@ namespace WPR_project.Services
             schademelding.Datum= DTO.Datum;
             schademelding.Status= DTO.Status;
             schademelding.Opmerkingen= DTO.Opmerkingen;
-            schademelding.SoortOnderhoud = DTO.SoortOnderhoud;
             schademelding.VoertuigId = DTO.VoertuigId;
 
             _schaderepository.updateSchademelding(schademelding);
