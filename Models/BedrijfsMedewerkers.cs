@@ -20,14 +20,16 @@ namespace WPR_project.Models
         public Guid EmailBevestigingToken { get; set; }
 
         public bool IsEmailBevestigd { get; set; } = false;
-        
+
         [Required(ErrorMessage = "wachtwoord is verplicht.")]
         [MinLength(8, ErrorMessage = "wachtwoord moet minimaal 8 tekens bevatten.")]
         [RegularExpression(@"^(?=.*[A-Z])(?=.*[!@#$&*]).+$",
             ErrorMessage = "wachtwoord moet minstens één hoofdletter en één uniek teken bevatten.")]
         public string wachtwoord { get; set; }
 
-        
+        public Guid AbonnementId { get; set; }
+
+
         [Required(ErrorMessage = "Zakelijke huurder ID is verplicht.")]
         public Guid zakelijkeId { get; set; } // Buitenlandse sleutel voor relatie
 

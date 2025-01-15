@@ -8,6 +8,7 @@ using WPR_project.Repositories;
 using WPR_project.Services;
 using WPR_project.Services.Email;
 using System.Text.Json.Serialization;
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +88,10 @@ builder.Services.AddAuthentication(options =>
 });
 
 
+builder.Services.AddHangfire(configuration => configuration
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddHangfireServer();
+
 
 // Dependency Injection voor repositories
 builder.Services.AddScoped<IHuurderRegistratieRepository, HuurderRegistratieRepository>();
@@ -139,6 +144,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseHangfireDashboard();
 }
 
 app.UseHttpsRedirection();
