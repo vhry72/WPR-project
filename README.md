@@ -12,4 +12,4 @@ na de backend aan te zetten voer je de volgende stappen uit:
 2. typ in de powershell: cd Views
 3. vervolgens: npm run dev
 4. open met o + enter
-5. de applicatie draait op http://localhost:5173 
+5. de applicatie draait op https://localhost:5173 
