@@ -159,6 +159,7 @@ namespace WPR_project.Controllers
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
             }
         }
+
         [HttpPut("maaknotitie/{id}")]
         public IActionResult maakNotitie(Guid id, [FromBody] VoertuigDTO voertuigNotitieDTO)
         {

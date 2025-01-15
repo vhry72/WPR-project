@@ -6,21 +6,99 @@
 }
 
 /* Algemene styling */
-body {
+html, body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-color: #0c2067;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
-/*H1tekst van indexjsx margin veranderen*/
-/* Stijl voor de H1-tekst (centreren van de tekst) */
-.H1Tekst-Index {
+
+.hero-section {
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 40vh;
+    background: url('../assets/20200108_CES_603.jpg') center/cover no-repeat;
+    background-size: cover;
+    color: white;
+    text-align: center;
+    width: 100%;
+    margin: 0;
     padding: 0;
-    margin-top: 40px; /* Pas deze waarde aan om de afstand tussen de tekst en de knoppen te wijzigen */
 }
+
+.hero-text {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 90%;
+}
+
+    .hero-text h1 {
+        color: white;
+        font-size: 2.5rem;
+    }
+    .hero-text p {
+        color: white;
+        font-size: 1.5rem;
+    }
+
+.onze-diensten {
+    color: white;
+    text-align: center;
+    margin-bottom: 10px;
+    border-bottom: 2px solid white;
+}
+
+/* Services section responsive */
+.services-section {
+    padding: 20px;
+    background-color: #0c2067;
+    width: 100%;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.service-card {
+    background: white;
+    color: black;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    max-width: 100%;
+    overflow: hidden;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+    .service-card img {
+        width: 100%;
+        border-radius: 10px;
+        height: 200px;
+        object-fit: cover;
+    }
+
+/* Footer styling */
+.footer {
+    text-align: center;
+    padding: 20px;
+    background: #0c2067;
+    color: white;
+    width: 100%;
+    margin-top: auto;
+}
+
 
     /* Containers */
     .index-container {
@@ -50,11 +128,6 @@ body {
     .btn:hover {
         background-color: #0056b3;
     }
-
-
-.register-container {
-
-}
 
 /* Centraal uitgelijnde login-container */
 .login-container {
@@ -179,245 +252,97 @@ h3 {
         font-size: 16px;
     }
 
-/* Responsiviteit */
-@media (max-width: 600px) {
-    .index-container, .register-container, .login-container {
+/* Media query voor telefoons */
+@media (max-width: 768px) {
+    .hero-section {
+        height: auto;
+        padding: 20px;
+    }
+
+    .services-section {
+        height: auto;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .service-card {
         padding: 15px;
+        font-size: 0.9rem;
+        word-wrap: break-word;
+        white-space: normal;
     }
 
-    .btn {
-        padding: 8px 15px;
-        font-size: 14px;
-    }
-
-    .tabs {
-        flex-direction: column;
-    }
-
-    .tab {
-        padding: 10px;
-        font-size: 14px;
-    }
+        .service-card img {
+            height: 120px;
+        }
 }
 
-/* --- STIJLEN VOOR HOME.JSX --- */
-
-/* Navigatiebalk */
-/*nav {
-    display: flex;
-    justify-content: center;
-    padding: 20px;
-    background-color: #333;
-}
-
-    nav ul {
-        list-style: none;
-        display: flex;
-        margin: 0;
-        padding: 0;
-    }
-
-        nav ul li {
-            margin: 0 15px;
+    /* Responsiviteit */
+    @media (max-width: 600px) {
+        .index-container, .register-container, .login-container {
+            padding: 15px;
         }
 
-            nav ul li a {
-                text-decoration: none;
-                color: white;
-                font-size: 18px;
-                padding: 10px 15px;
-            }
+        .btn {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
 
-                nav ul li a:hover {
-                    background-color: #555;
-                    border-radius: 5px;
-                }*/
-/* Style for the navigation bar */
-/*.navbar {
-    background-color: #007bff;
-    padding: 20px;
-}*/
+        .tabs {
+            flex-direction: column;
+        }
 
-/* Style for each navigation link */
-/*.nav-link {
-    color: #FFFFFF;
-    font-family: Arial, sans-serif;
-    font-size: 18px;
-    padding: 10px 15px;
-    text-decoration: none;
-    margin-right: 10px;
-}
-
-.nav-link:hover {
-    background-color: #2c3e50;
-    border-radius: 5px;
-}*/
-
- /*Header*/ 
-/*header {
-    background-color: #333;
-    padding: 10px 0;
-}
-
-    header .logo img {
-        width: 150px;
-    }*/
-
-/* Hero sectie */
-.hero {
-    background-image: url('../assets/20200108_CES_603.jpg');
-    background-size: cover; /* Zorgt ervoor dat de achtergrondafbeelding volledig wordt bedekt */
-    background-position: center; /* Centreert de afbeelding */
-    background-repeat: no-repeat; /* Voorkomt dat de afbeelding wordt herhaald */
-    color: white; 
-    height: 336px; 
-    display: flex; /* Maakt gebruik van flexbox */
-    align-items: center; /* Centreert inhoud verticaal */
-    justify-content: center; /* Centreert inhoud horizontaal */
-    text-align: center; /* Zorgt ervoor dat de tekst gecentreerd is */
-    flex-direction: column; /* Zorgt ervoor dat de elementen onder elkaar worden geplaatst */
-}
-
-    .hero h1 {
-        font-size: 3rem; /* Grotere lettergrootte voor de hoofdtitel */
-        margin-bottom: 20px; /* Ruimte onder de titel */
-    }
-.services h2 {
-    border-block-end: 2px solid #f4f4f4;
-    color: #f4f4f4; /* Witte tekstkleur voor leesbaarheid */
-}
-
-    .hero p {
-        font-size: 1.2rem; /* Lettergrootte voor de ondertitel */
-        margin-bottom: 30px; /* Ruimte onder de ondertitel */
+        .tab {
+            padding: 10px;
+            font-size: 14px;
+        }
     }
 
-.hero-text-container {
-    display: inline-block; /* Zorgt ervoor dat de tekstcontainer niet 100% breed is */
-    padding: 20px; /* Binnenruimte in het witte blokje */
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparante witte achtergrond */
-    border: 2px solid white; /* Witte rand */
-    border-radius: 15px; /* Ronde hoeken */
-    position: relative; /* Houdt positie binnen de parent */
-    z-index: 1; /* Zorgt dat het tekstblok boven de achtergrond verschijnt */
-}
-
-    .hero-text-container h1,
-    .hero-text-container p {
-        margin: 0; /* Verwijdert standaard marges */
-        color: #000; /* Zwarte tekstkleur voor leesbaarheid */
+    .subscription-container {
+        text-align: center;
+        margin: 20px;
+        font-family: Arial, sans-serif;
     }
 
-.ontdek-btn {
-    display: block; /* Zorgt ervoor dat de knop onder het tekstblok verschijnt */
-    text-align: center; /* Centreert de knop */
-    margin-top: 20px; /* Ruimte boven de knop */
-}
-
-.hero .cta {
-    background-color: #000; /* Zwarte achtergrondkleur voor de knop */
-    color: white; /* Witte tekstkleur */
-    padding: 10px 20px; /* Binnenruimte in de knop */
-    text-decoration: none; /* Verwijdert onderstreping */
-    font-weight: bold; /* Vetgedrukte tekst */
-    border-radius: 5px; /* Ronde hoeken voor de knop */
-    display: inline-block; /* Zorgt ervoor dat de knop netjes om de tekst past */
-}
-
-    .hero .cta:hover {
-        background-color: #555; /* Donkergrijze achtergrondkleur bij hover */
+    .subscription-options {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 20px;
     }
 
-
-
-/* Services */
-.services {
-    padding: 30px;
-    border-radius: 0;
-    text-align: center;
-    background-color: #0c2067;
-    width: 100%; 
-    box-sizing: border-box; 
-}
-
-.service-list {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap; 
-    gap: 0px; 
-}
-
-.service {
-    width: 20%; /* Kleinere breedte voor de kaarten */
-    padding: 15px; /* Minder binnenruimte in de kaarten */
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Minder uitgesproken schaduw */
-}
-
-    .service img {
-        width: 100%; /* Afbeeldingen kleiner passend maken */
-        border-radius: 10px;
+    .option {
+        padding: 15px 25px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    .service h3 {
-        font-size: 1.2rem; /* Kleinere titeltekst */
+        .option:hover {
+            background-color: black;
+            color: white;
+        }
+
+        .option.selected {
+            background-color: #007BFF;
+            color: white;
+            border-color: #0056b3;
+        }
+
+    .subscription-button {
+        margin-top: 20px;
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #007BFF;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
     }
 
-    .service p {
-        font-size: 1rem; /* Kleinere beschrijvingstekst */
-    }
-
-.footer-text {
-    text-align: center;
-    padding: 20px;
-    background-color: #333;
-    color: white;
-}
-
-.subscription-container {
-    text-align: center;
-    margin: 20px;
-    font-family: Arial, sans-serif;
-}
-
-.subscription-options {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.option {
-    padding: 15px 25px;
-    border: 2px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-    .option:hover {
-        background-color: black; 
-        color: white; 
-    }
-
-    .option.selected {
-        background-color: #007BFF; 
-        color: white; 
-        border-color: #0056b3;
-    }
-
-.subscription-button {
-    margin-top: 20px;
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-    .subscription-button:hover {
-        background-color: #0056b3; 
-    }
+        .subscription-button:hover {
+            background-color: #0056b3;
+        }
