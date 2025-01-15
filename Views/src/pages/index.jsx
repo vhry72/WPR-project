@@ -10,17 +10,17 @@ const Index = () => {
 
     return (
         <>
-            <div className="hero" id="home">
-                <div className="hero-text-container">
+            <div className="hero-section" id="home">
+                <div className="hero-text">
                     <h1>Welkom bij CarAndAll!</h1>
                     <p>Ontdek de beste diensten die we aanbieden!</p>
                 </div>
             </div>
 
             {/* Services Section */}
-            <section className="services" id="services">
-                <h2>Onze Diensten</h2>
-                <div className="service-list">
+            <section className="services-section" id="services">
+                <h2 className = "onze-diensten">Onze Diensten</h2>
+                <div className="services-grid">
                     {[
                         {
                             id: 1,
@@ -47,7 +47,7 @@ const Index = () => {
                             description: "Verhuur voor zowel zakelijke als persoonlijke behoeften.",
                         },
                     ].map((service) => (
-                        <div className="service" key={service.id}>
+                        <div className="service-card" key={service.id}>
                             <img
                                 src={service.imgSrc}
                                 alt={`${service.title} - ${service.description}`}
@@ -60,7 +60,7 @@ const Index = () => {
             </section>
 
             {/* Footer Section */}
-            <footer className = "footer-text">
+            <footer className="footer">
                 <p>&copy; 2024 CarAndAll. Alle rechten voorbehouden.</p>
             </footer>
         </>

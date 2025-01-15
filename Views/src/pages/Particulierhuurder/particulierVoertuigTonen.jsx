@@ -2,28 +2,43 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/ParticulierVoertuigTonen.css";
 import VoertuigRequestService from "../../services/requests/VoertuigRequestService";
-import JwtService from "../../services/JwtService"; // Importeer de nieuwe JWT-service
+import JwtService from "../../services/JwtService";
 
 const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
+    const [filterCriteria, setFilterCriteria] = useState("");
     const navigate = useNavigate();
+
+    useEffect(() => {
+        handleVoertuigType();
+    }, []);
+
     const handleChange = (event) => {
         setFilterType(event.target.value);
+    };
+
+    const handleCriteriaChange = (event) => {
+        setFilterCriteria(event.target.value.toLowerCase());
     };
 
     const handleVoertuigType = async () => {
         try {
             console.log("Voertuigen worden opgevraagd");
             const response = await VoertuigRequestService.getAll(filterType);
-            setVoertuigen(response);
+            const filteredVoertuigen = response.filter(v => v.voertuigBeschikbaar);
+            setVoertuigen(filteredVoertuigen);
         } catch (error) {
-            console.error("Het is niet gelukt om de voertuigtype op te halen", error);
+            console.error("Het is niet gelukt om de voertuigen op te halen", error);
         }
     };
 
+    const filteredVoertuigen = voertuigen.filter((v) =>
+        Object.values(v).some(value => value?.toString().toLowerCase().includes(filterCriteria))
+    );
+
     const handleSort = (criteria) => {
-        const sortedVoertuigen = [...voertuigen].sort((a, b) => {
+        const sortedVoertuigen = [...filteredVoertuigen].sort((a, b) => {
             if (a[criteria] < b[criteria]) return -1;
             if (a[criteria] > b[criteria]) return 1;
             return 0;
@@ -45,6 +60,13 @@ const ParticulierVoertuigTonen = () => {
                     <option value="camper">Camper</option>
                     <option value="caravan">Caravan</option>
                 </select>
+                <input
+                    type="text"
+                    placeholder="Filter op kenmerken (bijv. kleur, aantal deuren)"
+                    value={filterCriteria}
+                    onChange={handleCriteriaChange}
+                    className="input-field"
+                />
                 <button onClick={handleVoertuigType} className="button">
                     Voer voertuigType in
                 </button>
@@ -74,10 +96,11 @@ const ParticulierVoertuigTonen = () => {
                         <th>Kenteken</th>
                         <th>Kleur</th>
                         <th>Beschikbaar</th>
+                        <th>Beschikbaar tot</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {voertuigen.map((voertuig, index) => (
+                    {filteredVoertuigen.map((voertuig, index) => (
                         <tr key={index}>
                             <td
                                 onClick={() => handleVoertuigClick(voertuig)}
@@ -96,6 +119,7 @@ const ParticulierVoertuigTonen = () => {
                             <td>{voertuig.kenteken}</td>
                             <td>{voertuig.kleur}</td>
                             <td>{voertuig.voertuigBeschikbaar ? "Ja" : "Nee"}</td>
+                            <td>{voertuig.beschikbaarTot}</td>
                         </tr>
                     ))}
                 </tbody>

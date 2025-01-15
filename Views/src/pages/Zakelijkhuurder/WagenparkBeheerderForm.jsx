@@ -22,17 +22,6 @@ const WagenparkBeheerderForm = () => {
     const [errors, setErrors] = useState({});
     const [isLoading, setIsLoading] = useState(true);
 
-    const toastId = "abonnement-warning";
-
-    toast.warning(
-        "Je moet een abonnement toevoegen om een wagenparkbeheerder aan te maken.",
-        {
-            toastId, // Voorkomt duplicaten
-            autoClose: 3000,
-        }
-    );
-
-
     useEffect(() => {
         const fetchInitialData = async () => {
             try {
@@ -46,8 +35,9 @@ const WagenparkBeheerderForm = () => {
                 }
             } catch (error) {
                 console.error("Fout bij het ophalen van de huurder ID:", error);
+            } finally {
+                setIsLoading(false);
             }
-            setIsLoading(false);
         };
 
         fetchInitialData();
@@ -64,7 +54,7 @@ const WagenparkBeheerderForm = () => {
                 setBedrijfsEmail(response.data.bedrijfsEmail);
             }
         } catch (error) {
-            console.error(error.response);
+            console.error("Error fetching zakelijke huurder data:", error);
         }
     };
 
@@ -77,18 +67,11 @@ const WagenparkBeheerderForm = () => {
             }
         } catch (error) {
             if (error.response && error.response.status === 404) {
-                if (!toast.isActive(toastId)) { // Controleer of de toast al actief is
-                    toast.warning(
-                        "Je moet een abonnement toevoegen om een wagenparkbeheerder aan te maken.",
-                        { toastId }
-                    );
-                }
-            } else {
-                console.error('Er is een fout opgetreden bij het ophalen van het abonnement:', error);
+                setAbonnementId(null);
+                setAbonnementType(null);
             }
         }
     };
-
 
     const handleInputChange = (event) => {
         const { name, value } = event.target;
@@ -96,18 +79,12 @@ const WagenparkBeheerderForm = () => {
             case 'beheerderNaam': setBeheerderNaam(value); break;
             case 'bedrijfsEmail': setBedrijfsEmail(value); break;
             case 'wachtwoord': setWachtwoord(value); break;
-            case 'zakelijkeHuurderId': setZakelijkeHuurderId(value); break;
             default: break;
         }
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
-        if (!AbonnementId) {
-            toast.warning("Je moet een abonnement toevoegen om een wagenparkbeheerder aan te maken.", { autoClose: 3000 });
-            return;
-        }
 
         try {
             const payload = {
@@ -122,7 +99,7 @@ const WagenparkBeheerderForm = () => {
                 wachtwoord: wachtwoord,
                 emailBevestigingToken: uuidv4(),
                 isEmailBevestigd: false,
-                aspNetUserId: "string",
+                aspNetUserId: zakelijkeHuurderId,
                 zakelijkeId: zakelijkeId
             };
             console.log(payload);
@@ -134,7 +111,8 @@ const WagenparkBeheerderForm = () => {
 
             alert('Wagenparkbeheerder succesvol geregistreerd!');
         } catch (error) {
-            console.error(error.response);
+            console.error("Registratiefout:", error);
+            setErrors({ general: "Er is iets misgegaan met de registratie." });
         }
     };
 

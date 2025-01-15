@@ -7,7 +7,7 @@ import Index from "./pages/Index";
 import Privacyverklaring from "./pages/Beveiliging/Privacyverklaring";
 import Abonnement from "./pages/AbonnementBeheer/abonnement";
 import BedrijfsAbonnement from "./pages/AbonnementBeheer/bedrijfsabonnement";
-/*import MedewerkerAbonnementDashboard from "./pages/medewerkerAbonnementDashboard";*/
+import MedewerkerAbonnementDashboard from "./pages/Wagenparkbeheerder/medewerkerAbonnementDashboard";
 import Zaakdashboard from "./pages/Zakelijkhuurder/zaakdashboard";
 /*import Wagenparklogin from "./pages/wagenparklogin";*/
 import Wagendashboard from "./pages/Wagenparkbeheerder/wagendashboard";
@@ -176,6 +176,14 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
+                        <Route
+                            path="zaakdashboard"
+                            element={
+                                <PrivateRoute allowedRoles={["BedrijfsMedewerker"]}>
+                                    <Zaakdashboard />
+                                </PrivateRoute>
+                            }
+                        />
 
 
                         {/* Routes specifiek voor 'BackofficeMedewerker' */}
@@ -284,6 +292,14 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
                                     <Wagenbeheer />
+                                </PrivateRoute>
+                            }
+                            />
+                            <Route
+                            path="medewerkerAbonnementDashboard"
+                            element={
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
+                                <MedewerkerAbonnementDashboard/>
                                 </PrivateRoute>
                             }
                         />
