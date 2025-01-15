@@ -17,6 +17,8 @@ namespace WPR_project.DTO_s
 
         public Guid EmailBevestigingToken { get; set; }
 
+        public Guid AbonnemementId { get; set; }
+
         public bool IsEmailBevestigd { get; set; } = false;
 
         [Required(ErrorMessage = "wachtwoord is verplicht.")]
@@ -28,7 +30,7 @@ namespace WPR_project.DTO_s
         [Required(ErrorMessage = "Zakelijke huurder ID is verplicht.")]
         public Guid zakelijkeHuurderId { get; set; } 
 
-        public Guid WagenparkBeheerderbeheerderId { get; set; }
+        public Guid WagenparkBeheerderId { get; set; }
 
 
         [Required]
