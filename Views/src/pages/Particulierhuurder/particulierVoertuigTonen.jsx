@@ -1,36 +1,53 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "../../styles/ParticulierVoertuigTonen.css";
 import VoertuigRequestService from "../../services/requests/VoertuigRequestService";
 import JwtService from "../../services/JwtService";
+import axios from 'axios';
+
 
 const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
+    const [alleVoertuigen, setAlleVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
     const [filterCriteria, setFilterCriteria] = useState("");
+    const location = useLocation();
+    const { startDateTime, endDateTime, userRole } = location.state;
     const navigate = useNavigate();
+    
+    const formatDateForDB = (dateString) => {
+        return new Date(dateString).toISOString().replace('T', ' ').slice(0, 19);
+    }
+
+    const startdatum = formatDateForDB(startDateTime);
+    const einddatum = formatDateForDB(endDateTime)
+
 
     useEffect(() => {
-        handleVoertuigType();
+        const fetchVoertuigen = async () => {
+            try {
+                const response = await axios.get(`https://localhost:5033/api/Huurverzoek/BeschikbareVoertuigen/${startdatum}/${einddatum}`);
+                setAlleVoertuigen(response.data);  // Verondersteld dat de response een array is
+                filterVoertuigen(filterType, response.data);
+            } catch (error) {
+                console.error("Het is niet gelukt om de voertuigen op te halen", error);
+            }
+        };
+        fetchVoertuigen();
     }, []);
+
+    const filterVoertuigen = (type, voertuigenArray) => {
+        const filtered = voertuigenArray.filter(v => v.voertuigType.toLowerCase() === type.toLowerCase());
+        setVoertuigen(filtered);
+    };
 
     const handleChange = (event) => {
         setFilterType(event.target.value);
+        filterVoertuigen(event.target.value, alleVoertuigen);
     };
 
     const handleCriteriaChange = (event) => {
         setFilterCriteria(event.target.value.toLowerCase());
-    };
-
-    const handleVoertuigType = async () => {
-        try {
-            console.log("Voertuigen worden opgevraagd");
-            const response = await VoertuigRequestService.getAll(filterType);
-            const filteredVoertuigen = response.filter(v => v.voertuigBeschikbaar);
-            setVoertuigen(filteredVoertuigen);
-        } catch (error) {
-            console.error("Het is niet gelukt om de voertuigen op te halen", error);
-        }
     };
 
     const filteredVoertuigen = voertuigen.filter((v) =>
@@ -47,9 +64,22 @@ const ParticulierVoertuigTonen = () => {
     };
 
     const handleVoertuigClick = (voertuig) => {
+        console.log(voertuig); 
+        const kenteken = voertuig.kenteken;
+        const VoertuigID = voertuig.voertuigId;
+
+        console.log(VoertuigID);
+
+        const reservationData = {
+            startDateTime,
+            endDateTime,
+            userRole,
+            kenteken,
+            VoertuigID
+        };
+
         navigate(
-            `/huurVoertuig?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}&SoortHuurder=Particulier`
-        );
+            `/bevestigingHuur`, { state: reservationData });
     };
 
     return (
@@ -67,23 +97,12 @@ const ParticulierVoertuigTonen = () => {
                     onChange={handleCriteriaChange}
                     className="input-field"
                 />
-                <button onClick={handleVoertuigType} className="button">
-                    Voer voertuigType in
-                </button>
             </div>
             <div className="button-container">
-                <button onClick={() => handleSort("merk")} className="sort-button">
-                    Sorteer op Merk
-                </button>
-                <button onClick={() => handleSort("model")} className="sort-button">
-                    Sorteer op Model
-                </button>
-                <button onClick={() => handleSort("prijsPerDag")} className="sort-button">
-                    Sorteer op Prijs
-                </button>
-                <button onClick={() => handleSort("bouwjaar")} className="sort-button">
-                    Sorteer op Bouwjaar
-                </button>
+                <button onClick={() => handleSort("merk")} className="sort-button">Sorteer op Merk</button>
+                <button onClick={() => handleSort("model")} className="sort-button">Sorteer op Model</button>
+                <button onClick={() => handleSort("prijsPerDag")} className="sort-button">Sorteer op Prijs</button>
+                <button onClick={() => handleSort("bouwjaar")} className="sort-button">Sorteer op Bouwjaar</button>
             </div>
             <table className="styled-table">
                 <thead>
@@ -101,17 +120,8 @@ const ParticulierVoertuigTonen = () => {
                 </thead>
                 <tbody>
                     {filteredVoertuigen.map((voertuig, index) => (
-                        <tr key={index}>
-                            <td
-                                onClick={() => handleVoertuigClick(voertuig)}
-                                style={{
-                                    cursor: "pointer",
-                                    color: "blue",
-                                    textDecoration: "underline",
-                                }}
-                            >
-                                {voertuig.merk}
-                            </td>
+                        <tr key={index} onClick={() => handleVoertuigClick(voertuig)}>
+                            <td>{voertuig.merk}</td>
                             <td>{voertuig.model}</td>
                             <td>{voertuig.prijsPerDag}</td>
                             <td>{voertuig.voertuigType}</td>

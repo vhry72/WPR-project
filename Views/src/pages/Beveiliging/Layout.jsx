@@ -13,7 +13,7 @@ const Layout = () => {
         ParticuliereHuurder: [
             { to: "/instellingen", label: "Instellingen" },
             { to: "/particulierHuurderDashBoard", label: "Dashboard" },
-            { to: "/particulierVoertuigTonen", label: "Voertuigen Tonen" },
+            { to: "/huurVoertuig", label: "Voertuig huren" },
         ],
         ZakelijkeHuurder: [
             { to: "/instellingen", label: "Instellingen" },
@@ -21,7 +21,7 @@ const Layout = () => {
         ],
         BedrijfsMedewerker: [
             { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },
-            { to: "/ZakelijkAutoTonen", label: "Zakelijke Auto's" },
+            { to: "/huurVoertuig", label: "Auto's huren" },
         ],
         BackofficeMedewerker: [
             { to: "/instellingen", label: "Instellingen" },

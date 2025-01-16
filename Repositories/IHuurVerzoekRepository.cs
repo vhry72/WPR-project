@@ -11,6 +11,8 @@ namespace WPR_project.Repositories
 
         IQueryable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime);
 
+        IQueryable<Voertuig> GetAvailableVehicles(DateTime startDatum, DateTime eindDatum);
+
         IQueryable<Huurverzoek> GetAllHuurVerzoeken();
         IQueryable<Huurverzoek> GetAllActiveHuurVerzoeken();
         IQueryable<Huurverzoek> GetAllBeantwoorde();

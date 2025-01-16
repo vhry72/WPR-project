@@ -5,6 +5,7 @@ using WPR_project.Services;
 using WPR_project.DTO_s;
 using Microsoft.EntityFrameworkCore;
 using WPR_project.Repositories;
+using WPR_project.Services.Email;
 
 namespace WPR_project.Controllers
 {
@@ -15,13 +16,22 @@ namespace WPR_project.Controllers
         private readonly AbonnementService _service;
         private readonly WagenparkBeheerderService _WagenparkService;
         private readonly ZakelijkeHuurderService _zakelijkeHuurderService;
+        private readonly FactuurService _factuurService;
+        private readonly EmailService _emailService;
 
 
-        public AbonnementController(AbonnementService service, WagenparkBeheerderService WagenparkbeheerderService, ZakelijkeHuurderService zakelijkeHuurderService)
+        public AbonnementController(
+            AbonnementService service,
+            WagenparkBeheerderService WagenparkbeheerderService,
+            ZakelijkeHuurderService zakelijkeHuurderService,
+            FactuurService factuurService,
+            EmailService emailService)
         {
             _service = service;
             _WagenparkService = WagenparkbeheerderService;
             _zakelijkeHuurderService = zakelijkeHuurderService;
+            _factuurService = factuurService;
+            _emailService = emailService;
         }
 
         // Haalt alle beschikbare abonnementen op.
@@ -286,7 +296,17 @@ namespace WPR_project.Controllers
         {
             try
             {
-                _service.StuurFactuurEmail(beheerderId, abonnementId);
+                // Genereer de PDF
+                var pdfBytes = _factuurService.GenerateInvoicePDF(beheerderId, abonnementId);
+                var beheerder = _WagenparkService.GetBeheerderById(beheerderId);
+                if (beheerder == null)
+                    throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
+
+                // Stuur de e-mail met de PDF als bijlage
+                string subject = "Factuur voor uw nieuwe abonnement";
+                string body = "Bijgevoegd vindt u uw factuur.";
+                _emailService.SendEmailWithAttachment(beheerder.bedrijfsEmail, subject, body, pdfBytes, "Factuur.pdf");
+
                 return Ok(new { Message = "Factuur succesvol verstuurd." });
             }
             catch (KeyNotFoundException ex)
@@ -298,6 +318,7 @@ namespace WPR_project.Controllers
                 return StatusCode(500, new { Error = ex.Message });
             }
         }
+
 
         [HttpPost("{beheerderId}/bevestiging/stuur")]
         public IActionResult StuurBevestigingsEmail(Guid beheerderId, [FromBody] Guid abonnementId)

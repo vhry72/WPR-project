@@ -26,6 +26,7 @@ namespace WPR_project.Data
         public DbSet<VoertuigStatus> VoertuigStatussen { get; set; }
 
         public DbSet<VoertuigNotities> VoertuigNotities { get; set; }
+        public DbSet<Factuur> Facturen { get; set; }
 
         // Configuratie van de modellen en relaties
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,7 +44,8 @@ namespace WPR_project.Data
             modelBuilder.Entity<Voertuig>()
              .HasKey(v => v.voertuigId);
 
-
+            modelBuilder.Entity<Factuur>()
+                .HasKey(f => f.FactuurId);
 
             // Abonnement Configuratie
             modelBuilder.Entity<Abonnement>()

@@ -13,13 +13,7 @@ const BevestigingHuur = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [huurderNaam, setHuurderNaam] = useState("");
     const [huurderId, setHuurderId] = useState(null);
-
-    // Haal parameters uit de URL
-    const kenteken = new URLSearchParams(location.search).get("kenteken");
-    const VoertuigID = new URLSearchParams(location.search).get("VoertuigID");
-    const SoortHuurder = new URLSearchParams(location.search).get("SoortHuurder");
-    const startDate = new URLSearchParams(location.search).get("startdatum");
-    const endDate = new URLSearchParams(location.search).get("einddatum");
+    const { startDateTime, endDateTime, userRole, kenteken, VoertuigID } = location.state;
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -48,10 +42,10 @@ const BevestigingHuur = () => {
             try {
                 let huurderResponse;
 
-                if (SoortHuurder === "Particulier") {
+                if (userRole === "ParticuliereHuurder") {
                     huurderResponse = await ParticulierHuurdersRequestService.getById(huurderId);
                     console.log("Particulier Huurder Data:", huurderResponse.data);
-                } else if (SoortHuurder === "Zakelijk") {
+                } else if (userRole === "BedrijfsMedewerker") {
                     huurderResponse = await BedrijfsMedewerkerRequestService.getById(huurderId);
                     console.log("Zakelijk Huurder Data:", huurderResponse.data);
                 }
@@ -71,7 +65,7 @@ const BevestigingHuur = () => {
         if (huurderId) {
             fetchHuurderNaam();
         }
-    }, [huurderId, SoortHuurder]);
+    }, [huurderId, userRole]);
 
 
 
@@ -80,38 +74,20 @@ const BevestigingHuur = () => {
         setErrorMessage("");
 
         try {
-            // Controleer huurder op basis van SoortHuurder
-            console.log("Controleer actief huurverzoek...");
-            const checkResponse = await HuurVerzoekRequestService.checkActive(huurderId);
-            if (checkResponse.data.hasActiveRequest) {
-                throw new Error("Je hebt al een actief huurverzoek en kunt niet nogmaals huren.");
-            }
-
-            console.log("Haal voertuigdetails op...");
-            const voertuigResponse = await VoertuigRequestService.getById(VoertuigID);
-            const voertuigDetails = voertuigResponse.data;
-
             console.log("Maak nieuw huurverzoek...");
             const huurverzoek = {
                 huurderID: huurderId,
                 voertuigId: VoertuigID,
-                beginDate: startDate,
-                endDate: endDate,
+                beginDate: startDateTime,
+                endDate: endDateTime,
                 approved: false,
                 isBevestigd: false,
                 reden: "", 
             };
 
+            
             console.log("Huurverzoek object:", huurverzoek);
             await HuurVerzoekRequestService.register(huurverzoek);
-
-            console.log("Update voertuigstatus...");
-            const voertuigUpdate = {
-                startDatum: startDate,
-                eindDatum: endDate,
-                voertuigBeschikbaar: false,
-            };
-            await VoertuigRequestService.update(VoertuigID, voertuigUpdate);
 
             alert(`Huurverzoek succesvol bevestigd voor ${huurderNaam}!`);
             navigate("/");
@@ -129,8 +105,8 @@ const BevestigingHuur = () => {
             <h1>Welkom op de bevestigingspagina, {huurderNaam}</h1>
             <div className="details">
                 <p><strong>Kenteken:</strong> {kenteken}</p>
-                <p><strong>Startdatum:</strong> {startDate}</p>
-                <p><strong>Einddatum:</strong> {endDate}</p>
+                <p><strong>Startdatum:</strong> {startDateTime}</p>
+                <p><strong>Einddatum:</strong> {endDateTime}</p>
             </div>
 
             {errorMessage && <p className="error-message" style={{ color: "red" }}>{errorMessage}</p>}

@@ -104,11 +104,13 @@ builder.Services.AddScoped<IHuurVerzoekRepository, HuurVerzoekRepository>();
 builder.Services.AddScoped<ISchademeldingRepository, SchademeldingRepository>();
 builder.Services.AddScoped<IVoertuigStatusRepository, VoertuigStatusRepository>();
 builder.Services.AddScoped<IVoertuigNotitiesRepository, VoertuigNotitiesRepository>();
+builder.Services.AddScoped<IFactuurRepository, FactuurRepository>();
 
 
 
 // Dependency Injection voor services
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<ParticulierHuurderService>();
 builder.Services.AddScoped<ZakelijkeHuurderService>();
 builder.Services.AddScoped<WagenparkBeheerderService>();
@@ -117,11 +119,10 @@ builder.Services.AddScoped<VoertuigService>();
 builder.Services.AddScoped<BedrijfsMedewerkersService>();
 builder.Services.AddScoped<HuurverzoekService>();
 builder.Services.AddScoped<VoertuigNotitiesService>();
-
 builder.Services.AddScoped<SchademeldingService>();
 builder.Services.AddScoped<VoertuigStatusService>();
-
 builder.Services.AddScoped<UserManagerService>();
+builder.Services.AddScoped<FactuurService>();
 
 
 // Voor de 24-uurs reminder service
