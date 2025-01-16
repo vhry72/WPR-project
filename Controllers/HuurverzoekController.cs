@@ -31,6 +31,20 @@ public class HuurverzoekController : ControllerBase
         var hasActiveRequest = _service.HasAnsweredHuurverzoek(huurderId);
         return Ok(new { hasActiveRequest });
     }
+    //
+    [HttpGet("BeschikbareVoertuigen/{startDatum}/{eindDatum}")]
+    public IActionResult GetAvailableVehicles(DateTime startDatum, DateTime eindDatum)
+    {
+        try
+        {
+            var availableVehicles = _service.GetAvailableVehicles(startDatum, eindDatum);
+            return Ok(availableVehicles);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
 
     [HttpPost]
     public IActionResult CreateHuurVerzoek([FromBody] HuurVerzoekDTO huurVerzoekDto)
@@ -78,8 +92,7 @@ public class HuurverzoekController : ControllerBase
         return Ok(new { Message = "Huurverzoek succesvol ingediend. Een bevestiging is verzonden naar uw e-mailadres." });
     }
 
-
-
+    //
     [HttpGet]
     public IActionResult GetAllHuurVerZoeken()
     {
