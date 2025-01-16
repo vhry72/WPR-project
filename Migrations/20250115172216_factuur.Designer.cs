@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WPR_project.Data;
 
@@ -11,9 +12,11 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    partial class GegevensContextModelSnapshot : ModelSnapshot
+    [Migration("20250115172216_factuur")]
+    partial class factuur
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -566,15 +569,6 @@ namespace WPR_project.Migrations
                     b.Property<Guid>("voertuigId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<int?>("AantalDeuren")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("AantalSlaapplekken")
-                        .HasColumnType("int");
-
-                    b.Property<byte[]>("Afbeelding")
-                        .HasColumnType("varbinary(max)");
 
                     b.Property<int>("bouwjaar")
                         .HasColumnType("int");

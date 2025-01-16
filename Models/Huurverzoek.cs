@@ -12,8 +12,8 @@ namespace WPR_project.Models
         public string? Reden { get; set; }
 
         [ForeignKey("Voertuig")]
-        public Guid VoertuigId { get; set; } // Foreign key voor het voertuig
+        public Guid VoertuigId { get; set; } 
 
-        public Voertuig Voertuig { get; set; } // Navigatieproperty
+        public Voertuig Voertuig { get; set; }
     }
 }

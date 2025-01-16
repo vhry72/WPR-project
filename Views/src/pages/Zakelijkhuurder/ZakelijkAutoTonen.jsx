@@ -5,26 +5,44 @@ import { useNavigate } from 'react-router-dom';
 
 const ZakelijkAutoTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
+    const [alleVoertuigen, setAlleVoertuigen] = useState([]);
     const [filterType, setFilterType] = useState("auto");
     const [filterCriteria, setFilterCriteria] = useState("");
+    const location = useLocation();
+    const { startDateTime, endDateTime, userRole } = location.state;
     const navigate = useNavigate();
 
-    useEffect(() => {
-        fetchVoertuigen();
-    }, [filterType]);
 
-    const fetchVoertuigen = async () => {
-        try {
-            console.log("Voertuigen worden opgevraagd");
-            const response = await VoertuigRequestService.getAll(filterType);
-            setVoertuigen(response);
-        } catch (error) {
-            console.error("Het is niet gelukt om de voertuigen op te halen", error);
-        }
+
+    const formatDateForDB = (dateString) => {
+        return new Date(dateString).toISOString().replace('T', ' ').slice(0, 19);
+    }
+
+    const startdatum = formatDateForDB(startDateTime);
+    const einddatum = formatDateForDB(endDateTime)
+
+
+    useEffect(() => {
+        const fetchVoertuigen = async () => {
+            try {
+                const response = await axios.get(`https://localhost:5033/api/Huurverzoek/BeschikbareVoertuigen/${startdatum}/${einddatum}`);
+                setAlleVoertuigen(response.data);  // Verondersteld dat de response een array is
+                filterVoertuigen(filterType, response.data);
+            } catch (error) {
+                console.error("Het is niet gelukt om de voertuigen op te halen", error);
+            }
+        };
+        fetchVoertuigen();
+    }, []);
+
+    const filterVoertuigen = (type, voertuigenArray) => {
+        const filtered = voertuigenArray.filter(v => v.voertuigType.toLowerCase() === type.toLowerCase());
+        setVoertuigen(filtered);
     };
 
     const handleChange = (event) => {
         setFilterType(event.target.value);
+        filterVoertuigen(event.target.value, alleVoertuigen);
     };
 
     const handleCriteriaChange = (event) => {
@@ -45,9 +63,22 @@ const ZakelijkAutoTonen = () => {
     };
 
     const handleVoertuigClick = (voertuig) => {
+        console.log(voertuig);
+        const kenteken = voertuig.kenteken;
+        const VoertuigID = voertuig.voertuigId;
+
+        console.log(VoertuigID);
+
+        const reservationData = {
+            startDateTime,
+            endDateTime,
+            userRole,
+            kenteken,
+            VoertuigID
+        };
+
         navigate(
-            `/huurVoertuig?kenteken=${voertuig.kenteken}&VoertuigID=${voertuig.voertuigId}&SoortHuurder=Zakelijk`
-        );
+            `/bevestigingHuur`, { state: reservationData });
     };
 
     return (

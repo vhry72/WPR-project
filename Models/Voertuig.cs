@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
@@ -46,6 +47,12 @@ namespace WPR_project.Models
 
         [JsonIgnore]
         public ICollection<Schademelding> Schademeldingen { get; set; }
+
+        public int? AantalDeuren { get; set; }
+
+        public int? AantalSlaapplekken { get; set; }
+
+        public byte[]? Afbeelding { get; set; }
 
     }
 }

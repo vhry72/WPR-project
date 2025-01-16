@@ -41,6 +41,11 @@ public class HuurverzoekService
         return _repository.GetBeantwoordeHuurverzoekenByHuurderId(huurderId).Any();
     }
 
+    public IEnumerable<Voertuig> GetAvailableVehicles(DateTime start, DateTime end)
+    {
+        return _repository.GetAvailableVehicles(start, end).ToList();
+    }
+
     public string GetEmailByHuurderId(Guid huurderId)
     {
         var particulier = _particulierRepository.GetById(huurderId);

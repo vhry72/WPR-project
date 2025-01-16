@@ -32,6 +32,26 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
            .Include(h => h.Voertuig);
     }
 
+    public IQueryable<Voertuig> GetAvailableVehicles(DateTime startDatum, DateTime eindDatum)
+    {
+
+        TimeSpan buffer = TimeSpan.FromHours(3);
+        // Voeg buffer toe aan de begin- en eindtijden van de huurperiodes om te controleren
+        var bufferStartDatum = startDatum.Add(-buffer);
+        var bufferEindDatum = eindDatum.Add(buffer);
+
+        // Alle voertuigen ophalen die in een huurverzoek met overlappende datums (inclusief buffer) zijn opgenomen
+        var unavailableVehicleIds = _context.Huurverzoeken
+            .Where(hv => hv.beginDate < bufferEindDatum && hv.endDate > bufferStartDatum)
+            .Select(hv => hv.VoertuigId)
+            .Distinct();
+
+        return _context.Voertuigen
+            .Where(v => !unavailableVehicleIds.Contains(v.voertuigId));
+    }
+
+
+
     public IQueryable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime)
     {
         return _context.Huurverzoeken

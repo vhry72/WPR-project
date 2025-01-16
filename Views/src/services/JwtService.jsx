@@ -37,7 +37,7 @@ const JwtService = {
     // Haal alleen de gebruikersrol op via de API
     getUserRole: async () => {
         const userInfo = await JwtService.getUserInfo();
-        return userInfo?.Role || null;
+        return userInfo?.role || null;
     },
 };
 
