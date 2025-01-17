@@ -119,3 +119,35 @@ h1, h2 {
         font-size: 14px;
     }
 }
+
+.code-input-container {
+    display: flex;
+    justify-content: space-between; /* Zorgt ervoor dat de vakjes gelijkmatig verdeeld zijn */
+    margin-bottom: 20px;
+}
+
+.code-input {
+    width: 40px; /* Breedte van elk vakje */
+    height: 40px; /* Hoogte van elk vakje */
+    margin: 0 5px; /* Ruimte tussen de vakjes */
+    text-align: center;
+    font-size: 24px;
+    border: 2px solid #cccccc; /* Rand zoals andere inputs */
+    border-radius: 6px; /* Afgeronde hoeken zoals andere inputs */
+    background-color: #ffffff; /* Witte achtergrond */
+    color: #333333; /* Tekstkleur zoals andere inputs */
+}
+
+    .code-input:focus {
+        outline: none;
+        border-color: #007bff; /* Blauw accent voor focus, zoals bij andere inputs */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Schaduw rondom het input veld bij focus */
+    }
+
+@media (max-width: 600px) {
+    .code-input {
+        width: 30px; /* Kleinere breedte op kleinere schermen */
+        height: 30px; /* Kleinere hoogte op kleinere schermen */
+        font-size: 18px; /* Kleinere lettergrootte op kleinere schermen */
+    }
+}
