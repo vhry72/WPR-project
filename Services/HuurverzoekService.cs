@@ -89,11 +89,6 @@ public class HuurverzoekService
             throw new ArgumentException("De begindatum kan niet na de einddatum liggen.");
         }
 
-        var actieveHuurverzoeken = _repository.GetActiveHuurverzoekenByHuurderId(huurVerzoek.HuurderID);
-        if (actieveHuurverzoeken.Any())
-        {
-            throw new ArgumentException("De huurder heeft al een actief huurverzoek.");
-        }
 
         _repository.Add(huurVerzoek);
 
@@ -144,6 +139,11 @@ public class HuurverzoekService
     public IEnumerable<Huurverzoek> GetAllAfgekeurde()
     {
         return _repository.GetAllAfgekeurde();
+    }
+
+    public IEnumerable<Huurverzoek> GetHuurverzoekByHuurderID(Guid id)
+    {
+        return _repository.GetHuurverzoekenByHuurderID(id);
     }
     public IEnumerable<Huurverzoek> GetAllGoedGekeurde()
     {
