@@ -10,6 +10,7 @@ function FrontofficeRegister() {
         medewerkerEmail: "",
         wachtwoord: "",
     });
+    const [geselecteerdeMedewerker, setGeselecteerdeMedewerker] = useState(null);
 
     // Haal de huidige gebruiker-ID op bij het laden van de component
     useEffect(() => {
@@ -70,12 +71,31 @@ function FrontofficeRegister() {
         try {
             console.log(payload);
             const response = await axios.post(`https://localhost:5033/api/Account/register-frontoffice`, payload);
-            console.log();
-            // Voeg de nieuwe medewerker toe aan de lijst
             setFrontOfficeMedewerkers((prev) => [...prev, response.data]);
             setNieuweMedewerker({ medewerkerNaam: "", medewerkerEmail: "", wachtwoord: "" });
         } catch (error) {
             alert("Fout bij toevoegen van medewerker.");
+            console.error(error);
+        }
+    };
+
+    // Selecteer een medewerker om gegevens te bewerken
+    const selecteerMedewerkerVoorWijziging = (medewerker) => {
+        setGeselecteerdeMedewerker({ ...medewerker });
+    };
+
+    // Update de gewijzigde gegevens van een medewerker
+    const wijzigMedewerker = async () => {
+        try {
+            await axios.put(`/api/Account/frontoffice-medewerkers/${geselecteerdeMedewerker.frontofficeMedewerkerId}`, geselecteerdeMedewerker);
+            setFrontOfficeMedewerkers((prev) =>
+                prev.map((medewerker) =>
+                    medewerker.frontofficeMedewerkerId === geselecteerdeMedewerker.frontofficeMedewerkerId ? geselecteerdeMedewerker : medewerker
+                )
+            );
+            setGeselecteerdeMedewerker(null);
+        } catch (error) {
+            alert("Fout bij wijzigen van medewerker.");
             console.error(error);
         }
     };
@@ -117,12 +137,33 @@ function FrontofficeRegister() {
                 {frontOfficeMedewerkers.map((medewerker) => (
                     <li key={medewerker.frontofficeMedewerkerId}>
                         {medewerker.medewerkerNaam} - {medewerker.medewerkerEmail}
-                        <button onClick={() => deleteMedewerker(medewerker.frontofficeMedewerkerId)}>
-                            Verwijderen
-                        </button>
+                        <button onClick={() => selecteerMedewerkerVoorWijziging(medewerker)}>Wijzig Gegevens</button>
                     </li>
                 ))}
             </ul>
+
+            {/* Formulier voor het wijzigen van een medewerker */}
+            {geselecteerdeMedewerker && (
+                <div>
+                    <h3>Medewerker Gegevens Wijzigen</h3>
+                    <input
+                        type="text"
+                        name="medewerkerNaam"
+                        value={geselecteerdeMedewerker.medewerkerNaam}
+                        onChange={(e) => setGeselecteerdeMedewerker({ ...geselecteerdeMedewerker, medewerkerNaam: e.target.value })}
+                        placeholder="Naam"
+                    />
+                    <input
+                        type="email"
+                        name="medewerkerEmail"
+                        value={geselecteerdeMedewerker.medewerkerEmail}
+                        onChange={(e) => setGeselecteerdeMedewerker({ ...geselecteerdeMedewerker, medewerkerEmail: e.target.value })}
+                        placeholder="E-mailadres"
+                    />
+                    <button onClick={wijzigMedewerker}>Opslaan</button>
+                    <button onClick={() => setGeselecteerdeMedewerker(null)}>Annuleren</button>
+                </div>
+            )}
         </div>
     );
 }
