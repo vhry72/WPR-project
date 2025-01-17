@@ -59,6 +59,11 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
             .Include(h => h.Voertuig);
     }
 
+    public IQueryable<Huurverzoek> GetHuurverzoekIdByHuurderID(Guid id)
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.HuurderID == id);
+    }
 
     public IQueryable<Huurverzoek> GetAllHuurVerzoeken()
     {
