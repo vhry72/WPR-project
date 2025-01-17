@@ -30,7 +30,7 @@ import Schadeclaims from "./pages/BackOfficeMedewerker/Schadeclaims";
 import FrontOfficeMedewerker from "./pages/FrontOfficeMedewerker/FrontOfficeMedewerker";
 import VoertuigDetails from "./pages/FrontOfficeMedewerker/VoertuigDetails";
 import VoertuigInEnUitname from "./pages/FrontOfficeMedewerker/VoertuigInenUitname";
-import { UserProvider } from "./context/UserContext"; // Context import
+import { UserProvider } from "./context/UserContext";
 import EmailConfirmation from "./pages/Beveiliging/EmailConformation";
 import PrivateRoute from "./pages/Beveiliging/PrivateRoute";
 import VerhuurdeVoertuigen from "./pages/Voertuigen/VerhuurdeVoertuigen";
@@ -44,6 +44,7 @@ import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbo
 import FrontofficeRegister from "./pages/BackOfficeMedewerker/FrontofficeRegister";
 import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderForm";
 import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig";
+import HuurverzoekInzien from "./pages/Accountbeheer/HuurverzoekInzien";
 
 
 
@@ -98,6 +99,15 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
                                     <AccountwijzigingHuurders />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="HuurverzoekInzien"
+                            element={
+                                <PrivateRoute allowedRoles={["ParticuliereHuurder", "BedrijfsMedewerker"]}>
+                                    <HuurverzoekInzien />
                                 </PrivateRoute>
                             }
                         />

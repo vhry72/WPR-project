@@ -62,6 +62,7 @@ public class HuurverzoekController : ControllerBase
 
         var huurVerzoek = new Huurverzoek
         {
+            HuurVerzoekId = Guid.NewGuid(),
             HuurderID = huurVerzoekDto.HuurderID,
             VoertuigId = voertuig.voertuigId,
             beginDate = huurVerzoekDto.beginDate,
@@ -92,6 +93,20 @@ public class HuurverzoekController : ControllerBase
         return Ok(new { Message = "Huurverzoek succesvol ingediend. Een bevestiging is verzonden naar uw e-mailadres." });
     }
 
+
+    [HttpGet("GetByHuurderID/{id}")]
+    public IActionResult GetHuurverzoekenByHuurderID(Guid id)
+    {
+        try
+        {
+            var Huurverzoeken = _service.GetHuurverzoekByHuurderID(id);
+            return Ok(Huurverzoeken);
+        }
+        catch (Exception ex) 
+        {
+            return StatusCode(500, $"Interne serverfout: {ex.Message}");
+        }
+    }
 
     [HttpGet]
     public IActionResult GetAllHuurVerZoeken()

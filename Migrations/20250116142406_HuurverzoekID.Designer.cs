@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WPR_project.Data;
 
@@ -11,9 +12,11 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    partial class GegevensContextModelSnapshot : ModelSnapshot
+    [Migration("20250116142406_HuurverzoekID")]
+    partial class HuurverzoekID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,7 +75,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("zakelijkeId");
 
-                    b.ToTable("Abonnementen", (string)null);
+                    b.ToTable("Abonnementen");
                 });
 
             modelBuilder.Entity("Factuur", b =>
@@ -96,7 +99,7 @@ namespace WPR_project.Migrations
 
                     b.HasKey("FactuurId");
 
-                    b.ToTable("Facturen", (string)null);
+                    b.ToTable("Facturen");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -327,7 +330,7 @@ namespace WPR_project.Migrations
 
                     b.HasKey("BackofficeMedewerkerId");
 
-                    b.ToTable("BackofficeMedewerkers", (string)null);
+                    b.ToTable("BackofficeMedewerkers");
                 });
 
             modelBuilder.Entity("WPR_project.Models.Bedrijf", b =>
@@ -351,7 +354,7 @@ namespace WPR_project.Migrations
 
                     b.HasKey("BedrijfId");
 
-                    b.ToTable("Bedrijven", (string)null);
+                    b.ToTable("Bedrijven");
                 });
 
             modelBuilder.Entity("WPR_project.Models.BedrijfsMedewerkers", b =>
@@ -398,7 +401,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("zakelijkeId");
 
-                    b.ToTable("BedrijfsMedewerkers", (string)null);
+                    b.ToTable("BedrijfsMedewerkers");
                 });
 
             modelBuilder.Entity("WPR_project.Models.FrontofficeMedewerker", b =>
@@ -436,7 +439,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("FrontofficeMedewerkerId1");
 
-                    b.ToTable("FrontofficeMedewerkers", (string)null);
+                    b.ToTable("FrontofficeMedewerkers");
                 });
 
             modelBuilder.Entity("WPR_project.Models.Huurverzoek", b =>
@@ -470,7 +473,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("VoertuigId");
 
-                    b.ToTable("Huurverzoeken", (string)null);
+                    b.ToTable("Huurverzoeken");
                 });
 
             modelBuilder.Entity("WPR_project.Models.ParticulierHuurder", b =>
@@ -524,7 +527,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("AspNetUserId");
 
-                    b.ToTable("ParticulierHuurders", (string)null);
+                    b.ToTable("ParticulierHuurders");
                 });
 
             modelBuilder.Entity("WPR_project.Models.Schademelding", b =>
@@ -561,7 +564,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("VoertuigId");
 
-                    b.ToTable("Schademeldingen", (string)null);
+                    b.ToTable("Schademeldingen");
                 });
 
             modelBuilder.Entity("WPR_project.Models.Voertuig", b =>
@@ -620,7 +623,7 @@ namespace WPR_project.Migrations
 
                     b.HasKey("voertuigId");
 
-                    b.ToTable("Voertuigen", (string)null);
+                    b.ToTable("Voertuigen");
                 });
 
             modelBuilder.Entity("WPR_project.Models.VoertuigNotities", b =>
@@ -641,7 +644,7 @@ namespace WPR_project.Migrations
 
                     b.HasKey("NotitieId");
 
-                    b.ToTable("VoertuigNotities", (string)null);
+                    b.ToTable("VoertuigNotities");
                 });
 
             modelBuilder.Entity("WPR_project.Models.VoertuigStatus", b =>
@@ -666,7 +669,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("voertuigId");
 
-                    b.ToTable("VoertuigStatussen", (string)null);
+                    b.ToTable("VoertuigStatussen");
                 });
 
             modelBuilder.Entity("WPR_project.Models.WagenparkBeheerder", b =>
@@ -734,7 +737,7 @@ namespace WPR_project.Migrations
 
                     b.HasIndex("AbonnementId");
 
-                    b.ToTable("WagenparkBeheerders", (string)null);
+                    b.ToTable("WagenparkBeheerders");
                 });
 
             modelBuilder.Entity("ZakelijkHuurder", b =>
@@ -780,7 +783,7 @@ namespace WPR_project.Migrations
 
                     b.HasKey("zakelijkeId");
 
-                    b.ToTable("ZakelijkHuurders", (string)null);
+                    b.ToTable("ZakelijkHuurders");
                 });
 
             modelBuilder.Entity("Abonnement", b =>
