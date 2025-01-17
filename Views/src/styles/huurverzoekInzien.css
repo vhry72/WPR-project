@@ -1,0 +1,76 @@
+﻿.huurverzoekinzien-container {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.huurverzoekinzien-title {
+    font-size: 24px;
+    color: #333;
+}
+
+.huurverzoekinzien-filterContainer {
+    margin-bottom: 20px;
+}
+
+.huurverzoekinzien-inputField {
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.huurverzoekinzien-filterButton {
+    padding: 8px 16px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.huurverzoekinzien-styledTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .huurverzoekinzien-styledTable th,
+    .huurverzoekinzien-styledTable td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .huurverzoekinzien-styledTable th {
+        background-color: #f2f2f2;
+    }
+
+.huurverzoekinzien-status {
+    text-align: center;
+}
+
+.huurverzoekinzien-badge {
+    padding: 5px 10px;
+    color: white;
+    border-radius: 5px;
+}
+
+.huurverzoekinzien-approved {
+    background-color: #28a745;
+}
+
+.huurverzoekinzien-notApproved {
+    background-color: #dc3545;
+}
+
+.huurverzoekinzien-exportButton {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.huurverzoekinzien-message {
+    color: #dc3545;
+    font-size: 16px;
+}

@@ -142,7 +142,7 @@ public class AccountController : ControllerBase
             var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
                 new { userId = medewerker.BackofficeMedewerkerId, token = medewerker.EmailBevestigingToken }, Request.Scheme);
 
-            // Verstuur de bevestigingsmail
+         
             _emailService.SendEmail(dto.medewerkerEmail, "Bevestig je e-mailadres",
                 $"Klik hier om je e-mailadres te bevestigen: <a href='{confirmationLink}'>Bevestig e-mailadres</a>");
 

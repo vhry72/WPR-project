@@ -59,6 +59,11 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
             .Include(h => h.Voertuig);
     }
 
+    public IQueryable<Huurverzoek> GetHuurverzoekIdByHuurderID(Guid id)
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.HuurderID == id);
+    }
 
     public IQueryable<Huurverzoek> GetAllHuurVerzoeken()
     {
@@ -93,10 +98,24 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
             .Include(h => h.Voertuig);
     }
 
-    public Huurverzoek GetByID(Guid id)
+    public List<Huurverzoek> GetHuurverzoekenByHuurderID(Guid huurderId)
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.HuurderID == huurderId)
+            .Distinct()
+            .ToList();
+            
+    }
 
+    public Huurverzoek GetByID(Guid id)
     {
         return _context.Huurverzoeken.Find(id);
+    }
+
+    public IQueryable<Huurverzoek> GetById(Guid id)
+    {
+        return _context.Huurverzoeken
+            .Where(h => h.HuurVerzoekId == id);
     }
 
     public void Update(Huurverzoek huurVerzoek)

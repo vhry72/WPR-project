@@ -27,7 +27,7 @@ namespace WPR_project.Models
             ErrorMessage = "wachtwoord moet minstens één hoofdletter en één uniek teken bevatten.")]
         public string wachtwoord { get; set; }
 
-        public Guid AbonnementId { get; set; }
+        public Guid? AbonnementId { get; set; }
 
 
         [Required(ErrorMessage = "Zakelijke huurder ID is verplicht.")]

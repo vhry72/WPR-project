@@ -86,6 +86,9 @@ namespace WPR_project.Data
             modelBuilder.Entity<ParticulierHuurder>()
                 .HasKey(p => p.particulierId);
 
+            modelBuilder.Entity<Huurverzoek>()
+                .HasKey(h => h.HuurVerzoekId);
+
             modelBuilder.Entity<ParticulierHuurder>(entity =>
             {
                 entity.HasOne<IdentityUser>()
