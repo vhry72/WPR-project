@@ -17,7 +17,7 @@ public class HuurverzoekService
     private readonly IHuurderRegistratieRepository _particulierRepository;
     private readonly IEmailService _emailService;
 
-    // Voeg de standaard ophaallocatie toe
+    
     private const string OphaalLocatie = "Johanna Westerdijkplein 75, 2521 EP Den Haag";
 
     public HuurverzoekService(
@@ -79,7 +79,7 @@ public class HuurverzoekService
                   <strong>Praktische informatie:</strong><br/>
                   - De sleutel kan worden opgehaald bij de receptie op de bovengenoemde locatie.<br/>
                   - Breng het voertuig op tijd terug om extra kosten te voorkomen.<br/><br/>
-                  Met vriendelijke groet,<br/>Het Team";
+                  Met vriendelijke groet,<br/>Het CarAndAll Team";
     }
 
     public void Add(Huurverzoek huurVerzoek)
