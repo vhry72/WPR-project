@@ -1,79 +1,73 @@
-﻿using WPR_project.Data;
+﻿using NuGet.Protocol.Core.Types;
 using WPR_project.Models;
 using WPR_project.Repositories;
+using WPR_project.Services;
 using WPR_project.Services.Email;
 
 namespace WPR_project.Services
 {
     public class BackOfficeService
     {
-        private readonly IBackOfficeMedewerkerRepository _backOfficeMedewerkerRepository;
+        private readonly IBackOfficeMedewerkerRepository _repository;
         private readonly IFrontOfficeMedewerkerRepository _frontOfficeMedewerkerRepository;
         private readonly IEmailService _emailService;
-        private readonly GegevensContext _context;
-
         public BackOfficeService(
             IBackOfficeMedewerkerRepository repository,
-            IFrontOfficeMedewerkerRepository frontOfficeMedewerkerRepository,
-            GegevensContext context,
+            IFrontOfficeMedewerkerRepository frontOfficeMedewerkerRepository, 
             IEmailService emailService)
         {
-            _backOfficeMedewerkerRepository = repository;
+
+            _repository = repository;
             _frontOfficeMedewerkerRepository = frontOfficeMedewerkerRepository;
-            _context = context;
             _emailService = emailService;
         }
-        public void VoegMedewerkerToe(Guid frontOfficeId, string medewerkerNaam, string medewerkerEmail, string wachtwoord)
+
+        public void AddBackofficeMedewerker(BackofficeMedewerker backofficeMedewerker)
         {
-            // Controleer of de huurder bestaat
-            var medewerker = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(frontOfficeId);
-            if (medewerker == null)
-                throw new KeyNotFoundException("Front Office medewerker niet gevonden.");
+            _repository.AddBackOfficeMedewerker(backofficeMedewerker);
+            _repository.Save();
+        }
 
-            // Controleer of de medewerker al bestaat
-            if (medewerker.FrontofficeMedewerkers.Any(m => m.medewerkerEmail.Equals(medewerkerEmail, StringComparison.OrdinalIgnoreCase)))
-                throw new InvalidOperationException("Deze medewerker bestaat al.");
-
-            // Maak een nieuwe medewerker aan
-            var frontMedewerker = new FrontofficeMedewerker
+        public void UpdateBackofficeMedewerker(BackofficeMedewerker backOfficeMedewerker, Guid id)
+        {
+            var existingMedewerker = _repository.GetBackofficemedewerkerById(id);
+            if (existingMedewerker != null)
             {
-                FrontofficeMedewerkerId = Guid.NewGuid(),
-                medewerkerNaam = medewerkerNaam,
-                medewerkerEmail = medewerkerEmail,
-                wachtwoord = wachtwoord, // Sla dit veilig op (versleutel bijvoorbeeld)
+                existingMedewerker.medewerkerNaam = backOfficeMedewerker.medewerkerNaam;
+                existingMedewerker.medewerkerEmail = backOfficeMedewerker.medewerkerEmail;
+                existingMedewerker.wachtwoord = backOfficeMedewerker.wachtwoord;
 
-            };
-            // Voeg de medewerker toe aan de frontofficemedewerkers
-            medewerker.FrontofficeMedewerkers.Add(medewerker);
-
-            // Update de medewerker in de repository
-            _frontOfficeMedewerkerRepository.Update(medewerker);
-            _frontOfficeMedewerkerRepository.Save();
-
-            // Verstuur een e-mail naar de nieuwe medewerker
-            string bericht = $"Beste {medewerkerNaam},\n\nU bent toegevoegd.";
-            _emailService.SendEmail(medewerkerEmail, "Welkom bij de CarAndAll familie", bericht);
+                _repository.UpdateBackOfficeMedewerker(existingMedewerker, id);
+                _repository.Save();
+            }
+            else
+            {
+                throw new KeyNotFoundException("Backofficemedewerker niet gevonden.");
+            }
         }
-        public BackofficeMedewerker GetMedewerkerById(Guid medewerkerId)
+
+        public void DeleteBackofficeMedewerker(Guid id)
         {
-            return _backOfficeMedewerkerRepository.GetBackofficemedewerkerById(medewerkerId); 
+            var medewerker = _repository.GetBackofficemedewerkerById(id);
+            if (medewerker != null)
+            {
+                _repository.DeleteBackOfficeMedewerker(id);
+                _repository.Save();
+            }
+            else
+            {
+                throw new KeyNotFoundException("Backofficemedewerker niet gevonden.");
+            }
         }
-        public void VerwijderMedewerker(Guid frontOfficeMedewerkerId, Guid medewerkerId)
+
+        public void GetFrontofficeMedewerkerById(Guid id)
         {
-            var medewerker = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(medewerkerId);
+            var medewerker = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(id);
             if (medewerker == null)
-                throw new KeyNotFoundException("Front office medewerker niet gevonden.");
-
-            var backoffice = medewerker.FrontofficeMedewerkers.FirstOrDefault(m => m.FrontofficeMedewerkerId== medewerkerId);
-            if (medewerker == null)
-                throw new KeyNotFoundException("Medewerker niet gevonden.");
-
-            medewerker.FrontofficeMedewerkers.Remove(medewerker);
-            _frontOfficeMedewerkerRepository.Update(medewerker);
-            _frontOfficeMedewerkerRepository.Save();
-
-            string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent verwijderd uit het bedrijf CarAndAll.";
-            _emailService.SendEmail(medewerker.medewerkerEmail, "Medewerker verwijderd", bericht);
+            {
+                throw new KeyNotFoundException("Frontofficemedewerker niet gevonden.");
+            }
         }
     }
+
 }
