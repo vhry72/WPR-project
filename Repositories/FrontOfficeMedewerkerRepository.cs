@@ -7,9 +7,14 @@ namespace WPR_project.Repositories
     public class FrontOfficeMedewerkerRepository : IFrontOfficeMedewerkerRepository
     {
         private readonly GegevensContext _context;
+
+        public FrontOfficeMedewerkerRepository(GegevensContext context)
+        {
+            _context = context;
+        }
         public FrontofficeMedewerker GetFrontOfficeMedewerkerById(Guid id)
         {
-            return _context.FrontofficeMedewerkers.FirstOrDefault(h => h.FrontofficeMedewerkerId == id);
+            return _context.FrontofficeMedewerkers.Find(id);
         }
         public void Save()
         {

@@ -12,18 +12,19 @@ namespace WPR_project.Controllers
     [Route("api/[controller]")]
     public class BackOfficeMedewerkerController : ControllerBase
     {
-        private readonly BackOfficeService _service;
+        private readonly BackOfficeService _backOfficeService;
+        private readonly FrontOfficeService _frontOfficeService;
         private readonly IEmailService _emailService;
 
-
-        public BackOfficeMedewerkerController(BackOfficeService service, IEmailService emailService)
+        public BackOfficeMedewerkerController(BackOfficeService backOfficeService, FrontOfficeService frontOfficeService, IEmailService emailService)
         {
-            _service = service;
+            _backOfficeService = backOfficeService;
+            _frontOfficeService = frontOfficeService;
             _emailService = emailService;
         }
-        // voeg een medewerker aan een zakelijke Huurder toe
-        [HttpPost("{FrontofficeMedewerkerId}/voegFrontOffice")]
-        public IActionResult VoegFrontOfficeMedewerkerToe(Guid FrontOfficeMedewerkerId, [FromBody] FrontofficeMedewerkerDTO medewerker)
+
+        [HttpPost("voegFrontOffice")]
+        public IActionResult VoegFrontOfficeMedewerkerToe([FromBody] FrontofficeMedewerkerDTO medewerker)
         {
             if (medewerker == null)
             {
@@ -41,28 +42,8 @@ namespace WPR_project.Controllers
 
             try
             {
-                // aanroep om medewerker toe te voegen
-                _service.VoegMedewerkerToe(FrontOfficeMedewerkerId, medewerker.medewerkerNaam, medewerker.medewerkerEmail, medewerker.wachtwoord);
-
-                // Verstuur bevestigingsmail naar de medewerker
-                string emailBody = $@"
-            <h2>Welkom bij ons systeem, {medewerker.medewerkerNaam}</h2>
-            <p>U bent succesvol toegevoegd aan het bedrijfsabonnement.</p>
-            <p>Uw inloggegevens zijn:</p>
-            <ul>
-                <li><strong>E-mail:</strong> {medewerker.medewerkerEmail}</li>
-                <li><strong>Wachtwoord:</strong> {medewerker.wachtwoord}</li>
-            </ul>
-            <p>Gebruik deze gegevens om in te loggen op ons systeem.</p>
-            <br/>
-            <p>Met vriendelijke groet,</p>
-            <p>Het supportteam</p>";
-
-                _emailService.SendEmail(
-                    medewerker.medewerkerEmail,
-                    "Welkom bij het systeem - Bevestigingsmail",
-                    emailBody
-                );
+                // Aanroep om medewerker toe te voegen met de DTO data
+                _frontOfficeService.VoegMedewerkerToe(medewerker.medewerkerId, medewerker.medewerkerNaam, medewerker.medewerkerEmail, medewerker.wachtwoord);
 
                 return Ok(new
                 {
@@ -74,13 +55,24 @@ namespace WPR_project.Controllers
                     }
                 });
             }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Fout: {ex.Message}");
+                return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
+            }
+        }
+
+        [HttpDelete("verwijdermedewerker/{frontOfficeMedewerkerId}/{medewerkerId}")]
+        public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId, Guid medewerkerId)
+        {
+            try
+            {
+                _frontOfficeService.VerwijderMedewerker(frontOfficeMedewerkerId, medewerkerId);
+                return Ok(new { Message = "Medewerker succesvol verwijderd." });
+            }
             catch (KeyNotFoundException ex)
             {
                 return NotFound(new { Message = ex.Message });
-            }
-            catch (InvalidOperationException ex)
-            {
-                return Conflict(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -88,38 +80,6 @@ namespace WPR_project.Controllers
                 return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
             }
         }
-        [HttpDelete("{FrontOfficeMedewerkerId}/verwijdermedewerker/{medewerkerId}")]
-        public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId, Guid medewerkerId)
-        {
-            try
-            {
-                var medewerker = _service.GetMedewerkerById(medewerkerId);
-                if (medewerker == null)
-                {
-                    // Gebruik expliciet NotFoundObjectResult
-                    return new NotFoundObjectResult(new { Message = "Medewerker niet gevonden." });
-                }
 
-                _service.VerwijderMedewerker(frontOfficeMedewerkerId, medewerkerId);
-
-                // Gebruik expliciet OkObjectResult
-                return new OkObjectResult(new { Message = "Medewerker succesvol verwijderd." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                // Gebruik expliciet NotFoundObjectResult
-                return new NotFoundObjectResult(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"Fout: {ex.Message}");
-                // Gebruik expliciet ObjectResult met StatusCode 500
-                return new ObjectResult(new { Message = "Er is een interne fout opgetreden.", Details = ex.Message })
-                {
-                    StatusCode = 500
-                };
-            }
-        }
     }
-
 }

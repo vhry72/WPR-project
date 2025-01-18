@@ -16,5 +16,35 @@ namespace WPR_project.Repositories
         {
             return _context.BackofficeMedewerkers.Find(id);
         }
+
+        public void AddBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker)
+        {
+            _context.BackofficeMedewerkers.Add(backOfficeMedewerker);
+        }
+
+        public void UpdateBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker, Guid id)
+        {
+            var backOfficeMedewerkerToUpdate = _context.BackofficeMedewerkers.Find(id);
+            if (backOfficeMedewerkerToUpdate != null)
+            {
+                backOfficeMedewerkerToUpdate.medewerkerNaam = backOfficeMedewerker.medewerkerNaam;
+                backOfficeMedewerkerToUpdate.medewerkerEmail = backOfficeMedewerker.medewerkerEmail;
+                backOfficeMedewerkerToUpdate.wachtwoord = backOfficeMedewerker.wachtwoord;
+            }
+        }
+
+        public void DeleteBackOfficeMedewerker(Guid id)
+        {
+            var backOfficeMedewerker = _context.BackofficeMedewerkers.Find(id);
+            if (backOfficeMedewerker != null)
+            {
+                _context.BackofficeMedewerkers.Remove(backOfficeMedewerker);
+            }
+        }
+
+        public void Save()
+        {
+            _context.SaveChanges();
+        }
     }
 }
