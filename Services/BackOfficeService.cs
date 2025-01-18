@@ -7,8 +7,8 @@ namespace WPR_project.Services
 {
     public class BackOfficeService
     {
-        private readonly IBackOfficeMedewerkerRepository backOfficeMedewerkerRepository;
-        private readonly IFrontOfficeMedewerkerRepository frontOfficeMedewerkerRepository;
+        private readonly IBackOfficeMedewerkerRepository _backOfficeMedewerkerRepository;
+        private readonly IFrontOfficeMedewerkerRepository _frontOfficeMedewerkerRepository;
         private readonly IEmailService _emailService;
         private readonly GegevensContext _context;
 
@@ -18,15 +18,15 @@ namespace WPR_project.Services
             GegevensContext context,
             IEmailService emailService)
         {
-            backOfficeMedewerkerRepository = repository;
-            frontOfficeMedewerkerRepository = frontOfficeMedewerkerRepository;
+            _backOfficeMedewerkerRepository = repository;
+            _frontOfficeMedewerkerRepository = frontOfficeMedewerkerRepository;
             _context = context;
             _emailService = emailService;
         }
         public void VoegMedewerkerToe(Guid frontOfficeId, string medewerkerNaam, string medewerkerEmail, string wachtwoord)
         {
             // Controleer of de huurder bestaat
-            var medewerker = frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(frontOfficeId);
+            var medewerker = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(frontOfficeId);
             if (medewerker == null)
                 throw new KeyNotFoundException("Front Office medewerker niet gevonden.");
 
@@ -47,20 +47,20 @@ namespace WPR_project.Services
             medewerker.FrontofficeMedewerkers.Add(medewerker);
 
             // Update de medewerker in de repository
-            frontOfficeMedewerkerRepository.Update(medewerker);
-            frontOfficeMedewerkerRepository.Save();
+            _frontOfficeMedewerkerRepository.Update(medewerker);
+            _frontOfficeMedewerkerRepository.Save();
 
             // Verstuur een e-mail naar de nieuwe medewerker
             string bericht = $"Beste {medewerkerNaam},\n\nU bent toegevoegd.";
             _emailService.SendEmail(medewerkerEmail, "Welkom bij de CarAndAll familie", bericht);
         }
-        public BackofficeMedewerker? GetMedewerkerById(Guid medewerkerId)
+        public BackofficeMedewerker GetMedewerkerById(Guid medewerkerId)
         {
-            return _context.BackofficeMedewerkers.FirstOrDefault(m => m.BackofficeMedewerkerId == medewerkerId);
+            return _backOfficeMedewerkerRepository.GetBackofficemedewerkerById(medewerkerId); 
         }
         public void VerwijderMedewerker(Guid frontOfficeMedewerkerId, Guid medewerkerId)
         {
-            var medewerker = frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(medewerkerId);
+            var medewerker = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(medewerkerId);
             if (medewerker == null)
                 throw new KeyNotFoundException("Front office medewerker niet gevonden.");
 
@@ -69,8 +69,8 @@ namespace WPR_project.Services
                 throw new KeyNotFoundException("Medewerker niet gevonden.");
 
             medewerker.FrontofficeMedewerkers.Remove(medewerker);
-            frontOfficeMedewerkerRepository.Update(medewerker);
-            frontOfficeMedewerkerRepository.Save();
+            _frontOfficeMedewerkerRepository.Update(medewerker);
+            _frontOfficeMedewerkerRepository.Save();
 
             string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent verwijderd uit het bedrijf CarAndAll.";
             _emailService.SendEmail(medewerker.medewerkerEmail, "Medewerker verwijderd", bericht);

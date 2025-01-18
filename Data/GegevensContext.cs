@@ -28,6 +28,8 @@ namespace WPR_project.Data
         public DbSet<VoertuigNotities> VoertuigNotities { get; set; }
         public DbSet<Factuur> Facturen { get; set; }
 
+        public DbSet<PrivacyVerklaring> PrivacyVerklaringen { get; set; }
+
         // Configuratie van de modellen en relaties
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,7 +37,6 @@ namespace WPR_project.Data
             //Configuratie voor Medewerkers
             modelBuilder.Entity<BackofficeMedewerker>()
                 .HasKey(b => b.BackofficeMedewerkerId);
-
 
             modelBuilder.Entity<FrontofficeMedewerker>()
                 .HasKey(b => b.FrontofficeMedewerkerId);
@@ -53,7 +54,13 @@ namespace WPR_project.Data
 
             modelBuilder.Entity<VoertuigNotities>()
                 .HasKey(v => v.NotitieId);
-                
+
+            modelBuilder.Entity<PrivacyVerklaring>()
+                .HasKey(p => p.VerklaringId);
+
+            modelBuilder.Entity<PrivacyVerklaring>()
+                .Property(p => p.Verklaring)
+                .HasColumnType("nvarchar(max)");
 
             // Huurverzoek Configuratie
             modelBuilder.Entity<Huurverzoek>()
