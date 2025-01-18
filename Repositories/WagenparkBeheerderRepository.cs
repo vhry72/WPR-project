@@ -78,7 +78,15 @@ namespace WPR_project.Repositories
             return medewerkerIds;
         }
 
+         public List<BedrijfsMedewerkers> GetMedewerkersByWagenparkbeheerder(Guid wagenparkbeheerderId)
+        {
+            // Haal alleen de IDs van de medewerkers op die gekoppeld zijn aan het gegeven wagenparkbeheerderId
+            var medewerkerIds = _context.BedrijfsMedewerkers
+                .Where(m => m.beheerderId == wagenparkbeheerderId) // Let op de correcte propertynaam
+                .ToList();
 
+            return medewerkerIds;
+        }
 
         public void Save()
         {

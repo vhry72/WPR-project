@@ -15,6 +15,7 @@ namespace WPR_project.Repositories
         Guid GetAbonnementId(Guid id);
 
         List<Guid> GetMedewerkersIdsByWagenparkbeheerder(Guid wagenparkbeheerderId);
+        List<BedrijfsMedewerkers> GetMedewerkersByWagenparkbeheerder(Guid wagenparkbeheerderId);
 
         //sla op 
         void Save();

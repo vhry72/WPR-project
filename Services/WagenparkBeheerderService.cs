@@ -257,6 +257,12 @@ namespace WPR_project.Services
             return _repository.GetMedewerkersIdsByWagenparkbeheerder(wagenparkbeheerderId);
         }
 
+        public List<BedrijfsMedewerkers> GetMedewerkersByWagenparkbeheerder(Guid wagenparkbeheerderId)
+        {
+            // Haal de medewerkers-ID's op via de repository
+            return _repository.GetMedewerkersByWagenparkbeheerder(wagenparkbeheerderId);
+        }
+
         public IEnumerable<Huurverzoek> GetVerhuurdeVoertuigen(Guid medewerkerId)
         {
             var medewerker = _context.BedrijfsMedewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);

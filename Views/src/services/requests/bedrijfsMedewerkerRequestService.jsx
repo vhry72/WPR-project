@@ -22,17 +22,15 @@ const BedrijfsMedewerkerRequestService = {
         }
     },
 
-    register: async (data) => {
+    getObject: async (id) => {
         try {
-            console.log("Data verstuurd naar register-bedrijfsmedewerker:", data); // Log om te controleren wat wordt verstuurd
-            const response = await apiService.post('/Account/register-bedrijfsmedewerker', data);
-            return response;
+            const response = await apiService.get(`/WagenparkBeheerder/${id}/medewerker-object`);
+            return response.data;
         } catch (error) {
-            console.error("Error toevoegen van medewerker:", error.response?.data || error.message);
+            console.error(`Error fetching medewerker with ID ${id}:`, error);
             throw error;
         }
     },
-
 
     update: async (id, payload) => {
         try {

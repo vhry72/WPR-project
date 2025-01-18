@@ -221,6 +221,7 @@ public class UserManagerService
                 beheerderId = dto.WagenparkBeheerderId,
                 AspNetUserId = user.Id,
                 IsEmailBevestigd = false,
+                AbonnementId = null,
                 EmailBevestigingToken = Guid.NewGuid()
             };
 
