@@ -1,12 +1,10 @@
-import React, { useState } from "react";
+﻿import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import apiService from "../../services/apiService";
 import "../../styles/Login.css";
 import axios from "axios";
-import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
-import { toast } from 'react-toastify';
-
+import { toast } from "react-toastify";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -16,6 +14,7 @@ const Login = () => {
     const [userId, setUserId] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); // Toggle voor zichtbaarheid
     const navigate = useNavigate();
 
     const handleLogin = async () => {
@@ -44,7 +43,6 @@ const Login = () => {
         }
     };
 
-
     const handleVerifyTwoFactor = async () => {
         setIsLoading(true);
         setErrorMessage("");
@@ -63,12 +61,9 @@ const Login = () => {
             const userRole = response.data.role; // Get role from response
 
             setUserRole(userRole); // Update de context
-            localStorage.setItem("role", userRole);; // Store role in localStorage for UI purposes
+            localStorage.setItem("role", userRole); // Store role in localStorage for UI purposes
 
             toast.success("Succesvol ingelogd!");
-            
-
-
             navigate("/");
         } catch (error) {
             console.error("2FA verification failed:", error.response || error);
@@ -77,8 +72,6 @@ const Login = () => {
             setIsLoading(false);
         }
     };
-
-
 
     return (
         <div className="login-container-wrapper">
@@ -93,13 +86,21 @@ const Login = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             className="login-input"
                         />
-                        <input
-                            type="password"
-                            placeholder="Wachtwoord"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="login-input"
-                        />
+                        <div className="password-input-wrapper">
+                            <input
+                                type={showPassword ? "text" : "password"} // Toggle tussen text en password
+                                placeholder="Wachtwoord"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="login-input"
+                            />
+                            <span
+                                className="password-toggle-icon"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? "👁️" : "🕶️"}
+                            </span>
+                        </div>
                         <button onClick={handleLogin} disabled={isLoading} className="login-button">
                             {isLoading ? "Inloggen..." : "Login"}
                         </button>
@@ -115,7 +116,7 @@ const Login = () => {
                             className="login-input"
                         />
                         <button onClick={handleVerifyTwoFactor} disabled={isLoading} className="login-button">
-                            {isLoading ? "Verifi�ren..." : "Verifieer"}
+                            {isLoading ? "Verifiëren..." : "Verifieer"}
                         </button>
                     </div>
                 )}

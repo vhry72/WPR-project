@@ -209,23 +209,20 @@ public class AccountController : ControllerBase
 
         try
         {
+            // Haal de huidige gebruiker op
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return Unauthorized("Geen gebruiker ingelogd.");
+            }
+
+            // Vul automatisch de AspNetUserId in als deze ontbreekt
+            if (string.IsNullOrEmpty(dto.AspNetUserId))
+            {
+                dto.AspNetUserId = currentUser.Id;
+            }
+
             var medewerker = await _userManagerService.RegisterBedrijfsMedewerker(dto);
-
-            var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
-                new { userId = medewerker.bedrijfsMedewerkerId, token = medewerker.EmailBevestigingToken }, Request.Scheme);
-
-            // Verstuur de bevestigingsmail
-            _emailService.SendEmail(dto.medewerkerEmail, "Bevestig je e-mailadres",
-                $"Klik hier om je e-mailadres te bevestigen: <a href='{confirmationLink}'>Bevestig e-mailadres</a>");
-
-
-            var identityUser = await _userManager.FindByIdAsync(medewerker.AspNetUserId);
-
-            if (identityUser == null)
-                return BadRequest("Identity gebruiker niet gevonden.");
-
-            var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
-            _emailService.SendEmail(dto.medewerkerEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
 
             return Ok(new { Message = "Bedrijfsmedewerker succesvol geregistreerd." });
         }
@@ -234,6 +231,7 @@ public class AccountController : ControllerBase
             return BadRequest($"Er is een fout opgetreden: {ex.Message}");
         }
     }
+
 
     [HttpPost("register-wagenparkbeheerder")]
     public async Task<IActionResult> RegisterWagenparkbeheerder([FromBody] WagenparkBeheerderDTO dto)

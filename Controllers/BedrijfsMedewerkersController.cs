@@ -42,37 +42,6 @@ namespace WPR_project.Controllers
         }
 
         /// <summary>
-        /// Registreert een nieuwe bedrijfsmedewerker en verstuurt een verificatiemail.
-        /// </summary>
-        [HttpPost("register")]
-        public IActionResult Register([FromBody] BedrijfsMedewerkers medewerker)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(new
-                {
-                    Message = "Validatiefout",
-                    Errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage))
-                });
-            }
-
-            try
-            {
-                _service.Register(medewerker);
-                return Ok(new { Message = "Registratie succesvol. Controleer je e-mail voor verificatie." });
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Message = "Interne serverfout.", Error = ex.Message });
-            }
-        }
-
-
-        /// <summary>
         /// Werkt de gegevens van een bestaande bedrijfsmedewerker bij.
         /// </summary>
         [HttpPut("{id}")]
@@ -118,28 +87,6 @@ namespace WPR_project.Controllers
             {
                 return NotFound(new { Message = "Medewerker niet gevonden." });
             }
-        }
-    
-
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginDTO loginDto)
-        {
-            if (string.IsNullOrEmpty(loginDto.Email) || string.IsNullOrEmpty(loginDto.Password))
-            {
-                return BadRequest(new { Message = "E-mail en wachtwoord zijn verplicht." });
-            }
-
-            var medewerker = _service.GetByEmailAndPassword(loginDto.Email, loginDto.Password);
-            if (medewerker == null)
-            {
-                return Unauthorized(new { Message = "Ongeldige e-mail of wachtwoord." });
-            }
-
-            return Ok(new
-            {
-                Id = medewerker.bedrijfsMedewerkerId,
-                Message = "Login succesvol."
-            });
         }
     }
 }

@@ -24,23 +24,15 @@ const BedrijfsMedewerkerRequestService = {
 
     register: async (data) => {
         try {
-            const response = await apiService.post('/BedrijfsMedewerkers/register', { body: data });
+            console.log("Data verstuurd naar register-bedrijfsmedewerker:", data); // Log om te controleren wat wordt verstuurd
+            const response = await apiService.post('/Account/register-bedrijfsmedewerker', data);
             return response;
         } catch (error) {
-            console.error('Error registering medewerker:', error);
+            console.error("Error toevoegen van medewerker:", error.response?.data || error.message);
             throw error;
         }
     },
 
-    login: async (credentials) => {
-        try {
-            const response = await apiService.post('/BedrijfsMedewerkers/login', { body: credentials });
-            return response;
-        } catch (error) {
-            console.error('Login failed:', error);
-            throw error;
-        }
-    },
 
     update: async (id, payload) => {
         try {

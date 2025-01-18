@@ -36,7 +36,7 @@ const Register = () => {
         const { name, value } = e.target;
 
         if (name === "postcode") {
-            setFormData({ ...formData, [name]: value.replace(/^\s+|\s+$/g, "") });
+            setFormData({ ...formData, [name]: value.replace(/^\s+|\s+$/g, "").toUpperCase() });
         } else {
             setFormData({ ...formData, [name]: value });
         }
@@ -52,13 +52,39 @@ const Register = () => {
         setIsLoading(true);
         setErrorMessage("");
 
+        const wachtwoordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+        const telefoonRegex = /^06\d{8}$/;
+        const postcodeRegex = /^[1-9][0-9]{3}[A-Z]{2}$/;
+
+        const CapslockPostcode = formData.postcode.toUpperCase();
+
+        if (!postcodeRegex.test(CapslockPostcode)) {
+            setErrorMessage("Postcode moet het formaat 1234AB hebben.");
+            setIsLoading(false);
+            return;
+        }
+
+        if (!wachtwoordRegex.test(formData.wachtwoord)) {
+            setErrorMessage(
+                "Wachtwoord moet minimaal 8 tekens bevatten en ten minste één speciaal teken."
+            );
+            setIsLoading(false);
+            return;
+        }
+
+        if (!telefoonRegex.test(formData.telefoonnummer)) {
+            setErrorMessage("Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.");
+            setIsLoading(false);
+            return;
+        }
+
         try {
             const payload = {
                 particulierEmail: formData.particulierEmail,
                 particulierNaam: formData.particulierNaam,
                 wachtwoord: formData.wachtwoord,
                 adress: formData.adress,
-                postcode: formData.postcode,
+                postcode: CapslockPostcode,
                 woonplaats: formData.woonplaats,
                 telefoonnummer: formData.telefoonnummer,
             };
@@ -81,6 +107,30 @@ const Register = () => {
         event.preventDefault();
         setIsLoading(true);
         setErrorMessage("");
+
+        const wachtwoordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+        const telefoonRegex = /^06\d{8}$/;
+        const kvkRegex = /^\d{8}$/;
+
+        if (!wachtwoordRegex.test(formData.Zakelijkwachtwoord)) {
+            setErrorMessage(
+                "Wachtwoord moet minimaal 8 tekens bevatten en ten minste één speciaal teken."
+            );
+            setIsLoading(false);
+            return;
+        }
+
+        if (!kvkRegex.test(formData.kvkNummer)) {
+            setErrorMessage("KVK-nummer moet een 8-cijferig getal zijn.");
+            setIsLoading(false);
+            return;
+        }
+
+        if (!telefoonRegex.test(formData.zakelijkTelefoonnummer)) {
+            setErrorMessage("Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.");
+            setIsLoading(false);
+            return;
+        }
 
         try {
             const payload = {
@@ -105,6 +155,7 @@ const Register = () => {
             setIsLoading(false);
         }
     };
+
 
     return (
         <div className="register-container">
