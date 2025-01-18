@@ -45,6 +45,7 @@ import FrontofficeRegister from "./pages/BackOfficeMedewerker/FrontofficeRegiste
 import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderForm";
 import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig";
 import HuurverzoekInzien from "./pages/Accountbeheer/HuurverzoekInzien";
+import RegisterBedrijfsmedewerker from "./pages/Wagenparkbeheerder/RegisterBedrijfsmedewerker";
 
 
 
@@ -329,7 +330,14 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
-
+                        <Route
+                            path="RegisterBedrijfsmedewerker"
+                            element={
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
+                                    <RegisterBedrijfsmedewerker />
+                                </PrivateRoute>
+                            }
+                                />
 
                         <Route
                             path="FrontofficeRegister"

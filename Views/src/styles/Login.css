@@ -24,6 +24,26 @@ html, body {
     text-align: center;
 }
 
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.login-input {
+    flex: 1;
+    padding-right: 40px; /* Ruimte voor het icoon */
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1.2rem; /* Maak het oogje groter */
+    color: #666;
+}
+
+
 h1, h2 {
     font-size: 24px;
     margin-bottom: 20px;

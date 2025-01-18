@@ -1,45 +1,34 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import apiService from "../../services/apiService";
+import "../../styles/Login.css";
 import axios from "axios";
 import { UserContext } from "../../context/UserContext";
-import { toast } from 'react-toastify';
-import "../../styles/Login.css";
+import { toast } from "react-toastify";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const { setUserRole } = useContext(UserContext);
     const [password, setPassword] = useState("");
-    const [twoFactorCode, setTwoFactorCode] = useState(Array(6).fill(""));
+    const [twoFactorCode, setTwoFactorCode] = useState("");
     const [userId, setUserId] = useState(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); // Toggle voor zichtbaarheid
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const handleKeyPress = (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                if (!userId) { 
-                    handleLogin(event);
-                }
-            }
-        };
-
-        
-        window.addEventListener('keydown', handleKeyPress);
-
-        
-        return () => {
-            window.removeEventListener('keydown', handleKeyPress);
-        };
-    }, [email, password, userId]); 
-
-    const handleLogin = async (event) => {
+    const handleLogin = async () => {
         setIsLoading(true);
         setErrorMessage("");
+
         try {
-            const payload = { email, password };
-            const response = await axios.post("https://localhost:5033/api/Account/login", payload);
+            const payload = {
+                email: email,
+                password: password,
+            };
+
+            const response = await apiService.post("/Account/login", { body: payload });
+
             if (response.data && response.data.requiresTwoFactor) {
                 setUserId(response.data.userId);
             } else {
@@ -54,22 +43,26 @@ const Login = () => {
         }
     };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
+    const handleVerifyTwoFactor = async () => {
         setIsLoading(true);
         setErrorMessage("");
+
         try {
-            const code = twoFactorCode.join('');
-            const payload = { userId, code };
+            const payload = {
+                userId: userId,
+                code: twoFactorCode,
+            };
+
             const response = await axios.post("https://localhost:5033/api/Account/verify-2fa", payload, {
-                withCredentials: true,
+                withCredentials: true, // Ensures cookies are processed
             });
 
             console.log("2FA successful:", response.data);
-            const userRole = response.data.role;
+            const userRole = response.data.role; // Get role from response
 
-            setUserRole(userRole);
-            localStorage.setItem("role", userRole);
+            setUserRole(userRole); // Update de context
+            localStorage.setItem("role", userRole); // Store role in localStorage for UI purposes
+
             toast.success("Succesvol ingelogd!");
             navigate("/");
         } catch (error) {
@@ -80,95 +73,52 @@ const Login = () => {
         }
     };
 
-    const handleKeyDown = (index, event) => {
-        if (event.key === "Backspace" && twoFactorCode[index] === "") {
-            // Focus naar het vorige veld verplaatsen als het huidige veld leeg is en backspace wordt ingedrukt
-            const prevField = document.getElementById(`code-${index - 1}`);
-            if (prevField) {
-                prevField.focus();
-            }
-        }
-    };
-
-    const handleCodeChange = (index, event) => {
-        const value = event.target.value;
-        const newCode = [...twoFactorCode];
-
-        if (value === '' && twoFactorCode[index] !== '') {
-            // Verwijder de waarde als de gebruiker een backspace gebruikt in een niet-leeg veld
-            newCode[index] = '';
-            setTwoFactorCode(newCode);
-        } else if (value) {
-           
-            newCode[index] = value[0]; 
-            setTwoFactorCode(newCode);
-
-            if (index < 5) {
-                const nextField = document.getElementById(`code-${index + 1}`);
-                if (nextField) {
-                    nextField.focus();
-                }
-            }
-        }
-    };
-
-    const handleKeyPress = (event) => {
-        if (event.key === 'Enter') {  
-            event.preventDefault();  
-            handleLogin(event);
-        }
-    };
-
-
-
     return (
         <div className="login-container-wrapper">
             <div className="login-container">
                 {!userId ? (
-                    <form onSubmit={handleLogin} className="login-form">
+                    <div className="login-form">
                         <h2>Login</h2>
                         <input
-                        type="email"
-                        placeholder="E-mailadres"
-                        value={email}
-                        onInput={(e) => setEmail(e.target.value)}
-                        className="login-input"
-                        onKeyDown={handleKeyPress} // Voeg deze regel toe
-                        />
-                        <input
-                            type="password"
-                            placeholder="Wachtwoord"
-                            value={password}
-                            onInput={(e) => setPassword(e.target.value)}
+                            type="email"
+                            placeholder="E-mailadres"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                             className="login-input"
-                            onKeyDown={handleKeyPress} // Voeg deze regel toe
                         />
-                        <button type="submit" disabled={isLoading}>
+                        <div className="password-input-wrapper">
+                            <input
+                                type={showPassword ? "text" : "password"} // Toggle tussen text en password
+                                placeholder="Wachtwoord"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="login-input"
+                            />
+                            <span
+                                className="password-toggle-icon"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? "👁️" : "🕶️"}
+                            </span>
+                        </div>
+                        <button onClick={handleLogin} disabled={isLoading} className="login-button">
                             {isLoading ? "Inloggen..." : "Login"}
                         </button>
-                    </form>
+                    </div>
                 ) : (
-                    <form onSubmit={handleSubmit} className="two-factor-form">
+                    <div className="two-factor-form">
                         <h2>Tweestapsverificatie</h2>
-                        <div className="code-input-container">
-                            {twoFactorCode.map((code, index) => (
-                                <input
-                                    key={index}
-                                    id={`code-${index}`}
-                                    type="text"
-                                    maxLength="1"
-                                    value={code}
-                                    onChange={(e) => handleCodeChange(index, e)}
-                                    onKeyDown={(e) => handleKeyDown(index, e)} 
-                                    className="code-input"
-                                    autoComplete="off"
-                                />
-                            ))}
-                        </div>
-                        <button type="submit" disabled={isLoading} className="login-button">
-                            {isLoading ? "Verifi�ren..." : "Verifieer"}
+                        <input
+                            type="text"
+                            placeholder="Verificatiecode"
+                            value={twoFactorCode}
+                            onChange={(e) => setTwoFactorCode(e.target.value)}
+                            className="login-input"
+                        />
+                        <button onClick={handleVerifyTwoFactor} disabled={isLoading} className="login-button">
+                            {isLoading ? "Verifiëren..." : "Verifieer"}
                         </button>
-                    </form>
+                    </div>
                 )}
                 {errorMessage && <p className="error-message">{errorMessage}</p>}
             </div>
