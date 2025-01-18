@@ -107,6 +107,8 @@ namespace WPR_project.Controllers
             }
         }
 
+       
+
         /// <summary>
         /// Voegt een nieuwe wagenparkbeheerder toe
         /// </summary>
@@ -175,6 +177,51 @@ namespace WPR_project.Controllers
             }
         }
 
+        // haalt de medewerkernamen op die toegevoegd zijn
+
+        [HttpGet("{id}/medewerker-object")]
+        public IActionResult GetMedewerkers(Guid id)
+        {
+            try
+            {
+                var medewerkerIds = _service.GetMedewerkersByWagenparkbeheerder(id);
+
+                if (!medewerkerIds.Any())
+                    return NotFound(new { Message = "Geen medewerkers gevonden voor de opgegeven WagenparkbeheerderID." });
+
+                return Ok(medewerkerIds);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Er is een onverwachte fout opgetreden.", Details = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}/medewerker-wijzigen")]
+        public IActionResult GetMedewerkersWijzigen(Guid id)
+        {
+            try
+            {
+                var medewerkerIds = _service.GetMedewerkersIdsByWagenparkbeheerder(id);
+
+                if (!medewerkerIds.Any())
+                    return NotFound(new { Message = "Geen medewerkers gevonden voor de opgegeven WagenparkbeheerderID." });
+
+                return Ok(medewerkerIds);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Er is een onverwachte fout opgetreden.", Details = ex.Message });
+            }
+        }
 
         // voeg een medewerker aan een zakelijke Huurder toe
         [HttpPost("{zakelijkeId}/voegmedewerker")]

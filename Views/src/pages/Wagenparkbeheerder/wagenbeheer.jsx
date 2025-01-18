@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import BedrijfsMedewerkerRequestService from "../../services/requests/BedrijfsMedewerkerRequestService";
+import axios from "axios";
+import JwtService from "../../services/JwtService";
 import "../../styles/styles.css";
 import "../../styles/Wagenparkbeheerder.css";
 import "../../styles/Notificatie.css";
@@ -7,36 +8,33 @@ import "../../styles/Notificatie.css";
 const WagenbeheerDashboard = () => {
     const [medewerkers, setMedewerkers] = useState([]); // Medewerkers in abonnement
     const [alleMedewerkers, setAlleMedewerkers] = useState([]); // Alle medewerkers
-    const [selectedMedewerker, setSelectedMedewerker] = useState(""); // Geselecteerde medewerker
-    const [notificatie, setNotificatie] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [selectedMedewerker, setSelectedMedewerker] = useState(""); // Geselecteerde medewerker (email)
+    const [notificatie, setNotificatie] = useState(""); // Notificaties
+    const [error, setError] = useState(""); // Fouten
+    const [isLoading, setIsLoading] = useState(false); // Laadstatus
 
     // Haal gegevens op
     useEffect(() => {
         const fetchMedewerkers = async () => {
             try {
-                const response = await BedrijfsMedewerkerRequestService.getAll();
-                setAlleMedewerkers(response.data);
+                setIsLoading(true);
+                const userId = await JwtService.getUserId();
+                const response = await axios.get(
+                    `https://localhost:5033/api/WagenparkBeheerder/${userId}/medewerker-object`
+                );
+                setAlleMedewerkers(response.data); // Sla medewerkers op
             } catch (error) {
-                setNotificatie("Fout bij het ophalen van alle medewerkers.");
-                setTimeout(() => setNotificatie(""), 2000);
-            }
-        };
-
-        const fetchAbonnementMedewerkers = async () => {
-            try {
-                const abonnementResponse = await BedrijfsMedewerkerRequestService.getAbonnementMedewerkers();
-                setMedewerkers(abonnementResponse.data);
-            } catch (error) {
-                setNotificatie("Fout bij het ophalen van medewerkers in abonnement.");
-                setTimeout(() => setNotificatie(""), 3000);
+                console.error("Fout bij het ophalen van de medewerkers:", error);
+                setError("Er is een fout opgetreden bij het laden van de medewerkers.");
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchMedewerkers();
-        fetchAbonnementMedewerkers();
     }, []);
 
+    // Voeg medewerker toe aan abonnement
     const voegMedewerkerToeAanAbonnement = async () => {
         if (!selectedMedewerker) {
             setNotificatie("Selecteer een medewerker om toe te voegen.");
@@ -47,12 +45,19 @@ const WagenbeheerDashboard = () => {
         setIsLoading(true);
 
         try {
-            await BedrijfsMedewerkerRequestService.addToAbonnement(selectedMedewerker);
             const medewerker = alleMedewerkers.find((m) => m.email === selectedMedewerker);
+
+            // API-aanroep om medewerker toe te voegen
+            await axios.post(
+                `https://localhost:5033/api/WagenparkBeheerder/medewerkers/toevoegen`,
+                { email: selectedMedewerker }
+            );
+
             setMedewerkers((prev) => [...prev, medewerker]);
-            setNotificatie(`Medewerker ${medewerker.naam} toegevoegd aan abonnement.`);
+            setNotificatie(`Medewerker ${medewerker.email} toegevoegd aan abonnement.`);
         } catch (error) {
-            setNotificatie("Fout bij het toevoegen van medewerker aan abonnement.");
+            console.error("Fout bij het toevoegen van medewerker aan abonnement:", error);
+            setNotificatie("Er is een fout opgetreden bij het toevoegen van de medewerker.");
         } finally {
             setSelectedMedewerker("");
             setTimeout(() => setNotificatie(""), 3000);
@@ -60,19 +65,30 @@ const WagenbeheerDashboard = () => {
         }
     };
 
+    // Verwijder medewerker uit abonnement
     const verwijderMedewerkerVanAbonnement = async (email) => {
         setIsLoading(true);
 
         try {
-            await BedrijfsMedewerkerRequestService.removeFromAbonnement(email);
+            // API-aanroep om medewerker te verwijderen
+            await axios.delete(
+                `https://localhost:5033/api/WagenparkBeheerder/medewerkers/verwijderen`,
+                { data: { email } }
+            );
+
             setMedewerkers((prev) => prev.filter((m) => m.email !== email));
             setNotificatie(`Medewerker met email ${email} verwijderd uit abonnement.`);
         } catch (error) {
-            setNotificatie("Fout bij het verwijderen van medewerker uit abonnement.");
+            console.error("Fout bij het verwijderen van medewerker uit abonnement:", error);
+            setNotificatie("Er is een fout opgetreden bij het verwijderen van de medewerker.");
         } finally {
             setTimeout(() => setNotificatie(""), 3000);
             setIsLoading(false);
         }
+    };
+
+    const handleMedewerkerSelect = (email) => {
+        setSelectedMedewerker(email);
     };
 
     return (
@@ -84,12 +100,13 @@ const WagenbeheerDashboard = () => {
                 <div className="options">
                     <h2>Beheer Abonnement Medewerkers</h2>
 
+                    {/* Formulier voor het toevoegen van medewerkers */}
                     <div className="medewerker-form">
                         <label htmlFor="medewerkerSelect">Selecteer een medewerker</label>
                         <select
                             id="medewerkerSelect"
                             value={selectedMedewerker}
-                            onChange={(e) => setSelectedMedewerker(e.target.value)}
+                            onChange={(e) => handleMedewerkerSelect(e.target.value)}
                             aria-label="Selecteer een medewerker om toe te voegen aan het abonnement"
                         >
                             <option value="" disabled>
@@ -98,11 +115,12 @@ const WagenbeheerDashboard = () => {
                             {alleMedewerkers
                                 .filter((m) => !medewerkers.some((medewerker) => medewerker.email === m.email))
                                 .map((medewerker) => (
-                                    <option key={medewerker.id} value={medewerker.email}>
-                                        {medewerker.naam} - {medewerker.email}
+                                    <option key={medewerker.bedrijfsMedewerkerId} value={medewerker.email}>
+                                        {medewerker.medewerkerNaam} - {medewerker.email}
                                     </option>
                                 ))}
                         </select>
+                        <p>Geselecteerde medewerker: {selectedMedewerker || "Geen"}</p>
                         <button
                             onClick={voegMedewerkerToeAanAbonnement}
                             disabled={isLoading || !selectedMedewerker}
@@ -112,18 +130,19 @@ const WagenbeheerDashboard = () => {
                         </button>
                     </div>
 
+                    {/* Lijst van huidige medewerkers */}
                     <h3>Huidige Medewerkers in Abonnement</h3>
                     <ul aria-labelledby="medewerkerLijst">
                         {medewerkers.map((medewerker) => (
-                            <li key={medewerker.id}>
+                            <li key={medewerker.bedrijfsMedewerkerId}>
                                 <span>
-                                    <strong>{medewerker.naam}</strong> - {medewerker.email}
+                                    <strong>{medewerker.medewerkerNaam}</strong> - {medewerker.email}
                                 </span>
                                 <button
                                     onClick={() => verwijderMedewerkerVanAbonnement(medewerker.email)}
                                     disabled={isLoading}
                                     aria-live="polite"
-                                    aria-label={`Verwijder medewerker ${medewerker.naam} met email ${medewerker.email} uit abonnement`}
+                                    aria-label={`Verwijder medewerker ${medewerker.medewerkerNaam} met email ${medewerker.email} uit abonnement`}
                                 >
                                     Verwijderen
                                 </button>
@@ -131,6 +150,8 @@ const WagenbeheerDashboard = () => {
                         ))}
                     </ul>
                 </div>
+
+                {/* Notificaties */}
                 {notificatie && (
                     <div
                         className="notificatie-box"

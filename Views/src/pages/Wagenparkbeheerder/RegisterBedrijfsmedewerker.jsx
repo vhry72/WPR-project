@@ -1,7 +1,8 @@
-﻿import React, { useState } from "react";
-import BedrijfsMedewerkerRequestService from "../../services/requests/BedrijfsMedewerkerRequestService";
+﻿import React, { useState, useEffect } from "react";
 import "../../styles/styles.css";
 import "../../styles/Register.css";
+import JwtService from "../../services/JwtService";
+import axios from 'axios';
 
 const BedrijfsMedewerkerRegister = () => {
     const [formData, setFormData] = useState({
@@ -11,10 +12,40 @@ const BedrijfsMedewerkerRegister = () => {
     });
     const [notificatie, setNotificatie] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [wagenparkBeheerderId, setWagenparkBeheerderId] = useState(null);
+    const [zakelijkeHuurderId, setZakelijkeHuurderId] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    useEffect(() => {
+        const fetchUserId = async () => {
+            try {
+                const userId = await JwtService.getUserId();
+                console.log("User ID:", userId);
+                if (userId) {
+                    setWagenparkBeheerderId(userId);
+                } else {
+                    console.error("Huurder ID kon niet worden opgehaald via de API.");
+                }
+            } catch (error) {
+                console.error("Fout bij het ophalen van de huurder ID:", error);
+            }
+        };
+
+        fetchUserId();
+    }, []);
+
+    const fetchZakelijkeHuurderId = async () => {
+        if (!wagenparkBeheerderId) return;
+        try {
+            const response = await axios.get(`https://localhost:5033/api/WagenparkBeheerder/${wagenparkBeheerderId}/zakelijkeId`);
+            setZakelijkeHuurderId(response.data.zakelijkeId);
+        } catch (error) {
+            console.error("Error fetching zakelijke huurder data:", error);
+        }
     };
 
     const validateFormData = () => {
@@ -49,23 +80,46 @@ const BedrijfsMedewerkerRegister = () => {
         setIsLoading(true);
 
         try {
-            // Voeg hier AspNetUserId toe op basis van de huidige sessie/ingelogde gebruiker
-            const data = {
-                ...formData,
-                medewerkerEmail: formData.email, // Zorg dat dit overeenkomt met de backend-DTO
-                AspNetUserId: "GUID-VAN-HUIDIGE-GEBRUIKER" // Voeg hier een geldige GUID toe
-            };
+            // Zorg ervoor dat zakelijkeHuurderId wordt opgehaald
+            await fetchZakelijkeHuurderId(); // Ophalen van zakelijkeHuurderId
 
-            delete data.email; // Verwijder de verkeerde 'email' key
+            // Controleer opnieuw of zakelijkeHuurderId is ingesteld
+            if (!zakelijkeHuurderId) {
+                throw new Error("Zakelijke Huurder ID kon niet worden opgehaald. Probeer opnieuw.");
+            }
+
+            const data = {
+                medewerkerNaam: formData.medewerkerNaam,
+                medewerkerEmail: formData.email,
+                wachtwoord: formData.wachtwoord,
+                zakelijkeHuurderId: zakelijkeHuurderId,
+                wagenparkBeheerderId: wagenparkBeheerderId,
+                AspNetUserId: "string",
+            };
 
             console.log("Data verstuurd naar register-bedrijfsmedewerker:", data);
 
-            await BedrijfsMedewerkerRequestService.register(data);
+            // API-aanroep met headers
+            const response = await axios.post(
+                `https://localhost:5033/api/Account/register-bedrijfsmedewerker`,
+                data,
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+            );
+
+            console.log("Registratie succesvol:", response.data);
             setNotificatie(`Een e-mail is verstuurd naar ${formData.email}.`);
         } catch (error) {
             console.error("Error bij registratie:", error.response?.data || error.message);
+
+            // Gedetailleerde foutmelding tonen
             setNotificatie(
-                error.response?.data?.title || "Fout bij registratie. Probeer later opnieuw."
+                error.response?.data?.title ||
+                error.response?.data?.message ||
+                "Fout bij registratie. Probeer later opnieuw."
             );
         } finally {
             setTimeout(() => setNotificatie(""), 5000);
@@ -73,7 +127,6 @@ const BedrijfsMedewerkerRegister = () => {
             setFormData({ medewerkerNaam: "", email: "", wachtwoord: "" });
         }
     };
-
 
     return (
         <div className="register-container">
