@@ -34,7 +34,7 @@ namespace WPR_project.Controllers
         public IActionResult AddPrivacyVerklaring([FromBody] PrivacyVerklaringDTO privacyVerklaring)
         {
             _privacyVerklaringService.Add(privacyVerklaring);
-            _privacyVerklaringService.SendEmailToBackOffice(privacyVerklaring.MedewerkerId);
+            //_privacyVerklaringService.SendEmailToBackOffice(privacyVerklaring.MedewerkerId);
             return Ok();
         }
 

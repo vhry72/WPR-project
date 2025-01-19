@@ -9,6 +9,7 @@ using WPR_project.Services;
 using WPR_project.Services.Email;
 using System.Text.Json.Serialization;
 using Hangfire;
+using NuGet.Protocol.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",
 
-        policy => policy.WithOrigins("https://localhost:5174")
+        policy => policy.WithOrigins("https://localhost:5173")
                         .AllowAnyMethod()
                         .AllowAnyHeader()
                         .AllowCredentials());
@@ -105,10 +106,13 @@ builder.Services.AddScoped<ISchademeldingRepository, SchademeldingRepository>();
 builder.Services.AddScoped<IVoertuigStatusRepository, VoertuigStatusRepository>();
 builder.Services.AddScoped<IVoertuigNotitiesRepository, VoertuigNotitiesRepository>();
 builder.Services.AddScoped<IFactuurRepository, FactuurRepository>();
+builder.Services.AddScoped<IPrivacyVerklaringRepository, PrivacyVerklaringRepository>();
+builder.Services.AddScoped<IBackOfficeMedewerkerRepository, BackOfficeMedewerkerRepository>();
 
 
 
 // Dependency Injection voor services
+builder.Services.AddScoped<IFrontOfficeMedewerkerRepository, FrontOfficeMedewerkerRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<ParticulierHuurderService>();
@@ -123,6 +127,8 @@ builder.Services.AddScoped<SchademeldingService>();
 builder.Services.AddScoped<VoertuigStatusService>();
 builder.Services.AddScoped<UserManagerService>();
 builder.Services.AddScoped<FactuurService>();
+builder.Services.AddScoped<PrivacyVerklaringService>();
+builder.Services.AddScoped<BackOfficeService>();
 
 
 // Voor de 24-uurs reminder service

@@ -46,6 +46,7 @@ import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderFo
 import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig";
 import HuurverzoekInzien from "./pages/Accountbeheer/HuurverzoekInzien";
 import RegisterBedrijfsmedewerker from "./pages/Wagenparkbeheerder/RegisterBedrijfsmedewerker";
+import PrivacyverklaringWijziging from "./pages/BackOfficeMedewerker/PrivacyVerklaringWijziging";
 
 
 
@@ -204,6 +205,14 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["BackofficeMedewerker", "FrontofficeMedewerker"]}>
                                     <SchadeMeldingen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="PrivacyVerklaringWijziging"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <PrivacyverklaringWijziging />
                                 </PrivateRoute>
                             }
                         />

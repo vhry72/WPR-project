@@ -32,7 +32,8 @@ const Layout = () => {
             { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken" },
             { to: "/FrontofficeRegister", label: "Frontoffice Beheer"},
             { to: "/Schadeclaims", label: "Schade claims" },
-            { to: "/VoertuigTonen", label: "Wagenpark beheren"}
+            { to: "/VoertuigTonen", label: "Wagenpark beheren" },
+            { to: "/PrivacyVerklaringWijziging", label: "privacyverklaring Wijzigen"}
 
         ],
         FrontofficeMedewerker: [

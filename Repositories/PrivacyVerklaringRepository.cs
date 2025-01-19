@@ -15,6 +15,7 @@ namespace WPR_project.Repositories
         public void Add(PrivacyVerklaring privacyVerklaring)
         {
             _context.PrivacyVerklaringen.Add(privacyVerklaring);
+            _context.SaveChanges();
         }
 
         public PrivacyVerklaring GetLatestPrivacyVerklaring()
@@ -32,7 +33,9 @@ namespace WPR_project.Repositories
 
         public IQueryable<PrivacyVerklaring> GetAllPrivacyVerklaringen()
         {
-            return _context.PrivacyVerklaringen;
+            
+            return _context.PrivacyVerklaringen.OrderByDescending(pv => pv.UpdateDatum);
         }
+
     }
 }
