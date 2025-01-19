@@ -1,15 +1,51 @@
 ﻿/* eslint-disable no-unused-vars */
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import CookieConsent from "react-cookie-consent"; // Importeren van de library
 import "../styles/styles.css";
+import "../styles/CookieConsent.css";
 import "../styles/navigatieBalk.css";
 
+
+
 const Index = () => {
+    const [showBanner, setShowBanner] = useState(false);
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
     useEffect(() => {
-        console.log("Navigeert naar Index pagina");
+        // Controleer of de cookie al bestaat
+        const consent = getCookie("cookie-consent");
+        setShowBanner(!consent); // Alleen tonen als er geen consent cookie is
     }, []);
 
     return (
         <>
+            {showBanner && (
+                <div className="overlay">
+                    <div className="cookieConsentModal">
+                        <CookieConsent
+                            location="bottom"
+                            buttonText="OK"
+                            cookieName="cookie-consent"
+                            styleName="cookieConsentModal"
+                            buttonStyleName="cookieConsentButton"
+                            onAccept={() => {
+                                // Cookie wordt automatisch gezet door CookieConsent component
+                                setShowBanner(false);
+                            }}
+                            expires={365}
+                        >
+                            Wij gebruiken een noodzakelijk cookie voor authenticatie die essentieel is voor de werking van deze website. Dit cookie helpt ons jouw sessie te beheren en zorgt ervoor dat je niet opnieuw hoeft in te loggen bij elk bezoek. Door verder te gaan, accepteer je ons gebruik van dit cookie. Lees meer over ons <a href="/PrivacyVerklaring" className="privacyLink">privacybeleid</a>.
+                        </CookieConsent>
+                    </div>
+                </div>
+            )}
+            
+
             <div className="hero-section" id="home">
                 <div className="hero-text">
                     <h1>Welkom bij CarAndAll!</h1>
@@ -19,7 +55,7 @@ const Index = () => {
 
             {/* Services Section */}
             <section className="services-section" id="services">
-                <h2 className = "onze-diensten">Onze Diensten</h2>
+                <h2 className="onze-diensten">Onze Diensten</h2>
                 <div className="services-grid">
                     {[
                         {
