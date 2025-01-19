@@ -1,50 +1,50 @@
-﻿/* Privacy Policy Pagina CSS */
-.privacy-policy-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 40px;
+﻿.privacy-policy-container {
     font-family: Arial, sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f9f9f9;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 }
 
-h1, h2 {
-    color: #0056b3;
-}
+    .privacy-policy-container h1, h2 {
+        color: #333;
+    }
 
-h1 {
-    text-align: center;
+    .privacy-policy-container p, li {
+        color: #666;
+    }
+
+.section {
     margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ccc;
 }
 
-section {
-    margin-bottom: 20px;
-}
+    .section:last-child {
+        border-bottom: none;
+    }
 
-ul {
-    margin: 10px 0;
-    padding-left: 20px;
-}
-
-p, li {
-    font-size: 1rem;
-}
-
-footer {
-    text-align: center;
-    padding: 20px 0;
-    font-size: 0.9rem;
-    color: #666;
-}
-
-a {
-    color: #007bff;
+.link-button {
+    color: #0077cc;
     text-decoration: none;
 }
 
-    a:hover {
-        text-decoration: underline;
-    }
+.privacy-policy-container h2 {
+    font-size: 20px; /* Groter lettertype voor de sectietitels */
+    font-weight: bold; /* Vetgedrukte titels */
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.privacy-policy-container p {
+    margin-bottom: 10px;
+}
+
+.privacy-policy-container {
+    padding: 20px;
+    line-height: 1.6;
+}
+

@@ -30,10 +30,10 @@ namespace WPR_project.Services
         {
             var privacyVerklaring = new PrivacyVerklaring
             {
-                Verklaring = privacyVerklaringdto.Verklaring,
-                UpdateDatum = privacyVerklaringdto.UpdateDatum,
+                Verklaring = ConvertNewLines(privacyVerklaringdto.Verklaring),
+                UpdateDatum = DateTime.Now,
                 MedewerkerId = privacyVerklaringdto.MedewerkerId,
-                VerklaringId = privacyVerklaringdto.VerklaringId,
+                VerklaringId = Guid.NewGuid(),
             };
 
             _repository.Add(privacyVerklaring);
@@ -43,6 +43,12 @@ namespace WPR_project.Services
         {
             return _repository.GetAllPrivacyVerklaringen();
         }
+
+        public string ConvertNewLines(string input)
+        {
+            return input.Replace("\\n", "\n");
+        }
+
 
         public void SendEmailToBackOffice(Guid MedewerkerId)
         {
