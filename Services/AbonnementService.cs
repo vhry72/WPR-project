@@ -40,27 +40,45 @@ namespace WPR_project.Services
             return _abonnementRepository.GetAbonnementById(id);
         }
 
-        public void VoegMedewerkerToe(Guid medewerkerId, string medewerkerNaam, string medewerkerEmail, Guid wagenparkbeheerderId)
+        public void VoegMedewerkerToe(Guid beheerderId, Guid medewerkerId)
         {
-       
-            // Haal de bestaande medewerker-IDs op
-            var bestaandeMedewerkersIds = _wagenparkBeheerderRepository.GetMedewerkersIdsByWagenparkbeheerder(wagenparkbeheerderId);
+            // Haal de lijst van medewerkers op die onder deze wagenparkbeheerder vallen
+            var medewerkersVanBeheerder = _wagenparkBeheerderRepository.GetMedewerkersByWagenparkbeheerder(beheerderId);
 
-            // Controleer of de medewerker al gekoppeld is aan de wagenparkbeheerder
-            if (bestaandeMedewerkersIds.Contains(medewerkerId))
-                throw new InvalidOperationException("Deze medewerker is al toegevoegd aan het abonnement.");
+            // Controleer of de opgegeven medewerker bij deze wagenparkbeheerder hoort
+            var medewerker = medewerkersVanBeheerder.FirstOrDefault(m => m.bedrijfsMedewerkerId.Equals(medewerkerId));
+            if (medewerker == null)
+            {
+                throw new InvalidOperationException("Deze medewerker zit niet in uw wagenpark.");
+            }
 
-           
+            // Controleer of de medewerker al een abonnement heeft
+            if (medewerker.AbonnementId.HasValue)
+            {
+                throw new InvalidOperationException("Deze medewerker heeft al een abonnement.");
+            }
+
+            // Haal het AbonnementId op dat bij deze wagenparkbeheerder hoort
+            var abonnementIdVanBeheerder = _wagenparkBeheerderRepository.GetAbonnementId(beheerderId);
+            if (abonnementIdVanBeheerder == null)
+            {
+                throw new InvalidOperationException("Er is geen abonnement gekoppeld aan deze wagenparkbeheerder.");
+            }
+
+            // Koppel het abonnement aan de medewerker
+            medewerker.AbonnementId = abonnementIdVanBeheerder;
+
             // Sla de wijzigingen op
             _wagenparkBeheerderRepository.Save();
-        
+
+
         string bericht = $@"
-         Beste {medewerkerNaam},
- 
+         Beste {medewerker.medewerkerNaam},
+
          U bent toegevoegd als medewerker bij het bedrijfsabonnement.
         U kunt nu gebruik maken van de voordelen van dit abonnement.";
 
-            _emailService.SendEmail(medewerkerEmail, "Welkom bij het bedrijfsabonnement", bericht);
+            _emailService.SendEmail(medewerker.medewerkerEmail, "Welkom bij het bedrijfsabonnement", bericht);
         }
 
         //public void VerwijderMedewerker(Guid wagenparkbeheerderId, Guid medewerkerId)
