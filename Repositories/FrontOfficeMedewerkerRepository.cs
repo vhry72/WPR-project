@@ -24,5 +24,10 @@ namespace WPR_project.Repositories
         {
             _context.FrontofficeMedewerkers.Update(frontofficeMedewerker);
         }
+
+        public IQueryable<FrontofficeMedewerker> Getall()
+        {
+            return _context.FrontofficeMedewerkers.AsQueryable();
+        }
     }
 }

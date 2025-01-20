@@ -20,6 +20,10 @@ namespace WPR_project.Services
             _emailService = emailService;
         }
 
+        public IQueryable GetAll() {
+            return _frontOfficeMedewerkerRepository.Getall();
+        }
+
         public void VoegMedewerkerToe(Guid frontOfficeId, string medewerkerNaam, string medewerkerEmail, string wachtwoord)
         {
             var medewerker = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(frontOfficeId);

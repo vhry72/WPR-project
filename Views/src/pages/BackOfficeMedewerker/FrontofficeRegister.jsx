@@ -3,6 +3,8 @@ import axios from "axios";
 import JwtService from "../../services/JwtService";
 import { v4 as uuidv4 } from "uuid";
 
+const API_URL = `https://localhost:5033`;
+
 function FrontofficeRegister() {
     const [frontOfficeMedewerkers, setFrontOfficeMedewerkers] = useState([]);
     const [nieuweMedewerker, setNieuweMedewerker] = useState({
@@ -34,7 +36,7 @@ function FrontofficeRegister() {
     useEffect(() => {
         const fetchFrontOfficeMedewerkers = async () => {
             try {
-                const response = await axios.get("/api/Account/frontoffice-medewerkers");
+                const response = await axios.get(`${API_URL}/api/FrontOfficeMedewerker/GetAll`);
                 const medewerkersData = Array.isArray(response.data) ? response.data : [];
                 setFrontOfficeMedewerkers(medewerkersData);
             } catch (error) {
@@ -70,7 +72,7 @@ function FrontofficeRegister() {
 
         try {
             console.log(payload);
-            const response = await axios.post(`https://localhost:5033/api/Account/register-frontoffice`, payload);
+            const response = await axios.post(`${API_URL}/api/Account/register-frontoffice`, payload);
             setFrontOfficeMedewerkers((prev) => [...prev, response.data]);
             setNieuweMedewerker({ medewerkerNaam: "", medewerkerEmail: "", wachtwoord: "" });
         } catch (error) {
@@ -87,7 +89,7 @@ function FrontofficeRegister() {
     // Update de gewijzigde gegevens van een medewerker
     const wijzigMedewerker = async () => {
         try {
-            await axios.put(`/api/Account/frontoffice-medewerkers/${geselecteerdeMedewerker.frontofficeMedewerkerId}`, geselecteerdeMedewerker);
+            await axios.put(`${API_URL}//api/Account/frontoffice-medewerkers/${geselecteerdeMedewerker.frontofficeMedewerkerId}`, geselecteerdeMedewerker);
             setFrontOfficeMedewerkers((prev) =>
                 prev.map((medewerker) =>
                     medewerker.frontofficeMedewerkerId === geselecteerdeMedewerker.frontofficeMedewerkerId ? geselecteerdeMedewerker : medewerker

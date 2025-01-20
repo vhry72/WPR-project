@@ -7,5 +7,6 @@ namespace WPR_project.Repositories
         FrontofficeMedewerker GetFrontOfficeMedewerkerById(Guid id);
         void Update(FrontofficeMedewerker frontofficeMedewerker);
         void Save();
+        IQueryable<FrontofficeMedewerker> Getall();
     }
 }
