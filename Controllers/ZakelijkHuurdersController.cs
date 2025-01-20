@@ -82,8 +82,7 @@ namespace WPR_project.Controllers
             {
                 return NotFound("Abonnement niet gevonden.");
             }
-
-            // Stuur de abonnementsdetails terug
+            // return het abonnement 
             return Ok(abonnement);
         }
 

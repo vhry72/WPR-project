@@ -4,6 +4,8 @@ namespace WPR_project.Repositories
 {
     public interface IWagenparkBeheerderRepository
     {
+        // Interface voor de repositories om de methodes te erfen en de logica toe te voegen wat opgeslagen wordt in de DB
+
         IEnumerable<WagenparkBeheerder> GetWagenparkBeheerders();
         WagenparkBeheerder GetBeheerderById(Guid id); 
         void AddWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder);

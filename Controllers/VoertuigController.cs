@@ -19,6 +19,7 @@ namespace WPR_project.Controllers
             _voertuigService = voertuigService;
         }
 
+        // filter de gehaalde voertuigen
         [HttpGet("filter")]
         public IActionResult GetFilteredVoertuigen([FromQuery] string voertuigType, DateTime? startDatum, DateTime? eindDatum, [FromQuery] string sorteerOptie)
         {
@@ -32,6 +33,8 @@ namespace WPR_project.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
         [HttpGet]
         public IActionResult GetAllVoertuigen()
         {

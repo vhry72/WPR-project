@@ -39,7 +39,7 @@ namespace WPR_project.Controllers
                     return NotFound(new { Message = "Voertuig niet gevonden." });
                 }
                 voertuigstatus.verhuurd = verhuurd;// Update de goedkeuring               
-                _service.Update(id, voertuigstatus); // Pas de update correct toe
+                _service.Update(id, voertuigstatus); 
                 return Ok(new { Message = "Voertuig is verhuurd." });
             }
             catch (Exception ex)

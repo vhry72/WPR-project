@@ -80,6 +80,8 @@ namespace WPR_project.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+
+        // update status van schademelding
         [HttpPut("inBehandeling/{id}/{status}")]
         public IActionResult zetOpInBehandeling(Guid id, string status)
         {
@@ -102,6 +104,8 @@ namespace WPR_project.Controllers
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
             }
         }
+
+        // update status van schademelding om afgehandeld te zetten
         [HttpPut("Afgehandeld/{id}/{status}")]
         public IActionResult zetOpAfgehandeld(Guid id, string status)
         {
@@ -124,6 +128,8 @@ namespace WPR_project.Controllers
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
             }
         }
+
+        // update status van schademelding om in reparatie te zetten
         [HttpPut("InReparatie/{id}/{status}")]
         public IActionResult zetOpInReparatie(Guid id, string status)
         {

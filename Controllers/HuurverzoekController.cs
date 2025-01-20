@@ -19,12 +19,15 @@ public class HuurverzoekController : ControllerBase
         _voertuigService = voertuigService;
     }
 
+    // zie de actieve huurverzoeken van een huurder
     [HttpGet("check-active/{huurderId}")]
     public IActionResult CheckActiveHuurverzoek(Guid huurderId)
     {
         var hasActiveRequest = _service.HasActiveHuurverzoek(huurderId);
         return Ok(new { hasActiveRequest });
     }
+
+    // zie de beantwoorde huurverzoeken van een huurder
     [HttpGet("check-Beantwoorde/{huurderId}")]
     public IActionResult CheckBeantwoordeHuurverzoek(Guid huurderId)
     {
@@ -32,6 +35,7 @@ public class HuurverzoekController : ControllerBase
         return Ok(new { hasActiveRequest });
     }
 
+    // Haal alle beschikbare voertuigen op
     [HttpGet("BeschikbareVoertuigen/{startDatum}/{eindDatum}")]
     public IActionResult GetAvailableVehicles(DateTime startDatum, DateTime eindDatum)
     {
@@ -46,6 +50,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
+    // Maak een huurverzoek aan
     [HttpPost]
     public IActionResult CreateHuurVerzoek([FromBody] HuurVerzoekDTO huurVerzoekDto)
     {
@@ -94,6 +99,7 @@ public class HuurverzoekController : ControllerBase
     }
 
 
+    // Haal alle huurverzoeken op van een bepaalde Id
     [HttpGet("GetByHuurderID/{id}")]
     public IActionResult GetHuurverzoekenByHuurderID(Guid id)
     {
@@ -108,6 +114,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
+    // haal alle verzoeken op
     [HttpGet]
     public IActionResult GetAllHuurVerZoeken()
     {
@@ -122,6 +129,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
+    // haalde actieve verzoeken op
     [HttpGet("GetAllActive")]
     public IActionResult GetAllActiveHuurVerZoeken()
     {
@@ -135,6 +143,8 @@ public class HuurverzoekController : ControllerBase
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
+
+    // haal alle beantwoorde verzoeken op
     [HttpGet("GetAllBeantwoorde")]
     public IActionResult GetAllBeantwoordeVerZoeken()
     {
@@ -148,6 +158,8 @@ public class HuurverzoekController : ControllerBase
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
+
+    // haal alle afgekeurde verzoeken op
     [HttpGet("GetAllAfgekeurde")]
     public IActionResult GetAllAfgekeurde()
     {
@@ -161,6 +173,8 @@ public class HuurverzoekController : ControllerBase
             return StatusCode(500, $"Interne serverfout: {ex.Message}");
         }
     }
+
+    // haal alle goedgekeurde verzoeken op
     [HttpGet("GetAllGoedGekeurde")]
     public IActionResult GetAllGoedGekeurde()
     {
@@ -175,7 +189,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-    // Haalt een specifiek Huurverzoek op d.m.v. huurderID
+    // Haal een specifieke huurverzoek op d.m.v. huurderID
     [HttpGet("{id}")]
     public ActionResult<Huurverzoek> GetById(Guid id)
     {
@@ -213,6 +227,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
+    // update status van huurverzoek
     [HttpPut("keuring/{id}/{approved}")]
     public IActionResult WeigerRequest(Guid id, bool approved)
     {

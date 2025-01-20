@@ -1,4 +1,5 @@
 
+// gebruikt API om de JWT token te gebruiken voor veiligheidsredenen
 
 const JwtService = {
     getUserInfo: async () => {

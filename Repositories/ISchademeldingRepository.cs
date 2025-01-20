@@ -5,6 +5,8 @@ namespace WPR_project.Repositories
 {
     public interface ISchademeldingRepository
     {
+        // Interface voor de repositories om de methodes te erfen en de logica toe te voegen wat opgeslagen wordt in de DB
+
         IQueryable<Schademelding> GetAllSchademeldingen();
         List<Schademelding> GetSchademeldingByVoertuigId(Guid id);
         Schademelding GetSchademeldingById(Guid id);

@@ -23,6 +23,7 @@ namespace WPR_project.Controllers
             _emailService = emailService;
         }
 
+        // frontoffice aanmaken
         [HttpPost("voegFrontOffice")]
         public IActionResult VoegFrontOfficeMedewerkerToe([FromBody] FrontofficeMedewerkerDTO medewerker)
         {
@@ -62,6 +63,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        // frontoffice medewerker verwijderen
         [HttpDelete("verwijdermedewerker/{frontOfficeMedewerkerId}/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId, Guid medewerkerId)
         {

@@ -16,9 +16,7 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-        /// <summary>
-        /// Haalt alle bedrijfsmedewerkers op.
-        /// </summary>
+        // haal bedrijfsmedewerkers op
         [HttpGet]
         public ActionResult<IEnumerable<BedrijfsMedewerkersDTO>> GetAll()
         {
@@ -26,9 +24,7 @@ namespace WPR_project.Controllers
             return Ok(medewerkers);
         }
 
-        /// <summary>
-        /// Haalt een specifieke bedrijfsmedewerker op via ID.
-        /// </summary>
+        // haal medewerker op via Id
         [HttpGet("{id}")]
         public ActionResult<BedrijfsMedewerkersDTO> GetById(Guid id)
         {
@@ -41,9 +37,7 @@ namespace WPR_project.Controllers
             return Ok(medewerker);
         }
 
-        /// <summary>
-        /// Werkt de gegevens van een bestaande bedrijfsmedewerker bij.
-        /// </summary>
+       // update de medewerker
         [HttpPut("{id}")]
         public IActionResult UpdateMedewerker(Guid id, [FromBody] BedrijfsMedewerkersDTO dto)
         {
@@ -72,9 +66,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        /// <summary>
-        /// Verwijdert een bedrijfsmedewerker op basis van ID.
-        /// </summary>
+        // verwijder medewerker met gegeven Id
         [HttpDelete("{id}")]
         public IActionResult DeleteMedewerker(Guid id)
         {
