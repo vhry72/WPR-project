@@ -15,7 +15,7 @@ function Abonnement() {
     const [abonnementId, setAbonnementId] = useState(null);
     const [error, setError] = useState(null);
 
-    
+    // Fetch beheerder Id van API
     useEffect(() => {
         const fetchBeheerderId = async () => {
             try {
@@ -33,6 +33,7 @@ function Abonnement() {
         fetchBeheerderId();
     }, []);
 
+    // Fetch abonnement Id van API
     const fetchAbonnementId = async () => {
         try {
             const response = await axios.get(

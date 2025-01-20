@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
         updateDatum: '',
         verklaring: ''
     });
-
+    // fetcht de wijzigingen van ons privacybeleid
     useEffect(() => {
         const fetchLatestPrivacyPolicy = async () => {
             try {

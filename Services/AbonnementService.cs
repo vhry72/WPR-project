@@ -40,54 +40,75 @@ namespace WPR_project.Services
             return _abonnementRepository.GetAbonnementById(id);
         }
 
-        public void VoegMedewerkerToe(Guid medewerkerId, string medewerkerNaam, string medewerkerEmail, Guid wagenparkbeheerderId)
+        public void VoegMedewerkerToe(Guid beheerderId, Guid medewerkerId)
         {
-       
-            // Haal de bestaande medewerker-IDs op
-            var bestaandeMedewerkersIds = _wagenparkBeheerderRepository.GetMedewerkersIdsByWagenparkbeheerder(wagenparkbeheerderId);
+            // Haal de lijst van medewerkers op die onder deze medewerkerVanBeheerder vallen
+            var medewerkersVanBeheerder = _wagenparkBeheerderRepository.GetMedewerkersByWagenparkbeheerder(beheerderId);
 
-            // Controleer of de medewerker al gekoppeld is aan de wagenparkbeheerder
-            if (bestaandeMedewerkersIds.Contains(medewerkerId))
-                throw new InvalidOperationException("Deze medewerker is al toegevoegd aan het abonnement.");
+            // Controleer of de opgegeven medewerker bij deze medewerkerVanBeheerder hoort
+            var medewerker = medewerkersVanBeheerder.FirstOrDefault(m => m.bedrijfsMedewerkerId.Equals(medewerkerId));
+            if (medewerker == null)
+            {
+                throw new InvalidOperationException("Deze medewerker zit niet in uw wagenpark.");
+            }
 
-           
+            // Controleer of de medewerker al een abonnement heeft
+            if (medewerker.AbonnementId.HasValue)
+            {
+                throw new InvalidOperationException("Deze medewerker heeft al een abonnement.");
+            }
+
+            // Haal het AbonnementId op dat bij deze medewerkerVanBeheerder hoort
+            var abonnementIdVanBeheerder = _wagenparkBeheerderRepository.GetAbonnementId(beheerderId);
+            if (abonnementIdVanBeheerder == null)
+            {
+                throw new InvalidOperationException("Er is geen abonnement gekoppeld aan deze medewerkerVanBeheerder.");
+            }
+
+            // Koppel het abonnement aan de medewerker
+            medewerker.AbonnementId = abonnementIdVanBeheerder;
+
             // Sla de wijzigingen op
             _wagenparkBeheerderRepository.Save();
-        
+
         string bericht = $@"
-         Beste {medewerkerNaam},
- 
+         Beste {medewerker.medewerkerNaam},
+
          U bent toegevoegd als medewerker bij het bedrijfsabonnement.
         U kunt nu gebruik maken van de voordelen van dit abonnement.";
 
-            _emailService.SendEmail(medewerkerEmail, "Welkom bij het bedrijfsabonnement", bericht);
+            _emailService.SendEmail(medewerker.medewerkerEmail, "Welkom bij het bedrijfsabonnement", bericht);
         }
 
-        //public void VerwijderMedewerker(Guid wagenparkbeheerderId, Guid medewerkerId)
-        //{
-        //    // Haal de wagenparkbeheerder op, inclusief de lijst van medewerkers
-        //    var wagenparkbeheerder = _wagenparkBeheerderRepository.GetBeheerderById(wagenparkbeheerderId);
-        //    if (wagenparkbeheerder == null)
-        //        throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
+        public void VerwijderMedewerker(Guid beheerderId, Guid medewerkerId)
+        {
+            // Haal de lijst van medewerkers op die onder deze WagenparkBeheerder vallen
+            var medewerkersVanBeheerder = _wagenparkBeheerderRepository.GetMedewerkersByWagenparkbeheerder(beheerderId);
 
-        //    // Controleer of de medewerker bestaat binnen de lijst van medewerkers van deze wagenparkbeheerder
-        //    var medewerker = wagenparkbeheerder.beheerderId(m => m.bedrijfsMedewerkerId == medewerkerId);
-        //    if (medewerker == null)
-        //        throw new KeyNotFoundException("Medewerker niet gevonden.");
+            // Controleer of de opgegeven medewerker bij deze WagenparkBeheerder hoort
+            var medewerker = medewerkersVanBeheerder.FirstOrDefault(m => m.bedrijfsMedewerkerId.Equals(medewerkerId));
+            if (medewerker == null)
+            {
+                throw new KeyNotFoundException("Deze medewerker zit niet in uw wagenpark.");
+            }
 
-        //    // Verwijder de medewerker uit de lijst
-        //    wagenparkbeheerder.Remove(medewerker);
+            // Controleer of de medewerker een abonnement heeft
+            if (medewerker.AbonnementId.HasValue)
+            {
+                // Ontkoppel het abonnement van de medewerker
+                medewerker.AbonnementId = null;
+            }
 
-        //    // Update de gegevens van de wagenparkbeheerder
-        //    _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder, Guid id);
+            // Verwijder de medewerker uit de lijst
+            medewerkersVanBeheerder.Remove(medewerker);
 
-        //    // Sla de wijzigingen op
-        //    _wagenparkBeheerderRepository.Save();
-
-        //    // Bevestiging via e-mail sturen
-        //    string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent verwijderd uit het bedrijfsabonnement van {huurder.bedrijfsNaam}.";
-        //    _emailService.SendEmail(medewerker.medewerkerEmail, "Verwijdering uit bedrijfsabonnement", bericht);
-        //}
+            // Sla de wijzigingen op
+            _wagenparkBeheerderRepository.Save();
+        
+        // Bevestiging via e-mail sturen
+        string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent verwijderd uit het bedrijfsabonnement.";
+            _emailService.SendEmail(medewerker.medewerkerEmail, "Verwijderd uit bedrijfsabonnement", bericht);
+        }
 
 
         public void VerwerkPayAsYouGoBetaling(Guid beheerderId, decimal bedrag)

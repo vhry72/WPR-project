@@ -6,7 +6,7 @@ import "../styles/CookieConsent.css";
 import "../styles/navigatieBalk.css";
 
 
-
+// de home pagina waar je wordt gestuurd wanneer je de website opent
 const Index = () => {
     const [showBanner, setShowBanner] = useState(false);
 

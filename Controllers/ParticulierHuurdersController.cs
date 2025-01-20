@@ -17,6 +17,7 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
+        // verifieer dat het een particuliere huurder is
         [Authorize(Roles = "ParticulierHuurder")]
         [HttpGet]
         public ActionResult<IEnumerable<ParticulierHuurderDTO>> GetAll()
@@ -25,7 +26,7 @@ namespace WPR_project.Controllers
             return Ok(huurders);
         }
 
-        
+        // haal huurder op via Id
         [HttpGet("{id}")]
         public ActionResult<ParticulierHuurderDTO> GetById(Guid id)
         {
@@ -38,7 +39,7 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-
+        // 2fa authenticatie voor particuliere huurder
         [Authorize(Roles = "ParticulierHuurder")]
         [HttpGet("verify")]
         public IActionResult VerifyEmail(Guid token)
@@ -57,6 +58,7 @@ namespace WPR_project.Controllers
             return Ok(new { Message = "E-mail succesvol bevestigd." });
         }
 
+        // update de huurder
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderDTO dto)
         {
@@ -85,7 +87,7 @@ namespace WPR_project.Controllers
             }
         }
 
-
+        // verwijder huurder met gegeven Id
         [Authorize(Roles = "ParticulierHuurder")]
         [HttpDelete("{id}")]
         public IActionResult DeleteHuurder(Guid id)
@@ -100,7 +102,7 @@ namespace WPR_project.Controllers
                 return NotFound(new { Message = "Huurder niet gevonden." });
             }
         }
-
+        // haal geverifieerde huurders op
         [Authorize(Roles = "ParticulierHuurder")]
         [HttpGet("{id}/isVerified")]
         public IActionResult IsEmailVerified(Guid id)

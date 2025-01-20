@@ -1,4 +1,6 @@
-﻿//import { Outlet, Link } from "react-router-dom";
+﻿// Ons test layout tijdens debuggen
+
+//import { Outlet, Link } from "react-router-dom";
 //import "../../styles/navigatieBalk.css";
 
 //export const Layout = () => {

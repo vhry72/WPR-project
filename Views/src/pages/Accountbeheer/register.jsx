@@ -4,6 +4,7 @@ import ParticulierHuurdersRequestService from "../../services/requests/Particuli
 import ZakelijkeHuurderRequestService from "../../services/requests/ZakelijkeHuurderRequestService";
 import "../../styles/Register.css";
 
+// form om je gegevens in te vullen
 const Register = () => {
     const [formData, setFormData] = useState({
         particulierEmail: "",
@@ -26,12 +27,14 @@ const Register = () => {
     const [activeTab, setActiveTab] = useState("particulier");
     const qrCodeRef = useRef(null);
 
+    // qrcode voor 2fa
     useEffect(() => {
         if (qrCode && qrCodeRef.current) {
             qrCodeRef.current.scrollIntoView({ behavior: "smooth" });
         }
     }, [qrCode]);
 
+    // function om de postcode check bij een invoer van een spatie geen fout te geven
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -46,7 +49,7 @@ const Register = () => {
         setActiveTab(tab);
         setQrCode("");
     };
-
+    // formaat voor het telefoon invullen
     const handlePostParticulier = async (event) => {
         event.preventDefault();
         setIsLoading(true);
@@ -77,7 +80,7 @@ const Register = () => {
             setIsLoading(false);
             return;
         }
-
+        // payload stuurt de gegevens van de particulier door naar de backend
         try {
             const payload = {
                 particulierEmail: formData.particulierEmail,
@@ -103,6 +106,7 @@ const Register = () => {
         }
     };
 
+    // zelfde checks maar dan voor zakelijke huurder
     const handlePostZakelijk = async (event) => {
         event.preventDefault();
         setIsLoading(true);
@@ -249,7 +253,7 @@ const Register = () => {
                         Ga naar het inlogscherm
                     </button>
 
-                    {/* QR-code tonen na succesvolle registratie */}
+                    {/* qr code tonen na registratie */}
                     {qrCode && (
                         <div className="qr-code-container" ref={qrCodeRef} aria-live="polite">
                             <p>Scan de onderstaande QR-code in je authenticator-app:</p>
@@ -327,7 +331,7 @@ const Register = () => {
                         Ga naar het inlogscherm
                     </button>   
 
-                    {/* QR-code tonen na succesvolle registratie */}
+                    {/* qr code tonen na registratie */}
                     {qrCode && (
                         <div className="qr-code-container" ref={qrCodeRef} aria-live="polite">
                             <p>Scan de onderstaande QR-code in je authenticator-app:</p>
