@@ -339,7 +339,7 @@ public class AccountController : ControllerBase
 
 
 
-
+    
     [HttpPost("verify-2fa")]
     public async Task<IActionResult> VerifyTwoFactor([FromBody] Verify2FADTO model)
     {
@@ -424,7 +424,7 @@ public class AccountController : ControllerBase
 
 
 
-
+    [Authorize]
     [HttpPost("logout")]
     public IActionResult Logout()
     {

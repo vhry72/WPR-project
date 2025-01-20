@@ -18,7 +18,7 @@ namespace WPR_project.Controllers
         }
 
         // verifieer dat het een particuliere huurder is
-        [Authorize(Roles = "ParticulierHuurder")]
+        [Authorize(Roles = "ParticuliereHuurder")]
         [HttpGet]
         public ActionResult<IEnumerable<ParticulierHuurderDTO>> GetAll()
         {
@@ -27,6 +27,7 @@ namespace WPR_project.Controllers
         }
 
         // haal huurder op via Id
+        [Authorize(Roles = "ParticuliereHuurder")]
         [HttpGet("{id}")]
         public ActionResult<ParticulierHuurderDTO> GetById(Guid id)
         {
@@ -59,6 +60,7 @@ namespace WPR_project.Controllers
         }
 
         // update de huurder
+        [Authorize(Roles = "ParticuliereHuurder")]
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderDTO dto)
         {
