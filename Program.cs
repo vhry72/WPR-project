@@ -129,6 +129,7 @@ builder.Services.AddScoped<UserManagerService>();
 builder.Services.AddScoped<FactuurService>();
 builder.Services.AddScoped<PrivacyVerklaringService>();
 builder.Services.AddScoped<BackOfficeService>();
+builder.Services.AddScoped<FrontOfficeService>();
 
 
 // Voor de 24-uurs reminder service
