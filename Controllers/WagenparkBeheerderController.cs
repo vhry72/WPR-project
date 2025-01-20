@@ -19,9 +19,7 @@ namespace WPR_project.Controllers
             _emailService = emailService;
         }
 
-        /// <summary>
-        /// Haalt alle wagenparkbeheerders op
-        /// </summary>
+        // haal de wagenparkbeheerders op
         [HttpGet]
         public ActionResult<IEnumerable<WagenparkBeheerder>> GetAllBeheerders()
         {
@@ -29,9 +27,7 @@ namespace WPR_project.Controllers
             return Ok(beheerders);
         }
 
-        /// <summary>
-        /// Haalt een wagenparkbeheerder op via ID
-        /// </summary>
+        // haal wagenparkbeheerders op via Id
         [HttpGet("{id}")]
         public ActionResult<WagenparkBeheerder> GetBeheerderById(Guid id)
         {
@@ -42,7 +38,7 @@ namespace WPR_project.Controllers
             }
             return Ok(beheerder);
         }
-
+        // haal wagenparkbeheerders op via bedrijfsemail
         [HttpGet("{id}/zakelijkeId")]
         public ActionResult<ZakelijkHuurderIdDTO> GetZakelijkeID(Guid id)
         {
@@ -57,6 +53,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        // haal wagenparkbeheerders op via abonnementId
         [HttpGet("{id}/AbonnementId")]
         public ActionResult<AbonnementIdDTO> GetAbonnementID(Guid id)
         {
@@ -70,7 +67,7 @@ namespace WPR_project.Controllers
                 return NotFound(new { Message = ex.Message });
             }
         }
-
+        // haal wagenparkbeheerders op van verhuurde voertuigen voor medewerkers
         [HttpGet("verhuurdevoertuigen/{medewerkerId}")]
             public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
             {
@@ -85,6 +82,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        // haal de medewerkers bij een wagenparkbeheerder op
         [HttpGet("{id}/medewerkers")]
         public IActionResult GetMedewerkersIds(Guid id)
         {
@@ -107,12 +105,7 @@ namespace WPR_project.Controllers
             }
         }
 
-       
-
-        /// <summary>
-        /// Voegt een nieuwe wagenparkbeheerder toe
-        /// </summary>
-
+        // maak wagenparkbeheerder aan
         [HttpPost]
         public ActionResult AddBeheerder([FromBody] WagenparkBeheerderDTO beheerderDTO)
         {
@@ -138,9 +131,7 @@ namespace WPR_project.Controllers
         }
 
 
-        /// <summary>
-        /// Wijzigt een bestaande wagenparkbeheerder
-        /// </summary>
+        // update een bestaande wagenparkbeheerder
         [HttpPut("{id}")]
         public ActionResult UpdateBeheerder(Guid id, [FromBody] WagenparkBeheerder beheerder)
         {
@@ -160,9 +151,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        /// <summary>
-        /// Verwijdert een wagenparkbeheerder via ID
-        /// </summary>
+        // verwijder een wagenparkbeheerder
         [HttpDelete("{id}")]
         public ActionResult DeleteBeheerder(Guid id)
         {
@@ -177,7 +166,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        // haalt de medewerkernamen op die toegevoegd zijn
+        // haalt de medewerkergegevens op die toegevoegd zijn
 
         [HttpGet("{id}/medewerker-object")]
         public IActionResult GetMedewerkers(Guid id)
@@ -201,6 +190,8 @@ namespace WPR_project.Controllers
             }
         }
 
+
+        // wijzig de bedrijfsmedewerker
         [HttpPut("{id}/medewerker-wijzigen")]
         public IActionResult GetMedewerkersWijzigen(Guid id)
         {
@@ -333,8 +324,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        /// <summary>
-        /// verwijderen van een medewerker van een zakelijke huurder
+        // verwijderen van een medewerker van een wagenparkbeheerder
         [HttpDelete("{zakelijkeId}/verwijdermedewerker/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
         {
@@ -347,20 +337,18 @@ namespace WPR_project.Controllers
                     return new NotFoundObjectResult(new { Message = "Medewerker niet gevonden." });
                 }
 
-                _service.VerwijderMedewerker(zakelijkeId, medewerkerId);
-
-                // Gebruik expliciet OkObjectResult
+                _service.VerwijderMedewerker(zakelijkeId, medewerkerId)
                 return new OkObjectResult(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException ex)
             {
-                // Gebruik expliciet NotFoundObjectResult
+                
                 return new NotFoundObjectResult(new { Message = ex.Message });
             }
             catch (Exception ex)
             {
                 Console.Error.WriteLine($"Fout: {ex.Message}");
-                // Gebruik expliciet ObjectResult met StatusCode 500
+                // geef statuscode 500 terug met een objectresult
                 return new ObjectResult(new { Message = "Er is een interne fout opgetreden.", Details = ex.Message })
                 {
                     StatusCode = 500

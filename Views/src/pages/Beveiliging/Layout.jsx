@@ -4,6 +4,7 @@ import { UserContext } from "../../context/UserContext";
 import "../../styles/navigatieBalk.css";
 import axios from "axios";
 
+// de correcte layout van het programma met RBAC
 const Layout = () => {
     const { userRole, setUserRole } = useContext(UserContext);
     const navigate = useNavigate();

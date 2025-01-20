@@ -7,6 +7,8 @@ namespace WPR_project.Repositories
 {
     public interface IVoertuigRepository
     {
+        // Interface voor de repositories om de methodes te erfen en de logica toe te voegen wat opgeslagen wordt in de DB
+
         IEnumerable<Voertuig> GetAvailableVoertuigen(string voertuigType = null);
         IQueryable<Voertuig> GetAllVoertuigen();
         Voertuig GetFilteredVoertuigById(Guid id);

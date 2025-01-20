@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-
-const API_URL = 'https://localhost:5033/api'; // TODO: Make this a config variable
+// gebruikt axios voor het fetchen van Backend APIS wat het overzichtelijker maakt
+const API_URL = 'https://localhost:5033/api'; 
 
 const defaultHeaders = {
     'Content-Type': 'application/json',

@@ -29,7 +29,7 @@ namespace WPR_project.Repositories
             if (medewerker != null)
             {
                 _context.BedrijfsMedewerkers.Remove(medewerker);
-                _context.SaveChanges(); // SaveChanges toegevoegd om wijzigingen door te voeren
+                _context.SaveChanges(); // savechanges method toegevoegd om wijzigingen door te voeren
             }
         }
 

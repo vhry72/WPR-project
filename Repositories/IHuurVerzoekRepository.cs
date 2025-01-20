@@ -4,6 +4,8 @@ namespace WPR_project.Repositories
 {
     public interface IHuurVerzoekRepository
     {
+        // Interface voor de repositories om de methodes te erfen en de logica toe te voegen wat opgeslagen wordt in de DB
+
         void Add(Huurverzoek huurverzoek);
 
         IQueryable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId);
