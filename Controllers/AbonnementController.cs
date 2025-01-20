@@ -207,23 +207,23 @@ namespace WPR_project.Controllers
             }
         }
 
-        //[HttpDelete("{beheerderId}/medewerker/verwijderen/{medewerkerId}")]
-        //public IActionResult VerwijderMedewerker(Guid beheerderId, Guid medewerkerId)
-        //{
-        //    try
-        //    {
-        //        _service.VerwijderMedewerker(beheerderId, medewerkerId);
-        //        return Ok(new { Message = "Medewerker succesvol verwijderd." });
-        //    }
-        //    catch (KeyNotFoundException ex)
-        //    {
-        //        return NotFound(new { Error = ex.Message });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
-        //    }
-        //}
+        [HttpDelete("{beheerderId}/medewerker/verwijderen/{medewerkerId}")]
+        public IActionResult VerwijderMedewerker(Guid beheerderId, Guid medewerkerId)
+        {
+            try
+            {
+                _service.VerwijderMedewerker(beheerderId, medewerkerId);
+                return Ok(new { Message = "Medewerker succesvol verwijderd." });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { Error = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
+            }
+        }
 
 
         // haalt de huidige abonnement op van de beheerder

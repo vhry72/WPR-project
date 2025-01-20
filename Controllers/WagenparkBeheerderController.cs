@@ -231,49 +231,6 @@ namespace WPR_project.Controllers
                     Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)
                 });
             }
-
-            [HttpPost("/zet-limiet")]
-             IActionResult ZetVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int nieuwLimiet)
-            {
-                try
-                {
-                    _service.ZetVoertuigenLimiet(beheerderId, nieuwLimiet);
-                    return Ok("Limiet succesvol ingesteld.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-
-            [HttpPut("/verhoog-limiet")]
-             IActionResult VerhoogVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verhoging)
-            {
-                try
-                {
-                    _service.VerhoogVoertuigenLimiet(beheerderId, verhoging);
-                    return Ok("Limiet succesvol verhoogd.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-
-            [HttpPut("/verlaag-limiet")]
-             IActionResult VerlaagVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verlaging)
-            {
-                try
-                {
-                    _service.VerlaagVoertuigenLimiet(beheerderId, verlaging);
-                    return Ok("Limiet succesvol verlaagd.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
-            }
-
             try
             {
                 // aanroep om medewerker toe te voegen
@@ -324,6 +281,49 @@ namespace WPR_project.Controllers
             }
         }
 
+            [HttpPost("/zet-limiet")]
+             IActionResult ZetVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int nieuwLimiet)
+            {
+                try
+                {
+                    _service.ZetVoertuigenLimiet(beheerderId, nieuwLimiet);
+                    return Ok("Limiet succesvol ingesteld.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            [HttpPut("/verhoog-limiet")]
+             IActionResult VerhoogVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verhoging)
+            {
+                try
+                {
+                    _service.VerhoogVoertuigenLimiet(beheerderId, verhoging);
+                    return Ok("Limiet succesvol verhoogd.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+            [HttpPut("/verlaag-limiet")]
+             IActionResult VerlaagVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verlaging)
+            {
+                try
+                {
+                    _service.VerlaagVoertuigenLimiet(beheerderId, verlaging);
+                    return Ok("Limiet succesvol verlaagd.");
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+
+           
         // verwijderen van een medewerker van een wagenparkbeheerder
         [HttpDelete("{zakelijkeId}/verwijdermedewerker/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
@@ -337,7 +337,7 @@ namespace WPR_project.Controllers
                     return new NotFoundObjectResult(new { Message = "Medewerker niet gevonden." });
                 }
 
-                _service.VerwijderMedewerker(zakelijkeId, medewerkerId)
+                _service.VerwijderMedewerker(zakelijkeId, medewerkerId);
                 return new OkObjectResult(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException ex)
