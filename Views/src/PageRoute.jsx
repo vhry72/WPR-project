@@ -47,6 +47,9 @@ import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig
 import HuurverzoekInzien from "./pages/Accountbeheer/HuurverzoekInzien";
 import RegisterBedrijfsmedewerker from "./pages/Wagenparkbeheerder/RegisterBedrijfsmedewerker";
 import PrivacyverklaringWijziging from "./pages/BackOfficeMedewerker/PrivacyVerklaringWijziging";
+import FrontofficeTonen from "./pages/BackOfficeMedewerker/FrontofficeTonen";
+import FrontofficeToevoegen from "./pages/BackOfficeMedewerker/FrontofficeToevoegen";
+import FrontofficeDetails from "./pages/BackOfficeMedewerker/FrontofficeDetails";
 
 
 
@@ -356,6 +359,32 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
+
+                        <Route
+                            path="FrontofficeTonen"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <FrontofficeTonen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="FrontofficeToevoegen"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <FrontofficeToevoegen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="FrontofficeDetails/:medewerkerId"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <FrontofficeDetails />
+                                </PrivateRoute>
+                            }
+                        />
+
 
                         {/* Openbare pagina's */}
                         
