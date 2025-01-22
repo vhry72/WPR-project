@@ -50,9 +50,9 @@ import PrivacyverklaringWijziging from "./pages/BackOfficeMedewerker/PrivacyVerk
 import WachtwoordReset from "./pages/Beveiliging/wachtwoordReset";
 import WachtwoordVergeten from "./pages/Beveiliging/wachtwoordVergeten";
 import TweefaReset from "./pages/Beveiliging/2faReset"; 
-
-
-
+import FrontofficeTonen from "./pages/BackOfficeMedewerker/FrontofficeTonen";
+import FrontofficeToevoegen from "./pages/BackOfficeMedewerker/FrontofficeToevoegen";
+import FrontofficeDetails from "./pages/BackOfficeMedewerker/FrontofficeDetails";
 
 
 
@@ -359,6 +359,32 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
+
+                        <Route
+                            path="FrontofficeTonen"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <FrontofficeTonen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="FrontofficeToevoegen"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <FrontofficeToevoegen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="FrontofficeDetails/:medewerkerId"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <FrontofficeDetails />
+                                </PrivateRoute>
+                            }
+                        />
+
 
                         {/* Openbare pagina's */}
                         <Route path="wachtwoord-vergeten" element={<WachtwoordVergeten />} />

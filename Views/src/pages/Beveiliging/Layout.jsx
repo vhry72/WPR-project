@@ -31,10 +31,10 @@ const Layout = () => {
             { to: "/BackOfficeVerhuuraanvragen", label: "Huur Verzoeken" },
             { to: "/SchadeMeldingen", label: "Schademeldingen" },
             { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken" },
-            { to: "/FrontofficeRegister", label: "Frontoffice Beheer"},
             { to: "/Schadeclaims", label: "Schade claims" },
             { to: "/VoertuigTonen", label: "Wagenpark beheren" },
-            { to: "/PrivacyVerklaringWijziging", label: "privacyverklaring Wijzigen"}
+            { to: "/PrivacyVerklaringWijziging", label: "privacyverklaring Wijzigen" },
+            { to: "/FrontofficeTonen", label: "Frontoffice Beheer" }
 
         ],
         FrontofficeMedewerker: [
