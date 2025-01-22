@@ -54,5 +54,7 @@ namespace WPR_project.Models
 
         public byte[]? Afbeelding { get; set; }
 
+        public bool IsActive { get; set; } = true;
+
     }
 }

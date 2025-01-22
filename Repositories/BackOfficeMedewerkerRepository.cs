@@ -38,9 +38,22 @@ namespace WPR_project.Repositories
             var backOfficeMedewerker = _context.BackofficeMedewerkers.Find(id);
             if (backOfficeMedewerker != null)
             {
-                _context.BackofficeMedewerkers.Remove(backOfficeMedewerker);
+
+                backOfficeMedewerker.IsActive = false;
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == backOfficeMedewerker.AspNetUserId);
+
+                if (user != null)
+                {
+
+                    user.IsActive = false;
+                }
+
+                _context.SaveChanges();
             }
         }
+
+
 
         public void Save()
         {

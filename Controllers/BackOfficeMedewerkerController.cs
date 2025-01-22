@@ -63,13 +63,13 @@ namespace WPR_project.Controllers
             }
         }
 
-        // frontoffice medewerker verwijderen
-        [HttpDelete("verwijdermedewerker/{frontOfficeMedewerkerId}/{medewerkerId}")]
-        public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId, Guid medewerkerId)
+        
+        [HttpDelete("verwijdermedewerker/{frontOfficeMedewerkerId}")]
+        public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId)
         {
             try
             {
-                _frontOfficeService.VerwijderMedewerker(frontOfficeMedewerkerId, medewerkerId);
+                _frontOfficeService.Delete(frontOfficeMedewerkerId);
                 return Ok(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException ex)
@@ -80,6 +80,20 @@ namespace WPR_project.Controllers
             {
                 Console.Error.WriteLine($"Fout: {ex.Message}");
                 return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
+            }
+        }
+
+        [HttpDelete("VerwijderBackoffice/{Id}")]
+        public IActionResult VerwijderBackOfficeMedewerker(Guid id)
+        {
+            try
+            {
+                _backOfficeService.Delete(id);
+                return Ok(new { Message = "Huurder succesvol verwijderd." });
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
             }
         }
 

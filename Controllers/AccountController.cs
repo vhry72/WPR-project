@@ -10,6 +10,7 @@ using QRCoder;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
+using NuGet.Common;
 
 
 [ApiController]
@@ -17,14 +18,14 @@ using WPR_project.Data;
 public class AccountController : ControllerBase
 {
     private readonly UserManagerService _userManagerService;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly GegevensContext _dbContext;
     private readonly IEmailService _emailService;
     private readonly ILogger<AccountController> _logger;
 
     public AccountController(
         UserManagerService userManagerService,
-        UserManager<IdentityUser> userManager,
+        UserManager<ApplicationUser> userManager,
         IEmailService emailService,
         GegevensContext dbcontext,
         ILogger<AccountController> logger)
@@ -134,26 +135,25 @@ public class AccountController : ControllerBase
 
         try
         {
-
-            
-
-
             var medewerker = await _userManagerService.RegisterBackofficeMedewerker(dto);
             var confirmationLink = Url.Action(nameof(ConfirmEmail), "Account",
                 new { userId = medewerker.BackofficeMedewerkerId, token = medewerker.EmailBevestigingToken }, Request.Scheme);
 
-         
             _emailService.SendEmail(dto.medewerkerEmail, "Bevestig je e-mailadres",
                 $"Klik hier om je e-mailadres te bevestigen: <a href='{confirmationLink}'>Bevestig e-mailadres</a>");
-
 
             var identityUser = await _userManager.FindByIdAsync(medewerker.AspNetUserId);
 
             if (identityUser == null)
                 return BadRequest("Identity gebruiker niet gevonden.");
 
+            // QR Code voor 2FA genereren
             var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
-            _emailService.SendEmail(dto.medewerkerEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
+            byte[] qrCodeImage = _userManagerService.GenerateQrCode(qrCodeUri);
+
+            // Verstuur QR code als e-mailbijlage
+            await _emailService.SendEmailWithImage(dto.medewerkerEmail, "2FA QR-code",
+                "Hierbij je QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
 
             return Ok(new { Message = "Backoffice medewerker succesvol geregistreerd." });
         }
@@ -188,8 +188,13 @@ public class AccountController : ControllerBase
             if (identityUser == null)
                 return BadRequest("Identity gebruiker niet gevonden.");
 
+            // QR Code voor 2FA genereren
             var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
-            _emailService.SendEmail(dto.medewerkerEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
+            byte[] qrCodeImage = _userManagerService.GenerateQrCode(qrCodeUri);
+
+            // Verstuur QR code als e-mailbijlage
+            await _emailService.SendEmailWithImage(dto.medewerkerEmail, "2FA QR-code",
+                "Hierbij je QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
 
             return Ok(new { Message = "Frontoffice medewerker succesvol geregistreerd." });
         }
@@ -224,8 +229,13 @@ public class AccountController : ControllerBase
             if (identityUser == null)
                 return BadRequest("Identity gebruiker niet gevonden.");
 
+            // QR Code voor 2FA genereren
             var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
-            _emailService.SendEmail(dto.medewerkerEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
+            byte[] qrCodeImage = _userManagerService.GenerateQrCode(qrCodeUri);
+
+            // Verstuur QR code als e-mailbijlage
+            await _emailService.SendEmailWithImage(dto.medewerkerEmail, "2FA QR-code",
+                "Hierbij je QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
 
             return Ok(new { Message = "Bedrijfsmedewerker succesvol geregistreerd." });
         }
@@ -260,8 +270,13 @@ public class AccountController : ControllerBase
             if (identityUser == null)
                 return BadRequest("Identity gebruiker niet gevonden.");
 
+            // QR Code voor 2FA genereren
             var qrCodeUri = await _userManagerService.EnableTwoFactorAuthenticationAsync(identityUser);
-            _emailService.SendEmail(dto.bedrijfsEmail, "2FA QR-code", $"Jouw QR-code: {qrCodeUri}");
+            byte[] qrCodeImage = _userManagerService.GenerateQrCode(qrCodeUri);
+
+            // Verstuur QR code als e-mailbijlage
+            await _emailService.SendEmailWithImage(dto.bedrijfsEmail, "2FA QR-code",
+                "Hierbij je QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
 
             return Ok(new { Message = "Wagenparkbeheerder succesvol geregistreerd." });
         }
@@ -286,13 +301,17 @@ public class AccountController : ControllerBase
             return Unauthorized("Gebruiker bestaat niet.");
         }
 
-        // Controleer of de e-mail is bevestigd via UserManagerService
+        if (user.IsActive == false)
+        {
+            return Unauthorized("Account is Gedeactiveerd");
+        }
+
         var isEmailConfirmed = await _userManagerService.IsEmailConfirmedAsync(model.Email);
         if (!isEmailConfirmed)
         {
             return Unauthorized("E-mail is niet bevestigd. Controleer je inbox voor de bevestigingsmail.");
         }
-       
+
         var passwordValid = await _userManager.CheckPasswordAsync(user, model.Password);
         if (!passwordValid)
         {
@@ -339,7 +358,7 @@ public class AccountController : ControllerBase
 
 
 
-    
+
     [HttpPost("verify-2fa")]
     public async Task<IActionResult> VerifyTwoFactor([FromBody] Verify2FADTO model)
     {
@@ -495,4 +514,64 @@ public class AccountController : ControllerBase
             QrCodeUri = qrCodeUri
         });
     }
+
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword([FromBody] string email)
+    {
+        try
+        {
+            var (success, message) = await _userManagerService.ForgotPassword(email);
+            if (success)
+            {
+                return Ok(message);
+            }
+            else
+            {
+                _logger.LogError($"Fout bij het resetten van wachtwoord: {message}");
+                return BadRequest(message);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Onverwachte fout bij het resetten van wachtwoord: {ex.Message}");
+            return StatusCode(500, "Er is een interne serverfout opgetreden.");
+        }
+    }
+
+    [HttpPost("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetDTO dto)
+    {
+
+        if (string.IsNullOrWhiteSpace(dto.UserId) || string.IsNullOrWhiteSpace(dto.Token) || string.IsNullOrWhiteSpace(dto.Password))
+        {
+            return BadRequest("Invalid input parameters");
+        }
+
+        var result = await _userManagerService.ResetPasswordAsync(dto.UserId, dto.Token, dto.Password);
+
+        if (!result.Success)
+        {
+            return BadRequest(result.Errors);
+        }
+
+        return Ok("Wachtwoord succesvol gereset");
+    }
+
+
+
+    [HttpPost("reset-2fa")]
+    public async Task<IActionResult> ResetTwoFactorAuthentication([FromBody] LoginDTO dto)
+    {
+        try
+        {
+            await _userManagerService.ResetTwoFactorAuthentication(dto.Email, dto.Password);
+            return Ok("2FA is gereset en een nieuwe QR-code is verzonden.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Fout bij het resetten van 2FA: {ex.Message}");
+            return BadRequest("Er is iets fout gegaan bij het resetten van 2FA.");
+        }
+    }
+
 }

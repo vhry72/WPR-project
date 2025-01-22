@@ -5,7 +5,7 @@ using WPR_project.Models;
 
 namespace WPR_project.Data
 {
-    public class GegevensContext : IdentityDbContext<IdentityUser>
+    public class GegevensContext : IdentityDbContext<ApplicationUser>
     {
         public GegevensContext(DbContextOptions<GegevensContext> options) : base(options)
         {
@@ -98,7 +98,7 @@ namespace WPR_project.Data
 
             modelBuilder.Entity<ParticulierHuurder>(entity =>
             {
-                entity.HasOne<IdentityUser>()
+                entity.HasOne<ApplicationUser>()
                       .WithMany()
                       .HasForeignKey(p => p.AspNetUserId)
                       .OnDelete(DeleteBehavior.Cascade);

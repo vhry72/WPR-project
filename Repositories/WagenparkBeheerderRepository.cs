@@ -20,11 +20,42 @@ namespace WPR_project.Repositories
         public void DeleteWagenparkBeheerder(Guid id)
         {
             var wagenparkBeheerder = _context.WagenparkBeheerders.Find(id);
-            if (wagenparkBeheerder != null)
+            if (wagenparkBeheerder == null)
             {
-                _context.WagenparkBeheerders.Remove(wagenparkBeheerder);
+                throw new InvalidOperationException("Wagenparkbeheerder niet gevonden.");
+            }
+
+            
+            var alternatieveBeheerder = _context.WagenparkBeheerders
+                .Where(w => w.zakelijkeId == wagenparkBeheerder.zakelijkeId && w.beheerderId != id && w.IsActive)
+                .FirstOrDefault();
+
+            if (alternatieveBeheerder != null)
+            {
+               
+                var medewerkers = _context.BedrijfsMedewerkers
+                    .Where(m => m.beheerderId == id);
+                foreach (var medewerker in medewerkers)
+                {
+                    medewerker.beheerderId = alternatieveBeheerder.beheerderId;
+                }
+
+                
+                wagenparkBeheerder.IsActive = false;
+                var user = _context.Users.FirstOrDefault(u => u.Id == wagenparkBeheerder.AspNetUserId);
+                if (user != null)
+                {
+                    user.IsActive = false;
+                }
+
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException("Geen andere actieve wagenparkbeheerders gevonden binnen hetzelfde zakelijkeId. Kan de huidige beheerder niet verwijderen.");
             }
         }
+
 
         public Guid GetZakelijkeId(Guid id)
         {

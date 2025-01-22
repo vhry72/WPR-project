@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WPR_project.Data;
 
@@ -11,9 +12,11 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    partial class GegevensContextModelSnapshot : ModelSnapshot
+    [Migration("20250120210544_identity")]
+    partial class identity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,9 +39,6 @@ namespace WPR_project.Migrations
 
                     b.Property<int>("AbonnementType")
                         .HasColumnType("int");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<decimal>("Kosten")
                         .HasPrecision(18, 2)
@@ -316,9 +316,6 @@ namespace WPR_project.Migrations
                     b.Property<Guid>("EmailBevestigingToken")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
 
@@ -379,9 +376,6 @@ namespace WPR_project.Migrations
                     b.Property<Guid>("EmailBevestigingToken")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
 
@@ -428,9 +422,6 @@ namespace WPR_project.Migrations
 
                     b.Property<Guid?>("FrontofficeMedewerkerId1")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
@@ -500,9 +491,6 @@ namespace WPR_project.Migrations
 
                     b.Property<Guid>("EmailBevestigingToken")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
@@ -618,9 +606,6 @@ namespace WPR_project.Migrations
                     b.Property<byte[]>("Afbeelding")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<int>("bouwjaar")
                         .HasColumnType("int");
 
@@ -735,9 +720,6 @@ namespace WPR_project.Migrations
                     b.Property<Guid>("EmailBevestigingToken")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
 
@@ -794,9 +776,6 @@ namespace WPR_project.Migrations
 
                     b.Property<Guid>("EmailBevestigingToken")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");

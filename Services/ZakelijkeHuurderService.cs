@@ -131,14 +131,11 @@ namespace WPR_project.Services
         // Verwijder een zakelijke huurder
         public void Delete(Guid id)
         {
-            var huurder = _repository.GetZakelijkHuurderById(id);
-            if (huurder == null)
+            if (id == Guid.Empty)
             {
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
+                throw new ArgumentException("ID is verplicht.");
             }
-
             _repository.DeleteZakelijkHuurder(id);
-            _repository.Save();
         }
 
         // Voeg een medewerker toe aan een zakelijke huurder

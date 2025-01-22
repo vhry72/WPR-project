@@ -47,6 +47,9 @@ import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig
 import HuurverzoekInzien from "./pages/Accountbeheer/HuurverzoekInzien";
 import RegisterBedrijfsmedewerker from "./pages/Wagenparkbeheerder/RegisterBedrijfsmedewerker";
 import PrivacyverklaringWijziging from "./pages/BackOfficeMedewerker/PrivacyVerklaringWijziging";
+import WachtwoordReset from "./pages/Beveiliging/wachtwoordReset";
+import WachtwoordVergeten from "./pages/Beveiliging/wachtwoordVergeten";
+import TweefaReset from "./pages/Beveiliging/2faReset"; 
 
 
 
@@ -358,7 +361,9 @@ function PageRoute() {
                         />
 
                         {/* Openbare pagina's */}
-                        
+                        <Route path="wachtwoord-vergeten" element={<WachtwoordVergeten />} />
+                        <Route path="wachtwoord-reset" element={<WachtwoordReset />} />
+                        <Route path="2fa-reset" element={<TweefaReset />} />
                         <Route path="instellingen" element={<Instellingen />} />
                         <Route path="accountwijzigingHuurders" element={<AccountwijzigingHuurders />} />
                         <Route path="particulierVoertuigTonen" element={<ParticulierVoertuigTonen />} />

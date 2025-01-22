@@ -97,11 +97,28 @@ namespace WPR_project.Services
 
         public void Delete(Guid id)
         {
-            var medewerker = _repository.GetMedewerkerById(id);
-            if (medewerker == null) throw new KeyNotFoundException("Medewerker niet gevonden.");
-            
-            _repository.Delete(medewerker.bedrijfsMedewerkerId);
-            _repository.Save();
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("ID is verplicht.");
+            }
+
+            try
+            {
+                var bedrijfsMedewerker = _repository.GetMedewerkerById(id);
+                if (bedrijfsMedewerker == null)
+                {
+                    throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
+                }
+
+                _repository.Delete(id);
+
+                string bericht = $"Beste {bedrijfsMedewerker.medewerkerNaam},\n\nUw account is verwijderd.\n\nVriendelijke Groet,\nCarAndAll";
+                _emailService.SendEmail(bedrijfsMedewerker.medewerkerEmail, "Account verwijderd", bericht);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
         }
 
         public IQueryable<SchademeldingDTO> GetAllSchademeldingen()

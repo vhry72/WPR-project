@@ -8,20 +8,23 @@ using WPR_project.Data;
 using Microsoft.AspNetCore.Identity;
 using WPR_project.Services.Email;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
+using Microsoft.AspNetCore.Mvc;
+using System.Text.RegularExpressions;
 
 public class UserManagerService
 {
     private readonly IConfiguration _configuration;
     private readonly GegevensContext _dbContext;
     private readonly IEmailService _emailService;
-    private readonly UserManager<IdentityUser> _userManager;
+    private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<UserManagerService> _logger;
 
     public UserManagerService(
      IConfiguration configuration,
      GegevensContext dbContext,
      IEmailService emailService,
-     UserManager<IdentityUser> userManager,
+     UserManager<ApplicationUser> userManager,
      ILogger<UserManagerService> logger)
     {
         _configuration = configuration;
@@ -38,11 +41,12 @@ public class UserManagerService
         try
         {
             // Maak een IdentityUser aan
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 UserName = dto.particulierEmail,
                 Email = dto.particulierEmail,
-                EmailConfirmed = false
+                EmailConfirmed = false,
+                IsActive = true
             };
 
             var result = await _userManager.CreateAsync(user, dto.wachtwoord);
@@ -107,11 +111,12 @@ public class UserManagerService
 
     private async Task<IdentityUser> RegisterUser(string email, string password, string role)
     {
-        var user = new IdentityUser
+        var user = new ApplicationUser
         {
             UserName = email,
             Email = email,
-            EmailConfirmed = false
+            EmailConfirmed = false,
+            IsActive = true
         };
 
         var result = await _userManager.CreateAsync(user, password);
@@ -279,7 +284,7 @@ public class UserManagerService
         }
     }
 
-    public async Task<IdentityUser> FindByIdAsync(string userId)
+    public async Task<ApplicationUser> FindByIdAsync(string userId)
     {
         var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
         if (user == null)
@@ -318,11 +323,12 @@ public class UserManagerService
         try
         {
             // Maak een IdentityUser aan en gebruik Identity API voor hashing
-            var user = new IdentityUser
+            var user = new ApplicationUser
             {
                 UserName = dto.bedrijfsEmail,
                 Email = dto.bedrijfsEmail,
-                EmailConfirmed = false
+                EmailConfirmed = false,
+                IsActive = true
             };
 
             var result = await _userManager.CreateAsync(user, dto.wachtwoord); // Identity API hasht dit automatisch
@@ -565,7 +571,7 @@ public class UserManagerService
     }
 
 
-    public async Task<string> EnableTwoFactorAuthenticationAsync(IdentityUser user)
+    public async Task<string> EnableTwoFactorAuthenticationAsync(ApplicationUser user)
     {
         if (user == null)
         {
@@ -589,7 +595,7 @@ public class UserManagerService
 
 
 
-    public async Task<bool> VerifyTwoFactorTokenAsync(IdentityUser user, string token)
+    public async Task<bool> VerifyTwoFactorTokenAsync(ApplicationUser user, string token)
     {
         if (user == null)
         {
@@ -623,5 +629,102 @@ public class UserManagerService
             throw;
         }
     }
+
+    public byte[] GenerateQrCode(string qrCodeUri)
+    {
+        using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+        using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrCodeUri, QRCodeGenerator.ECCLevel.Q))
+        using (PngByteQRCode qrCode = new PngByteQRCode(qrCodeData))
+        {
+            return qrCode.GetGraphic(20);
+        }
+    }
+
+    public async Task<(bool Success, string Message)> ForgotPassword(string email)
+    {
+        if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        {
+            return (false, $"Ongeldige e-mailformat: {email}");
+        }
+
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            return (false, $"Gebruiker niet gevonden of e-mail niet bevestigd voor: {email}");
+        }
+
+        try
+        {
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = $"https://localhost:5173/wachtwoord-reset?userId={user.Id}&code={Uri.EscapeDataString(code)}";
+
+            await _emailService.SendEmailAsync(email, "Reset Wachtwoord",
+                $"Reset je wachtwoord door op de volgende link te klikken: <a href='{callbackUrl}'>link</a>");
+
+            return (true, $"Een e-mail om het wachtwoord te resetten is verzonden naar: {email}. Volg de instructies in de e-mail om je wachtwoord te resetten.");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"Er is iets fout gegaan bij het resetten van het wachtwoord voor {email}: {ex.Message}");
+        }
+    }
+
+    public async Task<(bool Success, IEnumerable<string> Errors)> ResetPasswordAsync(string userId, string token, string password)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user == null)
+        {
+            return (false, new List<string> { "Geen gebruiker gevonden." });
+        }
+
+        var result = await _userManager.ResetPasswordAsync(user, token, password);
+        if (result.Succeeded)
+        {
+            return (true, Enumerable.Empty<string>());
+        }
+
+        return (false, result.Errors.Select(e => e.Description));
+    }
+
+
+    public async Task ResetTwoFactorAuthentication(string email, string password)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+        if (user == null)
+        {
+            _logger.LogError("Gebruiker niet gevonden.");
+            return;
+        }
+
+        // Verifieer het wachtwoord
+        var passwordCheck = await _userManager.CheckPasswordAsync(user, password);
+        if (!passwordCheck)
+        {
+            _logger.LogError("Ongeldig wachtwoord.");
+            return;
+        }
+
+        
+        await _userManager.SetTwoFactorEnabledAsync(user, false);
+        await _userManager.ResetAuthenticatorKeyAsync(user);
+        await _userManager.SetTwoFactorEnabledAsync(user, true);
+
+
+        var qrCodeUri = await EnableTwoFactorAuthenticationAsync(user);
+        if (string.IsNullOrEmpty(qrCodeUri))
+        {
+            return;
+        }
+
+        byte[] qrCodeImage = GenerateQrCode(qrCodeUri);
+
+
+
+        await _emailService.SendEmailWithImage(email, "2FA QR-code",
+            "Hierbij je reset QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
+    }
+
+
+
 }
 

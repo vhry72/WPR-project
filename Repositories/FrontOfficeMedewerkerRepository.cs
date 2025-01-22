@@ -16,6 +16,27 @@ namespace WPR_project.Repositories
         {
             return _context.FrontofficeMedewerkers.Find(id);
         }
+
+        public void Delete(Guid id)
+        {
+            var frontOfficeMedewerker = _context.FrontofficeMedewerkers.Find(id);
+            if (frontOfficeMedewerker != null)
+            {
+
+                frontOfficeMedewerker.IsActive = false;
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == frontOfficeMedewerker.AspNetUserId);
+
+                if (user != null)
+                {
+
+                    user.IsActive = false;
+                }
+
+                _context.SaveChanges();
+            }
+        }
+
         public void Save()
         {
             _context.SaveChanges();
