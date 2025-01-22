@@ -85,17 +85,30 @@ namespace WPR_project.Services
 
         public void DeleteWagenparkBeheerder(Guid id)
         {
-            var beheerder = _repository.GetBeheerderById(id);
-            if (beheerder != null)
+            if (id == Guid.Empty)
             {
-                _repository.DeleteWagenparkBeheerder(id);
-                _repository.Save();
+                throw new ArgumentException("ID is verplicht.");
             }
-            else
+
+            try
             {
-                throw new KeyNotFoundException("Beheerder niet gevonden.");
+                var wagenparkBeheerder = _repository.GetBeheerderById(id);
+                if (wagenparkBeheerder == null)
+                {
+                    throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
+                }
+
+                _repository.DeleteWagenparkBeheerder(id);
+
+                string bericht = $"Beste {wagenparkBeheerder.beheerderNaam},\n\nUw account is verwijderd.\n\nVriendelijke Groet,\nCarAndAll";
+                _emailService.SendEmail(wagenparkBeheerder.bedrijfsEmail, "Account verwijderd", bericht);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
             }
         }
+
 
         public Guid GetZakelijkeId(Guid id)
         {

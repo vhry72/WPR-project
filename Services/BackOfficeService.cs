@@ -46,18 +46,16 @@ namespace WPR_project.Services
             }
         }
 
-        public void DeleteBackofficeMedewerker(Guid id)
+        public void Delete(Guid id)
         {
-            var medewerker = _repository.GetBackofficemedewerkerById(id);
-            if (medewerker != null)
+            var huurder = _repository.GetBackofficemedewerkerById(id);
+            if (id == Guid.Empty)
             {
-                _repository.DeleteBackOfficeMedewerker(id);
-                _repository.Save();
+                throw new ArgumentException("ID is verplicht.");
             }
-            else
-            {
-                throw new KeyNotFoundException("Backofficemedewerker niet gevonden.");
-            }
+            _repository.DeleteBackOfficeMedewerker(id);
+            string bericht = $"Beste {huurder.medewerkerNaam},\n\n Uw account wordt verwijderd, \n\n Vriendelijke Groet, \n CarAndAll";
+            _emailService.SendEmail(huurder.medewerkerEmail, "Account verwijderd", bericht);
         }
 
         public void GetFrontofficeMedewerkerById(Guid id)

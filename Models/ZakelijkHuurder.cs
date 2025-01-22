@@ -43,6 +43,8 @@ public class ZakelijkHuurder
     [Required]
     public string AspNetUserId { get; set; }
 
+    public bool IsActive { get; set; } = true;
+
     [JsonIgnore] // Zorg ervoor dat Medewerkers niet wordt opgenomen in de JSON
     public List<BedrijfsMedewerkers>? Medewerkers { get; set; } = new List<BedrijfsMedewerkers>();
 }

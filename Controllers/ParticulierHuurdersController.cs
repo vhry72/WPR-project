@@ -90,14 +90,13 @@ namespace WPR_project.Controllers
         }
 
         // verwijder huurder met gegeven Id
-        [Authorize(Roles = "ParticulierHuurder")]
         [HttpDelete("{id}")]
         public IActionResult DeleteHuurder(Guid id)
         {
             try
             {
                 _service.Delete(id);
-                return NoContent();
+                return Ok(new { Message = "Huurder succesvol verwijderd." });
             }
             catch (KeyNotFoundException)
             {

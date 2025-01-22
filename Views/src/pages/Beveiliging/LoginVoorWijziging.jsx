@@ -1,5 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; import axios from "axios";
+import React, { useState, useContext, useEffect} from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import { UserContext } from "../../context/UserContext";
 import { toast } from 'react-toastify';
 import "../../styles/Login.css";
@@ -155,6 +156,9 @@ const Login = () => {
                                 {showPassword ? "👁️" : "🕶️"}
                             </span>
                         </div>
+                        <div className="login-links">
+                            <Link to="/wachtwoord-vergeten">Wachtwoord Vergeten?</Link>
+                        </div>
                         <button type="submit" disabled={isLoading}>
                             {isLoading ? "Inloggen..." : "Login"}
                         </button>
@@ -176,7 +180,10 @@ const Login = () => {
                                     autoComplete="off"
                                 />
                             ))}
-                        </div>
+                            </div>
+                            <div className="login-links">
+                                <Link to="/2fa-reset">2FA Reset</Link>
+                            </div>
                         <button type="submit" disabled={isLoading} className="login-button">
                             {isLoading ? "Verifiëren..." : "Verifieer"}
                         </button>

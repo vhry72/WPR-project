@@ -16,6 +16,8 @@ namespace WPR_project.Models
 
         [Required]
         public string AspNetUserId { get; set; }
+
+        public bool IsActive { get; set; } = true;
     }
 }
  

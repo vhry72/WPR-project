@@ -6,23 +6,27 @@ import "../../styles/Wagenparkbeheerder.css";
 import "../../styles/Notificatie.css";
 
 const WagenbeheerDashboard = () => {
-    const [medewerkers, setMedewerkers] = useState([]); // Medewerkers in abonnement
-    const [alleMedewerkers, setAlleMedewerkers] = useState([]); // Alle medewerkers
-    const [selectedMedewerker, setSelectedMedewerker] = useState(""); // Geselecteerde medewerker (email)
-    const [notificatie, setNotificatie] = useState(""); // Notificaties
-    const [error, setError] = useState(""); // Fouten
-    const [isLoading, setIsLoading] = useState(false); // Laadstatus
+    const [medewerkers, setMedewerkers] = useState([]);
+    const [alleMedewerkers, setAlleMedewerkers] = useState([]);
+    const [selectedMedewerker, setSelectedMedewerker] = useState("");
+    const [notificatie, setNotificatie] = useState("");
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [beheerderId, setBeheerderId] = useState("");
 
-    // Haal gegevens op
     useEffect(() => {
         const fetchMedewerkers = async () => {
             try {
                 setIsLoading(true);
                 const userId = await JwtService.getUserId();
+                setBeheerderId(userId);
                 const response = await axios.get(
                     `https://localhost:5033/api/WagenparkBeheerder/${userId}/medewerker-object`
                 );
-                setAlleMedewerkers(response.data); // Sla medewerkers op
+                setAlleMedewerkers(response.data);
+                // Filter de medewerkers met een abonnement en voeg ze toe aan de lijst
+                const medewerkersMetAbonnement = response.data.filter(m => m.abonnementId !== null);
+                setMedewerkers(medewerkersMetAbonnement);
             } catch (error) {
                 console.error("Fout bij het ophalen van de medewerkers:", error);
                 setError("Er is een fout opgetreden bij het laden van de medewerkers.");
@@ -30,11 +34,9 @@ const WagenbeheerDashboard = () => {
                 setIsLoading(false);
             }
         };
-
         fetchMedewerkers();
     }, []);
 
-    // Voeg medewerker toe aan abonnement
     const voegMedewerkerToeAanAbonnement = async () => {
         if (!selectedMedewerker) {
             setNotificatie("Selecteer een medewerker om toe te voegen.");
@@ -45,16 +47,29 @@ const WagenbeheerDashboard = () => {
         setIsLoading(true);
 
         try {
-            const medewerker = alleMedewerkers.find((m) => m.email === selectedMedewerker);
+            const medewerker = alleMedewerkers.find((m) => m.medewerkerEmail === selectedMedewerker);
 
-            // API-aanroep om medewerker toe te voegen
+            if (!medewerker) {
+                throw new Error("Medewerker niet gevonden.");
+            }
+
+            if (medewerker.abonnementId) {
+                setNotificatie("Deze medewerker heeft al een abonnement.");
+                setTimeout(() => setNotificatie(""), 3000);
+                return;
+            }
+
             await axios.post(
-                `https://localhost:5033/api/WagenparkBeheerder/medewerkers/toevoegen`,
-                { email: selectedMedewerker }
+                `https://localhost:5033/api/Abonnement/${beheerderId}/medewerker/toevoegen/${medewerker.bedrijfsMedewerkerId}`
             );
 
-            setMedewerkers((prev) => [...prev, medewerker]);
-            setNotificatie(`Medewerker ${medewerker.email} toegevoegd aan abonnement.`);
+            const updatedMedewerkers = [...medewerkers, medewerker];
+            setMedewerkers(updatedMedewerkers);
+            // Verwijder medewerker uit alleMedewerkers als deze is toegevoegd aan abonnement
+            const remainingMedewerkers = alleMedewerkers.filter(m => m.medewerkerEmail !== medewerker.medewerkerEmail);
+            setAlleMedewerkers(remainingMedewerkers);
+
+            setNotificatie(`Medewerker ${medewerker.medewerkerEmail} toegevoegd aan abonnement.`);
         } catch (error) {
             console.error("Fout bij het toevoegen van medewerker aan abonnement:", error);
             setNotificatie("Er is een fout opgetreden bij het toevoegen van de medewerker.");
@@ -65,18 +80,21 @@ const WagenbeheerDashboard = () => {
         }
     };
 
-    // Verwijder medewerker uit abonnement
     const verwijderMedewerkerVanAbonnement = async (email) => {
         setIsLoading(true);
 
         try {
-            // API-aanroep om medewerker te verwijderen
+            const medewerker = medewerkers.find((m) => m.medewerkerEmail === email);
+
             await axios.delete(
-                `https://localhost:5033/api/WagenparkBeheerder/medewerkers/verwijderen`,
-                { data: { email } }
+                `https://localhost:5033/api/Abonnement/${beheerderId}/medewerker/verwijderen/${medewerker.bedrijfsMedewerkerId}`
             );
 
-            setMedewerkers((prev) => prev.filter((m) => m.email !== email));
+            const updatedMedewerkers = medewerkers.filter((m) => m.medewerkerEmail !== email);
+            setMedewerkers(updatedMedewerkers);
+            // Voeg medewerker weer toe aan alleMedewerkers als deze is verwijderd uit abonnement
+            setAlleMedewerkers([...alleMedewerkers, medewerker]);
+
             setNotificatie(`Medewerker met email ${email} verwijderd uit abonnement.`);
         } catch (error) {
             console.error("Fout bij het verwijderen van medewerker uit abonnement:", error);
@@ -87,6 +105,7 @@ const WagenbeheerDashboard = () => {
         }
     };
 
+
     const handleMedewerkerSelect = (email) => {
         setSelectedMedewerker(email);
     };
@@ -94,13 +113,10 @@ const WagenbeheerDashboard = () => {
     return (
         <>
             <header>
-                <h1 className="H1Tekst-Index">Wagenparkbeheerder Dashboard</h1>
+                <h1>Beheer Abonnement Medewerkers</h1>
             </header>
             <div className="index-container">
                 <div className="options">
-                    <h2>Beheer Abonnement Medewerkers</h2>
-
-                    {/* Formulier voor het toevoegen van medewerkers */}
                     <div className="medewerker-form">
                         <label htmlFor="medewerkerSelect">Selecteer een medewerker</label>
                         <select
@@ -113,10 +129,12 @@ const WagenbeheerDashboard = () => {
                                 -- Selecteer een medewerker --
                             </option>
                             {alleMedewerkers
-                                .filter((m) => !medewerkers.some((medewerker) => medewerker.email === m.email))
+                                .filter(
+                                    (m) => !medewerkers.some((medewerker) => medewerker.medewerkerEmail === m.medewerkerEmail) && !m.abonnementId
+                                )
                                 .map((medewerker) => (
-                                    <option key={medewerker.bedrijfsMedewerkerId} value={medewerker.email}>
-                                        {medewerker.medewerkerNaam} - {medewerker.email}
+                                    <option key={medewerker.bedrijfsMedewerkerId} value={medewerker.medewerkerEmail}>
+                                        {medewerker.medewerkerNaam} - {medewerker.medewerkerEmail}
                                     </option>
                                 ))}
                         </select>
@@ -130,19 +148,18 @@ const WagenbeheerDashboard = () => {
                         </button>
                     </div>
 
-                    {/* Lijst van huidige medewerkers */}
                     <h3>Huidige Medewerkers in Abonnement</h3>
                     <ul aria-labelledby="medewerkerLijst">
                         {medewerkers.map((medewerker) => (
                             <li key={medewerker.bedrijfsMedewerkerId}>
                                 <span>
-                                    <strong>{medewerker.medewerkerNaam}</strong> - {medewerker.email}
+                                    <strong>{medewerker.medewerkerNaam}</strong> - {medewerker.medewerkerEmail}
                                 </span>
                                 <button
-                                    onClick={() => verwijderMedewerkerVanAbonnement(medewerker.email)}
+                                    onClick={() => verwijderMedewerkerVanAbonnement(medewerker.medewerkerEmail)}
                                     disabled={isLoading}
                                     aria-live="polite"
-                                    aria-label={`Verwijder medewerker ${medewerker.medewerkerNaam} met email ${medewerker.email} uit abonnement`}
+                                    aria-label={`Verwijder medewerker ${medewerker.medewerkerNaam} met email ${medewerker.medewerkerEmail} uit abonnement`}
                                 >
                                     Verwijderen
                                 </button>
@@ -151,7 +168,6 @@ const WagenbeheerDashboard = () => {
                     </ul>
                 </div>
 
-                {/* Notificaties */}
                 {notificatie && (
                     <div
                         className="notificatie-box"

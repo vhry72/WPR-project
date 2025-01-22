@@ -38,7 +38,8 @@ namespace WPR_project.Controllers
             }
             return Ok(beheerder);
         }
-        // haal wagenparkbeheerders op via bedrijfsemail
+
+        // haal zakelijke id op via wagenparkbeheerderId
         [HttpGet("{id}/zakelijkeId")]
         public ActionResult<ZakelijkHuurderIdDTO> GetZakelijkeID(Guid id)
         {
@@ -53,7 +54,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        // haal wagenparkbeheerders op via abonnementId
+        // haal abonnementid op via wagenparkbeheerderId
         [HttpGet("{id}/AbonnementId")]
         public ActionResult<AbonnementIdDTO> GetAbonnementID(Guid id)
         {
@@ -67,7 +68,8 @@ namespace WPR_project.Controllers
                 return NotFound(new { Message = ex.Message });
             }
         }
-        // haal wagenparkbeheerders op van verhuurde voertuigen voor medewerkers
+        
+
         [HttpGet("verhuurdevoertuigen/{medewerkerId}")]
             public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
             {
@@ -131,7 +133,7 @@ namespace WPR_project.Controllers
         }
 
 
-        // update een bestaande wagenparkbeheerder
+        
         [HttpPut("{id}")]
         public ActionResult UpdateBeheerder(Guid id, [FromBody] WagenparkBeheerder beheerder)
         {
@@ -151,20 +153,25 @@ namespace WPR_project.Controllers
             }
         }
 
-        // verwijder een wagenparkbeheerder
+
         [HttpDelete("{id}")]
-        public ActionResult DeleteBeheerder(Guid id)
+        public IActionResult DeleteWagenparkbeheerder(Guid id)
         {
             try
             {
                 _service.DeleteWagenparkBeheerder(id);
-                return NoContent();
+                return Ok(new { Message = "Wagenparkbeheerder succesvol verwijderd." });
             }
-            catch (KeyNotFoundException ex)
+            catch (InvalidOperationException ex)
             {
-                return NotFound(new { Message = ex.Message });
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Message = "Wagenparkbeheerder niet gevonden." });
             }
         }
+
 
         // haalt de medewerkergegevens op die toegevoegd zijn
 
