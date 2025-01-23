@@ -37,13 +37,24 @@ namespace WPR_project.Repositories
             }
         }
 
+        public void Update(FrontofficeMedewerker frontofficeMedewerker)
+        {
+            var emailUpdateIdentity = frontofficeMedewerker.medewerkerEmail;
+            var user = _context.Users.FirstOrDefault(u => u.Id == frontofficeMedewerker.AspNetUserId);
+            if (user != null)
+            {
+                user.Email = emailUpdateIdentity;
+                user.UserName = emailUpdateIdentity;
+                user.NormalizedEmail = emailUpdateIdentity.ToUpper();
+                user.NormalizedUserName = emailUpdateIdentity.ToUpper();
+                _context.Users.Update(user);
+            }
+            _context.FrontofficeMedewerkers.Update(frontofficeMedewerker);
+        }
+
         public void Save()
         {
             _context.SaveChanges();
-        }
-        public void Update(FrontofficeMedewerker frontofficeMedewerker)
-        {
-            _context.FrontofficeMedewerkers.Update(frontofficeMedewerker);
         }
 
         public IQueryable<FrontofficeMedewerker> Getall()

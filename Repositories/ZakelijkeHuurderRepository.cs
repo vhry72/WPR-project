@@ -116,8 +116,33 @@ namespace WPR_project.Repositories
         // Werk een bestaande zakelijke huurder bij
         public void UpdateZakelijkHuurder(ZakelijkHuurder zakelijkHuurder)
         {
+            var emailUpdateIdentity = zakelijkHuurder.bedrijfsEmail;
+            var user = _context.Users.FirstOrDefault(u => u.Id == zakelijkHuurder.AspNetUserId);
+            if (user != null)
+            {
+                user.Email = emailUpdateIdentity;
+                user.UserName = emailUpdateIdentity;
+                user.NormalizedEmail = emailUpdateIdentity.ToUpper();
+                user.NormalizedUserName = emailUpdateIdentity.ToUpper();
+                _context.Users.Update(user);
+            }
+
+            
             _context.ZakelijkHuurders.Update(zakelijkHuurder);
+
+
+            var beheerders = _context.WagenparkBeheerders.Where(w => w.zakelijkeId == zakelijkHuurder.zakelijkeId).ToList();
+            foreach (var beheerder in beheerders)
+            {
+                beheerder.Adres = zakelijkHuurder.adres;
+                beheerder.telefoonNummer = zakelijkHuurder.telNummer;
+                beheerder.KVKNummer = zakelijkHuurder.KVKNummer;
+                _context.WagenparkBeheerders.Update(beheerder);
+            }
+
+            _context.SaveChanges();
         }
+
 
         // Sla wijzigingen in de database op
         public void Save()

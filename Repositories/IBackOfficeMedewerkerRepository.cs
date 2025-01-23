@@ -10,7 +10,7 @@ namespace WPR_project.Repositories
 
         void AddBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker);
 
-        void UpdateBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker, Guid id);
+        void UpdateBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker);
 
         void DeleteBackOfficeMedewerker(Guid id);
 

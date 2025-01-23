@@ -37,9 +37,21 @@ namespace WPR_project.Controllers
             return Ok(medewerker);
         }
 
-       // update de medewerker
+        [HttpGet("{id}/gegevens")]
+        public ActionResult<BedrijfsMedewerkerWijzigDTO> GetGegevensById(Guid id)
+        {
+            var huurder = _service.GetGegevensById(id);
+            if (huurder == null)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+
+            return Ok(huurder);
+        }
+
+
         [HttpPut("{id}")]
-        public IActionResult UpdateMedewerker(Guid id, [FromBody] BedrijfsMedewerkersDTO dto)
+        public IActionResult UpdateHuurder(Guid id, [FromBody] BedrijfsMedewerkerWijzigDTO dto)
         {
             if (!ModelState.IsValid)
             {
@@ -48,23 +60,17 @@ namespace WPR_project.Controllers
                 return BadRequest(ModelState);
             }
 
-            Console.WriteLine($"Route ID: {id}, DTO ID: {dto.bedrijfsMedewerkerId}");
-
-            if (id != dto.bedrijfsMedewerkerId)
-            {
-                return BadRequest(new { Message = "ID in de route komt niet overeen met het ID in de body." });
-            }
-
             try
             {
                 _service.Update(id, dto);
-                return NoContent();
+                return Ok("de gegevens zijn aangepast");
             }
             catch (KeyNotFoundException)
             {
-                return NotFound(new { Message = "Medewerker niet gevonden." });
+                return NotFound(new { Message = "Huurder niet gevonden." });
             }
         }
+
 
         // verwijder medewerker met gegeven Id
         [HttpDelete("{id}")]

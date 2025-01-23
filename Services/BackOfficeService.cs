@@ -1,4 +1,6 @@
-﻿using NuGet.Protocol.Core.Types;
+﻿using Humanizer;
+using NuGet.Protocol.Core.Types;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services;
@@ -28,23 +30,32 @@ namespace WPR_project.Services
             _repository.Save();
         }
 
-        public void UpdateBackofficeMedewerker(BackofficeMedewerker backOfficeMedewerker, Guid id)
+        public BackofficeMedewerkerWijzigDTO GetGegevensById(Guid id)
         {
-            var existingMedewerker = _repository.GetBackofficemedewerkerById(id);
-            if (existingMedewerker != null)
-            {
-                existingMedewerker.medewerkerNaam = backOfficeMedewerker.medewerkerNaam;
-                existingMedewerker.medewerkerEmail = backOfficeMedewerker.medewerkerEmail;
-                existingMedewerker.wachtwoord = backOfficeMedewerker.wachtwoord;
+            var huurder = _repository.GetBackofficemedewerkerById(id);
+            if (huurder == null) return null;
 
-                _repository.UpdateBackOfficeMedewerker(existingMedewerker, id);
-                _repository.Save();
-            }
-            else
+            return new BackofficeMedewerkerWijzigDTO
             {
-                throw new KeyNotFoundException("Backofficemedewerker niet gevonden.");
-            }
+                medewerkerEmail = huurder.medewerkerEmail,
+                medewerkerNaam = huurder.medewerkerNaam,
+
+            };
+
         }
+
+        public void Update(Guid id, BackofficeMedewerkerWijzigDTO dto)
+        {
+            var huurder = _repository.GetBackofficemedewerkerById(id);
+            if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");
+
+            huurder.medewerkerNaam = dto.medewerkerNaam;
+            huurder.medewerkerEmail = dto.medewerkerEmail;
+
+            _repository.UpdateBackOfficeMedewerker(huurder);
+            _repository.Save();
+        }
+
 
         public void Delete(Guid id)
         {

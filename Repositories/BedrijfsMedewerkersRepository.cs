@@ -60,8 +60,19 @@ namespace WPR_project.Repositories
 
         public void Update(BedrijfsMedewerkers bedrijfsMedewerkers)
         {
+            var emailUpdateIdentity = bedrijfsMedewerkers.medewerkerEmail;
+            var user = _context.Users.FirstOrDefault(u => u.Id == bedrijfsMedewerkers.AspNetUserId);
+            if (user != null)
+            {
+                user.Email = emailUpdateIdentity;
+                user.UserName = emailUpdateIdentity;
+                user.NormalizedEmail = emailUpdateIdentity.ToUpper();
+                user.NormalizedUserName = emailUpdateIdentity.ToUpper();
+                _context.Users.Update(user);
+            }
             _context.BedrijfsMedewerkers.Update(bedrijfsMedewerkers);
         }
+
 
         public void Save()
         {

@@ -29,6 +29,24 @@ namespace WPR_project.Services
             });
         }
 
+        public ParticulierHuurderWijzigDTO GetGegevensById(Guid id)
+        {
+            var huurder = _repository.GetById(id);
+            if (huurder == null) return null;
+
+            return new ParticulierHuurderWijzigDTO
+            {
+                particulierEmail = huurder.particulierEmail,
+                particulierNaam = huurder.particulierNaam,
+                adress = huurder.adress,
+                postcode = huurder.postcode,
+                woonplaats = huurder.woonplaats,
+                telefoonnummer = huurder.telefoonnummer
+
+            };
+
+        }
+
         public ParticulierHuurderDTO GetById(Guid id)
         {
             var huurder = _repository.GetById(id);
@@ -107,18 +125,19 @@ namespace WPR_project.Services
             return true;
         }
 
-        public void Update(Guid id, ParticulierHuurderDTO dto)
+        public void Update(Guid id, ParticulierHuurderWijzigDTO dto)
         {
             var huurder = _repository.GetById(id);
             if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");
 
             huurder.particulierNaam = dto.particulierNaam;
             huurder.particulierEmail = dto.particulierEmail;
+            huurder.adress = dto.adress;
+            huurder.postcode = dto.postcode;
+            huurder.woonplaats = dto.woonplaats;
+            huurder.telefoonnummer = dto.telefoonnummer;
 
-            if (!string.IsNullOrWhiteSpace(dto.wachtwoord))
-            {
-                huurder.wachtwoord = dto.wachtwoord;
-            }
+
 
             _repository.Update(huurder);
             _repository.Save();

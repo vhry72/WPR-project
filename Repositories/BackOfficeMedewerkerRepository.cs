@@ -22,15 +22,19 @@ namespace WPR_project.Repositories
             _context.BackofficeMedewerkers.Add(backOfficeMedewerker);
         }
 
-        public void UpdateBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker, Guid id)
+        public void UpdateBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker)
         {
-            var backOfficeMedewerkerToUpdate = _context.BackofficeMedewerkers.Find(id);
-            if (backOfficeMedewerkerToUpdate != null)
+            var emailUpdateIdentity = backOfficeMedewerker.medewerkerEmail;
+            var user = _context.Users.FirstOrDefault(u => u.Id == backOfficeMedewerker.AspNetUserId);
+            if (user != null)
             {
-                backOfficeMedewerkerToUpdate.medewerkerNaam = backOfficeMedewerker.medewerkerNaam;
-                backOfficeMedewerkerToUpdate.medewerkerEmail = backOfficeMedewerker.medewerkerEmail;
-                backOfficeMedewerkerToUpdate.wachtwoord = backOfficeMedewerker.wachtwoord;
+                user.Email = emailUpdateIdentity;
+                user.UserName = emailUpdateIdentity;
+                user.NormalizedEmail = emailUpdateIdentity.ToUpper();
+                user.NormalizedUserName = emailUpdateIdentity.ToUpper();
+                _context.Users.Update(user);
             }
+            _context.BackofficeMedewerkers.Update(backOfficeMedewerker);
         }
 
         public void DeleteBackOfficeMedewerker(Guid id)
