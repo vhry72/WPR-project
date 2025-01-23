@@ -1,4 +1,6 @@
-﻿using WPR_project.Data;
+﻿using NuGet.Protocol.Core.Types;
+using WPR_project.Data;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
@@ -20,7 +22,8 @@ namespace WPR_project.Services
             _emailService = emailService;
         }
 
-        public IQueryable GetAll() {
+        public IQueryable GetAll()
+        {
             return _frontOfficeMedewerkerRepository.Getall();
         }
 
@@ -49,22 +52,43 @@ namespace WPR_project.Services
             _emailService.SendEmail(medewerkerEmail, "Welkom bij de CarAndAll familie", bericht);
         }
 
-        public void VerwijderMedewerker(Guid frontOfficeMedewerkerId, Guid medewerkerId)
+        public void Delete(Guid id)
         {
-            var frontOfficeMedewerker = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(frontOfficeMedewerkerId);
-            if (frontOfficeMedewerker == null)
-                throw new KeyNotFoundException("Front office medewerker niet gevonden.");
-
-            var medewerkerOmTeVerwijderen = frontOfficeMedewerker.FrontofficeMedewerkers.FirstOrDefault(m => m.FrontofficeMedewerkerId == medewerkerId);
-            if (medewerkerOmTeVerwijderen == null)
-                throw new KeyNotFoundException("Medewerker niet gevonden.");
-
-            frontOfficeMedewerker.FrontofficeMedewerkers.Remove(medewerkerOmTeVerwijderen);
-            _frontOfficeMedewerkerRepository.Update(frontOfficeMedewerker);
-            _frontOfficeMedewerkerRepository.Save();
-
-            string bericht = $"Beste {medewerkerOmTeVerwijderen.medewerkerNaam},\n\nU bent verwijderd uit het bedrijf CarAndAll.";
-            _emailService.SendEmail(medewerkerOmTeVerwijderen.medewerkerEmail, "Medewerker verwijderd", bericht);
+            var medewerker = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(id);
+            if (id == Guid.Empty)
+            {
+                throw new ArgumentException("ID is verplicht.");
+            }
+            _frontOfficeMedewerkerRepository.Delete(id);
+            string bericht = $"Beste {medewerker.medewerkerNaam},\n\n Uw account wordt verwijderd, \n\n Vriendelijke Groet, \n CarAndAll";
+            _emailService.SendEmail(medewerker.medewerkerEmail, "Medewerker verwijderd", bericht);
         }
+
+        public FrontofficeMedewerkerWijzigDTO GetGegevensById(Guid id)
+        {
+            var huurder = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(id);
+            if (huurder == null) return null;
+
+            return new FrontofficeMedewerkerWijzigDTO
+            {
+                medewerkerEmail = huurder.medewerkerEmail,
+                medewerkerNaam = huurder.medewerkerNaam,
+
+            };
+
+        }
+
+        public void Update(Guid id, FrontofficeMedewerkerWijzigDTO dto)
+        {
+            var huurder = _frontOfficeMedewerkerRepository.GetFrontOfficeMedewerkerById(id);
+            if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");
+
+            huurder.medewerkerNaam = dto.medewerkerNaam;
+            huurder.medewerkerEmail = dto.medewerkerEmail;
+
+            _frontOfficeMedewerkerRepository.Update(huurder);
+            _frontOfficeMedewerkerRepository.Save();
+        }
+
     }
 }

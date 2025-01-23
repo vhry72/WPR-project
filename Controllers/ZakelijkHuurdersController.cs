@@ -101,80 +101,58 @@ namespace WPR_project.Controllers
             return CreatedAtAction(nameof(GetZakelijkHuurderById), new { id = zakelijkHuurder.zakelijkeId }, zakelijkHuurder);
         }
 
-       
+
+        [HttpGet("{id}/gegevens")]
+        public ActionResult<ZakelijkeHuurderWijzigDTO> GetGegevensById(Guid id)
+        {
+            var huurder = _service.GetGegevensById(id);
+            if (huurder == null)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+
+            return Ok(huurder);
+        }
+
+
         [HttpPut("{id}")]
-        public IActionResult UpdateZakelijkeHuurder(Guid id, [FromBody] ZakelijkHuurder zakelijkHuurder)
+        public IActionResult UpdateHuurder(Guid id, [FromBody] ZakelijkeHuurderWijzigDTO dto)
         {
-            if (zakelijkHuurder == null || zakelijkHuurder.zakelijkeId != id)
+            if (!ModelState.IsValid)
             {
-                return BadRequest("ID komt niet overeen met de gegevens.");
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+                Console.WriteLine($"ModelState Errors: {string.Join(", ", errors)}");
+                return BadRequest(ModelState);
             }
 
             try
             {
-                _service.Update(id, zakelijkHuurder);
+                _service.Update(id, dto);
+                return Ok("de gegevens zijn aangepast");
             }
             catch (KeyNotFoundException)
             {
-                return NotFound("Zakelijke huurder niet gevonden.");
+                return NotFound(new { Message = "Huurder niet gevonden." });
             }
-
-            return NoContent();
         }
 
-        
+
+        [Authorize]
         [HttpDelete("{id}")]
-        public IActionResult DeleteZakelijkeHuurder(Guid id)
+        public IActionResult DeleteBedrijf(Guid id)
         {
             try
             {
-                // Haal de zakelijke huurder op
-                var zakelijkeHuurder = _service.GetZakelijkHuurderById(id);
-                if (zakelijkeHuurder == null)
-                {
-                    return NotFound("Zakelijke huurder niet gevonden.");
-                }
-
-                // Haal het AspNetUsersId op
-                var aspNetUserId = zakelijkeHuurder.AspNetUserId;
-                if(aspNetUserId == null)
-                {
-                    return NotFound("Asp User niet gevonden");
-                }
-
-
-                // Verwijder de zakelijke huurder
                 _service.Delete(id);
-
-                // Zoek de gebruiker in AspNetUsers
-                var user = _userManager.FindByIdAsync(aspNetUserId).Result;
-                if (user == null)
-                {
-                    return NotFound("De gekoppelde gebruiker in AspNetUsers is niet gevonden.");
-                }
-
-                // Verwijder de gebruiker uit AspNetUsers
-                var result = _userManager.DeleteAsync(aspNetUserId).Result;
-                if (!result)
-                {
-                    return StatusCode(500, "Er is een fout opgetreden bij het verwijderen van de gebruiker.");
-                }
+                return Ok(new { Message = "Huurder succesvol verwijderd." });
             }
             catch (KeyNotFoundException)
             {
-                return NotFound("Zakelijke huurder niet gevonden.");
+                return NotFound(new { Message = "Huurder niet gevonden." });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Er is een fout opgetreden: {ex.Message}");
-            }
-
-            return NoContent();
         }
 
 
-
-      
         [HttpPost("{id}/voegmedewerker")]
         public IActionResult VoegMedewerkerToe(Guid id, [FromBody] BedrijfsMedewerkers medewerker)
         {

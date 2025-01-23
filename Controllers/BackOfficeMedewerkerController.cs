@@ -63,13 +63,13 @@ namespace WPR_project.Controllers
             }
         }
 
-        // frontoffice medewerker verwijderen
-        [HttpDelete("verwijdermedewerker/{frontOfficeMedewerkerId}/{medewerkerId}")]
-        public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId, Guid medewerkerId)
+        
+        [HttpDelete("verwijdermedewerker/{frontOfficeMedewerkerId}")]
+        public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId)
         {
             try
             {
-                _frontOfficeService.VerwijderMedewerker(frontOfficeMedewerkerId, medewerkerId);
+                _frontOfficeService.Delete(frontOfficeMedewerkerId);
                 return Ok(new { Message = "Medewerker succesvol verwijderd." });
             }
             catch (KeyNotFoundException ex)
@@ -82,6 +82,56 @@ namespace WPR_project.Controllers
                 return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
             }
         }
+
+        [HttpDelete("VerwijderBackoffice/{Id}")]
+        public IActionResult VerwijderBackOfficeMedewerker(Guid id)
+        {
+            try
+            {
+                _backOfficeService.Delete(id);
+                return Ok(new { Message = "Huurder succesvol verwijderd." });
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+        }
+
+        [HttpGet("{id}/gegevens")]
+        public ActionResult<BackofficeMedewerkerWijzigDTO> GetGegevensById(Guid id)
+        {
+            var huurder = _backOfficeService.GetGegevensById(id);
+            if (huurder == null)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+
+            return Ok(huurder);
+        }
+
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateHuurder(Guid id, [FromBody] BackofficeMedewerkerWijzigDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+                Console.WriteLine($"ModelState Errors: {string.Join(", ", errors)}");
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                _backOfficeService.Update(id, dto);
+                return Ok("de gegevens zijn aangepast");
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+        }
+
+
 
     }
 }

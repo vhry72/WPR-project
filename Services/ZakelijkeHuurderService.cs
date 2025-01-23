@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
@@ -109,36 +110,51 @@ namespace WPR_project.Services
             _wagenparkBeheerderRepository.Save();
         }
 
-        // Werk een zakelijke huurder bij
-        public void Update(Guid id, ZakelijkHuurder updatedHuurder)
+
+        public void Update(Guid id, ZakelijkeHuurderWijzigDTO dto)
         {
-            var bestaandeHuurder = _repository.GetZakelijkHuurderById(id);
-            if (bestaandeHuurder == null)
-            {
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
-            }
+            var huurder = _repository.GetZakelijkHuurderById(id);
+            if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");
 
-            bestaandeHuurder.bedrijfsNaam = updatedHuurder.bedrijfsNaam;
-            bestaandeHuurder.adres = updatedHuurder.adres;
-            bestaandeHuurder.KVKNummer = updatedHuurder.KVKNummer;
-            bestaandeHuurder.telNummer = updatedHuurder.telNummer;
-            bestaandeHuurder.bedrijfsEmail = updatedHuurder.bedrijfsEmail;
 
-            _repository.UpdateZakelijkHuurder(bestaandeHuurder);
+            huurder.bedrijfsNaam = dto.bedrijfsNaam;
+            huurder.bedrijfsEmail = dto.bedrijfsEmail;
+            huurder.adres = dto.adres;
+            huurder.telNummer = dto.telNummer;
+            huurder.KVKNummer = dto.KVKNummer;
+
+
+
+            _repository.UpdateZakelijkHuurder(huurder);
             _repository.Save();
         }
+
+        public ZakelijkeHuurderWijzigDTO GetGegevensById(Guid id)
+        {
+            var huurder = _repository.GetZakelijkHuurderById(id);
+            if (huurder == null) return null;
+
+            return new ZakelijkeHuurderWijzigDTO
+            {
+                bedrijfsEmail = huurder.bedrijfsEmail,
+                bedrijfsNaam = huurder.bedrijfsNaam,
+                KVKNummer = huurder.KVKNummer,
+                adres = huurder.adres,
+                telNummer = huurder.telNummer,
+
+            };
+
+        }
+
 
         // Verwijder een zakelijke huurder
         public void Delete(Guid id)
         {
-            var huurder = _repository.GetZakelijkHuurderById(id);
-            if (huurder == null)
+            if (id == Guid.Empty)
             {
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
+                throw new ArgumentException("ID is verplicht.");
             }
-
             _repository.DeleteZakelijkHuurder(id);
-            _repository.Save();
         }
 
         // Voeg een medewerker toe aan een zakelijke huurder

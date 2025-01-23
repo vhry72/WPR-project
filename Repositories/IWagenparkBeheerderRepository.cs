@@ -19,6 +19,9 @@ namespace WPR_project.Repositories
         List<Guid> GetMedewerkersIdsByWagenparkbeheerder(Guid wagenparkbeheerderId);
         List<BedrijfsMedewerkers> GetMedewerkersByWagenparkbeheerder(Guid wagenparkbeheerderId);
 
+        void updateWagenparkBeheerderGegevens(WagenparkBeheerder wagenparkbeheerder);
+
+
         //sla op 
         void Save();
         void UpdateWagenparkBeheerder(WagenparkBeheerder existingBeheerder);

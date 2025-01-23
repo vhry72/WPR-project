@@ -15,6 +15,9 @@ namespace WPR_project.Models
 
         [Required]
         public string AspNetUserId { get; set; }
+
+        public bool IsActive { get; set; } = true;
+
         [JsonIgnore] // Zorg ervoor dat Medewerkers niet wordt opgenomen in de JSON
         public List<FrontofficeMedewerker>? FrontofficeMedewerkers { get; set; } = new List<FrontofficeMedewerker>();
     }

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
@@ -83,19 +85,57 @@ namespace WPR_project.Services
             }
         }
 
+        public void updateWagenparkBeheerderGegevens(Guid id, WagenparkBeheerderWijzigDTO dto)
+        {
+            var huurder = _repository.GetBeheerderById(id);
+            if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");
+
+            huurder.beheerderNaam = dto.beheerderNaam;
+            huurder.bedrijfsEmail = dto.bedrijfsEmail;
+
+            _repository.updateWagenparkBeheerderGegevens(huurder);
+            _repository.Save();
+        }
+
+        public WagenparkBeheerderWijzigDTO GetGegevensById(Guid id)
+        {
+            var huurder = _repository.GetBeheerderById(id);
+            if (huurder == null) return null;
+
+            return new WagenparkBeheerderWijzigDTO
+            {
+                bedrijfsEmail = huurder.bedrijfsEmail,
+                beheerderNaam = huurder.beheerderNaam,
+            };
+
+        }
+
         public void DeleteWagenparkBeheerder(Guid id)
         {
-            var beheerder = _repository.GetBeheerderById(id);
-            if (beheerder != null)
+            if (id == Guid.Empty)
             {
-                _repository.DeleteWagenparkBeheerder(id);
-                _repository.Save();
+                throw new ArgumentException("ID is verplicht.");
             }
-            else
+
+            try
             {
-                throw new KeyNotFoundException("Beheerder niet gevonden.");
+                var wagenparkBeheerder = _repository.GetBeheerderById(id);
+                if (wagenparkBeheerder == null)
+                {
+                    throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
+                }
+
+                _repository.DeleteWagenparkBeheerder(id);
+
+                string bericht = $"Beste {wagenparkBeheerder.beheerderNaam},\n\nUw account is verwijderd.\n\nVriendelijke Groet,\nCarAndAll";
+                _emailService.SendEmail(wagenparkBeheerder.bedrijfsEmail, "Account verwijderd", bericht);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
             }
         }
+
 
         public Guid GetZakelijkeId(Guid id)
         {

@@ -25,11 +25,21 @@ namespace WPR_project.Repositories
 
         public void Delete(Guid medewerkerId)
         {
-            var medewerker = _context.BedrijfsMedewerkers.Find(medewerkerId);
-            if (medewerker != null)
+            var bedrijfsMedewerker = _context.BedrijfsMedewerkers.Find(medewerkerId);
+            if (bedrijfsMedewerker != null)
             {
-                _context.BedrijfsMedewerkers.Remove(medewerker);
-                _context.SaveChanges(); // savechanges method toegevoegd om wijzigingen door te voeren
+
+                bedrijfsMedewerker.IsActive = false;
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == bedrijfsMedewerker.AspNetUserId);
+
+                if (user != null)
+                {
+
+                    user.IsActive = false;
+                }
+
+                _context.SaveChanges();
             }
         }
 
@@ -50,8 +60,19 @@ namespace WPR_project.Repositories
 
         public void Update(BedrijfsMedewerkers bedrijfsMedewerkers)
         {
+            var emailUpdateIdentity = bedrijfsMedewerkers.medewerkerEmail;
+            var user = _context.Users.FirstOrDefault(u => u.Id == bedrijfsMedewerkers.AspNetUserId);
+            if (user != null)
+            {
+                user.Email = emailUpdateIdentity;
+                user.UserName = emailUpdateIdentity;
+                user.NormalizedEmail = emailUpdateIdentity.ToUpper();
+                user.NormalizedUserName = emailUpdateIdentity.ToUpper();
+                _context.Users.Update(user);
+            }
             _context.BedrijfsMedewerkers.Update(bedrijfsMedewerkers);
         }
+
 
         public void Save()
         {

@@ -38,7 +38,8 @@ namespace WPR_project.Controllers
             }
             return Ok(beheerder);
         }
-        // haal wagenparkbeheerders op via bedrijfsemail
+
+        // haal zakelijke id op via wagenparkbeheerderId
         [HttpGet("{id}/zakelijkeId")]
         public ActionResult<ZakelijkHuurderIdDTO> GetZakelijkeID(Guid id)
         {
@@ -53,7 +54,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        // haal wagenparkbeheerders op via abonnementId
+        // haal abonnementid op via wagenparkbeheerderId
         [HttpGet("{id}/AbonnementId")]
         public ActionResult<AbonnementIdDTO> GetAbonnementID(Guid id)
         {
@@ -67,17 +68,18 @@ namespace WPR_project.Controllers
                 return NotFound(new { Message = ex.Message });
             }
         }
-        // haal wagenparkbeheerders op van verhuurde voertuigen voor medewerkers
+
+
         [HttpGet("verhuurdevoertuigen/{medewerkerId}")]
-            public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
+        public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
+        {
+            try
             {
-                try
-             {
                 var huurverzoeken = _service.GetVerhuurdeVoertuigen(medewerkerId);
                 return Ok(huurverzoeken);
-                 }
+            }
             catch (KeyNotFoundException ex)
-                {
+            {
                 return NotFound(ex.Message);
             }
         }
@@ -131,7 +133,7 @@ namespace WPR_project.Controllers
         }
 
 
-        // update een bestaande wagenparkbeheerder
+
         [HttpPut("{id}")]
         public ActionResult UpdateBeheerder(Guid id, [FromBody] WagenparkBeheerder beheerder)
         {
@@ -151,20 +153,25 @@ namespace WPR_project.Controllers
             }
         }
 
-        // verwijder een wagenparkbeheerder
+
         [HttpDelete("{id}")]
-        public ActionResult DeleteBeheerder(Guid id)
+        public IActionResult DeleteWagenparkbeheerder(Guid id)
         {
             try
             {
                 _service.DeleteWagenparkBeheerder(id);
-                return NoContent();
+                return Ok(new { Message = "Wagenparkbeheerder succesvol verwijderd." });
             }
-            catch (KeyNotFoundException ex)
+            catch (InvalidOperationException ex)
             {
-                return NotFound(new { Message = ex.Message });
+                return BadRequest(new { Message = ex.Message });
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Message = "Wagenparkbeheerder niet gevonden." });
             }
         }
+
 
         // haalt de medewerkergegevens op die toegevoegd zijn
 
@@ -281,49 +288,49 @@ namespace WPR_project.Controllers
             }
         }
 
-            [HttpPost("/zet-limiet")]
-             IActionResult ZetVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int nieuwLimiet)
+        [HttpPost("/zet-limiet")]
+        IActionResult ZetVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int nieuwLimiet)
+        {
+            try
             {
-                try
-                {
-                    _service.ZetVoertuigenLimiet(beheerderId, nieuwLimiet);
-                    return Ok("Limiet succesvol ingesteld.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                _service.ZetVoertuigenLimiet(beheerderId, nieuwLimiet);
+                return Ok("Limiet succesvol ingesteld.");
             }
-
-            [HttpPut("/verhoog-limiet")]
-             IActionResult VerhoogVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verhoging)
+            catch (Exception ex)
             {
-                try
-                {
-                    _service.VerhoogVoertuigenLimiet(beheerderId, verhoging);
-                    return Ok("Limiet succesvol verhoogd.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                return BadRequest(ex.Message);
             }
+        }
 
-            [HttpPut("/verlaag-limiet")]
-             IActionResult VerlaagVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verlaging)
+        [HttpPut("/verhoog-limiet")]
+        IActionResult VerhoogVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verhoging)
+        {
+            try
             {
-                try
-                {
-                    _service.VerlaagVoertuigenLimiet(beheerderId, verlaging);
-                    return Ok("Limiet succesvol verlaagd.");
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message);
-                }
+                _service.VerhoogVoertuigenLimiet(beheerderId, verhoging);
+                return Ok("Limiet succesvol verhoogd.");
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-           
+        [HttpPut("/verlaag-limiet")]
+        IActionResult VerlaagVoertuigenLimiet([FromQuery] Guid beheerderId, [FromQuery] int verlaging)
+        {
+            try
+            {
+                _service.VerlaagVoertuigenLimiet(beheerderId, verlaging);
+                return Ok("Limiet succesvol verlaagd.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         // verwijderen van een medewerker van een wagenparkbeheerder
         [HttpDelete("{zakelijkeId}/verwijdermedewerker/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
@@ -342,7 +349,7 @@ namespace WPR_project.Controllers
             }
             catch (KeyNotFoundException ex)
             {
-                
+
                 return new NotFoundObjectResult(new { Message = ex.Message });
             }
             catch (Exception ex)
@@ -353,6 +360,40 @@ namespace WPR_project.Controllers
                 {
                     StatusCode = 500
                 };
+            }
+        }
+
+        [HttpGet("{id}/gegevens")]
+        public ActionResult<WagenparkBeheerderWijzigDTO> GetGegevensById(Guid id)
+        {
+            var huurder = _service.GetGegevensById(id);
+            if (huurder == null)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+
+            return Ok(huurder);
+        }
+
+
+        [HttpPut("{id}/updateGegevens")]
+        public IActionResult UpdateHuurder(Guid id, [FromBody] WagenparkBeheerderWijzigDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+                Console.WriteLine($"ModelState Errors: {string.Join(", ", errors)}");
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                _service.updateWagenparkBeheerderGegevens(id, dto);
+                return Ok("de gegevens zijn aangepast");
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
             }
         }
     }

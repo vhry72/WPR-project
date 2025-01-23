@@ -24,7 +24,7 @@ namespace WPR_project.Models
 
         [Required(ErrorMessage = "KVK-nummer is verplicht.")]
         [RegularExpression(@"^\d{8}$", ErrorMessage = "KVK-nummer moet een 8-cijferig getal zijn.")]
-        public string KVKNummer { get; set; }
+        public int KVKNummer { get; set; }
 
         public string telefoonNummer { get; set; }
 
@@ -52,5 +52,8 @@ namespace WPR_project.Models
         public Guid zakelijkeId { get; set; }
 
         public int? voertuiglimiet { get; set; }
+
+        public bool IsActive { get; set; } = true;
+
     }
 }

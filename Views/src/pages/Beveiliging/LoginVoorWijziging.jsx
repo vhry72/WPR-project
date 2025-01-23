@@ -1,5 +1,6 @@
-import React, { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; import axios from "axios";
+import React, { useState, useContext, useEffect} from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import { UserContext } from "../../context/UserContext";
 import { toast } from 'react-toastify';
 import "../../styles/Login.css";
@@ -33,6 +34,16 @@ const Login = () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
     }, [email, password, userId]);
+
+
+
+    useEffect(() => {
+        const allFieldsFilled = twoFactorCode.every(code => code.trim() !== '');
+        if (allFieldsFilled) {
+            handleSubmit(new Event('submit'));
+        }
+    }, [twoFactorCode]); 
+
 
 
     const handleLogin = async (event) => {
@@ -90,33 +101,46 @@ const Login = () => {
 
 
     const handleKeyDown = (index, event) => {
-        if (event.key === "Backspace" && twoFactorCode[index] === "") {
-            // Focus naar het vorige veld verplaatsen als het huidige veld leeg is en backspace wordt ingedrukt
-            const prevField = document.getElementById(`code-${index - 1}`);
-            if (prevField) {
-                prevField.focus();
-            }
-        }
-    };
-    const handleCodeChange = (index, event) => {
-        const value = event.target.value;
-        const newCode = [...twoFactorCode];
-        if (value === '' && twoFactorCode[index] !== '') {
-            // Verwijder de waarde als de gebruiker een backspace gebruikt in een niet-leeg veld
-            newCode[index] = '';
-            setTwoFactorCode(newCode);
-        } else if (value) {
-
-            newCode[index] = value[0];
-            setTwoFactorCode(newCode);
-            if (index < 5) {
-                const nextField = document.getElementById(`code-${index + 1}`);
-                if (nextField) {
-                    nextField.focus();
+        if (event.key === "Backspace") {
+            if (twoFactorCode[index] === "") {
+                const prevFieldIndex = index - 1;
+                if (prevFieldIndex >= 0) {
+                    const prevField = document.getElementById(`code-${prevFieldIndex}`);
+                    if (prevField) {
+                        prevField.focus();
+                        const newCode = [...twoFactorCode];
+                        newCode[prevFieldIndex] = ""; 
+                        setTwoFactorCode(newCode);
+                    }
                 }
+            } else {
+
+                const newCode = [...twoFactorCode];
+                newCode[index] = '';
+                setTwoFactorCode(newCode);
             }
+        } else if (event.key === "ArrowLeft" && index > 0) {
+            const prevField = document.getElementById(`code-${index - 1}`);
+            prevField && prevField.focus();
+        } else if (event.key === "ArrowRight" && index < twoFactorCode.length - 1) {
+            const nextField = document.getElementById(`code-${index + 1}`);
+            nextField && nextField.focus();
         }
     };
+
+
+    const handleCodeChange = (index, event) => {
+        const newCodes = [...twoFactorCode];
+        newCodes[index] = event.target.value;
+        setTwoFactorCode(newCodes);
+
+        if (event.target.value && index < twoFactorCode.length - 1) {
+            document.getElementById(`code-${index + 1}`).focus();
+        }
+    };
+
+
+
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
@@ -137,11 +161,11 @@ const Login = () => {
                             value={email}
                             onInput={(e) => setEmail(e.target.value)}
                             className="login-input"
-                            onKeyDown={handleKeyPress} // Voeg deze regel toe
+                            onKeyDown={handleKeyPress} /
                         />
                         <div className="password-input-wrapper">
                             <input
-                                type={showPassword ? "text" : "password"} // Toggle tussen text en password
+                                type={showPassword ? "text" : "password"} 
                                 placeholder="Wachtwoord"
                                 value={password}
                                 onInput={(e) => setPassword(e.target.value)}
@@ -154,6 +178,9 @@ const Login = () => {
                             >
                                 {showPassword ? "👁️" : "🕶️"}
                             </span>
+                        </div>
+                        <div className="login-links">
+                            <Link to="/wachtwoord-vergeten">Wachtwoord Vergeten?</Link>
                         </div>
                         <button type="submit" disabled={isLoading}>
                             {isLoading ? "Inloggen..." : "Login"}
@@ -176,10 +203,13 @@ const Login = () => {
                                     autoComplete="off"
                                 />
                             ))}
-                        </div>
-                        <button type="submit" disabled={isLoading} className="login-button">
-                            {isLoading ? "Verifiëren..." : "Verifieer"}
-                        </button>
+                            </div>
+                            <div className="login-links">
+                                <Link to="/2fa-reset">2FA Reset</Link>
+                            </div>
+                            <button type="submit" disabled={isLoading} className="login-button" style={{ display: "none" }}>
+                                Verifieer
+                            </button>
                     </form>
                 )}
                 {errorMessage && <p className="error-message">{errorMessage}</p>}

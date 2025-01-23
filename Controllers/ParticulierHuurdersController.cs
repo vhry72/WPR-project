@@ -40,6 +40,19 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
+
+        [HttpGet("{id}/gegevens")]
+        public ActionResult<ParticulierHuurderDTO> GetGegevensById(Guid id)
+        {
+            var huurder = _service.GetGegevensById(id);
+            if (huurder == null)
+            {
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+
+            return Ok(huurder);
+        }
+
         // 2fa authenticatie voor particuliere huurder
         [Authorize(Roles = "ParticulierHuurder")]
         [HttpGet("verify")]
@@ -60,9 +73,9 @@ namespace WPR_project.Controllers
         }
 
         // update de huurder
-        [Authorize(Roles = "ParticuliereHuurder")]
+        //[Authorize(Roles = "ParticuliereHuurder")]
         [HttpPut("{id}")]
-        public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderDTO dto)
+        public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderWijzigDTO dto)
         {
             if (!ModelState.IsValid)
             {
@@ -71,17 +84,10 @@ namespace WPR_project.Controllers
                 return BadRequest(ModelState);
             }
 
-            Console.WriteLine($"Route ID: {id}, DTO ID: {dto.particulierId}");
-
-            if (id != dto.particulierId)
-            {
-                return BadRequest(new { Message = "ID in de route komt niet overeen met het ID in de body." });
-            }
-
             try
             {
                 _service.Update(id, dto);
-                return NoContent();
+                return Ok("de gegevens zijn aangepast");
             }
             catch (KeyNotFoundException)
             {
@@ -90,14 +96,13 @@ namespace WPR_project.Controllers
         }
 
         // verwijder huurder met gegeven Id
-        [Authorize(Roles = "ParticulierHuurder")]
         [HttpDelete("{id}")]
         public IActionResult DeleteHuurder(Guid id)
         {
             try
             {
                 _service.Delete(id);
-                return NoContent();
+                return Ok(new { Message = "Huurder succesvol verwijderd." });
             }
             catch (KeyNotFoundException)
             {

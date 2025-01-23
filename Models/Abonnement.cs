@@ -36,4 +36,5 @@ public class Abonnement
     public int? AantalDagen { get; set; }
 
     public DateTime? updateDatum { get; set; }
+    public bool IsActive { get; set; } = true;
 }
