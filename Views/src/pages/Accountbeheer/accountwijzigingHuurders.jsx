@@ -34,6 +34,7 @@ const AccountwijzigingHuurders = () => {
         fetchUserId();
     }, []);
 
+    // Haal de gebruikersgegevens op 
     useEffect(() => {
         const fetchUserDetails = async () => {
             setIsLoading(true);
@@ -44,7 +45,7 @@ const AccountwijzigingHuurders = () => {
                     setFormData({
                         name: response.data.particulierNaam,
                         email: response.data.particulierEmail,
-                        password: "", // Laat wachtwoord leeg
+                        password: "", 
                     });
                 } else {
                     setErrorMessage("Gebruikersgegevens konden niet worden geladen.");

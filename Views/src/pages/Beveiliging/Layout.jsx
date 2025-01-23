@@ -9,7 +9,7 @@ const Layout = () => {
     const { userRole, setUserRole } = useContext(UserContext);
     const navigate = useNavigate();
 
-
+    // navigatie per rol van gebruikers
     const navLinks = {
         ParticuliereHuurder: [
             { to: "/instellingen", label: "Instellingen" },
@@ -47,7 +47,7 @@ const Layout = () => {
         WagenparkBeheerder: [
             { to: "/instellingen", label: "Instellingen" },
             { to: "/wagendashboard", label: "Wagen Dashboard" },
-            { to: "/wagenbeheer", label: "Wagen Beheer" },
+            { to: "/wagenbeheer", label: "Medewerkersbeheer" },
             { to: "/abonnement", label: "Kies Abonnement" },
             { to: "/RegisterBedrijfsmedewerker", label: "Voeg medewerker toe" },
             { to: "/medewerkerAbonnementDashboard", label: "Beheer abonnement"},

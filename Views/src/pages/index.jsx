@@ -52,7 +52,6 @@ const Index = () => {
                 </div>
             </div>
 
-            {/* Services Section */}
             <section className="services-section" id="services">
                 <h2 className="onze-diensten">Onze Diensten</h2>
                 <div className="services-grid">
@@ -94,7 +93,7 @@ const Index = () => {
                 </div>
             </section>
 
-            {/* Footer Section */}
+            {/* Footer */}
             <footer className="footer">
                 <p>&copy; 2024 CarAndAll. Alle rechten voorbehouden.</p>
             </footer>

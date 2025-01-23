@@ -15,6 +15,7 @@ const HuurverzoekInzien = () => {
     const [filterStartDate, setFilterStartDate] = useState("");
     const [filterEndDate, setFilterEndDate] = useState("");
 
+    // haal de huurverzoeken op 
     useEffect(() => {
         const fetchHuurverzoeken = async () => {
             try {
@@ -99,18 +100,20 @@ const HuurverzoekInzien = () => {
                     value={filterStartDate}
                     onChange={e => setFilterStartDate(e.target.value)}
                     className="huurverzoekinzien-inputField"
+                    aria-label= "Kies begin van huurdatum"
                 />
                 <input
                     type="date"
                     value={filterEndDate}
                     onChange={e => setFilterEndDate(e.target.value)}
                     className="huurverzoekinzien-inputField"
+                    aria-label="Kies tot eind huurdatum"
                 />
                 <button onClick={() => { setFilterStartDate(''); setFilterEndDate(''); }} className="huurverzoekinzien-filterButton">
                     Reset Filters
                 </button>
-                <button onClick={exportToCSV} className="huurverzoekinzien-exportButton">Exporteer naar CSV</button>
-                <button onClick={exportToPDF} className="huurverzoekinzien-exportButton">Exporteer naar PDF</button>
+                <button onClick={exportToCSV} className="huurverzoekinzien-exportButtonCSV">Exporteer naar CSV</button>
+                <button onClick={exportToPDF} className="huurverzoekinzien-exportButtonPDF">Exporteer naar PDF</button>
             </div>
             <table className="huurverzoekinzien-styledTable">
                 <thead>

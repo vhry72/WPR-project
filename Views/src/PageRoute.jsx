@@ -51,11 +51,7 @@ import FrontofficeTonen from "./pages/BackOfficeMedewerker/FrontofficeTonen";
 import FrontofficeToevoegen from "./pages/BackOfficeMedewerker/FrontofficeToevoegen";
 import FrontofficeDetails from "./pages/BackOfficeMedewerker/FrontofficeDetails";
 
-
-
-
-
-
+// De routing van de paginas
 function PageRoute() {
     return (
         <UserProvider>

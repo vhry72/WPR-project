@@ -6,12 +6,12 @@ import "../../styles/Wagenparkbeheerder.css";
 import "../../styles/Notificatie.css";
 
 const WagenbeheerDashboard = () => {
-    const [medewerkers, setMedewerkers] = useState([]); // Medewerkers in abonnement
-    const [alleMedewerkers, setAlleMedewerkers] = useState([]); // Alle medewerkers
-    const [selectedMedewerker, setSelectedMedewerker] = useState(""); // Geselecteerde medewerker (email)
-    const [notificatie, setNotificatie] = useState(""); // Notificaties
-    const [error, setError] = useState(""); // Fouten
-    const [isLoading, setIsLoading] = useState(false); // Laadstatus
+    const [medewerkers, setMedewerkers] = useState([]); 
+    const [alleMedewerkers, setAlleMedewerkers] = useState([]); 
+    const [selectedMedewerker, setSelectedMedewerker] = useState(""); 
+    const [notificatie, setNotificatie] = useState(""); 
+    const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false); 
 
     // Haal gegevens op
     useEffect(() => {
@@ -94,13 +94,13 @@ const WagenbeheerDashboard = () => {
     return (
         <>
             <header>
-                <h1 className="H1Tekst-Index">Wagenparkbeheerder Dashboard</h1>
+                <h1 className="H1tekst-wagenbeheer">Wagenparkbeheerder Dashboard</h1>
             </header>
             <div className="index-container">
                 <div className="options">
-                    <h2>Beheer Abonnement Medewerkers</h2>
+                    
 
-                    {/* Formulier voor het toevoegen van medewerkers */}
+                    {/* Formulier voor het toevoegen van medewerker aan abonnement */}
                     <div className="medewerker-form">
                         <label htmlFor="medewerkerSelect">Selecteer een medewerker</label>
                         <select

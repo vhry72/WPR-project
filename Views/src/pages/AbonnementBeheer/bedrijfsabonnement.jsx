@@ -17,6 +17,7 @@ function BedrijfsAbonnement() {
 
     const abonnement = location.state?.selectedAbonnement || location.state?.wijzigAbonnement;
 
+    // Fetch Id van API
     useEffect(() => {
         const fetchBeheerderId = async () => {
             try {
@@ -43,7 +44,7 @@ function BedrijfsAbonnement() {
                 const response = await axios.get(
                     `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/zakelijkeId`
                 );
-                setZakelijkeId(response.data.zakelijkeId); // Veronderstel dat zakelijkeId juist is in de API-respons
+                setZakelijkeId(response.data.zakelijkeId); //  zakelijkeId moet overeenkomen voor APi response
             } catch (error) {
                 console.error("Fout bij het ophalen van de zakelijke ID:", error);
                 setError("Kan zakelijke ID niet ophalen. Controleer de API of netwerkverbinding.");
@@ -63,6 +64,7 @@ function BedrijfsAbonnement() {
             return;
         }
 
+        // Controleer of alle gegevens beschikbaar zijn
         if (!abonnement || !zakelijkeId || !beheerderId) {
             alert("Alle gegevens zijn niet beschikbaar. Controleer of alles correct is geladen.");
             return;
@@ -78,6 +80,7 @@ function BedrijfsAbonnement() {
                 korting: abonnement.korting,
             };
 
+            // Verstuur de factuur naar de API
             console.log(payload);
             await axios.post(`${API_URL}/${beheerderId}/abonnement/maken`, payload);
             setFactuurVerstuurd(true);

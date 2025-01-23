@@ -54,7 +54,7 @@ const BevestigingHuur = () => {
                     setHuurderNaam(
                         huurderResponse.data.particulierNaam || // Voor particulier
                         huurderResponse.data.medewerkerNaam || // Voor zakelijk
-                        "Huurder" // Fallback
+                        "Huurder" // Fallback bij geen naam
                     );
                 }
             } catch (error) {
@@ -62,6 +62,7 @@ const BevestigingHuur = () => {
             }
         };
 
+        // haal de id van de role op
         if (huurderId) {
             fetchHuurderNaam();
         }

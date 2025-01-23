@@ -27,7 +27,7 @@ const ParticulierVoertuigTonen = () => {
         const fetchVoertuigen = async () => {
             try {
                 const response = await axios.get(`https://localhost:5033/api/Huurverzoek/BeschikbareVoertuigen/${startdatum}/${einddatum}`);
-                setAlleVoertuigen(response.data);  // Verondersteld dat de response een array is
+                setAlleVoertuigen(response.data);  // alle voertuigen ophalen
                 filterVoertuigen(filterType, response.data);
             } catch (error) {
                 console.error("Het is niet gelukt om de voertuigen op te halen", error);
@@ -36,11 +36,12 @@ const ParticulierVoertuigTonen = () => {
         fetchVoertuigen();
     }, []);
 
+    // Filter voertuigen op functionaliteiten
     const filterVoertuigen = (type, voertuigenArray) => {
         const filtered = voertuigenArray.filter(v => v.voertuigType.toLowerCase() === type.toLowerCase());
         setVoertuigen(filtered);
     };
-
+    // voer wijziging door van het filteren van voertuigen
     const handleChange = (event) => {
         setFilterType(event.target.value);
         filterVoertuigen(event.target.value, alleVoertuigen);

@@ -21,17 +21,19 @@
 
 .huurverzoekinzien-filterButton {
     padding: 8px 16px;
-    background-color: #007BFF;
+    background-color: #3966c2;
     color: white;
-    border: none;
+    border: double;
     border-radius: 4px;
     cursor: pointer;
+    margin-left: auto;
+    margin-left: 10px;
 }
 
-.huurverzoekinzien-styledTable {
-    width: 100%;
-    border-collapse: collapse;
-}
+    .huurverzoekinzien-styledTable {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
     .huurverzoekinzien-styledTable th,
     .huurverzoekinzien-styledTable td {
@@ -61,13 +63,24 @@
     background-color: #dc3545;
 }
 
-.huurverzoekinzien-exportButton {
+.huurverzoekinzien-exportButtonCSV {
     margin-top: 20px;
     padding: 10px;
-    background-color: #4CAF50;
+    background-color: #3966c2;
     color: white;
-    border: none;
+    border: double;
     cursor: pointer;
+    margin-left: 20px;  
+}
+
+.huurverzoekinzien-exportButtonPDF {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #3966c2;
+    color: white;
+    border: double;
+    cursor: pointer;
+    margin-left: 20px;
 }
 
 .huurverzoekinzien-message {

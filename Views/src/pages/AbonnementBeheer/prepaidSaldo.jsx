@@ -24,6 +24,7 @@ function PrepaidSaldo() {
         fetchUserId();
     }, []);
 
+    // haal de saldo op van de beheerder
     useEffect(() => {
         const fetchSaldo = async () => {
             try {
@@ -40,6 +41,7 @@ function PrepaidSaldo() {
         }
     }, [beheerderId]);
 
+    // functie om saldo op te waarderen
     const laadSaldoOp = async () => {
         try {
             await axios.post(`/api/abonnement/${beheerderId}/saldo/opwaarderen`, { bedrag });

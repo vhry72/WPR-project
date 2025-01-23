@@ -31,15 +31,12 @@ body header {
                     background-color: #555;
                     border-radius: 5px;
                 }
- /*Style for the navigation bar */
+
 .navbar {
     background-color: #1f4579;
     padding: 20px;
 }
 
-
- /*Style for each navigation link */
-/* Donkerdere achtergrond voor betere contrast */
 .nav-link {
     color: #FFFFFF;
     font-family: Arial, sans-serif;
@@ -48,7 +45,7 @@ body header {
     text-decoration: none;
     margin-right: 10px;
     border-radius: 50px;
-    background-color: #1a2b4c; /* Donkerder blauw */
+    background-color: #1a2b4c; 
 }
 
 
@@ -63,8 +60,8 @@ body header {
         width: 150px;
     }
 
-.nav-logout-button {
-    background-color: #ff4d4d;
+.logout-button {
+    background-color: #446537; 
     color: white;
     border: none;
     padding: 8px 16px;
@@ -74,6 +71,7 @@ body header {
     transition: background-color 0.3s ease;
 }
 
-    .nav-logout-button:hover {
-        background-color: #cc0000;
+
+    .logout-button:hover {
+        background-color: #cc4000;
     }
