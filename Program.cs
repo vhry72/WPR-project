@@ -10,6 +10,7 @@ using WPR_project.Services.Email;
 using System.Text.Json.Serialization;
 using Hangfire;
 using NuGet.Protocol.Resources;
+using Hangfire.Dashboard;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,9 @@ builder.Services.AddControllers()
         {
             options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
         });
+
+var hangfireUsername = builder.Configuration["Hangfire:Username"];
+var hangfirePassword = builder.Configuration["Hangfire:Password"];
 
 
 // Database setup
@@ -153,8 +157,25 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    app.UseHangfireDashboard();
+    // Controleer of de inloggegevens correct zijn
+    if (string.IsNullOrEmpty(hangfireUsername) || string.IsNullOrEmpty(hangfirePassword))
+    {
+        throw new InvalidOperationException("Hangfire username or password is not configured.");
+    }
+
+    app.UseHangfireDashboard("/hangfire", new DashboardOptions
+    {
+        Authorization =
+        [
+            new HangfireBasicAuthenticationFilter
+            {
+                Username = hangfireUsername,
+                Password = hangfirePassword
+            }
+        ]
+    });
 }
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
