@@ -642,15 +642,26 @@ public class UserManagerService
 
     public async Task<(bool Success, string Message)> ForgotPassword(string email)
     {
-        if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-        {
-            return (false, $"Ongeldige e-mailformat: {email}");
-        }
-
         var user = await _userManager.FindByEmailAsync(email);
         if (user == null)
         {
             return (false, $"Gebruiker niet gevonden of e-mail niet bevestigd voor: {email}");
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        if (roles.Contains("Bedrijfsmedewerker"))
+        {
+            return (false, $"Gebruikers met de de rol BedrijfsMedewerker kunnen hun wachtwoord niet resetten. Neem contact op met je Wagenparkbeheerder");
+        }
+
+        if (roles.Contains("Frontofficemedewerker"))
+        {
+            return (false, $"Gebruikers met de rollen FrontofficeMedewerker kunnen hun wachtwoord niet resetten. Neem contact op met een Backoffice medewerker");
+        }
+
+        if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        {
+            return (false, $"Ongeldige e-mailformat: {email}");
         }
 
         try
@@ -666,6 +677,38 @@ public class UserManagerService
         catch (Exception ex)
         {
             return (false, $"Er is iets fout gegaan bij het resetten van het wachtwoord voor {email}: {ex.Message}");
+        }
+    }
+
+
+    public async Task<(bool Success, string Message)> ForgotPasswordBeheerder(string email, string beheerderEmail)
+    {
+        if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+        {
+            return (false, $"Ongeldige e-mailformat: {email}");
+        }
+
+        var user = await _userManager.FindByEmailAsync(email);
+
+        
+        if (user == null)
+        {
+            return (false, $"Gebruiker niet gevonden of e-mail niet bevestigd voor: {email}");
+        }
+
+        try
+        {
+            var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callbackUrl = $"https://localhost:5173/wachtwoord-reset?userId={user.Id}&code={Uri.EscapeDataString(code)}";
+
+            await _emailService.SendEmailAsync(beheerderEmail, "Reset Wachtwoord",
+                $"Reset de wachtwoord voor je medewerker door op de volgende link te klikken: <a href='{callbackUrl}'>link</a>");
+
+            return (true, $"Een e-mail om het wachtwoord te resetten is verzonden naar: {beheerderEmail}. Volg de instructies in de e-mail om je wachtwoord te resetten.");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"Er is iets fout gegaan bij het resetten van het wachtwoord voor {beheerderEmail}: {ex.Message}");
         }
     }
 

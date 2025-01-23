@@ -537,6 +537,29 @@ public class AccountController : ControllerBase
         }
     }
 
+    [HttpPost("password-reset-beheerder/{beheerderEmail}")]
+    public async Task<IActionResult> passwordResetLinkBeheerder([FromBody] string email, string beheerderEmail)
+    {
+        try
+        {
+            var (success, message) = await _userManagerService.ForgotPasswordBeheerder(email, beheerderEmail);
+            if (success)
+            {
+                return Ok(message);
+            }
+            else
+            {
+                _logger.LogError($"Fout bij het resetten van wachtwoord: {message}");
+                return BadRequest(message);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"Onverwachte fout bij het resetten van wachtwoord: {ex.Message}");
+            return StatusCode(500, "Er is een interne serverfout opgetreden.");
+        }
+    }
+
     [HttpPost("reset-password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetDTO dto)
     {
