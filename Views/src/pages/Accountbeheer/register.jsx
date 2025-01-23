@@ -61,6 +61,7 @@ const Register = () => {
 
         const CapslockPostcode = formData.postcode.toUpperCase();
 
+        // checks voor de invoer van de gegevens
         if (!postcodeRegex.test(CapslockPostcode)) {
             setErrorMessage("Postcode moet het formaat 1234AB hebben.");
             setIsLoading(false);
@@ -115,10 +116,11 @@ const Register = () => {
         const wachtwoordRegex = /^(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
         const telefoonRegex = /^06\d{8}$/;
         const kvkRegex = /^\d{8}$/;
+        const bedrijfsnaamRegex = /^.{2,100}$/;
 
         if (!wachtwoordRegex.test(formData.Zakelijkwachtwoord)) {
             setErrorMessage(
-                "Wachtwoord moet minimaal 8 tekens bevatten en ten minste één speciaal teken."
+                "Wachtwoord moet minimaal 8 tekens bevatten en ten minste 1 speciaal teken."
             );
             setIsLoading(false);
             return;
@@ -132,6 +134,12 @@ const Register = () => {
 
         if (!telefoonRegex.test(formData.zakelijkTelefoonnummer)) {
             setErrorMessage("Telefoonnummer moet een geldig Nederlands telefoonnummer zijn.");
+            setIsLoading(false);
+            return;
+        }
+
+        if(!bedrijfsnaamRegex.test(formData.bedrijfsnaam)) {
+            setErrorMessage("Bedrijfsnaam moet tussen de 2 en 100 tekens bevatten.");
             setIsLoading(false);
             return;
         }
@@ -162,8 +170,10 @@ const Register = () => {
 
 
     return (
+        // tab voor particulier en zakelijk voor registratie
         <div className="register-container">
             <h1>Registreren</h1>
+
             <div className="register-tabs">
                 <button
                     className={`tab ${activeTab === "particulier" ? "active" : ""}`}
@@ -272,7 +282,7 @@ const Register = () => {
                 <form id="ZakelijkForm" className="form" onSubmit={handlePostZakelijk}>
                     <label htmlFor="kantoorAdres">Kantooradres</label>
                     <input
-                        type="text"
+                        type="Kantooradres"
                         id="kantoorAdres"
                         name="kantoorAdres"
                         value={formData.kantoorAdres}
@@ -281,7 +291,7 @@ const Register = () => {
                     />
                     <label htmlFor="kvkNummer">KVK-nummer</label>
                     <input
-                        type="text"
+                        type="kvknummer"
                         id="kvkNummer"
                         name="kvkNummer"
                         value={formData.kvkNummer}
@@ -290,7 +300,7 @@ const Register = () => {
                     />
                     <label htmlFor="Zakelijkemail">E-mailadres</label>
                     <input
-                        type="email"
+                        type="zakelijkeEmail"
                         id="Zakelijkemail"
                         name="Zakelijkemail"
                         value={formData.Zakelijkemail}
@@ -299,7 +309,7 @@ const Register = () => {
                     />
                     <label htmlFor="zakelijkTelefoonnummer">Telefoonnummer</label>
                     <input
-                        type="text"
+                        type="zakelijkeTelefoonnummer"
                         id="zakelijkTelefoonnummer"
                         name="zakelijkTelefoonnummer"
                         value={formData.zakelijkTelefoonnummer}
@@ -308,7 +318,7 @@ const Register = () => {
                     />
                     <label htmlFor="bedrijfsnaam">Bedrijfsnaam</label>
                     <input
-                        type="text"
+                        type="bedrijfsnaam"
                         id="bedrijfsnaam"
                         name="bedrijfsnaam"
                         value={formData.bedrijfsnaam}
@@ -317,20 +327,35 @@ const Register = () => {
                     />
                     <label htmlFor="Zakelijkwachtwoord">Wachtwoord</label>
                     <input
-                        type="password"
+                        type="wachtwoord"
                         id="Zakelijkwachtwoord"
                         name="Zakelijkwachtwoord"
                         value={formData.Zakelijkwachtwoord}
                         onChange={handleChange}
                         required
                     />
+
+                    {/* Checkbox voor bevestiging van machtiging en eigendom */}
+                    <div className="checkbox-container">
+                        <input
+                            type="checkbox"
+                            id="bevestigingCheckbox"
+                            name="bevestigingCheckbox"
+                            required
+                            aria-describedby="bevestigingLabel"
+                        />
+                        <label htmlFor="bevestigingCheckbox" id="bevestigingLabel">
+                            Ik bevestig dat ik gemachtigd ben en een wettelijke eigenaar van dit bedrijf ben waarvoor ik een account aanmaak.
+                        </label>
+                    </div>
+
                     <button type="submit" className="register-button" disabled={isLoading}>
                         {isLoading ? "Verwerken..." : "Registreren"}
                     </button>
                     <button type="button" className="login-button" onClick={() => window.location.href = '/LoginVoorWijziging'}>
                         Ga naar het inlogscherm
-                    </button>   
-
+                    </button>
+             
                     {/* qr code tonen na registratie */}
                     {qrCode && (
                         <div className="qr-code-container" ref={qrCodeRef} aria-live="polite">

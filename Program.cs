@@ -13,7 +13,7 @@ using NuGet.Protocol.Resources;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+// cors policy ingevoerd
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost",

@@ -6,6 +6,7 @@ import "../../styles/Wagenparkbeheerder.css";
 import "../../styles/Notificatie.css";
 
 const WagenbeheerDashboard = () => {
+
     const [medewerkers, setMedewerkers] = useState([]);
     const [alleMedewerkers, setAlleMedewerkers] = useState([]);
     const [selectedMedewerker, setSelectedMedewerker] = useState("");
@@ -14,6 +15,7 @@ const WagenbeheerDashboard = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [beheerderId, setBeheerderId] = useState("");
 
+   // Haal gegevens op
     useEffect(() => {
         const fetchMedewerkers = async () => {
             try {
@@ -113,10 +115,12 @@ const WagenbeheerDashboard = () => {
     return (
         <>
             <header>
-                <h1>Beheer Abonnement Medewerkers</h1>
+                <h1 className="H1tekst-wagenbeheer">Wagenparkbeheerder Dashboard</h1>
             </header>
             <div className="index-container">
                 <div className="options">
+                   
+                    {/* Formulier voor het toevoegen van medewerker aan abonnement */}
                     <div className="medewerker-form">
                         <label htmlFor="medewerkerSelect">Selecteer een medewerker</label>
                         <select

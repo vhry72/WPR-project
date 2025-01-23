@@ -237,7 +237,7 @@ const VerhuurdeVoertuigen = () => {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>Overzicht Verhuurde Voertuigen</h1>
+            <h1>Overzicht Gehuurde Voertuigen</h1>
 
             <div className={styles.filterContainer}>
                 <input
@@ -245,12 +245,14 @@ const VerhuurdeVoertuigen = () => {
                     value={filterStartDate}
                     onChange={(e) => setFilterStartDate(e.target.value)}
                     className={styles.inputField}
+                    aria-label="Selecteer begindatum van verhuurde wagens"
                 />
                 <input
                     type="date"
                     value={filterEndDate}
                     onChange={(e) => setFilterEndDate(e.target.value)}
                     className={styles.inputField}
+                    aria-label="Selecteer einddatum van verhuurde wagens"
                 />
                 <input
                     type="text"
@@ -258,6 +260,7 @@ const VerhuurdeVoertuigen = () => {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Zoek op naam"
                     className={styles.inputField}
+                    aria-label= "Selecteer op medewerkernaam"
                 />
                 <button className={styles.filterButton} onClick={resetFilters}>
                     Reset Filters

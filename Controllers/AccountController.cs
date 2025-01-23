@@ -440,9 +440,6 @@ public class AccountController : ControllerBase
         return Ok(new { Role = role });
     }
 
-
-
-
     [HttpPost("logout")]
     public IActionResult Logout()
     {

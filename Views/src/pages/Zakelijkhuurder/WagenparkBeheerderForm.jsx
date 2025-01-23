@@ -141,15 +141,17 @@ const WagenparkBeheerderForm = () => {
                         value={beheerderNaam}
                         onChange={handleInputChange}
                         placeholder="Voer beheerdersnaam in"
+                        aria-label= "Voer Wagenparkbeheerder naam in"
                     />
                 </div>
                 <div className="wagenparkRegister-form-group">
-                    <label>Bedrijfs Email:</label>
+                    <label>Beheerder Email:</label>
                     <input
                         type="email"
                         name="bedrijfsEmail"
                         value={bedrijfsEmail}
                         onChange={handleInputChange}
+                        aria-label="Voer de Wagenparkbeheerder email in"
                     />
                 </div>
                 <div className="wagenparkRegister-form-group">
@@ -160,6 +162,7 @@ const WagenparkBeheerderForm = () => {
                         value={wachtwoord}
                         onChange={handleInputChange}
                         placeholder="Voer wachtwoord in"
+                        aria-label="Voer de wachtwoord in"
                     />
                 </div>
                 <div className="wagenparkRegister-form-group">

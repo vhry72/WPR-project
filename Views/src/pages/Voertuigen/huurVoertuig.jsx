@@ -16,7 +16,7 @@ const HuurVoertuig = () => {
             try {
                 const userId = await JwtService.getUserRole();
                 if (!userId) {
-                    setErrorMessage("Geen HuurderRol gevonden.");
+                    setErrorMessage("Geen Huurder rol gevonden.");
                     setLoading(false);
                     return;
                 }

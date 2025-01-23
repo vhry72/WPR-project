@@ -34,8 +34,6 @@ const VoertuigTonen = () => {
         navigate(`/VoertuigNotitieToevoegen/${voertuig.voertuigId}`); // Gebruik routeparameters
     };
 
-   
-
     return (
         <div className="container">
             <div className="input-container">

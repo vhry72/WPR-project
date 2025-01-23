@@ -35,7 +35,6 @@ const HuurVerzoekenList = () => {
             alert("Voertuig ID is niet beschikbaar.");
             return;
         }
-        // Toon schadeformulier voor het huidige voertuig
         setCurrentInname({ id, voertuigId });
     };
 
