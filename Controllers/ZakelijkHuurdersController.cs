@@ -101,26 +101,41 @@ namespace WPR_project.Controllers
             return CreatedAtAction(nameof(GetZakelijkHuurderById), new { id = zakelijkHuurder.zakelijkeId }, zakelijkHuurder);
         }
 
-       
-        [HttpPut("{id}")]
-        public IActionResult UpdateZakelijkeHuurder(Guid id, [FromBody] ZakelijkHuurder zakelijkHuurder)
+
+        [HttpGet("{id}/gegevens")]
+        public ActionResult<ZakelijkeHuurderWijzigDTO> GetGegevensById(Guid id)
         {
-            if (zakelijkHuurder == null || zakelijkHuurder.zakelijkeId != id)
+            var huurder = _service.GetGegevensById(id);
+            if (huurder == null)
             {
-                return BadRequest("ID komt niet overeen met de gegevens.");
+                return NotFound(new { Message = "Huurder niet gevonden." });
+            }
+
+            return Ok(huurder);
+        }
+
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateHuurder(Guid id, [FromBody] ZakelijkeHuurderWijzigDTO dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
+                Console.WriteLine($"ModelState Errors: {string.Join(", ", errors)}");
+                return BadRequest(ModelState);
             }
 
             try
             {
-                _service.Update(id, zakelijkHuurder);
+                _service.Update(id, dto);
+                return Ok("de gegevens zijn aangepast");
             }
             catch (KeyNotFoundException)
             {
-                return NotFound("Zakelijke huurder niet gevonden.");
+                return NotFound(new { Message = "Huurder niet gevonden." });
             }
-
-            return NoContent();
         }
+
 
         [Authorize]
         [HttpDelete("{id}")]

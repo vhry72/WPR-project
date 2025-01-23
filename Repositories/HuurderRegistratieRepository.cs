@@ -1,16 +1,19 @@
-﻿    using WPR_project.Data;
-    using WPR_project.Models;
+﻿using WPR_project.Data;
+using WPR_project.Models;
+using Microsoft.AspNetCore.Identity;
 
-    namespace WPR_project.Repositories
+namespace WPR_project.Repositories
     {
         public class HuurderRegistratieRepository : IHuurderRegistratieRepository
         {
             private readonly GegevensContext _context;
+            private readonly UserManager<ApplicationUser> _userManager;
 
-            public HuurderRegistratieRepository(GegevensContext context)
+        public HuurderRegistratieRepository(GegevensContext context, UserManager<ApplicationUser> userManager)
             {
                 _context = context;
-            }
+                _userManager = userManager;
+        }
 
             public void Add(ParticulierHuurder particulierHuurder)
             {
@@ -66,7 +69,17 @@
 
             public void Update(ParticulierHuurder particulierHuurder)
             {
-                _context.ParticulierHuurders.Update(particulierHuurder);
+            var emailUpdateIdentity = particulierHuurder.particulierEmail;
+            var user = _context.Users.FirstOrDefault(u => u.Id == particulierHuurder.AspNetUserId);
+            if (user != null)
+            {
+                user.Email = emailUpdateIdentity;
+                user.UserName = emailUpdateIdentity;
+                user.NormalizedEmail = emailUpdateIdentity.ToUpper();
+                user.NormalizedUserName = emailUpdateIdentity.ToUpper();
+                _context.Users.Update(user);
+            }
+            _context.ParticulierHuurders.Update(particulierHuurder);
             }
         }
     }

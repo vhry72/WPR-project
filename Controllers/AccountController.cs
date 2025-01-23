@@ -443,7 +443,6 @@ public class AccountController : ControllerBase
 
 
 
-    [Authorize]
     [HttpPost("logout")]
     public IActionResult Logout()
     {

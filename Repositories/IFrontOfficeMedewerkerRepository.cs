@@ -11,6 +11,7 @@ namespace WPR_project.Repositories
 
         void Delete(Guid id);
         void Save();
+
         IQueryable<FrontofficeMedewerker> Getall();
     }
 }

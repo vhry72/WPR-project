@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
+using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
@@ -81,6 +83,31 @@ namespace WPR_project.Services
             {
                 throw new KeyNotFoundException("Beheerder niet gevonden.");
             }
+        }
+
+        public void updateWagenparkBeheerderGegevens(Guid id, WagenparkBeheerderWijzigDTO dto)
+        {
+            var huurder = _repository.GetBeheerderById(id);
+            if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");
+
+            huurder.beheerderNaam = dto.beheerderNaam;
+            huurder.bedrijfsEmail = dto.bedrijfsEmail;
+
+            _repository.updateWagenparkBeheerderGegevens(huurder);
+            _repository.Save();
+        }
+
+        public WagenparkBeheerderWijzigDTO GetGegevensById(Guid id)
+        {
+            var huurder = _repository.GetBeheerderById(id);
+            if (huurder == null) return null;
+
+            return new WagenparkBeheerderWijzigDTO
+            {
+                bedrijfsEmail = huurder.bedrijfsEmail,
+                beheerderNaam = huurder.beheerderNaam,
+            };
+
         }
 
         public void DeleteWagenparkBeheerder(Guid id)

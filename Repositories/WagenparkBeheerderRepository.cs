@@ -25,14 +25,14 @@ namespace WPR_project.Repositories
                 throw new InvalidOperationException("Wagenparkbeheerder niet gevonden.");
             }
 
-            
+
             var alternatieveBeheerder = _context.WagenparkBeheerders
                 .Where(w => w.zakelijkeId == wagenparkBeheerder.zakelijkeId && w.beheerderId != id && w.IsActive)
                 .FirstOrDefault();
 
             if (alternatieveBeheerder != null)
             {
-               
+
                 var medewerkers = _context.BedrijfsMedewerkers
                     .Where(m => m.beheerderId == id);
                 foreach (var medewerker in medewerkers)
@@ -40,7 +40,7 @@ namespace WPR_project.Repositories
                     medewerker.beheerderId = alternatieveBeheerder.beheerderId;
                 }
 
-                
+
                 wagenparkBeheerder.IsActive = false;
                 var user = _context.Users.FirstOrDefault(u => u.Id == wagenparkBeheerder.AspNetUserId);
                 if (user != null)
@@ -109,7 +109,7 @@ namespace WPR_project.Repositories
             return medewerkerIds;
         }
 
-         public List<BedrijfsMedewerkers> GetMedewerkersByWagenparkbeheerder(Guid wagenparkbeheerderId)
+        public List<BedrijfsMedewerkers> GetMedewerkersByWagenparkbeheerder(Guid wagenparkbeheerderId)
         {
             // Haal alleen de IDs van de medewerkers op die gekoppeld zijn aan het gegeven wagenparkbeheerderId
             var medewerkerIds = _context.BedrijfsMedewerkers
@@ -134,5 +134,21 @@ namespace WPR_project.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public void updateWagenparkBeheerderGegevens(WagenparkBeheerder wagenparkbeheerder)
+        {
+            var emailUpdateIdentity = wagenparkbeheerder.bedrijfsEmail;
+            var user = _context.Users.FirstOrDefault(u => u.Id == wagenparkbeheerder.AspNetUserId);
+            if (user != null)
+            {
+                user.Email = emailUpdateIdentity;
+                user.UserName = emailUpdateIdentity;
+                user.NormalizedEmail = emailUpdateIdentity.ToUpper();
+                user.NormalizedUserName = emailUpdateIdentity.ToUpper();
+                _context.Users.Update(user);
+            }
+            _context.WagenparkBeheerders.Update(wagenparkbeheerder);
+        }
+
     }
 }

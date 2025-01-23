@@ -1,5 +1,6 @@
 ﻿using WPR_project.Data;
 using WPR_project.Models;
+using WPR_project.DTO_s;
 
 namespace WPR_project.Repositories
 {
@@ -10,6 +11,7 @@ namespace WPR_project.Repositories
         IEnumerable<ParticulierHuurder> GetAll();
         ParticulierHuurder GetById(Guid id);
         ParticulierHuurder GetByEmailAndPassword(string email, string password);
+
         ParticulierHuurder GetByToken(Guid token);
         void Add(ParticulierHuurder particulierHuurder);
         void Update(ParticulierHuurder particulierHuurder);

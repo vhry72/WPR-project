@@ -78,22 +78,33 @@ namespace WPR_project.Services
         }
 
 
-        public void Update(Guid id, BedrijfsMedewerkersDTO dto)
+        public BedrijfsMedewerkerWijzigDTO GetGegevensById(Guid id)
         {
-            var medewerker = _repository.GetMedewerkerById(id);
-            if (medewerker == null) throw new KeyNotFoundException("Medewerker niet gevonden.");
+            var huurder = _repository.GetMedewerkerById(id);
+            if (huurder == null) return null;
 
-            medewerker.medewerkerNaam = dto.medewerkerNaam;
-            medewerker.medewerkerEmail = dto.medewerkerEmail;
-
-            if (!string.IsNullOrWhiteSpace(dto.wachtwoord))
+            return new BedrijfsMedewerkerWijzigDTO
             {
-                medewerker.wachtwoord = dto.wachtwoord;
-            }
+                medewerkerEmail = huurder.medewerkerEmail,
+                medewerkerNaam = huurder.medewerkerNaam,
+            };
 
-            _repository.Update(medewerker);
+        }
+
+
+
+        public void Update(Guid id, BedrijfsMedewerkerWijzigDTO dto)
+        {
+            var huurder = _repository.GetMedewerkerById(id);
+            if (huurder == null) throw new KeyNotFoundException("Huurder niet gevonden.");
+
+            huurder.medewerkerNaam = dto.medewerkerNaam;
+            huurder.medewerkerEmail = dto.medewerkerEmail;
+
+            _repository.Update(huurder);
             _repository.Save();
         }
+
 
         public void Delete(Guid id)
         {
