@@ -40,6 +40,7 @@ import VoertuigTonen from "./pages/BackOfficeMedewerker/VoertuigTonen";
 import VoertuigDetailsBackOffice from "./pages/BackOfficeMedewerker/VoertuigDetailsBackOffice";
 import VoertuigNotitieTonen from "./pages/FrontOfficeMedewerker/VoertuigNotitieToevoegen";
 import VoertuigToevoegen from "./pages/BackOfficeMedewerker/VoertuigToevoegen";
+import MedewerkersWijzigen from "./pages/Wagenparkbeheerder/MedewerkersWijzigen"
 import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
 import FrontofficeRegister from "./pages/BackOfficeMedewerker/FrontofficeRegister";
 import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderForm";
@@ -53,6 +54,7 @@ import TweefaReset from "./pages/Beveiliging/2faReset";
 import FrontofficeTonen from "./pages/BackOfficeMedewerker/FrontofficeTonen";
 import FrontofficeToevoegen from "./pages/BackOfficeMedewerker/FrontofficeToevoegen";
 import FrontofficeDetails from "./pages/BackOfficeMedewerker/FrontofficeDetails";
+import MedewerkersDashboard from "./pages/Wagenparkbeheerder/medewerkerAbonnementDashboard";
 import WagenparkWijzigPagina from "./pages/ZakelijkHuurder/wagenparkWijzigPagina";
 import WachtwoordResetBeheerder from "./pages/Beveiliging/WachtwoordResetBeheerder"
 import AccountwijzigingZakelijk from "./pages/Zakelijkhuurder/accountwijzigingZakelijk";
@@ -355,7 +357,16 @@ function PageRoute() {
                                     <RegisterBedrijfsmedewerker />
                                 </PrivateRoute>
                             }
-                                />
+                        />
+                        <Route
+                            path="MedewerkersWijzigen"
+                            element={
+                                <PrivateRoute allowedRoles={["WagenparkBeheerder"]}>
+                                    <MedewerkersWijzigen />
+                                </PrivateRoute>
+                            }
+                        />
+
 
                         <Route
                             path="FrontofficeRegister"

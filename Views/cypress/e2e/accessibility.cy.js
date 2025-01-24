@@ -1,7 +1,7 @@
 describe('Accessibility Tests', () => {
     beforeEach(() => {
         // Bezoek de pagina die je wilt testen
-        cy.visit('http://localhost:5173/');
+        cy.visit('https://localhost:5174/');
         // Voer axe core-injectie uit
         cy.injectAxe();
     });

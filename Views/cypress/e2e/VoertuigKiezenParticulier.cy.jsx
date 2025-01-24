@@ -1,6 +1,6 @@
 describe('Particulier Voertuig Tonen Cypress Test', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:5177/particulierVoertuigTonen');
+        cy.visit('https://localhost:5174/particulierVoertuigTonen');
     });
 
     it('Filtert voertuigen op type en controleert resultaten', () => {
