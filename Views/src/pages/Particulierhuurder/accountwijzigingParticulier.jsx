@@ -4,12 +4,16 @@ import ParticulierHuurdersRequestService from "../../services/requests/Particuli
 import { useNavigate, useLocation } from "react-router-dom";
 import JwtService from "../../services/JwtService"; 
 import axios from "axios";
+import { toast } from 'react-toastify';
 
-const AccountwijzigingHuurders = () => {
+const AccountwijzigingParticulier = () => {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
-        password: "",
+        adres: "",
+        postalCode: "",
+        city: "",
+        telephone: "",
     });
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -39,13 +43,16 @@ const AccountwijzigingHuurders = () => {
         const fetchUserDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`)
+                const response = await axios.get(`https://localhost:5033/api/ParticulierHuurder/${huurderId}/gegevens`)
                 console.log(response.data)
                 if (response && response.data) {
                     setFormData({
                         name: response.data.particulierNaam,
                         email: response.data.particulierEmail,
-                        password: "", 
+                        adres: response.data.adress,
+                        postalCode: response.data.postcode,
+                        city: response.data.woonplaats,
+                        telephone: response.data.telefoonnummer, 
                     });
                 } else {
                     setErrorMessage("Gebruikersgegevens konden niet worden geladen.");
@@ -57,8 +64,8 @@ const AccountwijzigingHuurders = () => {
             }
         };
 
-        if (huurderId) fetchUserDetails(); // Controleer op huurderId i.p.v. id
-    }, [huurderId]); // Zorg ervoor dat de dependency ook huurderId is
+        if (huurderId) fetchUserDetails(); 
+    }, [huurderId]); 
 
 
     const handleChange = (event) => {
@@ -76,19 +83,22 @@ const AccountwijzigingHuurders = () => {
                 particulierId: huurderId,
                 particulierEmail: formData.email,
                 particulierNaam: formData.name,
-                wachtwoord: formData.password,
+                adress: formData.adres,
+                postcode: formData.postalCode,
+                woonplaats: formData.city,
+                telefoonnummer: formData.telephone,
             };
 
-            console.log(payload);
             const response = await axios.put(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`, payload);
-            if (response.status === 200 || response.status === 204) {
-                alert("Gebruikersgegevens succesvol bijgewerkt!");
-                navigate("/"); // Terug naar home of een andere pagina
+            if (response.status === 200) {
+                toast.success("Gebruikersgegevens succesvol bijgewerkt!");
+                navigate("/");
             } else {
                 setErrorMessage("Er is een fout opgetreden bij het bijwerken van de gegevens.");
             }
         } catch (error) {
             setErrorMessage("Er is een fout opgetreden bij het opslaan van de gegevens.");
+            console.log(error);
         } finally {
             setIsLoading(false);
         }
@@ -118,12 +128,42 @@ const AccountwijzigingHuurders = () => {
                     required
                 />
 
-                <label htmlFor="password">Wachtwoord</label>
+                <label htmlFor="adres">adress</label>
                 <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    value={formData.password}
+                    type="text"
+                    id="adres"
+                    name="adres"
+                    value={formData.adres}
+                    onChange={handleChange}
+                    required
+                />
+
+                <label htmlFor="postalCode">postcode</label>
+                <input
+                    type="text"
+                    id="postalCode"
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    required
+                />
+
+                <label htmlFor="city">woonplaats</label>
+                <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                />
+
+                <label htmlFor="telephone">telefoonnummer</label>
+                <input
+                    type="text"
+                    id="telephone"
+                    name="telephone"
+                    value={formData.telephone}
                     onChange={handleChange}
                     required
                 />
@@ -138,4 +178,4 @@ const AccountwijzigingHuurders = () => {
     );
 };
 
-export default AccountwijzigingHuurders;
+export default AccountwijzigingParticulier;

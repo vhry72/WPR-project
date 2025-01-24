@@ -170,8 +170,8 @@ const Login = () => {
                                 value={password}
                                 onInput={(e) => setPassword(e.target.value)}
                                 className="login-input"
-                                onKeyDown={handleKeyPress}
-                            />
+                                onKeyDown={handleKeyPress}/>
+    
                             <span
                                 className="password-toggle-icon"
                                 onClick={() => setShowPassword(!showPassword)}

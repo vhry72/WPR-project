@@ -20,7 +20,17 @@ namespace WPR_project.Repositories
             _context.ZakelijkHuurders.Add(zakelijkHuurder);
         }
 
+        public List<WagenparkBeheerder> GetWagenparkBeheerdersByZakelijkeId(Guid id)
+        {
+            var wagenparkbeheerders = _context.WagenparkBeheerders.Where(z => z.zakelijkeId == id).ToList();
+
+            return wagenparkbeheerders;
         
+        
+        }
+
+
+
         public void DeleteZakelijkHuurder(Guid id)
         {
             var zakelijkHuurder = _context.ZakelijkHuurders.Find(id);
