@@ -149,20 +149,22 @@ public class HuurverzoekService
     {
         return _repository.GetAllGoedGekeurde();
     }
-    public HuurVerzoekDTO GetById(Guid id)
+    public HuurverzoekIdDTO GetById(Guid id)
     {
         var huurder = _repository.GetByID(id);
         if (huurder == null) { return null; }
 
-        return new HuurVerzoekDTO
+        return new HuurverzoekIdDTO
         {
-            HuurderID = id,
+            HuurVerzoekId = id,
+            HuurderID = huurder.HuurderID,
             beginDate = huurder.beginDate,
             endDate = huurder.endDate,
-            approved = huurder.approved,
+            isBevestigd = huurder.isBevestigd,
+            approved = huurder.approved
         };
     }
-    public void Update(Guid id, HuurVerzoekDTO dto)
+    public void Update(Guid id, HuurverzoekIdDTO dto)
     {
         var huurder = _repository.GetByID(id);
         if (huurder == null) throw new KeyNotFoundException("Huurverzoek niet gevonden.");

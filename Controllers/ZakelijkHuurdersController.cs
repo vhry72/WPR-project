@@ -28,11 +28,11 @@ namespace WPR_project.Controllers
         }
 
 
-       
+
         [HttpGet("verify")]
         public IActionResult VerifyEmail(Guid token)
         {
-            if(token == Guid.Empty)
+            if (token == Guid.Empty)
             {
                 return BadRequest(new { Message = "Verificatietoken is verplicht." });
             }
@@ -46,7 +46,7 @@ namespace WPR_project.Controllers
             return Ok("Je e-mail is succesvol bevestigd. Je kunt nu inloggen.");
         }
 
-        
+
         [HttpGet]
         public ActionResult<IEnumerable<ZakelijkHuurder>> GetAllZakelijkeHuurders()
         {
@@ -54,7 +54,7 @@ namespace WPR_project.Controllers
             return Ok(huurders);
         }
 
-       
+
         [HttpGet("{id}")]
         public ActionResult<ZakelijkHuurder> GetZakelijkHuurderById(Guid id)
         {
@@ -176,7 +176,7 @@ namespace WPR_project.Controllers
             }
         }
 
-      
+
         [HttpDelete("{id}/verwijdermedewerker")]
         public IActionResult VerwijderMedewerker(Guid id, [FromBody] string medewerkerEmail)
         {
@@ -228,6 +228,20 @@ namespace WPR_project.Controllers
             {
                 return Conflict(new { Message = ex.Message });
             }
+        }
+
+        [HttpGet("{id}/WagenparkGegevens")]
+        public ActionResult<WagenparkBeheerderGetGegevensDTO> getWagenparkGegevensByZakelijkeId(Guid id)
+        {
+            var wagenparkBeheerder = _service.GetWagenparkBeheerdersByZakelijkeId(id);
+
+            if (!wagenparkBeheerder.Any())
+            {
+                return NotFound("Deze zakelijkeId bevat geen wagenparkBeheerders");
+            }
+
+            return Ok(wagenparkBeheerder);
+        
         }
     }
 }

@@ -34,6 +34,31 @@ namespace WPR_project.Services
             return _repository.GetZakelijkHuurderById(id);
         }
 
+        public List<WagenparkBeheerderGetGegevensDTO> GetWagenparkBeheerdersByZakelijkeId(Guid id)
+        {
+            var wagenparkbeheerders = _repository.GetWagenparkBeheerdersByZakelijkeId(id);
+
+            if (wagenparkbeheerders == null || !wagenparkbeheerders.Any())
+            {
+                throw new InvalidOperationException("Deze zakelijkeID heeft geen wagenparkbeheerders");
+            }
+
+            var resultaat = new List<WagenparkBeheerderGetGegevensDTO>();
+
+            foreach (var wb in wagenparkbeheerders)
+            {
+                resultaat.Add(new WagenparkBeheerderGetGegevensDTO
+                {
+                    beheerderId = wb.beheerderId,
+                    beheerderNaam = wb.beheerderNaam,
+                    bedrijfsEmail = wb.bedrijfsEmail
+                });
+            }
+
+            return resultaat;
+        }
+
+
         // Registreer een nieuwe zakelijke huurder met e-mailverificatie
         public void RegisterZakelijkeHuurder(ZakelijkHuurder huurder)
         {

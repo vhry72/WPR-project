@@ -36,7 +36,7 @@ const WachtwoordReset = () => {
                 }
             );
             toast.success("Wachtwoord is gereset.");
-            navigate('/login');
+            navigate('/');
         } catch (error) {
             toast.error(error.response?.data || "Er is iets misgegaan.");
         } finally {
