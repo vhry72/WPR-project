@@ -377,7 +377,7 @@ function PageRoute() {
                             }
                         />
                         <Route
-                            path="FrontofficeDetails/:medewerkerId"
+                            path="FrontofficeDetails"
                             element={
                                 <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
                                     <FrontofficeDetails />

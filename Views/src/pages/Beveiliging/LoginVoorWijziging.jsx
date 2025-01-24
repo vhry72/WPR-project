@@ -161,7 +161,7 @@ const Login = () => {
                             value={email}
                             onInput={(e) => setEmail(e.target.value)}
                             className="login-input"
-                            onKeyDown={handleKeyPress} /
+                            onKeyDown={handleKeyPress} 
                         />
                         <div className="password-input-wrapper">
                             <input
