@@ -136,6 +136,9 @@ const VoertuigDetails = () => {
             >
                 Verwijder Voertuig
             </button>
+            <button onClick={() => navigate(`/VoertuigTonen`)} className="button">
+                Terug naar Overzicht
+            </button>
             
         </div>
 
