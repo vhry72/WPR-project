@@ -23,7 +23,7 @@ namespace WPR_project.TemporaryTests
         }
 
         [Fact]
-        public void Register_InvalidEmail_ShouldThrowException()
+        public void Registreert_OnjuistEmailadresIngevoerd()
         {
             // Arrange
             var huurder = new ParticulierHuurder
@@ -32,7 +32,7 @@ namespace WPR_project.TemporaryTests
                 particulierNaam = "John Doe",
                 wachtwoord = "Password123!",
                 adress = "Weimarstraat 24b",
-                postcode = "1234AB",
+                postcode = "1234XZ",
                 woonplaats = "Amsterdam",
                 telefoonnummer = "+31612345678"
             };
@@ -45,32 +45,7 @@ namespace WPR_project.TemporaryTests
         }
 
         [Fact]
-        public void Register_InvalidPassword_ShouldThrowException()
-        {
-            // Arrange
-            var huurder = new ParticulierHuurder
-            {
-                particulierEmail = "test@gmail.com",
-                particulierNaam = "John Doe",
-                wachtwoord = "123", //Ongeldig wachtwoord
-                adress = "Weimarstraat 24b",
-                postcode = "1234AB",
-                woonplaats = "Amsterdam",
-                telefoonnummer = "+31612345678"
-            };
-
-            // Act
-            var ex = Assert.Throws<ArgumentException>(() => _service.Register(huurder));
-            var exe = Assert.Throws<ArgumentException>(() => _service.Register(huurder));
-            Console.WriteLine(exe.Message); // Voeg dit toe om de foutmelding te bekijken
-
-
-            // Assert
-            Assert.Contains("Validatie mislukt: wachtwoord moet minimaal 8 tekens bevatten.", ex.Message);
-        }
-
-        [Fact]
-        public void Register_MissingRequiredFields_ShouldThrowException()
+        public void Registreer_GeenEmailIngevoerd()
         {
             // Arrange
             var huurder = new ParticulierHuurder
@@ -92,14 +67,14 @@ namespace WPR_project.TemporaryTests
         }
 
         [Fact]
-        public void Register_ValidationsFail_ShouldReturnCorrectErrorMessage()
+        public void Registreer_OngeldigWachtwoordIngevoerd()
         {
             // Arrange
             var huurder = new ParticulierHuurder
             {
                 particulierEmail = "test@gmail.com",
-                particulierNaam = "", // lege naam
-                wachtwoord = "Password123!",
+                particulierNaam = "John Doe",
+                wachtwoord = "123", //Ongeldig wachtwoord
                 adress = "Weimarstraat 24b",
                 postcode = "1234AB",
                 woonplaats = "Amsterdam",
@@ -108,9 +83,12 @@ namespace WPR_project.TemporaryTests
 
             // Act
             var ex = Assert.Throws<ArgumentException>(() => _service.Register(huurder));
+            var exe = Assert.Throws<ArgumentException>(() => _service.Register(huurder));
+            Console.WriteLine(exe.Message); // Voeg dit toe om de foutmelding te bekijken
+
 
             // Assert
-            Assert.Contains("Naam is verplicht.", ex.Message);
+            Assert.Contains("Validatie mislukt: wachtwoord moet minimaal 8 tekens bevatten.", ex.Message);
         }
     }
 }

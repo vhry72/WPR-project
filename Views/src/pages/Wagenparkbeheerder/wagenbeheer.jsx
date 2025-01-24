@@ -57,7 +57,7 @@ const WagenbeheerDashboard = () => {
 
             if (medewerker.abonnementId) {
                 setNotificatie("Deze medewerker heeft al een abonnement.");
-                setTimeout(() => setNotificatie(""), 3000);
+                setTimeout(() => setNotificatie(""), 2000);
                 return;
             }
 
@@ -77,7 +77,7 @@ const WagenbeheerDashboard = () => {
             setNotificatie("Er is een fout opgetreden bij het toevoegen van de medewerker.");
         } finally {
             setSelectedMedewerker("");
-            setTimeout(() => setNotificatie(""), 3000);
+            setTimeout(() => setNotificatie(""), 2000);
             setIsLoading(false);
         }
     };
@@ -102,7 +102,7 @@ const WagenbeheerDashboard = () => {
             console.error("Fout bij het verwijderen van medewerker uit abonnement:", error);
             setNotificatie("Er is een fout opgetreden bij het verwijderen van de medewerker.");
         } finally {
-            setTimeout(() => setNotificatie(""), 3000);
+            setTimeout(() => setNotificatie(""), 2000);
             setIsLoading(false);
         }
     };

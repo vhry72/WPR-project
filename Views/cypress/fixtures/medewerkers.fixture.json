@@ -1,0 +1,20 @@
+﻿[
+  {
+    "bedrijfsMedewerkerId": "1",
+    "medewerkerNaam": "Janet Doe",
+    "medewerkerEmail": "janetdoe@bedrijf.nl",
+    "abonnementId": null
+  },
+  {
+    "bedrijfsMedewerkerId": "2",
+    "medewerkerNaam": "John Smith",
+    "medewerkerEmail": "johnsmith@bedrijf.nl",
+    "abonnementId": "ab123"
+  },
+  {
+    "bedrijfsMedewerkerId": "3",
+    "medewerkerNaam": "Alice Johnson",
+    "medewerkerEmail": "alicejohnson@bedrijf.nl",
+    "abonnementId": null
+  }
+]

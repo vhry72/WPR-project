@@ -161,7 +161,8 @@ const Login = () => {
                             value={email}
                             onInput={(e) => setEmail(e.target.value)}
                             className="login-input"
-                            onKeyDown={handleKeyPress} /
+                            onKeyDown={handleKeyPress} 
+                            aria-label="Vul Emailadres in"
                         />
                         <div className="password-input-wrapper">
                             <input
@@ -171,6 +172,7 @@ const Login = () => {
                                 onInput={(e) => setPassword(e.target.value)}
                                 className="login-input"
                                 onKeyDown={handleKeyPress}
+                                aria-label="Vul wachtwoord in"
                             />
                             <span
                                 className="password-toggle-icon"
