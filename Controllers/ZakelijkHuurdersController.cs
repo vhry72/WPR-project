@@ -137,7 +137,7 @@ namespace WPR_project.Controllers
         }
 
 
-        [Authorize]
+        
         [HttpDelete("{id}")]
         public IActionResult DeleteBedrijf(Guid id)
         {

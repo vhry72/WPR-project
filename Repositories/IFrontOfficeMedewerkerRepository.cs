@@ -10,6 +10,8 @@ namespace WPR_project.Repositories
         void Update(FrontofficeMedewerker frontofficeMedewerker);
 
         void Delete(Guid id);
+
+        void DeactivateFrontOffice(Guid id);
         void Save();
 
         IQueryable<FrontofficeMedewerker> Getall();

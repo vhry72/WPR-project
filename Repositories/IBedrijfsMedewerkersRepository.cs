@@ -8,7 +8,9 @@ namespace WPR_project.Repositories
         // Interface voor de repositories om de methodes te erfen en de logica toe te voegen wat opgeslagen wordt in de DB
 
         void AddMedewerker(BedrijfsMedewerkers medewerker);
-        void Delete(Guid medewerkerId); 
+        void Delete(Guid medewerkerId);
+
+        void Deactivate(Guid medewerkerId);
         BedrijfsMedewerkers GetByEmailAndPassword(string email, string password);
         BedrijfsMedewerkers GetMedewerkerById(Guid medewerkerId); 
         IEnumerable<BedrijfsMedewerkers> GetAll();

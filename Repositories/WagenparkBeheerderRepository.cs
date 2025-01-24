@@ -1,4 +1,5 @@
-﻿using WPR_project.Data;
+﻿using Hangfire;
+using WPR_project.Data;
 using WPR_project.Models;
 
 namespace WPR_project.Repositories
@@ -17,7 +18,7 @@ namespace WPR_project.Repositories
             _context.WagenparkBeheerders.Add(wagenparkBeheerder);
         }
 
-        public void DeleteWagenparkBeheerder(Guid id)
+        public void SetWagenparkBeheerderInactive(Guid id)
         {
             var wagenparkBeheerder = _context.WagenparkBeheerders.Find(id);
             if (wagenparkBeheerder == null)
@@ -25,36 +26,67 @@ namespace WPR_project.Repositories
                 throw new InvalidOperationException("Wagenparkbeheerder niet gevonden.");
             }
 
-
+            // Zoek een alternatieve beheerder
             var alternatieveBeheerder = _context.WagenparkBeheerders
                 .Where(w => w.zakelijkeId == wagenparkBeheerder.zakelijkeId && w.beheerderId != id && w.IsActive)
                 .FirstOrDefault();
 
-            if (alternatieveBeheerder != null)
+            if (alternatieveBeheerder == null)
             {
-
-                var medewerkers = _context.BedrijfsMedewerkers
-                    .Where(m => m.beheerderId == id);
-                foreach (var medewerker in medewerkers)
-                {
-                    medewerker.beheerderId = alternatieveBeheerder.beheerderId;
-                }
-
-
-                wagenparkBeheerder.IsActive = false;
-                var user = _context.Users.FirstOrDefault(u => u.Id == wagenparkBeheerder.AspNetUserId);
-                if (user != null)
-                {
-                    user.IsActive = false;
-                }
-
-                _context.SaveChanges();
+                throw new InvalidOperationException("Geen alternatieve actieve wagenparkbeheerders gevonden. Kan de huidige beheerder niet deactiveren.");
             }
-            else
+
+            // Reassign medewerkers naar de alternatieve beheerder
+            var medewerkers = _context.BedrijfsMedewerkers.Where(m => m.beheerderId == id);
+            foreach (var medewerker in medewerkers)
             {
-                throw new InvalidOperationException("Geen andere actieve wagenparkbeheerders gevonden binnen hetzelfde zakelijkeId. Kan de huidige beheerder niet verwijderen.");
+                medewerker.beheerderId = alternatieveBeheerder.beheerderId;
+            }
+
+            wagenparkBeheerder.IsActive = false;
+            var user = _context.Users.FirstOrDefault(u => u.Id == wagenparkBeheerder.AspNetUserId);
+            if (user != null)
+            {
+                user.IsActive = false;
+            }
+
+            _context.SaveChanges();
+
+            BackgroundJob.Schedule(() => DeleteWagenparkBeheerder(id), TimeSpan.FromDays(730));
+        }
+
+
+        public void DeleteWagenparkBeheerder(Guid id)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var wagenparkBeheerder = _context.WagenparkBeheerders.Find(id);
+                    if (wagenparkBeheerder == null || !wagenparkBeheerder.IsActive)
+                    {
+                        throw new InvalidOperationException("Actieve wagenparkbeheerder niet gevonden.");
+                    }
+
+                    // Reassign moet al gedaan zijn bij het inactief zetten
+                    _context.WagenparkBeheerders.Remove(wagenparkBeheerder);
+                    var user = _context.Users.FirstOrDefault(u => u.Id == wagenparkBeheerder.AspNetUserId);
+                    if (user != null)
+                    {
+                        _context.Users.Remove(user);
+                    }
+
+                    _context.SaveChanges();
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
         }
+
 
 
         public Guid GetZakelijkeId(Guid id)

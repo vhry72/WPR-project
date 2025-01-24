@@ -125,7 +125,7 @@ namespace WPR_project.Services
                     throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
                 }
 
-                _repository.DeleteWagenparkBeheerder(id);
+                _repository.SetWagenparkBeheerderInactive(id);
 
                 string bericht = $"Beste {wagenparkBeheerder.beheerderNaam},\n\nUw account is verwijderd.\n\nVriendelijke Groet,\nCarAndAll";
                 _emailService.SendEmail(wagenparkBeheerder.bedrijfsEmail, "Account verwijderd", bericht);

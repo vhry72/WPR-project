@@ -257,8 +257,11 @@ namespace WPR_project.Services
             beheerder.HuidigAbonnement = abonnement;
             beheerder.AbonnementType = abonnementType;
 
+            _
             _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
             _wagenparkBeheerderRepository.Save();
+
+
         }
 
         public void StuurFactuurEmail(Guid beheerderId, Guid abonnementId)

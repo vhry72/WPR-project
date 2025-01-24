@@ -64,7 +64,7 @@ namespace WPR_project.Services
             {
                 throw new ArgumentException("ID is verplicht.");
             }
-            _repository.DeleteBackOfficeMedewerker(id);
+            _repository.DeactivateBackOfficeMedewerker(id);
             string bericht = $"Beste {huurder.medewerkerNaam},\n\n Uw account wordt verwijderd, \n\n Vriendelijke Groet, \n CarAndAll";
             _emailService.SendEmail(huurder.medewerkerEmail, "Account verwijderd", bericht);
         }

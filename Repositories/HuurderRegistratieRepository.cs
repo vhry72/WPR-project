@@ -1,6 +1,7 @@
 ﻿using WPR_project.Data;
 using WPR_project.Models;
 using Microsoft.AspNetCore.Identity;
+using Hangfire;
 
 namespace WPR_project.Repositories
     {
@@ -18,7 +19,28 @@ namespace WPR_project.Repositories
             public void Add(ParticulierHuurder particulierHuurder)
             {
                 _context.ParticulierHuurders.Add(particulierHuurder);
+        }
+
+        public void DectivateParticulier(Guid id)
+        {
+            var particulierHuurder = _context.ParticulierHuurders.Find(id);
+            if (particulierHuurder != null)
+            {
+
+                particulierHuurder.IsActive = false;
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == particulierHuurder.AspNetUserId);
+
+                if (user != null)
+                {
+
+                    user.IsActive = false;
+                }
+
+                _context.SaveChanges();
+                BackgroundJob.Schedule(() => Delete(id), TimeSpan.FromDays(730));
             }
+        }
 
         public void Delete(Guid id)
         {
