@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hangfire;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WPR_project.Data;
@@ -22,8 +23,7 @@ namespace WPR_project.Repositories
 
             _context.BedrijfsMedewerkers.Add(medewerker);
         }
-
-        public void Delete(Guid medewerkerId)
+        public void Deactivate(Guid medewerkerId)
         {
             var bedrijfsMedewerker = _context.BedrijfsMedewerkers.Find(medewerkerId);
             if (bedrijfsMedewerker != null)
@@ -39,6 +39,30 @@ namespace WPR_project.Repositories
                     user.IsActive = false;
                 }
 
+                _context.SaveChanges();
+
+                BackgroundJob.Schedule(() => Delete(medewerkerId), TimeSpan.FromDays(370));
+            }
+        }
+
+
+        public void Delete(Guid medewerkerId)
+        {
+            var bedrijfsMedewerker = _context.BedrijfsMedewerkers.Find(medewerkerId);
+            if (bedrijfsMedewerker != null)
+            {
+
+                bedrijfsMedewerker.IsActive = false;
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == bedrijfsMedewerker.AspNetUserId);
+
+                if (user != null)
+                {
+
+                    _context.Remove(user);
+                }
+
+                _context.BedrijfsMedewerkers.Remove(bedrijfsMedewerker);
                 _context.SaveChanges();
             }
         }

@@ -150,7 +150,7 @@ namespace WPR_project.Services
             {
                 throw new ArgumentException("ID is verplicht.");
             }
-            _repository.Delete(id);
+            _repository.DectivateParticulier(id);
             string bericht = $"Beste {huurder.particulierNaam},\n\n Uw account wordt verwijderd, \n\n Vriendelijke Groet, \n CarAndAll";
             _emailService.SendEmail(huurder.particulierEmail, "Account verwijderd", bericht);
         }

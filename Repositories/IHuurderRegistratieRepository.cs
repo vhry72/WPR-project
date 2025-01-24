@@ -16,6 +16,7 @@ namespace WPR_project.Repositories
         void Add(ParticulierHuurder particulierHuurder);
         void Update(ParticulierHuurder particulierHuurder);
         void Delete(Guid id);
+        void DectivateParticulier(Guid id);
         void Save();
     }
 }

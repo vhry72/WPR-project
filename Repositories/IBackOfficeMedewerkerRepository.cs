@@ -14,6 +14,8 @@ namespace WPR_project.Repositories
 
         void DeleteBackOfficeMedewerker(Guid id);
 
+        void DeactivateBackOfficeMedewerker(Guid id);
+
         void Save();
     }
 }

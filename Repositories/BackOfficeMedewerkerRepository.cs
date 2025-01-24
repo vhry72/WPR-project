@@ -1,4 +1,5 @@
-﻿using WPR_project.Data;
+﻿using Hangfire;
+using WPR_project.Data;
 using WPR_project.Models;
 
 namespace WPR_project.Repositories
@@ -37,7 +38,7 @@ namespace WPR_project.Repositories
             _context.BackofficeMedewerkers.Update(backOfficeMedewerker);
         }
 
-        public void DeleteBackOfficeMedewerker(Guid id)
+        public void DeactivateBackOfficeMedewerker(Guid id)
         {
             var backOfficeMedewerker = _context.BackofficeMedewerkers.Find(id);
             if (backOfficeMedewerker != null)
@@ -54,6 +55,31 @@ namespace WPR_project.Repositories
                 }
 
                 _context.SaveChanges();
+
+                BackgroundJob.Schedule(() => DeleteBackOfficeMedewerker(id), TimeSpan.FromDays(365));
+            }
+        }
+
+
+        public void DeleteBackOfficeMedewerker(Guid id)
+        {
+            var backOfficeMedewerker = _context.BackofficeMedewerkers.Find(id);
+            if (backOfficeMedewerker != null)
+            {
+
+                backOfficeMedewerker.IsActive = false;
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == backOfficeMedewerker.AspNetUserId);
+
+                if (user != null)
+                {
+
+                   _context.Users.Remove(user);
+                }
+
+                _context.BackofficeMedewerkers.Remove(backOfficeMedewerker);
+                _context.SaveChanges();
+
             }
         }
 

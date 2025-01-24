@@ -110,8 +110,10 @@ namespace WPR_project.Repositories
             var voertuig = _context.Voertuigen.Find(id);
             if (voertuig != null)
             {
-                _context.Voertuigen.Remove(voertuig);
+                voertuig.IsActive = false;
             }
+
+            _context.SaveChanges();
         }
         public void Add(Voertuig voertuig)
         {

@@ -179,7 +179,7 @@ namespace WPR_project.Services
             {
                 throw new ArgumentException("ID is verplicht.");
             }
-            _repository.DeleteZakelijkHuurder(id);
+            _repository.ScheduleDeleteZakelijkHuurder(id);
         }
 
         // Voeg een medewerker toe aan een zakelijke huurder

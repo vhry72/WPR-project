@@ -59,7 +59,7 @@ namespace WPR_project.Services
             {
                 throw new ArgumentException("ID is verplicht.");
             }
-            _frontOfficeMedewerkerRepository.Delete(id);
+            _frontOfficeMedewerkerRepository.DeactivateFrontOffice(id);
             string bericht = $"Beste {medewerker.medewerkerNaam},\n\n Uw account wordt verwijderd, \n\n Vriendelijke Groet, \n CarAndAll";
             _emailService.SendEmail(medewerker.medewerkerEmail, "Medewerker verwijderd", bericht);
         }

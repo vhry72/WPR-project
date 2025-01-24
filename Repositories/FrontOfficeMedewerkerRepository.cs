@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Hangfire;
+using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
 using WPR_project.Models;
 
@@ -17,7 +18,7 @@ namespace WPR_project.Repositories
             return _context.FrontofficeMedewerkers.Find(id);
         }
 
-        public void Delete(Guid id)
+        public void DeactivateFrontOffice(Guid id)
         {
             var frontOfficeMedewerker = _context.FrontofficeMedewerkers.Find(id);
             if (frontOfficeMedewerker != null)
@@ -32,6 +33,29 @@ namespace WPR_project.Repositories
 
                     user.IsActive = false;
                 }
+
+                _context.SaveChanges();
+                BackgroundJob.Schedule(() => Delete(id), TimeSpan.FromDays(730));
+            }
+        }
+
+        public void Delete(Guid id)
+        {
+            var frontOfficeMedewerker = _context.FrontofficeMedewerkers.Find(id);
+            if (frontOfficeMedewerker != null)
+            {
+
+                frontOfficeMedewerker.IsActive = false;
+
+                var user = _context.Users.FirstOrDefault(u => u.Id == frontOfficeMedewerker.AspNetUserId);
+
+                if (user != null)
+                {
+
+                    _context.Users.Remove(user);
+                }
+
+                _context.FrontofficeMedewerkers.Remove(frontOfficeMedewerker);
 
                 _context.SaveChanges();
             }

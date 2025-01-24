@@ -136,8 +136,6 @@ builder.Services.AddScoped<BackOfficeService>();
 builder.Services.AddScoped<FrontOfficeService>();
 
 
-// Voor de 24-uurs reminder service
-builder.Services.AddHostedService<HuurverzoekReminderService>();
 
 
 

@@ -1,4 +1,5 @@
-﻿using WPR_project.Data;
+﻿using Hangfire;
+using WPR_project.Data;
 using WPR_project.Models;
 
 namespace WPR_project.Repositories
@@ -29,15 +30,22 @@ namespace WPR_project.Repositories
         
         }
 
+        public void ScheduleDeleteZakelijkHuurder(Guid id)
+        {
 
+            DeactivateZakelijkHuurder(id);
 
-        public void DeleteZakelijkHuurder(Guid id)
+            //verwijdering over twee jaar
+            BackgroundJob.Schedule(() => DeleteZakelijkHuurderVanDB(id), TimeSpan.FromDays(730));
+        }
+
+        public void DeactivateZakelijkHuurder(Guid id)
         {
             var zakelijkHuurder = _context.ZakelijkHuurders.Find(id);
 
             if (zakelijkHuurder != null)
             {
-                
+
                 zakelijkHuurder.IsActive = false;
 
 
@@ -75,8 +83,70 @@ namespace WPR_project.Repositories
                     zakelijkHuurderUser.IsActive = false;
                 }
 
-                
+
                 _context.SaveChanges();
+            }
+        }
+
+        public void DeleteZakelijkHuurderVanDB(Guid id)
+        {
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var zakelijkHuurder = _context.ZakelijkHuurders.Find(id);
+
+                    if (zakelijkHuurder != null)
+                    {
+                       
+                        var abonnementen = _context.Abonnementen.Where(a => a.zakelijkeId == id);
+                        _context.Abonnementen.RemoveRange(abonnementen);
+
+                        
+                        var wagenparkBeheerders = _context.WagenparkBeheerders.Where(w => w.zakelijkeId == id);
+                        foreach (var wb in wagenparkBeheerders)
+                        {
+                            var user = _context.Users.FirstOrDefault(u => u.Id == wb.AspNetUserId);
+                            if (user != null)
+                            {
+                                _context.Users.Remove(user);
+                            }
+                        }
+                        _context.WagenparkBeheerders.RemoveRange(wagenparkBeheerders);
+
+                        
+                        var bedrijfsMedewerkers = _context.BedrijfsMedewerkers.Where(b => b.zakelijkeId == id);
+                        foreach (var bm in bedrijfsMedewerkers)
+                        {
+                            var user = _context.Users.FirstOrDefault(u => u.Id == bm.AspNetUserId);
+                            if (user != null)
+                            {
+                                _context.Users.Remove(user);
+                            }
+                        }
+                        _context.BedrijfsMedewerkers.RemoveRange(bedrijfsMedewerkers);
+
+                        
+                        var zakelijkHuurderUser = _context.Users.FirstOrDefault(u => u.Id == zakelijkHuurder.AspNetUserId);
+                        if (zakelijkHuurderUser != null)
+                        {
+                            _context.Users.Remove(zakelijkHuurderUser);
+                        }
+
+                        
+                        _context.ZakelijkHuurders.Remove(zakelijkHuurder);
+
+                        
+                        _context.SaveChanges();
+                        transaction.Commit();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    
+                    transaction.Rollback();
+                    throw new InvalidOperationException("Het is niet gelukt om de bedrijf te verwijderen"); ;
+                }
             }
         }
 

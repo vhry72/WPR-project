@@ -15,8 +15,9 @@ namespace WPR_project.Repositories
 
         void AddZakelijkHuurder(ZakelijkHuurder zakelijkHuurder);
         void UpdateZakelijkHuurder(ZakelijkHuurder zakelijkHuurder);
-        void DeleteZakelijkHuurder(Guid id);
-
+        void DeactivateZakelijkHuurder(Guid id);
+        void DeleteZakelijkHuurderVanDB(Guid id);
+        void ScheduleDeleteZakelijkHuurder(Guid id);
 
         // Standard save
         void Save();

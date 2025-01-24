@@ -5,6 +5,7 @@ using WPR_project.Services.Email;
 using NuGet.Protocol.Core.Types;
 using System;
 using System.Collections.Generic;
+using Hangfire;
 
 namespace WPR_project.Services;
 
@@ -84,46 +85,40 @@ public class HuurverzoekService
 
     public void Add(Huurverzoek huurVerzoek)
     {
+        if (huurVerzoek.beginDate <= DateTime.Now)
+        {
+            throw new ArgumentException("De begindatum moet in de toekomst liggen.");
+        }
         if (huurVerzoek.beginDate >= huurVerzoek.endDate)
         {
             throw new ArgumentException("De begindatum kan niet na de einddatum liggen.");
         }
 
-
         _repository.Add(huurVerzoek);
-
 
         var email = GetEmailByHuurderId(huurVerzoek.HuurderID);
         var subject = "Bevestiging van uw huurverzoek";
         var body = GenerateEmailBody(huurVerzoek.beginDate, "bevestiging");
 
-        _emailService.SendEmail(email, subject, body);
-    }
+        var delay = huurVerzoek.beginDate.AddDays(-1) - DateTime.Now;
 
-    public void SendReminders()
-    {
-        var reminderTime = DateTime.Now.AddHours(24);
-        var huurverzoeken = _repository.GetHuurverzoekenForReminder(reminderTime);
-
-        foreach (var verzoek in huurverzoeken)
+       
+        if (delay.TotalSeconds <= 0)
         {
-            try
-            {
-                var email = GetEmailByHuurderId(verzoek.HuurderID);
-                var subject = "Herinnering: Uw huurperiode begint binnenkort";
-                var body = GenerateEmailBody(verzoek.beginDate, "herinnering");
-
-                _emailService.SendEmail(email, subject, body);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Fout bij het versturen van een herinneringsmail: {ex.Message}");
-            }
+            
+            _emailService.SendEmail(email, subject, body);
+        }
+        else
+        {
+            BackgroundJob.Schedule(() => _emailService.SendEmail(email, subject, body), delay);
         }
     }
 
 
-        public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
+
+
+
+    public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
         {
             return _repository.GetAllHuurVerzoeken();
         }

@@ -11,6 +11,7 @@ namespace WPR_project.Repositories
         void AddWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder);
         void UpdateWagenparkBeheerder(WagenparkBeheerder wagenParkBeheerder, Guid id);
         void DeleteWagenparkBeheerder(Guid id);
+        void SetWagenparkBeheerderInactive(Guid id);
 
         Guid GetZakelijkeId(Guid id);
 
