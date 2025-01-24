@@ -12,7 +12,7 @@ import Zaakdashboard from "./pages/Zakelijkhuurder/zaakdashboard";
 /*import Wagenparklogin from "./pages/wagenparklogin";*/
 import Wagendashboard from "./pages/Wagenparkbeheerder/wagendashboard";
 import ZakelijkAutoTonen from "./pages/Zakelijkhuurder/ZakelijkAutoTonen";
-import AccountwijzigingHuurders from "./pages/Accountbeheer/accountwijzigingHuurders";
+import AccountwijzigingParticulier from "./pages/Particulierhuurder/accountwijzigingParticulier";
 import Instellingen from "./pages/Accountbeheer/instellingen";
 import Wagenbeheer from "./pages/Wagenparkbeheerder/wagenbeheer";
 import ParticulierVoertuigTonen from "./pages/Particulierhuurder/particulierVoertuigTonen";
@@ -55,6 +55,10 @@ import FrontofficeTonen from "./pages/BackOfficeMedewerker/FrontofficeTonen";
 import FrontofficeToevoegen from "./pages/BackOfficeMedewerker/FrontofficeToevoegen";
 import FrontofficeDetails from "./pages/BackOfficeMedewerker/FrontofficeDetails";
 import MedewerkersDashboard from "./pages/Wagenparkbeheerder/medewerkerAbonnementDashboard";
+import WagenparkWijzigPagina from "./pages/ZakelijkHuurder/wagenparkWijzigPagina";
+import WachtwoordResetBeheerder from "./pages/Beveiliging/WachtwoordResetBeheerder"
+import AccountwijzigingZakelijk from "./pages/Zakelijkhuurder/accountwijzigingZakelijk";
+import AccountwijzigingBackOffice from "./pages/BackOfficeMedewerker/accountWijzigingBackoffice";
 
 // De routing van de paginas
 
@@ -105,7 +109,7 @@ function PageRoute() {
                             path="accountwijzigingHuurders"
                             element={
                                 <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
-                                    <AccountwijzigingHuurders />
+                                    <AccountwijzigingParticulier />
                                 </PrivateRoute>
                             }
                         />
@@ -130,46 +134,38 @@ function PageRoute() {
                         />
 
                         <Route
+                            path="wagenparkWijzigPagina"
+                            element={
+                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
+                                    <WagenparkWijzigPagina />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="wachtwoordResetBeheerder"
+                            element={
+                                <PrivateRoute allowedRoles={["ZakelijkeHuurder", "WagenparkBeheerder", "BackofficeMedewerker"]}>
+                                    <WachtwoordResetBeheerder />
+                                </PrivateRoute>
+                            }
+                        />
+
+                        <Route
+                            path="accountwijzigingZakelijk"
+                            element={
+                                <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
+                                    <AccountwijzigingZakelijk />
+                                </PrivateRoute>
+                            }
+                        />
+
+
+                        <Route
                             path="WagenparkBeheerderForm"
                             element={
                                 <PrivateRoute allowedRoles={["ZakelijkeHuurder"]}>
                                     <WagenparkBeheerderForm />
-                                </PrivateRoute>
-                            }
-                        />
-
-                        <Route
-                            path="accountwijzigingHuurders"
-                            element={
-                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
-                                    <AccountwijzigingHuurders />
-                                </PrivateRoute>
-                            }
-                        />
-
-                        <Route
-                            path="accountwijzigingHuurders"
-                            element={
-                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
-                                    <AccountwijzigingHuurders />
-                                </PrivateRoute>
-                            }
-                        />
-
-                        <Route
-                            path="accountwijzigingHuurders"
-                            element={
-                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
-                                    <AccountwijzigingHuurders />
-                                </PrivateRoute>
-                            }
-                        />
-
-                        <Route
-                            path="accountwijzigingHuurders"
-                            element={
-                                <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
-                                    <AccountwijzigingHuurders />
                                 </PrivateRoute>
                             }
                         />
@@ -186,10 +182,10 @@ function PageRoute() {
                         />
 
                         <Route
-                            path="accountwijzigingHuurders"
+                            path="accountwijzigingBedrijfsmedewerker"
                             element={
                                 <PrivateRoute allowedRoles={["BedrijfsMedewerker"]}>
-                                    <AccountwijzigingHuurders />
+                                    <AccountwijzigingParticulier />
                                 </PrivateRoute>
                             }
                         />
@@ -221,6 +217,16 @@ function PageRoute() {
                                 </PrivateRoute>
                             }
                         />
+
+                        <Route
+                            path="accountWijzigingBackoffice"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <AccountwijzigingBackOffice />
+                                </PrivateRoute>
+                            }
+                        />
+
                         <Route
                             path="VoertuigTonen"
                             element={
@@ -388,7 +394,7 @@ function PageRoute() {
                             }
                         />
                         <Route
-                            path="FrontofficeDetails/:medewerkerId"
+                            path="FrontofficeDetails"
                             element={
                                 <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
                                     <FrontofficeDetails />
@@ -402,7 +408,7 @@ function PageRoute() {
                         <Route path="wachtwoord-reset" element={<WachtwoordReset />} />
                         <Route path="2fa-reset" element={<TweefaReset />} />
                         <Route path="instellingen" element={<Instellingen />} />
-                        <Route path="accountwijzigingHuurders" element={<AccountwijzigingHuurders />} />
+                        <Route path="accountwijzigingHuurders" element={<AccountwijzigingParticulier />} />
                         <Route path="particulierVoertuigTonen" element={<ParticulierVoertuigTonen />} />
                         <Route path="huurVoertuig" element={<HuurVoertuig />} />
                         <Route path="LoginVoorWijziging" element={<LoginVoorWijziging />} />

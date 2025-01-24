@@ -43,7 +43,7 @@ const HuurVerzoekenList = () => {
             ) : (
                 <ul>
                     {huurverzoeken.map((huurverzoek) => (
-                        <li key={huurverzoek.huurderID}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
+                        <li key={huurverzoek.huurVerzoekId}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
                             <p>Voertuig: {huurverzoek.voertuig.merk} {huurverzoek.voertuig.model}</p>
                             <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
                             <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>

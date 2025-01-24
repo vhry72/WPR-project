@@ -203,7 +203,7 @@ public class HuurverzoekController : ControllerBase
 
     // Werkt bij of een HuurVerzoek is GoedGekeurd of Afgekeurd en of die bevestigd is.
     [HttpPut("KeurGoed/{id}")]
-    public IActionResult Update(Guid id, [FromBody] HuurVerzoekDTO dto)
+    public IActionResult Update(Guid id, [FromBody] HuurverzoekIdDTO dto)
     {
         if (!ModelState.IsValid)
         {
@@ -212,14 +212,14 @@ public class HuurverzoekController : ControllerBase
             return BadRequest(ModelState);
         }
         Console.WriteLine($"Route ID: {id}, DTO ID: {dto.HuurderID}");
-        if (id != dto.HuurderID)
+        if (id != dto.HuurVerzoekId)
         {
             return BadRequest(new { Message = "ID in de route komt niet overeen met het ID in de body." });
         }
         try
         {
             _service.Update(id, dto);
-            return NoContent();
+            return Ok("Het huurverzoek is correct bijgewerkt");
         }
         catch (KeyNotFoundException)
         {

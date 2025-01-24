@@ -162,7 +162,9 @@ const Login = () => {
                             onInput={(e) => setEmail(e.target.value)}
                             className="login-input"
                             onKeyDown={handleKeyPress} 
+
                             aria-label="Vul Emailadres in"
+
                         />
                         <div className="password-input-wrapper">
                             <input
@@ -171,9 +173,11 @@ const Login = () => {
                                 value={password}
                                 onInput={(e) => setPassword(e.target.value)}
                                 className="login-input"
+
                                 onKeyDown={handleKeyPress}
                                 aria-label="Vul wachtwoord in"
                             />
+
                             <span
                                 className="password-toggle-icon"
                                 onClick={() => setShowPassword(!showPassword)}

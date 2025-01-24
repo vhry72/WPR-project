@@ -23,7 +23,8 @@ const FrontofficeTonen = () => {
     }, []);
 
     const handleMedewerkerClick = (medewerkerId) => {
-        navigate(`/FrontofficeDetails/${medewerkerId}`);
+        const data = { medewerkerId };
+        navigate(`/FrontofficeDetails`, { state: data });
     };
 
     const handleToevoegenClick = () => {

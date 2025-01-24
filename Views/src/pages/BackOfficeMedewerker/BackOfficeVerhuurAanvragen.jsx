@@ -11,6 +11,7 @@ const HuurVerzoekenList = () => {
         axios.get('https://localhost:5033/api/Huurverzoek/GetAllActive')
             .then(response => {
                 setActieveVerzoeken(response.data);
+                console.log(response);
                 setLoading(false);
             })
             .catch(err => {
@@ -23,6 +24,7 @@ const HuurVerzoekenList = () => {
         axios.get('https://localhost:5033/api/Huurverzoek/GetAllAfgekeurde')
             .then(response => {
                 setAfgekeurdeVerzoeken(response.data);
+                console.log(response);
             })
             .catch(err => {
                 setError('Er is een fout opgetreden bij het ophalen van afgekeurde huurverzoeken.');
@@ -45,7 +47,7 @@ const HuurVerzoekenList = () => {
     const approveRequest = (id) => {
         axios.put(`https://localhost:5033/api/Huurverzoek/keuring/${id}/true`)
             .then(() => {
-                setActieveVerzoeken(prev => prev.filter(req => req.huurderID !== id));
+                setActieveVerzoeken(prev => prev.filter(req => req.huurVerzoekId !== id));
                 alert('Huurverzoek goedgekeurd!');
             })
             .catch(err => alert(`Fout bij goedkeuren: ${err.message}`));
@@ -54,7 +56,7 @@ const HuurVerzoekenList = () => {
     const weigerRequest = (id) => {
         axios.put(`https://localhost:5033/api/Huurverzoek/keuring/${id}/false`)
             .then(() => {
-                setActieveVerzoeken(prev => prev.filter(req => req.huurderID !== id));
+                setActieveVerzoeken(prev => prev.filter(req => req.huurVerzoekId !== id));
                 fetchAfgekeurdeVerzoeken(); // Werk afgekeurde verzoeken bij
                 alert('Huurverzoek geweigerd!');
             })
@@ -73,15 +75,15 @@ const HuurVerzoekenList = () => {
                 ) : (
                     <ul>
                         {actieveVerzoeken.map((huurverzoek) => (
-                            <li key={huurverzoek.huurderID}>
+                            <li key={huurverzoek.huurVerzoekId}>
                                 <p>Voertuig: {huurverzoek.voertuig.merk} {huurverzoek.voertuig.model}</p>
                                 <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
                                 <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>
                                 <p>Voertuig Beschikbaar: {huurverzoek.voertuig?.voertuigBeschikbaar ? 'Ja' : 'Nee'}</p>
-                                <button onClick={() => approveRequest(huurverzoek.huurderID)}>
+                                <button onClick={() => approveRequest(huurverzoek.huurVerzoekId)}>
                                     Keur verzoek goed
                                 </button>
-                                <button onClick={() => weigerRequest(huurverzoek.huurderID)}>
+                                <button onClick={() => weigerRequest(huurverzoek.huurVerzoekId)}>
                                     Weiger verzoek
                                 </button>
                             </li>
@@ -97,7 +99,7 @@ const HuurVerzoekenList = () => {
                 ) : (
                     <ul>
                         {afgekeurdeVerzoeken.map((huurverzoek) => (
-                            <li key={huurverzoek.huurderID}>
+                            <li key={huurverzoek.huurVerzoekId}>
                                 <p>Voertuig: {huurverzoek.voertuig.merk} {huurverzoek.voertuig.model}</p>
                                 <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
                                 <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>

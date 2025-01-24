@@ -4,22 +4,22 @@ import { UserContext } from "../../context/UserContext";
 import "../../styles/navigatieBalk.css";
 import axios from "axios";
 
-// de correcte layout van het programma met RBAC
+
 const Layout = () => {
     const { userRole, setUserRole } = useContext(UserContext);
     const navigate = useNavigate();
 
-    // navigatie per rol van gebruikers
+ 
     const navLinks = {
         ParticuliereHuurder: [
-            { to: "/instellingen", label: "Instellingen" },
-            { to: "/particulierHuurderDashBoard", label: "Dashboard" },
+            { to: "/accountWijzigingParticulier", label: "Wijzig Gegevens"},
             { to: "/huurVoertuig", label: "Voertuig huren" },
             { to: "/HuurverzoekInzien", label: "Huurverzoek inzien" }
         ],
         ZakelijkeHuurder: [
-            { to: "/instellingen", label: "Instellingen" },
-            { to : "WagenparkBeheerderForm", label : "Voeg een Wagenparkmedewerker toe"},
+            { to: "WagenparkBeheerderForm", label: "Voeg een Wagenparkmedewerker toe" },
+            { to: "/wagenparkWijzigPagina", label: "Wijzig Wagenparkbeheerder" },
+            { to: "/accountwijzigingZakelijk", label: "Wijzig gegevens"}
         ],
         BedrijfsMedewerker: [
             { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },
@@ -27,26 +27,23 @@ const Layout = () => {
             { to: "/HuurverzoekInzien", label: "Huurverzoek inzien" }
         ],
         BackofficeMedewerker: [
-            { to: "/instellingen", label: "Instellingen" },
             { to: "/BackOfficeVerhuuraanvragen", label: "Huur Verzoeken" },
             { to: "/SchadeMeldingen", label: "Schademeldingen" },
             { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken" },
             { to: "/Schadeclaims", label: "Schade claims" },
             { to: "/VoertuigTonen", label: "Wagenpark beheren" },
             { to: "/PrivacyVerklaringWijziging", label: "privacyverklaring Wijzigen" },
-            { to: "/FrontofficeTonen", label: "Frontoffice Beheer" }
+            { to: "/FrontofficeTonen", label: "Frontoffice Beheer" },
+            { to: "/accountWijzigingBackoffice", label: "Wijzig Gegevens"}
 
         ],
         FrontofficeMedewerker: [
-            { to: "/instellingen", label: "Instellingen" },
             { to: "/Schadeclaims", label: "Schadeclaims" },
             { to: "/VoertuigDetails", label: "Voertuig Gegevens" },
             { to: "/VoertuigInenUitname", label: "Voertuigen Verhuur"}
 
         ],
         WagenparkBeheerder: [
-            { to: "/instellingen", label: "Instellingen" },
-            { to: "/BeheerderGegevensWijzigen", label: "Wijzig Beheerder" }, 
             { to: "/wagendashboard", label: "Wagen Dashboard" },
             { to: "/wagenbeheer", label: "Medewerkersbeheer" },
             { to: "/abonnement", label: "Kies Abonnement" },
