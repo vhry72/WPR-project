@@ -13,7 +13,8 @@ const FrontofficeTonen = () => {
         const fetchMedewerkers = async () => {
             try {
                 const response = await axios.get(`${API_URL}/api/FrontOfficeMedewerker/GetAll`);
-                setMedewerkers(response.data);
+                const actieveMedewerkers = response.data.filter(medewerker => medewerker.isActive);
+                setMedewerkers(actieveMedewerkers);
             } catch (error) {
                 console.error("Fout bij het ophalen van medewerkers:", error);
             }

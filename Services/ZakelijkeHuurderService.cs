@@ -51,7 +51,8 @@ namespace WPR_project.Services
                 {
                     beheerderId = wb.beheerderId,
                     beheerderNaam = wb.beheerderNaam,
-                    bedrijfsEmail = wb.bedrijfsEmail
+                    bedrijfsEmail = wb.bedrijfsEmail,
+                    IsActive = wb.IsActive
                 });
             }
 

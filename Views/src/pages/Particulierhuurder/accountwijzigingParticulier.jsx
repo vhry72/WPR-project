@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "../../context/UserContext";
 import "../../styles/styles.css";
 import ParticulierHuurdersRequestService from "../../services/requests/ParticulierHuurderRequestService";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -17,6 +18,7 @@ const AccountwijzigingParticulier = () => {
     });
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const { setUserRole } = useContext(UserContext);
     const navigate = useNavigate();
     const [huurderId, setHuurderId] = useState(null);
 
@@ -104,6 +106,22 @@ const AccountwijzigingParticulier = () => {
         }
     };
 
+    const handleDelete = async () => {
+        if (window.confirm("Weet je zeker dat je je account wilt verwijderen?")) {
+            setIsLoading(true);
+            try {
+                await axios.delete(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`);
+                toast.success("Account succesvol verwijderd.");
+                await JwtService.handleLogout(setUserRole, navigate);
+                navigate("/");
+            } catch (error) {
+                toast.error("Fout bij het verwijderen van het account.");
+            } finally {
+                setIsLoading(false);
+            }
+        }
+    };
+
     return (
         <div className="accountwijziging-container">
             <h1 style={{ color: '#000000'}}>Gebruikersgegevens Wijzigen</h1>
@@ -170,6 +188,10 @@ const AccountwijzigingParticulier = () => {
 
                 <button type="submit" className="submit-button" disabled={isLoading}>
                     {isLoading ? "Bezig met opslaan..." : "Opslaan"}
+                </button>
+
+                <button onClick={handleDelete} disabled={isLoading} className="delete-button">
+                    {isLoading ? "Verwijderen..." : "Verwijder Account"}
                 </button>
 
                 {errorMessage && <p className="error-message">{errorMessage}</p>}

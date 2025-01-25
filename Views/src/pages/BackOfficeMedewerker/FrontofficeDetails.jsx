@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "../../styles/FrontofficeBeheer.css";
+import { toast } from 'react-toastify';
 
 const API_URL = "https://localhost:5033";
 
@@ -22,6 +23,7 @@ const FrontofficeDetails = () => {
                 setFormData({
                     medewerkerNaam: response.data.medewerkerNaam,
                     medewerkerEmail: response.data.medewerkerEmail,
+                    isActive: response.data.isActive,
                 });
             } catch (err) {
                 console.error("Fout bij ophalen medewerkerdetails:", err);
@@ -52,7 +54,7 @@ const FrontofficeDetails = () => {
                 formData
             );
             if (response.status === 200) {
-                alert("Gegevens succesvol bijgewerkt!");
+                toast.success("Gegevens succesvol bijgewerkt!");
                 setMedewerker((prev) => ({ ...prev, ...formData }));
             }
         } catch (err) {
@@ -65,8 +67,8 @@ const FrontofficeDetails = () => {
         const bevestigen = window.confirm("Weet je zeker dat je deze medewerker wilt verwijderen?");
         if (bevestigen) {
             try {
-                await axios.delete(`${API_URL}/api/FrontOfficeMedewerker/Delete/${medewerkerId}`);
-                alert("Medewerker succesvol verwijderd!");
+                await axios.delete(`${API_URL}/api/BackOfficeMedewerker/verwijdermedewerker/${medewerkerId}`);
+                toast.success("Medewerker succesvol verwijderd!");
                 navigate(`/FrontofficeTonen`);
             } catch (err) {
                 console.error("Fout bij het verwijderen van medewerker:", err);

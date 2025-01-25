@@ -79,7 +79,7 @@ namespace WPR_project.Controllers
             try
             {
                 _service.Delete(id);
-                return NoContent();
+                return Ok("De medewerker is verwijderd");
             }
             catch (KeyNotFoundException)
             {

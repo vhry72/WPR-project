@@ -23,21 +23,21 @@ const MedewerkerWijzigPagina = () => {
 
     useEffect(() => {
         const fetchMedewerkers = async () => {
+            if (!beheerderId) return;
             try {
                 const response = await axios.get(`https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/medewerker-object`);
-                if (response.data && response.data.length > 0) {
-                    setMedewerkers(response.data);
+                const actieveMedewerkers = response.data.filter(medewerker => medewerker.isActive);
+                if (actieveMedewerkers.length > 0) {
+                    setMedewerkers(actieveMedewerkers);
                 } else {
-                    toast.error("Geen medewerkers gevonden.");
+                    toast.error("Geen actieve medewerkers gevonden.");
                 }
             } catch (error) {
                 toast.error("Fout bij het laden van medewerker IDs.");
             }
         };
 
-        if (beheerderId) {
-            fetchMedewerkers();
-        }
+        fetchMedewerkers();
     }, [beheerderId]);
 
     useEffect(() => {
@@ -96,6 +96,29 @@ const MedewerkerWijzigPagina = () => {
         }
     };
 
+    const handleDeleteMedewerker = async () => {
+        if (!medewerkerId) {
+            toast.error("Selecteer eerst een medewerker om te verwijderen.");
+            return;
+        }
+
+        const confirmDelete = window.confirm("Weet je zeker dat je deze medewerker wilt verwijderen?");
+        if (confirmDelete) {
+            setIsLoading(true);
+            try {
+                const response = await axios.delete(`https://localhost:5033/api/BedrijfsMedewerkers/${medewerkerId}`);
+                toast.success("Medewerker is succesvol verwijderd!");
+                setMedewerkers(medewerkers.filter(medewerker => medewerker.bedrijfsMedewerkerId !== medewerkerId));
+                setMedewerkerGegevens({ medewerkerNaam: '', medewerkerEmail: '' });
+                setMedewerkerId('');
+                navigate('/');
+            } catch (error) {
+                toast.error("Er is een fout opgetreden bij het verwijderen van de medewerker.");
+            }
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="medewerker-wijzig-container">
             <h1>Wijzig Gegevens van Medewerkers</h1>
@@ -130,6 +153,10 @@ const MedewerkerWijzigPagina = () => {
 
                 <button type="submit" disabled={isLoading || !medewerkerId}>
                     {isLoading ? 'Updating' : 'Update Gegevens'}
+                </button>
+
+                <button onClick={handleDeleteMedewerker} disabled={isLoading || !medewerkerId}>
+                    {isLoading ? 'Verwijderen...' : 'Verwijder Medewerker'}
                 </button>
 
                 <button onClick={ToPasswordReset}>Reset Medewerker Wachtwoord</button>
