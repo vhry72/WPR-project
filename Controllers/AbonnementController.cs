@@ -129,7 +129,10 @@ namespace WPR_project.Controllers
                     AbonnementTermijnen = abonnementDto.AbonnementTermijnen,
                     AbonnementType = abonnementDto.Type,
                     zakelijkeId = abonnementDto.zakelijkeId,
-                    korting = abonnementDto.korting
+                    korting = abonnementDto.korting,
+                    IsActive = true,
+                    status = false
+
                 };
 
                 // Voeg het abonnement toe via de service

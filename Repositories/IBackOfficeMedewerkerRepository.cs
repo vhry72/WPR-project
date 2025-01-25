@@ -16,6 +16,8 @@ namespace WPR_project.Repositories
 
         void DeactivateBackOfficeMedewerker(Guid id);
 
+        void AbonnementKeuring(Guid abonnementId, bool keuring);
+
         void Save();
     }
 }

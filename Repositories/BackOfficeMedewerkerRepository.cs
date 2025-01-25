@@ -8,7 +8,7 @@ namespace WPR_project.Repositories
     {
         private readonly GegevensContext _context;
 
-        public BackOfficeMedewerkerRepository(GegevensContext context)      
+        public BackOfficeMedewerkerRepository(GegevensContext context)
         {
             _context = context;
         }
@@ -74,7 +74,7 @@ namespace WPR_project.Repositories
                 if (user != null)
                 {
 
-                   _context.Users.Remove(user);
+                    _context.Users.Remove(user);
                 }
 
                 _context.BackofficeMedewerkers.Remove(backOfficeMedewerker);
@@ -83,6 +83,21 @@ namespace WPR_project.Repositories
             }
         }
 
+        public void AbonnementKeuring(Guid abonnementId, bool keuring)
+        {
+            var abonnement = _context.Abonnementen.Find(abonnementId);
+
+            if (abonnement == null)
+            {
+                throw new InvalidOperationException("Abonnement not found.");
+            }
+            else
+            {
+                abonnement.status = keuring;
+                _context.SaveChanges();
+            }
+
+        }
 
 
         public void Save()

@@ -35,7 +35,8 @@ const Layout = () => {
             { to: "/VoertuigTonen", label: "Wagenpark beheren" },
             { to: "/PrivacyVerklaringWijziging", label: "privacyverklaring Wijzigen" },
             { to: "/FrontofficeTonen", label: "Frontoffice Beheer" },
-            { to: "/accountWijzigingBackoffice", label: "Wijzig Gegevens"}
+            { to: "/accountWijzigingBackoffice", label: "Wijzig Gegevens" },
+            { to: "/AbonnementKeuren", label: "Abonnementen keuren" }
 
         ],
         FrontofficeMedewerker: [

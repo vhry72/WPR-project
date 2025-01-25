@@ -15,7 +15,7 @@ namespace WPR_project.Services
         private readonly IEmailService _emailService;
         public BackOfficeService(
             IBackOfficeMedewerkerRepository repository,
-            IFrontOfficeMedewerkerRepository frontOfficeMedewerkerRepository, 
+            IFrontOfficeMedewerkerRepository frontOfficeMedewerkerRepository,
             IEmailService emailService)
         {
 
@@ -77,6 +77,19 @@ namespace WPR_project.Services
                 throw new KeyNotFoundException("Frontofficemedewerker niet gevonden.");
             }
         }
-    }
 
+        public void KeuringAbonnement(Guid id, bool keuring)
+        {
+            try
+            {
+                _repository.AbonnementKeuring(id, keuring);
+
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException(e.Message);
+
+            }
+        }
+    }
 }
