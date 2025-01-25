@@ -2,11 +2,12 @@
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import "../../styles/navigatieBalk.css";
-import axios from "axios";
+
+import JwtService from "../../services/JwtService";
 
 
 const Layout = () => {
-    const { userRole, setUserRole } = useContext(UserContext);
+    const { userRole, setUserRole } = useContext(UserContext)
     const navigate = useNavigate();
 
  
@@ -54,16 +55,10 @@ const Layout = () => {
         ],
     };
 
-    const handleLogout = async () => {
-        try {
-            await axios.post("https://localhost:5033/api/Account/logout", {}, { withCredentials: true });
-            setUserRole(null); // Reset de rol
-            localStorage.removeItem("role"); // Verwijder de rol uit localStorage
-            navigate("/"); // Navigeer naar de inlogpagina
-        } catch (error) {
-            console.error("Fout bij uitloggen:", error);
-        }
+    const onLogoutClick = () => {
+        JwtService.handleLogout(setUserRole, navigate);
     };
+
 
     return (
         <>
@@ -81,7 +76,7 @@ const Layout = () => {
                             </Link>
                         ))}
                     {userRole && (
-                        <button onClick={handleLogout} className="logout-button">
+                        <button onClick={onLogoutClick} className="logout-button">
                             Uitloggen
                         </button>
                     )}

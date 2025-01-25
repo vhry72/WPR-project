@@ -11,10 +11,14 @@ const WagenparkWijzigPagina = () => {
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const [beheerderId, setBeheerderId] = useState('');
+    const [error, setError] = useState('');
+    const toastIdGeenActieve = "geen-actieve-toast";
+    const toastIdError = "error-toast";
 
     useEffect(() => {
         const loadBeheerderId = async () => {
-            const id = await JwtService.getUserId(); // JWtservice gebruikt voor vinden Id
+            const id = await JwtService.getUserId(); 
+            console.log("Loaded ID:", id);
             setBeheerderId(id);
         };
 
@@ -23,22 +27,43 @@ const WagenparkWijzigPagina = () => {
 
     useEffect(() => {
         const fetchMedewerkers = async () => {
+
+            if (!beheerderId) {
+                console.log("beheerderId is undefined or not set yet.");
+                return;
+            }
+
             try {
-                const response = await axios.get(`https://localhost:5033/api/ZakelijkeHuurder/${beheerderId}/WagenparkGegevens`);
-                if (response.data && response.data.length > 0) {
-                    setMedewerkers(response.data);
+                const response = await axios.get(
+                    `https://localhost:5033/api/ZakelijkeHuurder/${beheerderId}/WagenparkGegevens`
+                );
+
+
+                const actieveMedewerkers = response.data.filter(
+                    (medewerker) => medewerker.isActive
+                );
+
+                if (actieveMedewerkers.length > 0) {
+                    setMedewerkers(actieveMedewerkers);
                 } else {
-                    toast.error("Geen medewerkers gevonden.");
+                    if (!toast.isActive(toastIdGeenActieve)) {
+                        toast.error("Geen actieve medewerkers gevonden.", {
+                            toastId: toastIdGeenActieve,
+                        });
+                    }
                 }
             } catch (error) {
-                toast.error("Fout bij het laden van medewerker IDs.");
+                if (!toast.isActive(toastIdError)) {
+                    toast.error("Fout bij het laden van medewerker gegevens.", {
+                        toastId: toastIdError,
+                    });
+                }
             }
         };
 
-        if (beheerderId) {
-            fetchMedewerkers();
-        }
-    }, [beheerderId]);
+        fetchMedewerkers();
+    }, [beheerderId]); 
+
 
     useEffect(() => {
         const fetchMedewerkerDetails = async () => {
@@ -75,6 +100,31 @@ const WagenparkWijzigPagina = () => {
         navigate("/WachtwoordResetBeheerder");
     };
 
+    const handleDeleteMedewerker = async () => {
+        if (!medewerkerId) {
+            toast.error("Selecteer eerst een medewerker om te verwijderen.");
+            return;
+        }
+
+        const confirmDelete = window.confirm("Weet je zeker dat je deze medewerker wilt verwijderen?");
+        if (confirmDelete) {
+            setIsLoading(true);
+            try {
+                const response = await axios.delete(`https://localhost:5033/api/WagenparkBeheerder/${medewerkerId}`);
+                toast.success("Medewerker is succesvol verwijderd!");
+                setMedewerkers(medewerkers.filter(medewerker => medewerker.beheerderId !== medewerkerId));
+                setMedewerkerGegevens({ beheerderNaam: '', bedrijfsEmail: '' });
+                setMedewerkerId('');
+                navigate('/');
+            } catch (error) {
+                toast.error("Er is een fout opgetreden bij het verwijderen van de medewerker.");
+                setError(error.message);
+                
+            }
+            setIsLoading(false);
+        }
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsLoading(true);
@@ -82,7 +132,7 @@ const WagenparkWijzigPagina = () => {
         try {
             console.log(medewerkerId);
             console.log(medewerkerGegevens);
-            const response = await axios.put(`https://localhost:5033/api/BedrijfsMedewerkers/${medewerkerId}`, medewerkerGegevens, {
+            const response = await axios.put(`https://localhost:5033/api/WagenparkBeheerder/${medewerkerId}/updateGegevens`, medewerkerGegevens, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -132,8 +182,13 @@ const WagenparkWijzigPagina = () => {
                     {isLoading ? 'Updating' : 'Update Gegevens'}
                 </button>
 
+                <button onClick={handleDeleteMedewerker} disabled={isLoading || !medewerkerId}>
+                    {isLoading ? 'Verwijderen...' : 'Verwijder Medewerker'}
+                </button>
+
                 <button onClick={ToPasswordReset}>Reset Medewerker Wachtwoord</button>
 
+                {error && <p className="error-message">{error}</p>}
             </form>
         </div>
     );

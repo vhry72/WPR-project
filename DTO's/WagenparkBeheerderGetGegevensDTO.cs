@@ -15,5 +15,7 @@ namespace WPR_project.DTO_s
         [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
         public string bedrijfsEmail { get; set; }
 
+        public bool IsActive { get; set; }
+
     }
 }
