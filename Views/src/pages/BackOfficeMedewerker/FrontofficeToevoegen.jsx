@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../../styles/FrontofficeBeheer.css";
+import { v4 as uuidv4 } from 'uuid';
+
+
 
 const API_URL = "https://localhost:5033";
 
@@ -20,13 +23,21 @@ const FrontofficeToevoegen = () => {
 
     const handleToevoegen = async () => {
         try {
-            await axios.post(`${API_URL}/api/Account/register-frontoffice`, {
-                ...formData,
+
+            const payload =
+            {
                 frontofficeMedewerkerId: uuidv4(),
+                medewerkerNaam: formData.medewerkerNaam,
+                medewerkerEmail: formData.medewerkerEmail,
+                wachtwoord: formData.wachtwoord,
                 emailBevestigingToken: uuidv4(),
                 isEmailBevestigd: false,
                 aspNetUserId: "string",
-            });
+                isActive: true,
+            };
+
+            const response = await axios.post(`${API_URL}/api/Account/register-frontoffice`, payload)
+            console.log(response)
             alert("Medewerker succesvol toegevoegd!");
             navigate(`/FrontofficeTonen`);
         } catch (error) {
