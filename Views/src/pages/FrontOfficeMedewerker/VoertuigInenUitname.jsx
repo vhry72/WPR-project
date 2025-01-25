@@ -44,10 +44,14 @@ const HuurVerzoekenList = () => {
         axios.put(`https://localhost:5033/api/Voertuig/veranderBeschikbaar/${voertuigId}/true`)
             .then(() => {
                 if (schade) {
-                    // Verstuur schadegegevens naar de backend
-                    axios.post(`https://localhost:5033/api/SchadeRapport`, {
+                    // Verstuur schadegegevens naar de backend met de juiste API endpoint
+                    axios.post(`https://localhost:5033/api/Schademelding/maak`, {
+                        schademeldingId: null, // Optioneel, afhankelijk van je backend
+                        beschrijving: schade,
+                        datum: new Date().toISOString(),
+                        status: "Nieuw",
+                        opmerkingen: "",
                         voertuigId,
-                        schadeBeschrijving: schade,
                     })
                         .then(() => {
                             alert('Voertuig ingenomen en schade geregistreerd.');
@@ -131,33 +135,34 @@ const HuurVerzoekenList = () => {
             {huurverzoeken.length === 0 ? (
                 <p>Geen Huurverzoeken aangevraagd.</p>
             ) : (
-                <ul>
-                    {huurverzoeken.map((huurverzoek) => {
-                        const voertuig = huurverzoek.voertuig;
-                        const voertuigId = voertuig?.voertuigId;
-                        const VoertuigStatusId = voertuig?.voertuigStatusId;
-                        return (
-                            <li key={huurverzoek.huurderID}>
-                                <p>Voertuig: {voertuig?.merk} {voertuig?.model}</p>
-                                <p>Kleur: {voertuig?.kleur}</p>
-                                <p>Bouwjaar: {voertuig?.bouwjaar}</p>
-                                <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
-                                <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>
-                                <p>Voertuig Beschikbaar: {voertuig?.voertuigBeschikbaar ? 'Ja' : 'Nee'}</p>
+                    <ul>
+                        {huurverzoeken.map((huurverzoek) => {
+                            const voertuig = huurverzoek.voertuig;
+                            const voertuigId = voertuig?.voertuigId;
+                            const VoertuigStatusId = voertuig?.voertuigStatusId;
 
-                                <button onClick={() => geefUit(huurverzoek.huurderID, voertuigId)}>
-                                    Geef Uit
-                                </button>
-                                <button onClick={() => neemIn(huurverzoek.huurderID, voertuigId)}>
-                                    Neem In
-                                </button>
-                                <button onClick={() => zetOpVerhuurd(huurverzoek.huurderID, VoertuigStatusId)}>
-                                    Niet Verhuurd
-                                </button>
-                            </li>
-                        );
-                    })}
-                </ul>
+                            return (
+                                <li key={`${huurverzoek.huurderVerzoekId}`}>
+                                    <p>Voertuig: {voertuig?.merk} {voertuig?.model}</p>
+                                    <p>Kleur: {voertuig?.kleur}</p>
+                                    <p>Bouwjaar: {voertuig?.bouwjaar}</p>
+                                    <p>Begin Datum: {new Date(huurverzoek.beginDate).toLocaleDateString()}</p>
+                                    <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>
+                                    <p>Voertuig Beschikbaar: {voertuig?.voertuigBeschikbaar ? 'Ja' : 'Nee'}</p>
+
+                                    <button onClick={() => geefUit(huurverzoek.huurderVerzoekId, voertuigId)}>
+                                        Geef Uit
+                                    </button>
+                                    <button onClick={() => neemIn(huurverzoek.huurderVerzoekId, voertuigId)}>
+                                        Neem In
+                                    </button>
+                                    <button onClick={() => zetOpVerhuurd(huurverzoek.huurderVerzoekId, VoertuigStatusId)}>
+                                        Niet Verhuurd
+                                    </button>
+                                </li>
+                            );
+                        })}
+                    </ul>
             )}
         </div>
     );
