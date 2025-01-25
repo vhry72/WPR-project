@@ -90,5 +90,29 @@ namespace WPR_project.Services
             _frontOfficeMedewerkerRepository.Save();
         }
 
+        public void HuurverzoekIsCompleted(Guid HuurverzoekId, bool keuring)
+        {
+            try
+            {
+                _frontOfficeMedewerkerRepository.HuurverzoekIsCompleted(HuurverzoekId, keuring);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+        }
+
+        public void schademeldingIsCompleted(Guid schademeldingId, bool keuring)
+        {
+            try
+            {
+                _frontOfficeMedewerkerRepository.schademeldingIsCompleted(schademeldingId, keuring);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+        }
     }
 }
+

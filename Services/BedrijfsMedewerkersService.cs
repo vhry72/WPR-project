@@ -132,9 +132,9 @@ namespace WPR_project.Services
             }
         }
 
-        public IQueryable<SchademeldingDTO> GetAllSchademeldingen()
+        public IQueryable<SchadeMeldingInfoDTO> GetAllSchademeldingen()
         {
-            return _schaderepository.GetAllSchademeldingen().Select(h => new SchademeldingDTO
+            return _schaderepository.GetAllSchademeldingen().Select(h => new SchadeMeldingInfoDTO
             {
                 SchademeldingId = h.SchademeldingId,
                 Beschrijving = h.Beschrijving,
@@ -142,6 +142,7 @@ namespace WPR_project.Services
                 Status = h.Status,
                 Opmerkingen = h.Opmerkingen,
                 VoertuigId = h.VoertuigId,
+                IsAfgehandeld = h.IsAfgehandeld,
                 
             });
         }

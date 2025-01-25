@@ -14,6 +14,10 @@ namespace WPR_project.Repositories
         void DeactivateFrontOffice(Guid id);
         void Save();
 
+        void HuurverzoekIsCompleted(Guid HuurverzoekId, bool keuring);
+
+        void schademeldingIsCompleted(Guid schademeldingId, bool keuring);
+
         IQueryable<FrontofficeMedewerker> Getall();
     }
 }

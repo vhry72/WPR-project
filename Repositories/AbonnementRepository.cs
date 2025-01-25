@@ -32,14 +32,26 @@ namespace WPR_project.Repositories
             return _context.Abonnementen
                 .Where(a => a.vervaldatum >= vandaag && a.vervaldatum <= eenMaandLater)
                 .ToList();
-           
+
 
         }
 
         public Abonnement GetAbonnementById(Guid id)
         {
-            return _context.Abonnementen
-         .FirstOrDefault(a => a.AbonnementId == id);
+            if (id == Guid.Empty)
+            {
+                throw new InvalidOperationException("De HuurverzoekID is niet geldig");
+            }
+            var abonnementen = _context.Abonnementen.FirstOrDefault(a => a.AbonnementId == id);
+
+            if (abonnementen == null)
+            {
+                throw new InvalidOperationException("Het Abonnement kon niet opgehaald worden");
+            }
+            else
+            {
+                return abonnementen;
+            }
         }
 
         public void AddAbonnement(Abonnement abonnement)

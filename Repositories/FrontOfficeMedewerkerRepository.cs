@@ -76,6 +76,26 @@ namespace WPR_project.Repositories
             _context.FrontofficeMedewerkers.Update(frontofficeMedewerker);
         }
 
+        public void HuurverzoekIsCompleted(Guid HuurverzoekId, bool keuring)
+        {
+            var huurverzoek = _context.Huurverzoeken.Find(HuurverzoekId);
+            if (huurverzoek != null)
+            {
+                huurverzoek.IsCompleted = keuring;
+                _context.SaveChanges();
+            }
+        }
+
+        public void schademeldingIsCompleted(Guid schademeldingId, bool keuring)
+        {
+            var schademelding = _context.Schademeldingen.Find(schademeldingId);
+            if (schademelding != null)
+            {
+                schademelding.IsAfgehandeld = keuring;
+                _context.SaveChanges();
+            }
+        }
+
         public void Save()
         {
             _context.SaveChanges();

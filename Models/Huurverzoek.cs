@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Microsoft.Identity.Client;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WPR_project.Models
 {
@@ -13,8 +14,10 @@ namespace WPR_project.Models
         public string? Reden { get; set; }
 
         [ForeignKey("Voertuig")]
-        public Guid VoertuigId { get; set; } 
+        public Guid VoertuigId { get; set; }
 
         public Voertuig Voertuig { get; set; }
+
+        public bool? IsCompleted { get; set; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { v4 as uuidv4 } from "uuid";
+import { toast } from 'react-toastify';
 
 const HuurVerzoekenList = () => {
     const [huurverzoeken, setHuurverzoeken] = useState([]);
@@ -11,7 +13,8 @@ const HuurVerzoekenList = () => {
     const fetchHuurverzoeken = () => {
         axios.get('https://localhost:5033/api/Huurverzoek/GetAllGoedGekeurde')
             .then(response => {
-                setHuurverzoeken(response.data);
+                const filteredHuurverzoeken = response.data.filter(huurverzoek => !huurverzoek.isCompleted);
+                setHuurverzoeken(filteredHuurverzoeken);
                 setLoading(false);
             })
             .catch(err => {
@@ -40,33 +43,47 @@ const HuurVerzoekenList = () => {
 
     const handleSchadeSubmit = () => {
         const { id, voertuigId } = currentInname;
+        const keuring = true;
 
         axios.put(`https://localhost:5033/api/Voertuig/veranderBeschikbaar/${voertuigId}/true`)
             .then(() => {
                 if (schade) {
-                    // Verstuur schadegegevens naar de backend met de juiste API endpoint
-                    axios.post(`https://localhost:5033/api/Schademelding/maak`, {
-                        schademeldingId: null, // Optioneel, afhankelijk van je backend
+                    const payload = {
+                        schademeldingId: uuidv4(),
                         beschrijving: schade,
                         datum: new Date().toISOString(),
                         status: "Nieuw",
-                        opmerkingen: "",
-                        voertuigId,
-                    })
+                        opmerkingen: "geen",
+                        voertuigId: voertuigId,
+                    };
+
+                    axios.post(`https://localhost:5033/api/Schademelding/maak`, payload)
                         .then(() => {
-                            alert('Voertuig ingenomen en schade geregistreerd.');
+                            toast.success('Voertuig ingenomen en schade geregistreerd.');
                         })
-                        .catch(err => alert(`Fout bij schade-registratie: ${err.message}`));
+                        .catch(err => {
+                            toast.error(`Fout bij schade-registratie: ${err.message}`);
+                        });
                 } else {
-                    alert('Voertuig ingenomen zonder schade.');
+                    toast.success('Voertuig ingenomen zonder schade.');
                 }
 
-                // Werk de lijst van huurverzoeken bij
-                setHuurverzoeken(prevState => prevState.filter(req => req.huurderID !== id));
+                // Voeg hier de API-aanroep toe voor de FrontOfficeMedewerker endpoint
+                axios.post(`https://localhost:5033/api/FrontOfficeMedewerker/${id}/${keuring}/Huurverzoek-isCompleted`)
+                    .then(() => {
+                        // Voer hier eventuele vervolgstappen uit na het aanroepen van de API
+                    })
+                    .catch(err => {
+                        toast.error(`Fout bij het updaten van het huurverzoek: ${err.message}`);
+                    });
+
+                setHuurverzoeken(prevState => prevState.filter(req => req.huurVerzoekId !== id));
                 setCurrentInname(null);
                 setSchade('');
             })
-            .catch(err => alert(`Fout bij inname: ${err.message}`));
+            .catch(err => {
+                toast.error(`Fout bij inname: ${err.message}`);
+            });
     };
 
     const geefUit = (id, voertuigId) => {
@@ -76,36 +93,13 @@ const HuurVerzoekenList = () => {
         }
         axios.put(`https://localhost:5033/api/Voertuig/veranderBeschikbaar/${voertuigId}/false`)
             .then(() => {
-                setHuurverzoeken(prevState => prevState.filter(req => req.huurderID !== id));
+                setHuurverzoeken(prevState => prevState.filter(req => req.huurVerzoekId !== id));
                 alert('Voertuig Uitgegeven');
             })
             .catch(err => alert(`Fout bij uitgeven: ${err.message}`));
     };
 
-    const zetOpVerhuurd = (id, VoertuigStatusId) => {
-        if (!VoertuigStatusId) {
-            alert('VoertuigStatusId is niet beschikbaar');
-            return;
-        }
-        axios.put(`https://localhost:5033/api/VoertuigStatus/Verhuur/${VoertuigStatusId}/false`)
-            .then(() => {
-                setHuurverzoeken(prevState =>
-                    prevState.map(req =>
-                        req.huurderID === id
-                            ? {
-                                ...req,
-                                voertuig: {
-                                    ...req.voertuig,
-                                    voertuigStatusId: 'Niet Verhuurd',
-                                }
-                            }
-                            : req
-                    )
-                );
-                alert('Voertuig is nu niet verhuurd');
-            })
-            .catch(err => alert(`Fout bij verhuren: ${err.message}`));
-    };
+
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
@@ -142,7 +136,7 @@ const HuurVerzoekenList = () => {
                             const VoertuigStatusId = voertuig?.voertuigStatusId;
 
                             return (
-                                <li key={`${huurverzoek.huurderVerzoekId}`}>
+                                <li key={`${huurverzoek.huurVerzoekId}`}>
                                     <p>Voertuig: {voertuig?.merk} {voertuig?.model}</p>
                                     <p>Kleur: {voertuig?.kleur}</p>
                                     <p>Bouwjaar: {voertuig?.bouwjaar}</p>
@@ -150,14 +144,11 @@ const HuurVerzoekenList = () => {
                                     <p>Eind Datum: {new Date(huurverzoek.endDate).toLocaleDateString()}</p>
                                     <p>Voertuig Beschikbaar: {voertuig?.voertuigBeschikbaar ? 'Ja' : 'Nee'}</p>
 
-                                    <button onClick={() => geefUit(huurverzoek.huurderVerzoekId, voertuigId)}>
+                                    <button onClick={() => geefUit(huurverzoek.huurVerzoekId, voertuigId)}>
                                         Geef Uit
                                     </button>
-                                    <button onClick={() => neemIn(huurverzoek.huurderVerzoekId, voertuigId)}>
+                                    <button onClick={() => neemIn(huurverzoek.huurVerzoekId, voertuigId)}>
                                         Neem In
-                                    </button>
-                                    <button onClick={() => zetOpVerhuurd(huurverzoek.huurderVerzoekId, VoertuigStatusId)}>
-                                        Niet Verhuurd
                                     </button>
                                 </li>
                             );

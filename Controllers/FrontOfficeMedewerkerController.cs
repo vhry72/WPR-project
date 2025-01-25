@@ -10,10 +10,20 @@ namespace WPR_project.Controllers
     public class FrontOfficeMedewerkerController : ControllerBase
     {
         private readonly FrontOfficeService _service;
+        private readonly HuurverzoekService _huurverzoekService;
+        private readonly SchademeldingService _schademeldingService;
 
-        public FrontOfficeMedewerkerController(FrontOfficeService service)
+        public FrontOfficeMedewerkerController
+            (
+            FrontOfficeService service, 
+            HuurverzoekService huurverzoekService,
+            SchademeldingService schademeldingService
+            )
         {
             _service = service;
+            _huurverzoekService = huurverzoekService;
+            _schademeldingService = schademeldingService;
+
         }
 
         [HttpGet("GetAll")]
@@ -64,6 +74,44 @@ namespace WPR_project.Controllers
             }
         }
 
+        [HttpPost("{HuurverzoekID}/{keuring}/Huurverzoek-isCompleted")]
+        public IActionResult HuurverzoekIsCompleted(Guid HuurverzoekID, bool keuring)
+        {
+            var huurverzoek = _huurverzoekService.GetById(HuurverzoekID);
+            if (huurverzoek == null)
+            {
+                return NotFound(new { Message = "Huurverzoek niet gevonden." });
+            }
+            try
+            {
+                _service.HuurverzoekIsCompleted(HuurverzoekID, keuring);
+                return Ok("Huurverzoek is afgesloten.");
+            }
 
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
+
+        [HttpPost("{schademeldingId}/{keuring}/Schademelding-afgehandeld")]
+        public IActionResult schademeldingIsCompleted(Guid schademeldingId, bool keuring)
+        {
+            var huurverzoek = _schademeldingService.GetById(schademeldingId);
+            if (huurverzoek == null)
+            {
+                return NotFound(new { Message = "Huurverzoek niet gevonden." });
+            }
+            try
+            {
+                _service.schademeldingIsCompleted(schademeldingId, keuring);
+                return Ok("schademelding is afgesloten.");
+            }
+
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
     }
 }
