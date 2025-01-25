@@ -26,6 +26,5 @@ namespace WPR_project.DTO_s
 
         public decimal? korting { get; set; }
 
-
     }
 }

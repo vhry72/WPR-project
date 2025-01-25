@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WPR_project.Data;
 
@@ -11,9 +12,11 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    partial class GegevensContextModelSnapshot : ModelSnapshot
+    [Migration("20250125172952_GoedAfkeurenAbo")]
+    partial class GoedAfkeurenAbo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -60,9 +63,6 @@ namespace WPR_project.Migrations
 
                     b.Property<decimal?>("korting")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("notitie")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("status")
                         .HasColumnType("bit");

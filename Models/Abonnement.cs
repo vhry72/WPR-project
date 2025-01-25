@@ -37,4 +37,8 @@ public class Abonnement
 
     public DateTime? updateDatum { get; set; }
     public bool IsActive { get; set; } = true;
+
+    public bool status { get; set; }
+
+    public string? notitie { get; set; }
 }

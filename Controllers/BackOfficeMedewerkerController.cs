@@ -63,7 +63,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        
+
         [HttpDelete("verwijdermedewerker/{frontOfficeMedewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId)
         {
@@ -132,6 +132,23 @@ namespace WPR_project.Controllers
         }
 
 
-
+        [HttpPost("{Abonnementid}/Keuring/{keuring}")]
+        public IActionResult keuringAbonnement(Guid Abonnementid, bool keuring)
+        {
+            try
+            {
+                _backOfficeService.KeuringAbonnement(Abonnementid, keuring);
+                return Ok(new { Message = "Keuring succesvol uitgevoerd." });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return NotFound(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine($"Fout: {ex.Message}");
+                return StatusCode(500, new { Message = "Er is een interne fout opgetreden.", Details = ex.Message });
+            }
+        }
     }
 }

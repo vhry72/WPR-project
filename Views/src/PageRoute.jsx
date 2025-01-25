@@ -59,6 +59,7 @@ import WagenparkWijzigPagina from "./pages/ZakelijkHuurder/wagenparkWijzigPagina
 import WachtwoordResetBeheerder from "./pages/Beveiliging/WachtwoordResetBeheerder"
 import AccountwijzigingZakelijk from "./pages/Zakelijkhuurder/accountwijzigingZakelijk";
 import AccountwijzigingBackOffice from "./pages/BackOfficeMedewerker/accountWijzigingBackoffice";
+import AbonnementenKeuren from "./pages/BackOfficeMedewerker/AbonnementKeuren";
 
 // De routing van de paginas
 
@@ -106,7 +107,7 @@ function PageRoute() {
                         />
 
                         <Route
-                            path="accountwijzigingHuurders"
+                            path="accountwijzigingParticulier"
                             element={
                                 <PrivateRoute allowedRoles={["ParticuliereHuurder"]}>
                                     <AccountwijzigingParticulier />
@@ -206,6 +207,14 @@ function PageRoute() {
                             element={
                                 <PrivateRoute allowedRoles={["BackofficeMedewerker", "FrontofficeMedewerker"]}>
                                     <SchadeMeldingen />
+                                </PrivateRoute>
+                            }
+                        />
+                        <Route
+                            path="AbonnementKeuren"
+                            element={
+                                <PrivateRoute allowedRoles={["BackofficeMedewerker"]}>
+                                    <AbonnementenKeuren />
                                 </PrivateRoute>
                             }
                         />
