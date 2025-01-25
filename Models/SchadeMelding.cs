@@ -6,16 +6,16 @@ namespace WPR_project.Models
     public class Schademelding
     {
         [Key]
-        public Guid SchademeldingId { get; set; } 
+        public Guid SchademeldingId { get; set; }
 
         [Required]
-        public string Beschrijving { get; set; } 
+        public string Beschrijving { get; set; }
 
         [Required]
-        public DateTime Datum { get; set; } 
+        public DateTime Datum { get; set; }
 
         [Required]
-        public string Status { get; set; } 
+        public string Status { get; set; }
 
         public string Opmerkingen { get; set; }
 
@@ -28,6 +28,8 @@ namespace WPR_project.Models
 
         [ForeignKey("VoertuigId")]
         public Voertuig Voertuig { get; set; }
+
+        public bool? IsAfgehandeld { get; set; }
     }
 }
 

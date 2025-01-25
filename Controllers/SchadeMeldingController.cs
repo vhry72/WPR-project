@@ -54,7 +54,7 @@ namespace WPR_project.Controllers
 
         // ophalen van alle schademeldingen
         [HttpGet]
-        public ActionResult<IQueryable<SchademeldingDTO>> GetAllSchademeldingen()
+        public ActionResult<IQueryable<SchadeMeldingInfoDTO>> GetAllSchademeldingen()
         {
             var meldingen = _service.GetAllSchademeldingen();
             return Ok(meldingen);

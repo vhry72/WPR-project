@@ -12,7 +12,8 @@ const SchadeClaimsList = () => {
     useEffect(() => {
         axios.get('https://localhost:5033/api/Schademelding')
             .then(response => {
-                setSchademeldingen(response.data);
+                const filteredSchademeldingen = response.data.filter(schademelding => !schademelding.isAfgehandeld);
+                setSchademeldingen(filteredSchademeldingen);
                 setLoading(false);
             })
             .catch(err => {
@@ -29,13 +30,18 @@ const SchadeClaimsList = () => {
             })
             .catch(err => alert(`Fout bij goedkeuren: ${err.message}`));
     };
-    const Afgehandeld = (id) => {
-        axios.put(`https://localhost:5033/api/Schademelding/Afgehandeld/${id}/"Afgehandeld"`)
-            .then(() => {
-                setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
-                alert('Schademelding afgehandeld.');
-            })
-            .catch(err => alert(`Fout bij status aanpassing: ${err.message}`));
+
+
+    const Afgehandeld = async (id) => {
+        try {
+            await axios.put(`https://localhost:5033/api/Schademelding/Afgehandeld/${id}/"Afgehandeld"`);
+            setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
+            alert('Schademelding afgehandeld.');
+
+            await axios.post(`https://localhost:5033/api/FrontOfficeMedewerker/${id}/true/Schademelding-afgehandeld`);
+        } catch (err) {
+            alert(`Fout bij status aanpassing: ${err.message}`);
+        }
     };
 
     const handleMaakSchadeClaimClick = () => {
@@ -56,8 +62,8 @@ const SchadeClaimsList = () => {
                 <p>Geen Schadeclaims op het moment.</p>
             ) : (
                 <ul>
-                    {schademeldingen.map((schademelding) => (
-                        <li key={schademelding.schademeldingId}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
+                        {schademeldingen.filter(schademelding => !schademelding.isAfgehandeld).map((schademelding) => (
+                            <li key={schademelding.schademeldingId}> {/* Zorg ervoor dat de juiste ID wordt gebruikt */}
                             <p>Status: {schademelding.status}</p>
                             <p>Beschrijving: {schademelding.beschrijving}</p>
                             <p>Datum: {new Date(schademelding.datum).toLocaleDateString()}</p>
