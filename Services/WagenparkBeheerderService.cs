@@ -6,6 +6,7 @@ using WPR_project.Services.Email;
 
 namespace WPR_project.Services
 {
+    // Service voor het beheren van wagenparkbeheerders
     public class WagenparkBeheerderService
     {
         private readonly IWagenparkBeheerderRepository _repository;
@@ -15,6 +16,7 @@ namespace WPR_project.Services
         private readonly IEmailService _emailService;
         private readonly GegevensContext _context;
 
+        // Constructor: initialiseert de repositories en services
         public WagenparkBeheerderService(
             IWagenparkBeheerderRepository repository,
             IZakelijkeHuurderRepository zakelijkeHuurderRepository,
@@ -32,12 +34,14 @@ namespace WPR_project.Services
         }
 
 
+        // Haal wagenparkbeheerder op via ID
         public WagenparkBeheerder GetBeheerderById(Guid id)
         {
             return _repository.GetBeheerderById(id);
         }
 
 
+        //wijzig het abonnement van een wagenparkbeheerder
         public void UpdateWagenParkBeheerderAbonnement(Guid id, Guid abonnementId)
         {
             var existingBeheerder = _repository.GetBeheerderById(id);
@@ -55,6 +59,7 @@ namespace WPR_project.Services
             }
         }
 
+        // wijzig de wagenparkbeheerder gegevens
         public void updateWagenparkBeheerderGegevens(Guid id, WagenparkBeheerderWijzigDTO dto)
         {
             var huurder = _repository.GetBeheerderById(id);
@@ -67,6 +72,7 @@ namespace WPR_project.Services
             _repository.Save();
         }
 
+        // Haal de gegevens van een wagenparkbeheerder via ID
         public WagenparkBeheerderWijzigDTO GetGegevensById(Guid id)
         {
             var huurder = _repository.GetBeheerderById(id);
@@ -80,6 +86,7 @@ namespace WPR_project.Services
 
         }
 
+        // Deactiveer het account van een wagenparkbeheerder en stuur een bevestigingsmail
         public void DeleteWagenparkBeheerder(Guid id)
         {
             if (id == Guid.Empty)
@@ -107,6 +114,7 @@ namespace WPR_project.Services
         }
 
 
+        // Haal de zakelijke ID op van een wagenparkbeheerder
         public Guid GetZakelijkeId(Guid id)
         {
             var zakelijkeId = _repository.GetZakelijkeId(id);
@@ -118,6 +126,7 @@ namespace WPR_project.Services
             return zakelijkeId;
         }
 
+        // Haal de abonnement ID op van een wagenparkbeheerder
         public Guid GetAbonnementId(Guid id)
         {
             var AbonnementID = _repository.GetAbonnementId(id);

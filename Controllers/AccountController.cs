@@ -8,7 +8,7 @@ using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
 
-
+//  dit is de controller voor het beheren van de verschillende soorten gebruikers
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase
@@ -33,6 +33,7 @@ public class AccountController : ControllerBase
         _logger = logger;
     }
 
+    // hier registreer je de particuliere huurder
     [HttpPost("register-particulier")]
     public async Task<IActionResult> RegisterParticulier([FromBody] ParticulierHuurderRegisterDTO dto)
     {
@@ -77,7 +78,7 @@ public class AccountController : ControllerBase
     }
 
 
-
+    // hier registreer je de zakelijke huurder
     [HttpPost("register-zakelijk")]
     public async Task<IActionResult> RegisterZakelijk([FromBody] ZakelijkeHuurderDTO dto)
     {

@@ -4,6 +4,7 @@ using WPR_project.Services.Email;
 
 namespace WPR_project.Services
 {
+    //dit is de service voor het abonnement
     public class AbonnementService
     {
         private readonly IAbonnementRepository _abonnementRepository;
@@ -101,7 +102,7 @@ namespace WPR_project.Services
             _emailService.SendEmail(medewerker.medewerkerEmail, "Verwijderd uit bedrijfsabonnement", bericht);
         }
 
-
+        // Voeg een nieuw abonnement toe
         public void AddAbonnement(Abonnement abonnement)
         {
             if (abonnement == null)
@@ -114,7 +115,7 @@ namespace WPR_project.Services
         }
 
 
-       
+        // Laad prepaid saldo op voor een wagenparkbeheerder
         public void LaadPrepaidSaldoOp(Guid beheerderId, decimal bedrag)
         {
             var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
@@ -140,6 +141,7 @@ namespace WPR_project.Services
             _emailService.SendEmail(beheerder.bedrijfsEmail, "Prepaid saldo opgewaardeerd", bericht);
         }
 
+        // Wijzig een abonnement met directe kosten
         public void WijzigAbonnementMetDirecteKosten(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
         {
             var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
@@ -156,6 +158,7 @@ namespace WPR_project.Services
             _wagenparkBeheerderRepository.Save();
         }
 
+        // Wijzig een abonnement vanaf de volgende periode
         public void WijzigAbonnementVanafVolgendePeriode(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
         {
             var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
@@ -174,6 +177,7 @@ namespace WPR_project.Services
 
         }
 
+        // Haal de details van een abonnement op
         public Abonnement GetAbonnementDetails(Guid abonnementId)
         {
             var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
