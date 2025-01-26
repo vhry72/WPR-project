@@ -6,6 +6,9 @@
 //using Moq;
 //using WPR_project.Repositories;
 //using WPR_project.Services.Email;
+//using Microsoft.AspNetCore.Identity;
+//using WPR_project.Data;
+//using WPR_project.DTO_s;
 
 //namespace WPR_project.TemporaryTests
 //{
@@ -13,34 +16,59 @@
 //    {
 //        private readonly Mock<IHuurderRegistratieRepository> _mockRepository;
 //        private readonly Mock<IEmailService> _mockEmailService;
-//        private readonly ParticulierHuurderService _service;
+//        private readonly Mock<UserManager<ApplicationUser>> _mockUserManager;
+//        private readonly UserManagerService _service;
+
 
 //        public ParticulierHuurderTests()
 //        {
 //            _mockRepository = new Mock<IHuurderRegistratieRepository>();
 //            _mockEmailService = new Mock<IEmailService>();
-//            _service = new ParticulierHuurderService(_mockRepository.Object, _mockEmailService.Object);
+
+//            Mock the UserManager<ApplicationUser>
+//           var mockUserManager = new Mock<UserManager<ApplicationUser>>(
+//               Mock.Of<IUserStore<ApplicationUser>>(),
+//               null, null, null, null, null, null, null, null);
+
+//            _service = new UserManagerService(
+//                Mock.Of<IConfiguration>(),
+//                Mock.Of<GegevensContext>(),
+//                _mockEmailService.Object,
+//                mockUserManager.Object,
+//                Mock.Of<ILogger<UserManagerService>>());
 //        }
 
 //        [Fact]
-//        public void Registreert_OnjuistEmailadresIngevoerd()
+//        public async Task Registreert_OnjuistEmailadresIngevoerd()
 //        {
-//            // Arrange
-//            var huurder = new ParticulierHuurder
+//            Arrange
+
+//           var huurder = new ParticulierHuurder
+//           {
+//               particulierEmail = "test@example.com",
+//               particulierNaam = "John Doe",
+//               wachtwoord = "Password123!",
+//               adress = "Weimarstraat 24b",
+//               postcode = "1234AB",
+//               woonplaats = "Amsterdam",
+//               telefoonnummer = "+31612345678"
+//           };
+
+//            var huurderDTO = new ParticulierHuurderRegisterDTO
 //            {
-//                particulierEmail = "invalid-bedrijsEmail", // Ongeldig e-mailadres
-//                particulierNaam = "John Doe",
-//                wachtwoord = "Password123!",
-//                adress = "Weimarstraat 24b",
-//                postcode = "1234XZ",
-//                woonplaats = "Amsterdam",
-//                telefoonnummer = "+31612345678"
+//                particulierEmail = huurder.particulierEmail,
+//                particulierNaam = huurder.particulierNaam,
+//                wachtwoord = huurder.wachtwoord,
+//                adress = huurder.adress,
+//                postcode = huurder.postcode,
+//                woonplaats = huurder.woonplaats,
+//                telefoonnummer = huurder.telefoonnummer
 //            };
 
-//            // Act
-//            var ex = Assert.Throws<ArgumentException>(() => _service.Register(huurder));
+//            Act
+//           var ex = await Assert.ThrowsAsync<ArgumentException>(() => _service.RegisterParticulierHuurder(huurderDTO));
 
-//            // Assert
+//            Assert
 //            Assert.Contains("Ongeldig e-mailadres.", ex.Message);
 //        }
 
@@ -91,4 +119,5 @@
 //            Assert.Contains("Validatie mislukt: wachtwoord moet minimaal 8 tekens bevatten.", ex.Message);
 //        }
 //    }
+//}
 //}
