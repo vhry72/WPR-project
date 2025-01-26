@@ -10,7 +10,7 @@ namespace WPR_project.TemporaryTests;
 
     public class ZakelijkVoertuigKiezenTests
     {
-        [Fact] // Testcase 5 Scenario 1: Succesvolle selectie van een voertuig
+        [Fact] // Succesvolle selectie van een voertuig
         public void GetFilteredVoertuigen_ValidCriteria_ReturnsBusinessVehicles()
         {
             // Arrange
@@ -42,7 +42,7 @@ namespace WPR_project.TemporaryTests;
             mockRepo.Verify(repo => repo.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, null), Times.Once);
         }
 
-        [Fact] // Testcase 5 Scenario 2: Geen voertuigen voldoen aan de filtercriteria
+        [Fact] // Geen voertuigen voldoen aan de filtercriteria
         public void GetFilteredVoertuigen_NoMatches_ReturnsEmptyList()
         {
             // Arrange
@@ -65,7 +65,7 @@ namespace WPR_project.TemporaryTests;
             mockRepo.Verify(repo => repo.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, null), Times.Once);
         }
 
-        [Fact] // Testcase 5 Scenario 1: Voertuigdetails worden correct opgehaald
+        [Fact] // Voertuigdetails worden correct opgehaald
         public void GetVoertuigDetails_Success_ReturnsBusinessVehicleDetails()
         {
             // Arrange
