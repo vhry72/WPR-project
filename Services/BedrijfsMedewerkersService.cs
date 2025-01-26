@@ -32,6 +32,7 @@ namespace WPR_project.Services
                 bedrijfsMedewerkerId = medewerker.bedrijfsMedewerkerId,
                 medewerkerNaam = medewerker.medewerkerNaam,
                 medewerkerEmail = medewerker.medewerkerEmail,
+                abonnementId = medewerker.AbonnementId,
             };
         }
 

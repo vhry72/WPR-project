@@ -20,6 +20,7 @@
 //        private readonly Mock<IWagenparkBeheerderRepository> _wagenparkBeheerderRepositoryMock;
 //        private readonly Mock<IEmailService> _emailServiceMock;
 //        private readonly AbonnementService _abonnementService;
+//        private readonly FactuurService _factuurService;
 
 //        public AbonnementenTests()
 //        {
@@ -27,11 +28,11 @@
 //            _zakelijkeHuurderRepositoryMock = new Mock<IZakelijkeHuurderRepository>();
 //            _wagenparkBeheerderRepositoryMock = new Mock<IWagenparkBeheerderRepository>();
 //            _emailServiceMock = new Mock<IEmailService>();
+//            _factuurService = new Mock<FactuurService>();
 
 //            // Instantiate the service with the mocked repositories and email service
 //            _abonnementService = new AbonnementService(
 //                _abonnementRepositoryMock.Object,
-//                _zakelijkeHuurderRepositoryMock.Object,
 //                _wagenparkBeheerderRepositoryMock.Object,
 //                _emailServiceMock.Object
 //            );

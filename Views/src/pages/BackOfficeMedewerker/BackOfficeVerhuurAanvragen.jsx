@@ -45,7 +45,7 @@ const HuurVerzoekenList = () => {
     }, []);
 
     const approveRequest = (id) => {
-        axios.put(`https://localhost:5033/api/Huurverzoek/keuring/${id}/true`)
+        axios.put(`https://localhost:5033/api/Huurverzoek/keuring/${id}/true`, { withCredentials: true })
             .then(() => {
                 setActieveVerzoeken(prev => prev.filter(req => req.huurVerzoekId !== id));
                 alert('Huurverzoek goedgekeurd!');
@@ -54,7 +54,7 @@ const HuurVerzoekenList = () => {
     };
 
     const weigerRequest = (id) => {
-        axios.put(`https://localhost:5033/api/Huurverzoek/keuring/${id}/false`)
+        axios.put(`https://localhost:5033/api/Huurverzoek/keuring/${id}/false`, { withCredentials: true })
             .then(() => {
                 setActieveVerzoeken(prev => prev.filter(req => req.huurVerzoekId !== id));
                 fetchAfgekeurdeVerzoeken(); // Werk afgekeurde verzoeken bij

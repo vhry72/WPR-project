@@ -36,7 +36,7 @@ const FrontofficeToevoegen = () => {
                 isActive: true,
             };
 
-            const response = await axios.post(`${API_URL}/api/Account/register-frontoffice`, payload)
+            const response = await axios.post(`${API_URL}/api/Account/register-frontoffice`, payload, { withCredentials: true });
             console.log(response)
             alert("Medewerker succesvol toegevoegd!");
             navigate(`/FrontofficeTonen`);

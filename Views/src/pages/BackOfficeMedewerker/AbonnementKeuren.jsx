@@ -13,7 +13,7 @@ const AbonnementenKeuren = () => {
     useEffect(() => {
         const fetchAbonnementen = async () => {
             try {
-                const response = await axios.get(`${API_URL}/api/Abonnement`);
+                const response = await axios.get(`${API_URL}/api/Abonnement`, { withCredentials: true });
                 const nu = new Date();
                 const tienDagenGeleden = new Date(nu.setDate(nu.getDate() - 10));
 
@@ -36,7 +36,7 @@ const AbonnementenKeuren = () => {
         const fetchZakelijkeHuurder = async (zakelijkeId) => {
             if (!huurderDetails[zakelijkeId]) {
                 try {
-                    const response = await axios.get(`${API_URL}/api/ZakelijkeHuurder/${zakelijkeId}`);
+                    const response = await axios.get(`${API_URL}/api/ZakelijkeHuurder/${zakelijkeId}`, { withCredentials: true });
                     setHuurderDetails(prev => ({ ...prev, [zakelijkeId]: response.data }));
                 } catch (error) {
                     console.error("Fout bij het ophalen van zakelijke huurder gegevens:", error);
@@ -53,7 +53,7 @@ const AbonnementenKeuren = () => {
 
     const handleKeuring = async (abonnementId, keuring) => {
         try {
-            await axios.post(`${API_URL}/api/BackOfficeMedewerker/${abonnementId}/Keuring/${keuring}`);
+            await axios.post(`${API_URL}/api/BackOfficeMedewerker/${abonnementId}/Keuring/${keuring}`, { withCredentials: true });
             toast.success("Keuring is succesvol uitgevoerd");
             if (keuring) { 
                 setAbonnementen(prev => prev.filter(ab => ab.abonnementId !== abonnementId));

@@ -1,4 +1,6 @@
-﻿using WPR_project.Models;
+﻿using Microsoft.AspNetCore.Mvc;
+using WPR_project.DTO_s;
+using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
 
@@ -10,15 +12,18 @@ namespace WPR_project.Services
         private readonly IAbonnementRepository _abonnementRepository;
         private readonly IWagenparkBeheerderRepository _wagenparkBeheerderRepository;
         private readonly IEmailService _emailService;
+        private readonly FactuurService _factuurService;
 
         public AbonnementService(
             IAbonnementRepository abonnementRepository,
             IWagenparkBeheerderRepository wagenparkBeheerderRepository,
-            IEmailService emailService)
+            IEmailService emailService,
+            FactuurService factuurService)
         {
             _abonnementRepository = abonnementRepository;
             _wagenparkBeheerderRepository = wagenparkBeheerderRepository;
             _emailService = emailService;
+            _factuurService = factuurService;
         }
 
         public IEnumerable<Abonnement> GetAllAbonnementen()
@@ -63,7 +68,7 @@ namespace WPR_project.Services
             // Sla de wijzigingen op
             _wagenparkBeheerderRepository.Save();
 
-        string bericht = $@"
+            string bericht = $@"
          Beste {medewerker.medewerkerNaam},
 
          U bent toegevoegd als medewerker bij het bedrijfsabonnement.
@@ -96,26 +101,31 @@ namespace WPR_project.Services
 
             // Sla de wijzigingen op
             _wagenparkBeheerderRepository.Save();
-        
-        // Bevestiging via e-mail sturen
-        string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent verwijderd uit het bedrijfsabonnement.";
+
+            // Bevestiging via e-mail sturen
+            string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent verwijderd uit het bedrijfsabonnement.";
             _emailService.SendEmail(medewerker.medewerkerEmail, "Verwijderd uit bedrijfsabonnement", bericht);
         }
 
+
         // Voeg een nieuw abonnement toe
         public void AddAbonnement(Abonnement abonnement)
+
         {
             if (abonnement == null)
             {
                 throw new ArgumentNullException(nameof(abonnement), "Abonnement mag niet null zijn.");
             }
-
+            
+            
             _abonnementRepository.AddAbonnement(abonnement);
             _abonnementRepository.Save();
+            StuurFactuur(id, abonnement.AbonnementId);
         }
 
 
         // Laad prepaid saldo op voor een wagenparkbeheerder
+
         public void LaadPrepaidSaldoOp(Guid beheerderId, decimal bedrag)
         {
             var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
@@ -141,40 +151,18 @@ namespace WPR_project.Services
             _emailService.SendEmail(beheerder.bedrijfsEmail, "Prepaid saldo opgewaardeerd", bericht);
         }
 
-        // Wijzig een abonnement met directe kosten
-        public void WijzigAbonnementMetDirecteKosten(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
+
+
+        public void WijzigAbonnementVanafVolgendePeriode(AbonnementWijzigDTO dto)
         {
-            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
-            if (beheerder == null) throw new KeyNotFoundException("Beheerder niet gevonden.");
-
-            var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
-            if (abonnement == null) throw new KeyNotFoundException("Abonnement niet gevonden.");
-
-            beheerder.HuidigAbonnement = abonnement;
-            beheerder.AbonnementType = abonnementType;
-            beheerder.updateDatumAbonnement = DateTime.Now;
-
-            _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
-            _wagenparkBeheerderRepository.Save();
-        }
-
-        // Wijzig een abonnement vanaf de volgende periode
-        public void WijzigAbonnementVanafVolgendePeriode(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
-        {
-            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
-            if (beheerder == null) throw new KeyNotFoundException("Beheerder niet gevonden.");
-
-            var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
-            if (abonnement == null) throw new KeyNotFoundException("Abonnement niet gevonden.");
-
-            beheerder.HuidigAbonnement = abonnement;
-            beheerder.AbonnementType = abonnementType;
-
-            
-            _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
-            _wagenparkBeheerderRepository.Save();
-
-
+            try
+            {
+                _abonnementRepository.UpdateInToekomst(dto);
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
         }
 
         // Haal de details van een abonnement op
@@ -199,6 +187,31 @@ namespace WPR_project.Services
 
             // Retourneer het bijgewerkte abonnement
             return abonnement;
+        }
+
+        public void StuurFactuur(Guid beheerderId, Guid abonnementId)
+        {
+            try
+            {
+                // Genereer de PDF
+                var pdfBytes = _factuurService.GenerateInvoicePDF(beheerderId, abonnementId);
+                var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
+                if (beheerder == null)
+                    throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
+
+                // Stuur de e-mail met de PDF als bijlage
+                string subject = "Factuur voor uw nieuwe abonnement";
+                string body = "Bijgevoegd vindt u uw factuur.";
+                _emailService.SendEmailWithAttachment(beheerder.bedrijfsEmail, subject, body, pdfBytes, "Factuur.pdf");
+            }
+            catch (KeyNotFoundException ex)
+            {
+                throw new KeyNotFoundException(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

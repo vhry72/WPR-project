@@ -42,8 +42,7 @@ function BedrijfsAbonnement() {
 
             try {
                 const response = await axios.get(
-                    `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/zakelijkeId`
-                );
+                    `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/zakelijkeId`, { withCredentials: true });
                 setZakelijkeId(response.data.zakelijkeId); //  zakelijkeId moet overeenkomen voor APi response
             } catch (error) {
                 console.error("Fout bij het ophalen van de zakelijke ID:", error);
@@ -82,7 +81,7 @@ function BedrijfsAbonnement() {
 
             // Verstuur de factuur naar de API
             console.log(payload);
-            await axios.post(`${API_URL}/${beheerderId}/abonnement/maken`, payload);
+            await axios.post(`${API_URL}/${beheerderId}/abonnement/maken`, payload, { withCredentials: true });
             setFactuurVerstuurd(true);
         } catch (error) {
             console.error("Fout bij het versturen van de factuur:", error);

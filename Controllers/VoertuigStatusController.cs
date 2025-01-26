@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WPR_project.Services;
 
 namespace WPR_project.Controllers
@@ -27,6 +28,8 @@ namespace WPR_project.Controllers
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
             }
         }
+
+        [Authorize(Roles = "Frontofficemedewerker")]
         [HttpPut("Verhuur/{id}/{verhuurd}")]
         public IActionResult neemIn(Guid id, bool verhuurd)
         {
@@ -47,6 +50,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "Frontofficemedewerker")]
         [HttpPut("Schade/{id}/{schade}")]
         public IActionResult UpdateSchade(Guid id, bool schade)
         {
@@ -67,6 +71,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "Frontofficemedewerker")]
         [HttpPut("Onderhoud/{id}/{onderhoud}")]
         public IActionResult UpdateOnderhoud(Guid id, bool onderhoud)
         {

@@ -47,9 +47,8 @@ function WijzigBedrijfsAbonnement() {
 
             try {
                 const response = await axios.get(
-                    `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/zakelijkeId`
-                );
-                setZakelijkeId(response.data.zakelijkeId); // Veronderstel dat zakelijkeId juist is in de API-respons
+                    `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/zakelijkeId`, { withCredentials: true });
+                setZakelijkeId(response.data.zakelijkeId);
             } catch (error) {
                 console.error("Fout bij het ophalen van de zakelijke ID:", error);
                 setError("Kan zakelijke ID niet ophalen. Controleer de API of netwerkverbinding.");
@@ -70,8 +69,7 @@ function WijzigBedrijfsAbonnement() {
 
             try {
                 const response = await axios.get(
-                    `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/AbonnementId`
-                );
+                    `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/AbonnementId`, { withCredentials: true });
                 setAbonnementId(response.data.abonnementId);
             } catch (error) {
                 console.error("Fout bij het ophalen van de Abonnement id:", error);
@@ -116,7 +114,7 @@ function WijzigBedrijfsAbonnement() {
             };
 
             console.log(payload);
-            await axios.post(`${API_URL}/${beheerderId}/abonnement/wijzig`, payload);
+            await axios.post(`${API_URL}/${beheerderId}/abonnement/wijzig`, payload, { withCredentials: true });
             setWijzigingVerstuurd(true);
         } catch (error) {
             console.error("Fout bij het versturen van de factuur:", error);

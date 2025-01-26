@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import JwtService from "../../services/JwtService";
+import { toast } from 'react-toastify';
 
 const HuurVoertuig = () => {
     const navigate = useNavigate();
@@ -14,13 +15,26 @@ const HuurVoertuig = () => {
     useEffect(() => {
         const executeSteps = async () => {
             try {
-                const userId = await JwtService.getUserRole();
-                if (!userId) {
+                const role = await JwtService.getUserRole();
+                const userId = await JwtService.getUserId();
+                if (!role) {
                     setErrorMessage("Geen Huurder rol gevonden.");
                     setLoading(false);
                     return;
                 }
-                setUserRole(userId);
+                setUserRole(role);
+
+                if (role === 'Bedrijfsmedewerker') {
+                    const response = await fetch(`https://localhost:5033/api/BedrijfsMedewerkers/${userId}`, { withCredentials: true });
+                    const data = await response.json();
+                    console.log(response);
+
+                    if (!response.ok || !data.abonnementId) {
+                        toast.error("U maakt geen deel uit van een bedrijfsabonnement. Neem contact op met uw wagenparkbeheerder.");
+                        navigate('/');
+                        return;
+                    }
+                }
             } catch (error) {
                 console.error("Er is een fout opgetreden:", error);
                 setErrorMessage("Er is een fout opgetreden tijdens het laden van de gegevens.");
@@ -80,7 +94,7 @@ const HuurVoertuig = () => {
 
         if (userRole === "ParticuliereHuurder") {
             navigate('/particulierVoertuigTonen', { state: reservationData });
-        } else if (userRole === "BedrijfsMedewerker") {
+        } else if (userRole === "Bedrijfsmedewerker") {
             navigate('/ZakelijkAutoTonen', { state: reservationData });
         }
     };

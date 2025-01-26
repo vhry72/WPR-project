@@ -44,7 +44,7 @@ const VoertuigDetails = () => {
             };
             console.log(voertuigId);
             console.log(payload);
-            const response = await axios.put(`https://localhost:5033/api/Voertuig/maaknotitie/${id}`, payload);
+            const response = await axios.put(`https://localhost:5033/api/Voertuig/maaknotitie/${id}`, payload, { withCredentials: true });
 
             if (response.status === 200) {
                 alert("Notitie succesvol bijgewerkt!");

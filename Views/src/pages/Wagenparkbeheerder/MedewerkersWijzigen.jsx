@@ -25,7 +25,7 @@ const MedewerkerWijzigPagina = () => {
         const fetchMedewerkers = async () => {
             if (!beheerderId) return;
             try {
-                const response = await axios.get(`https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/medewerker-object`);
+                const response = await axios.get(`https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/medewerker-object`, { withCredentials: true });
                 const actieveMedewerkers = response.data.filter(medewerker => medewerker.isActive);
                 if (actieveMedewerkers.length > 0) {
                     setMedewerkers(actieveMedewerkers);
@@ -45,7 +45,7 @@ const MedewerkerWijzigPagina = () => {
             if (!medewerkerId) return;
             setIsLoading(true);
             try {
-                const response = await axios.get(`https://localhost:5033/api/BedrijfsMedewerkers/${medewerkerId}/gegevens`);
+                const response = await axios.get(`https://localhost:5033/api/BedrijfsMedewerkers/${medewerkerId}/gegevens`, { withCredentials: true });
                 if (response.data) {
                     setMedewerkerGegevens({
                         medewerkerNaam: response.data.medewerkerNaam,
@@ -82,11 +82,7 @@ const MedewerkerWijzigPagina = () => {
         try {
             console.log(medewerkerId);
             console.log(medewerkerGegevens);
-           const response = await axios.put(`https://localhost:5033/api/BedrijfsMedewerkers/${medewerkerId}`, medewerkerGegevens, {
-                headers: {
-                'Content-Type': 'application/json'
-            }
-           });
+            const response = await axios.put(`https://localhost:5033/api/BedrijfsMedewerkers/${medewerkerId}`, medewerkerGegevens, { withCredentials: true, headers: { 'Content-Type': 'application/json' } });
             console.log(response);
             toast.success("De gegevens zijn succesvol aangepast!");
             navigate('/');
@@ -106,7 +102,7 @@ const MedewerkerWijzigPagina = () => {
         if (confirmDelete) {
             setIsLoading(true);
             try {
-                const response = await axios.delete(`https://localhost:5033/api/BedrijfsMedewerkers/${medewerkerId}`);
+                const response = await axios.delete(`https://localhost:5033/api/BedrijfsMedewerkers/${medewerkerId}`, { withCredentials: true });
                 toast.success("Medewerker is succesvol verwijderd!");
                 setMedewerkers(medewerkers.filter(medewerker => medewerker.bedrijfsMedewerkerId !== medewerkerId));
                 setMedewerkerGegevens({ medewerkerNaam: '', medewerkerEmail: '' });

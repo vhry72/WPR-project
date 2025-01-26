@@ -37,8 +37,7 @@ function Abonnement() {
     const fetchAbonnementId = async () => {
         try {
             const response = await axios.get(
-                `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/AbonnementId`
-            );
+                `https://localhost:5033/api/WagenparkBeheerder/${beheerderId}/AbonnementId`, { withCredentials: true });
             setAbonnementId(response.data.abonnementId);
             return response.data.abonnementId;
         } catch (error) {

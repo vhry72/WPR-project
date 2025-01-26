@@ -2,6 +2,7 @@
 using WPR_project.Services;
 using WPR_project.DTO_s;
 using WPR_project.Services.Email;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
 // dit is de controller voor de abonnementen van de wagenparkbeheerder en de zakelijke huurder
@@ -47,7 +48,7 @@ namespace WPR_project.Controllers
         }
 
 
-        // Hier maak je een abonnement aan voor de zakelijke huurder
+        [Authorize(Roles = "WagenparkBeheerder")]
         [HttpPost("{beheerderId}/abonnement/maken")]
         public IActionResult MaakBedrijfsAbonnement(Guid beheerderId, [FromBody] AbonnementDTO abonnementDto)
         {
@@ -101,7 +102,7 @@ namespace WPR_project.Controllers
                 };
 
                 // Voeg het abonnement toe via de service
-                _service.AddAbonnement(nieuwAbonnement);
+                _service.AddAbonnement(nieuwAbonnement, beheerderId);
 
                 // Beheerder koppelen aan abonnement
                 _WagenparkService.UpdateWagenParkBeheerderAbonnement(beheerderId, nieuwAbonnement.AbonnementId);
@@ -115,7 +116,9 @@ namespace WPR_project.Controllers
         }
 
 
-        // Hier kun je het saldo van een zakelijke huurder opwaarderen
+
+        [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpPost("{beheerderId}/saldo/opwaarderen")]
         public IActionResult LaadSaldoOp(Guid zakelijkeId, [FromBody] decimal bedrag)
         {
@@ -132,7 +135,9 @@ namespace WPR_project.Controllers
         }
 
 
-        // Hier voeg je een medewerker toe aan een abonnement
+
+        [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpPost("{beheerderId}/medewerker/toevoegen/{medewerkerId}")]
         public IActionResult VoegMedewerkerToe(Guid beheerderId, Guid medewerkerId)
         {
@@ -149,7 +154,9 @@ namespace WPR_project.Controllers
             }
         }
 
-        // Hier verwijder je een medewerker van een abonnement
+
+        [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpDelete("{beheerderId}/medewerker/verwijderen/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid beheerderId, Guid medewerkerId)
         {
@@ -169,7 +176,9 @@ namespace WPR_project.Controllers
         }
 
 
-        // Hier haal je het huidige abonnement van een wagenparkbeheerder op
+
+        [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpGet("{beheerderId}/huidig-abonnement")]
         public IActionResult GetHuidigAbonnement(Guid beheerderId)
         {
@@ -189,7 +198,9 @@ namespace WPR_project.Controllers
             }
         }
 
-        // Hier kun je een bestaand abonnement wijzigen
+
+        [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpPost("{beheerderId}/abonnement/wijzig")]
         public IActionResult WijzigAbonnement(Guid beheerderId, [FromBody] AbonnementWijzigDTO abonnement)
         {
@@ -205,62 +216,15 @@ namespace WPR_project.Controllers
 
             try
             {
-                // Controle of directZichtbaar of volgendePeriode correct zijn ingesteld
-                if (abonnement.directZichtbaar == true)
-                {
-                    _service.WijzigAbonnementMetDirecteKosten(beheerderId, abonnement.AbonnementId, abonnement.AbonnementType);
-                }
-                else if (abonnement.AantalDagen.HasValue && abonnement.AantalDagen > 0)
-                {
-                    _service.WijzigAbonnementVanafVolgendePeriode(beheerderId, abonnement.AbonnementId, abonnement.AbonnementType);
-                }
-                else
-                {
-                    return BadRequest(new { Error = "Geef aan of de wijziging direct zichtbaar moet zijn of vanaf de volgende periode moet ingaan." });
-                }
-
+                _service.WijzigAbonnementVanafVolgendePeriode(abonnement);
                 return Ok(new { Message = "Abonnement succesvol gewijzigd." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { Error = ex.Message });
+
             }
             catch (InvalidOperationException ex)
             {
                 return BadRequest(new { Error = ex.Message });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Error = "Er is een interne fout opgetreden.", Details = ex.Message });
-            }
-        }
 
-        [HttpPost("{beheerderId}/factuur/stuur")]
-        public IActionResult StuurFactuur(Guid beheerderId, [FromBody] Guid abonnementId)
-        {
-            try
-            {
-                // Genereer de PDF
-                var pdfBytes = _factuurService.GenerateInvoicePDF(beheerderId, abonnementId);
-                var beheerder = _WagenparkService.GetBeheerderById(beheerderId);
-                if (beheerder == null)
-                    throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
-
-                // Stuur de e-mail met de PDF als bijlage
-                string subject = "Factuur voor uw nieuwe abonnement";
-                string body = "Bijgevoegd vindt u uw factuur.";
-                _emailService.SendEmailWithAttachment(beheerder.bedrijfsEmail, subject, body, pdfBytes, "Factuur.pdf");
-
-                return Ok(new { Message = "Factuur succesvol verstuurd." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { Error = ex.Message });
-            }
         }
     }
 }

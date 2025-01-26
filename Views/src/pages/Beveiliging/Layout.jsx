@@ -23,7 +23,6 @@ const Layout = () => {
             { to: "/accountwijzigingZakelijk", label: "Wijzig gegevens"}
         ],
         Bedrijfsmedewerker: [
-            { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },
             { to: "/huurVoertuig", label: "Auto's huren" },
             { to: "/HuurverzoekInzien", label: "Huurverzoek inzien" }
         ],

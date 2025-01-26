@@ -23,8 +23,7 @@ const WagenbeheerDashboard = () => {
                 const userId = await JwtService.getUserId();
                 setBeheerderId(userId);
                 const response = await axios.get(
-                    `https://localhost:5033/api/WagenparkBeheerder/${userId}/medewerker-object`
-                );
+                    `https://localhost:5033/api/WagenparkBeheerder/${userId}/medewerker-object`, { withCredentials: true });
                 setAlleMedewerkers(response.data);
                 // Filter de medewerkers met een abonnement en voeg ze toe aan de lijst
                 const medewerkersMetAbonnement = response.data.filter(m => m.abonnementId !== null);
@@ -62,8 +61,7 @@ const WagenbeheerDashboard = () => {
             }
 
             await axios.post(
-                `https://localhost:5033/api/Abonnement/${beheerderId}/medewerker/toevoegen/${medewerker.bedrijfsMedewerkerId}`
-            );
+                `https://localhost:5033/api/Abonnement/${beheerderId}/medewerker/toevoegen/${medewerker.bedrijfsMedewerkerId}`, { withCredentials: true });
 
             const updatedMedewerkers = [...medewerkers, medewerker];
             setMedewerkers(updatedMedewerkers);
@@ -89,8 +87,7 @@ const WagenbeheerDashboard = () => {
             const medewerker = medewerkers.find((m) => m.medewerkerEmail === email);
 
             await axios.delete(
-                `https://localhost:5033/api/Abonnement/${beheerderId}/medewerker/verwijderen/${medewerker.bedrijfsMedewerkerId}`
-            );
+                `https://localhost:5033/api/Abonnement/${beheerderId}/medewerker/verwijderen/${medewerker.bedrijfsMedewerkerId}`, { withCredentials: true });
 
             const updatedMedewerkers = medewerkers.filter((m) => m.medewerkerEmail !== email);
             setMedewerkers(updatedMedewerkers);

@@ -52,8 +52,10 @@ namespace WPR_project.Services
             return _voertuigRepository.GetVoertuigTypeVoertuigen(voertuigType);
         }
 
+
         // wijzig de gegevens van een voertuig
         public void veranderGegevens(Guid id, VoertuigWijzigingDTO DTO)
+
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);
             if (voertuig == null)
@@ -61,14 +63,22 @@ namespace WPR_project.Services
                 throw new KeyNotFoundException("Voertuig niet gevonden.");
             }
 
-            voertuig.prijsPerDag = DTO.prijsPerDag;
-            voertuig.kleur = DTO.kleur;
-            voertuig.kenteken = DTO.kenteken;
+            voertuig.merk = dto.merk;
+            voertuig.model = dto.model;
+            voertuig.kleur = dto.kleur;
+            voertuig.prijsPerDag = dto.prijsPerDag;
+            voertuig.bouwjaar = dto.bouwjaar;
+            voertuig.kenteken = dto.kenteken;
+            voertuig.AantalDeuren = dto.AantalDeuren;
+            voertuig.AantalSlaapplekken = dto.AantalSlaapplekken;
+            voertuig.Afbeelding = dto.Afbeelding;
 
             _voertuigRepository.updateVoertuig(voertuig);
         }
 
+
         // Wijzig de beschikbaarheid van een voertuig
+
         public void UpdateVoertuig(Guid id, VoertuigDTO DTO)
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);

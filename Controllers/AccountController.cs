@@ -122,6 +122,7 @@ public class AccountController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Backofficemedewerker")]
     [HttpPost("register-backoffice")]
     public async Task<IActionResult> RegisterBackoffice([FromBody] BackofficeMedewerker dto)
     {
@@ -160,6 +161,7 @@ public class AccountController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Backofficemedewerker")]
     [HttpPost("register-frontoffice")]
     public async Task<IActionResult> RegisterFrontoffice([FromBody] FrontofficeMedewerker dto)
     {
@@ -192,6 +194,7 @@ public class AccountController : ControllerBase
             // Verstuur QR code als e-mailbijlage
             await _emailService.SendEmailWithImage(dto.medewerkerEmail, "2FA QR-code",
                 "Hierbij je QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
+            await _emailService.SendEmailAsync(dto.medewerkerEmail, "Inloggegevens", $"Hierbij je inloggegevens voor je account bij CarAndAll:\nUsername: {dto.medewerkerEmail}\nPassword: {dto.wachtwoord}");
 
             return Ok(new { Message = "Frontoffice medewerker succesvol geregistreerd." });
         }
@@ -201,6 +204,7 @@ public class AccountController : ControllerBase
         }
     }
 
+    [Authorize(Roles = "Wagenparkbeheerder")]
     [HttpPost("register-bedrijfsmedewerker")]
     public async Task<IActionResult> RegisterBedrijfsMedewerker([FromBody] BedrijfsmedewerkerRegDTO dto)
     {
@@ -233,6 +237,7 @@ public class AccountController : ControllerBase
             // Verstuur QR code als e-mailbijlage
             await _emailService.SendEmailWithImage(dto.medewerkerEmail, "2FA QR-code",
                 "Hierbij je QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
+            await _emailService.SendEmailAsync(dto.medewerkerEmail, "Inloggegevens", $"Hierbij je inloggegevens voor je account bij CarAndAll:\nUsername: {dto.medewerkerEmail}\nPassword: {dto.wachtwoord}");
 
             return Ok(new { Message = "Bedrijfsmedewerker succesvol geregistreerd." });
         }
@@ -242,7 +247,7 @@ public class AccountController : ControllerBase
         }
     }
 
-
+    [Authorize(Roles = "ZakelijkeHuurder")]
     [HttpPost("register-wagenparkbeheerder")]
     public async Task<IActionResult> RegisterWagenparkbeheerder([FromBody] WagenparkBeheerderDTO dto)
     {
@@ -274,6 +279,7 @@ public class AccountController : ControllerBase
             // Verstuur QR code als e-mailbijlage
             await _emailService.SendEmailWithImage(dto.bedrijfsEmail, "2FA QR-code",
                 "Hierbij je QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
+            await _emailService.SendEmailAsync(dto.bedrijfsEmail, "Inloggegevens", $"Hierbij je inloggegevens voor je account bij CarAndAll:\nUsername: {dto.bedrijfsEmail}\nPassword: {dto.wachtwoord}");
 
             return Ok(new { Message = "Wagenparkbeheerder succesvol geregistreerd." });
         }
@@ -329,7 +335,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpGet("user-info")]
-    [Authorize] // Zorg ervoor dat alleen geauthenticeerde gebruikers toegang hebben
+    [Authorize] 
     public IActionResult GetUserInfo()
     {
         try
@@ -400,6 +406,7 @@ public class AccountController : ControllerBase
 
         return Ok(new { Role = role });
     }
+
 
     [HttpPost("logout")]
     public IActionResult Logout()

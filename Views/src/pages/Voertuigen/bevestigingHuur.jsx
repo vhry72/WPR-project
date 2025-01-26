@@ -41,21 +41,16 @@ const BevestigingHuur = () => {
 
                 if (userRole === "ParticuliereHuurder") {
                     const huurderResponse = await axios.get(
-                        `https://localhost:5033/api/ParticulierHuurder/${huurderId}`);
+                        `https://localhost:5033/api/ParticulierHuurder/${huurderId}`, { withCredentials: true });
                     console.log("Particulier Huurder Data:", huurderResponse.data);
+                    setHuurderNaam(huurderResponse.data.particulierNaam);
                 } else if (userRole === "Bedrijfsmedewerker") {
                     const huurderResponse = await axios.get(
-                        `https://localhost:5033/api/BedrijfsMedewerkers/${huurderId}`);
+                        `https://localhost:5033/api/BedrijfsMedewerkers/${huurderId}`, { withCredentials: true });
                     console.log("Zakelijk Huurder Data:", huurderResponse.data);
+                    setHuurderNaam(huurderResponse.data.medewerkerNaam);
                 }
-                console.log(huurderResponse.data);
-                if (huurderResponse?.data) {
-                    setHuurderNaam(
-                        huurderResponse.data.particulierNaam || // Voor particulier
-                        huurderResponse.data.medewerkerNaam || // Voor zakelijk
-                        "Huurder" // Fallback bij geen naam
-                    );
-                }
+
             } catch (error) {
                 console.error("Fout bij het ophalen van huurdergegevens:", error);
             }

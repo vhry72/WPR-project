@@ -3,6 +3,7 @@ using WPR_project.Models;
 using WPR_project.Services;
 using WPR_project.DTO_s;
 using WPR_project.Services.Email;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
 {
@@ -18,7 +19,7 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder")]
         [HttpGet("{id}/zakelijkeId")]
         public ActionResult<ZakelijkHuurderIdDTO> GetZakelijkeID(Guid id)
         {
@@ -33,7 +34,7 @@ namespace WPR_project.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder")]
         [HttpGet("{id}/AbonnementId")]
         public ActionResult<AbonnementIdDTO> GetAbonnementID(Guid id)
         {
@@ -49,7 +50,7 @@ namespace WPR_project.Controllers
         }
 
 
-
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder")]
         [HttpGet("verhuurdevoertuigen/{medewerkerId}")]
         public ActionResult<IEnumerable<Huurverzoek>> GetVerhuurdeVoertuigen(Guid medewerkerId)
         {
@@ -65,7 +66,7 @@ namespace WPR_project.Controllers
         }
 
 
-        // haal de medewerkers bij een wagenparkbeheerder op
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder")]
         [HttpGet("{id}/medewerkers")]
         public IActionResult GetMedewerkersIds(Guid id)
         {
@@ -88,9 +89,9 @@ namespace WPR_project.Controllers
             }
         }
 
-    
 
 
+        [Authorize(Roles = "ZakelijkeHuurder")]
         [HttpDelete("{id}")]
         public IActionResult DeleteWagenparkbeheerder(Guid id)
         {
@@ -110,8 +111,7 @@ namespace WPR_project.Controllers
         }
 
 
-        // haalt de medewerkergegevens op die toegevoegd zijn
-
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder")]
         [HttpGet("{id}/medewerker-object")]
         public IActionResult GetMedewerkers(Guid id)
         {
@@ -136,7 +136,7 @@ namespace WPR_project.Controllers
 
 
 
-
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder,Backofficemedewerker")]
         [HttpGet("{id}/gegevens")]
         public ActionResult<WagenparkBeheerderWijzigDTO> GetGegevensById(Guid id)
         {
@@ -149,7 +149,7 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-
+        [Authorize(Roles = "ZakelijkeHuurder")]
         [HttpPut("{id}/updateGegevens")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] WagenparkBeheerderWijzigDTO dto)
         {

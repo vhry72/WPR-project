@@ -2,6 +2,7 @@
 using WPR_project.Models;
 using WPR_project.Services;
 using WPR_project.DTO_s;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
 {
@@ -16,7 +17,7 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-        // Ophalen van alle notities voor een specifiek voertuig
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpGet("{voertuigId}")]
         public IActionResult GetVoertuigNotities(Guid voertuigId)
         {
@@ -35,7 +36,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        // Toevoegen van een nieuwe notitie aan een voertuig
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPost]
         public IActionResult AddVoertuigNotitie([FromBody] VoertuigNotitiesDTO voertuigNotitiesDTO)
         {
