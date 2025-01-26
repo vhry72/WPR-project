@@ -23,7 +23,7 @@ const SchadeClaimsList = () => {
     }, []);
 
     const inBehandeling = (id) => {
-        axios.put(`https://localhost:5033/api/Schademelding/inBehandeling/${id}/"In Behandeling"`, { withCredentials: true });
+        axios.put(`https://localhost:5033/api/Schademelding/inBehandeling/${id}/"In Behandeling"`, { withCredentials: true })
             .then(() => {
                 setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
                 alert('Schademelding op In Behandeling gezet.');
