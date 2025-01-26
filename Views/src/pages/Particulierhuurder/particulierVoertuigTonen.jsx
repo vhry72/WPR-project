@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "../../styles/ParticulierVoertuigTonen.css";
 import axios from 'axios';
 
-
 const ParticulierVoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
     const [alleVoertuigen, setAlleVoertuigen] = useState([]);
@@ -12,7 +11,7 @@ const ParticulierVoertuigTonen = () => {
     const location = useLocation();
     const { startDateTime, endDateTime, userRole } = location.state;
     const navigate = useNavigate();
-    
+
     const formatDateForDB = (dateString) => {
         return new Date(dateString).toISOString().replace('T', ' ').slice(0, 19);
     }
@@ -20,11 +19,11 @@ const ParticulierVoertuigTonen = () => {
     const startdatum = formatDateForDB(startDateTime);
     const einddatum = formatDateForDB(endDateTime)
 
-
     useEffect(() => {
         const fetchVoertuigen = async () => {
             try {
                 const response = await axios.get(`https://localhost:5033/api/Huurverzoek/BeschikbareVoertuigen/${startdatum}/${einddatum}`);
+                console.log(response.data);
                 setAlleVoertuigen(response.data);  // alle voertuigen ophalen
                 filterVoertuigen(filterType, response.data);
             } catch (error) {
@@ -32,14 +31,13 @@ const ParticulierVoertuigTonen = () => {
             }
         };
         fetchVoertuigen();
-    }, []);
+    }, [filterType]);
 
-    // Filter voertuigen op functionaliteiten
     const filterVoertuigen = (type, voertuigenArray) => {
         const filtered = voertuigenArray.filter(v => v.voertuigType.toLowerCase() === type.toLowerCase());
         setVoertuigen(filtered);
     };
-    // voer wijziging door van het filteren van voertuigen
+
     const handleChange = (event) => {
         setFilterType(event.target.value);
         filterVoertuigen(event.target.value, alleVoertuigen);
@@ -54,31 +52,23 @@ const ParticulierVoertuigTonen = () => {
     );
 
     const handleSort = (criteria) => {
-        const sortedVoertuigen = [...filteredVoertuigen].sort((a, b) => {
-            if (a[criteria] < b[criteria]) return -1;
-            if (a[criteria] > b[criteria]) return 1;
-            return 0;
-        });
+        const sortedVoertuigen = [...filteredVoertuigen].sort((a, b) => (a[criteria] < b[criteria] ? -1 : (a[criteria] > b[criteria] ? 1 : 0)));
         setVoertuigen(sortedVoertuigen);
     };
 
     const handleVoertuigClick = (voertuig) => {
-        console.log(voertuig); 
         const kenteken = voertuig.kenteken;
         const VoertuigID = voertuig.voertuigId;
-
-        console.log(VoertuigID);
 
         const reservationData = {
             startDateTime,
             endDateTime,
             userRole,
             kenteken,
-            VoertuigID
+            VoertuigID,
         };
 
-        navigate(
-            `/bevestigingHuur`, { state: reservationData });
+        navigate(`/bevestigingHuur`, { state: reservationData });
     };
 
     return (
@@ -98,43 +88,53 @@ const ParticulierVoertuigTonen = () => {
                 />
             </div>
             <div className="button-container">
-                <button onClick={() => handleSort("merk")} className="sort-button">Sorteer op Merk</button>
-                <button onClick={() => handleSort("model")} className="sort-button">Sorteer op Model</button>
-                <button onClick={() => handleSort("prijsPerDag")} className="sort-button">Sorteer op Prijs</button>
-                <button onClick={() => handleSort("bouwjaar")} className="sort-button">Sorteer op Bouwjaar</button>
+                <button onClick={() => handleSort("merk")} className="sort-button">
+                    Sorteer op Merk
+                </button>
+                <button onClick={() => handleSort("model")} className="sort-button">
+                    Sorteer op Model
+                </button>
+                <button onClick={() => handleSort("prijsPerDag")} className="sort-button">
+                    Sorteer op Prijs
+                </button>
+                <button onClick={() => handleSort("bouwjaar")} className="sort-button">
+                    Sorteer op Bouwjaar
+                </button>
+                <button onClick={() => handleSort("aantalDeuren")} className="sort-button">
+                    Sorteer op deuren
+                </button>
+                <button onClick={() => handleSort("aantalSlaapplekken")} className="sort-button">
+                    Sorteer op slaapplekken
+                </button>
             </div>
-            <table className="styled-table">
-                <thead>
-                    <tr>
-                        <th>Merk</th>
-                        <th>Model</th>
-                        <th>Prijs Per Dag</th>
-                        <th>Voertuig Type</th>
-                        <th>Bouwjaar</th>
-                        <th>Kenteken</th>
-                        <th>Kleur</th>
-                        <th>Beschikbaar</th>
-                        <th>Beschikbaar tot</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredVoertuigen.map((voertuig, index) => (
-                        <tr key={index} onClick={() => handleVoertuigClick(voertuig)}>
-                            <td>{voertuig.merk}</td>
-                            <td>{voertuig.model}</td>
-                            <td>{voertuig.prijsPerDag}</td>
-                            <td>{voertuig.voertuigType}</td>
-                            <td>{voertuig.bouwjaar}</td>
-                            <td>{voertuig.kenteken}</td>
-                            <td>{voertuig.kleur}</td>
-                            <td>{voertuig.voertuigBeschikbaar ? "Ja" : "Nee"}</td>
-                            <td>{voertuig.beschikbaarTot}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="card-container">
+                {filteredVoertuigen.map((voertuig, index) => (
+                    <div key={index} className="card" onClick={() => handleVoertuigClick(voertuig)}>
+                        <img
+                            src={`data:image/jpeg;base64,${voertuig.afbeelding}`}
+                            alt={`${voertuig.merk} ${voertuig.model}`}
+                            className="card-image"
+                        />
+                        <div className="card-content">
+                            <h3>{voertuig.merk} {voertuig.model}</h3>
+                            <p><strong>Type:</strong> {voertuig.voertuigType}</p>
+                            <p><strong>Prijs per dag:</strong> {new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(voertuig.prijsPerDag)}</p>
+                            <p><strong>Bouwjaar:</strong> {voertuig.bouwjaar}</p>
+                            <p><strong>Kenteken:</strong> {voertuig.kenteken}</p>
+                            <p><strong>Kleur:</strong> {voertuig.kleur}</p>
+                            <p><strong>Aantal Deuren:</strong> {voertuig.aantalDeuren}</p>
+                            <p><strong>Aantal Slaapplekken:</strong> {voertuig.aantalSlaapplekken}</p>
+                        </div>
+                        <div className="card-actions">
+                            <button onClick={() => handleVoertuigClick(voertuig)}>Reserveer</button>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
+
+
 };
 
 export default ParticulierVoertuigTonen;

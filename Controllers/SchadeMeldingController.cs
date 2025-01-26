@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace WPR_project.Controllers
             _schademeldingservice = schademeldingservice;
         }
 
-
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPost("maak")]
         public IActionResult CreateSchadeMelding([FromBody] SchademeldingDTO schademelding)
         {
@@ -39,9 +40,9 @@ namespace WPR_project.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
-        
 
 
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpGet]
         public ActionResult<IQueryable<SchadeMeldingInfoDTO>> GetAllSchademeldingen()
         {
@@ -50,7 +51,7 @@ namespace WPR_project.Controllers
         }
 
 
-        // update status van schademelding
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPut("inBehandeling/{id}/{status}")]
         public IActionResult zetOpInBehandeling(Guid id, string status)
         {
@@ -74,7 +75,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        // update status van schademelding om afgehandeld te zetten
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPut("Afgehandeld/{id}/{status}")]
         public IActionResult zetOpAfgehandeld(Guid id, string status)
         {
@@ -98,7 +99,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        // update status van schademelding om in reparatie te zetten
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPut("InReparatie/{id}/{status}")]
         public IActionResult zetOpInReparatie(Guid id, string status)
         {

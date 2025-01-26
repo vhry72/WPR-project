@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WPR_project.DTO_s;
 using WPR_project.Services;
 
@@ -24,7 +25,7 @@ namespace WPR_project.Controllers
             _schademeldingService = schademeldingService;
 
         }
-
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpGet("GetAll")]
         public IActionResult GetAllFrontOffice()
         {
@@ -39,6 +40,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpGet("{id}/gegevens")]
         public ActionResult<FrontofficeMedewerkerWijzigDTO> GetGegevensById(Guid id)
         {
@@ -51,7 +53,7 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] FrontofficeMedewerkerWijzigDTO dto)
         {
@@ -73,6 +75,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPost("{HuurverzoekID}/{keuring}/Huurverzoek-isCompleted")]
         public IActionResult HuurverzoekIsCompleted(Guid HuurverzoekID, bool keuring)
         {
@@ -93,6 +96,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPost("{schademeldingId}/{keuring}/Schademelding-afgehandeld")]
         public IActionResult schademeldingIsCompleted(Guid schademeldingId, bool keuring)
         {

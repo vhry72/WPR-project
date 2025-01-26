@@ -30,15 +30,9 @@ namespace WPR_project.Models
         public Guid? AbonnementId { get; set; }
 
 
-        [Required(ErrorMessage = "Zakelijke huurder ID is verplicht.")]
-        public Guid zakelijkeId { get; set; } // Buitenlandse sleutel voor relatie
-
-        [ForeignKey(nameof(zakelijkeId))]
-        public ZakelijkHuurder ZakelijkeHuurder { get; set; }
+        public Guid zakelijkeId { get; set; } 
 
         public Guid beheerderId { get; set; }
-        [ForeignKey(nameof(beheerderId))]
-        public WagenparkBeheerder WagenparkBeheerder { get; set; }
 
         [Required]
         public string AspNetUserId { get; set; }

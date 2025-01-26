@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WPR_project.DTO_s;
 using WPR_project.Models;
@@ -34,7 +35,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-
+    [Authorize(Roles = "ParticuliereHuurder,Bedrijfsmedewerker")]
     [HttpPost]
     public IActionResult CreateHuurVerzoek([FromBody] HuurVerzoekDTO huurVerzoekDto)
     {
@@ -83,7 +84,7 @@ public class HuurverzoekController : ControllerBase
     }
 
 
-
+    [Authorize]
     [HttpGet("GetByHuurderID/{id}")]
     public IActionResult GetHuurverzoekenByHuurderID(Guid id)
     {
@@ -99,7 +100,7 @@ public class HuurverzoekController : ControllerBase
     }
 
 
-
+    [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
     [HttpGet("GetAllActive")]
     public IActionResult GetAllActiveHuurVerZoeken()
     {
@@ -116,7 +117,7 @@ public class HuurverzoekController : ControllerBase
 
 
 
-
+    [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
     [HttpGet("GetAllAfgekeurde")]
     public IActionResult GetAllAfgekeurde()
     {
@@ -131,7 +132,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-
+    [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
     [HttpGet("GetAllGoedGekeurde")]
     public IActionResult GetAllGoedGekeurde()
     {
@@ -146,9 +147,9 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-    
 
 
+    [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
     [HttpPut("keuring/{id}/{approved}")]
     public IActionResult WeigerRequest(Guid id, bool approved)
     {

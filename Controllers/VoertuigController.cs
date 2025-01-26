@@ -1,6 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WPR_project.Services;
 using WPR_project.DTO_s;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
 {
@@ -49,10 +54,20 @@ namespace WPR_project.Controllers
 
 
 
-
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpPut("veranderGegevens/{id}")]
-        public IActionResult veranderGegevens(Guid id, [FromBody] VoertuigWijzigingDTO DTO)
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> veranderGegevens(Guid id, [FromForm] VoertuigWijzigingDTO DTO, [FromForm] IFormFile afbeelding)
         {
+            if (afbeelding != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await afbeelding.CopyToAsync(memoryStream);
+                    DTO.Afbeelding = memoryStream.ToArray();
+                }
+            }
+
             try
             {
                 _voertuigService.veranderGegevens(id, DTO);
@@ -69,6 +84,8 @@ namespace WPR_project.Controllers
         }
 
 
+
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPut("veranderBeschikbaar/{id}/{voertuigBeschikbaar}")]
         public IActionResult neemIn(Guid id, bool voertuigBeschikbaar)
         {
@@ -89,7 +106,7 @@ namespace WPR_project.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
         [HttpPut("maaknotitie/{id}")]
         public IActionResult maakNotitie(Guid id, [FromBody] VoertuigDTO voertuigNotitieDTO)
         {
@@ -110,6 +127,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpDelete("verwijderVoertuig/{id}")]
         public IActionResult DeleteVoertuig(Guid id)
         {
@@ -125,7 +143,7 @@ namespace WPR_project.Controllers
         }
 
 
-
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpPost("maakVoertuig")]
         public IActionResult maakVoertuig([FromBody] VoertuigDTO voertuig)
         {

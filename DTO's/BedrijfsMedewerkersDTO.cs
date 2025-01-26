@@ -14,10 +14,6 @@ namespace WPR_project.DTO_s
         [EmailAddress(ErrorMessage = "Ongeldig e-mailadres.")]
         public string medewerkerEmail { get; set; }
 
-        [Required(ErrorMessage = "wachtwoord is verplicht.")]
-        [MinLength(8, ErrorMessage = "wachtwoord moet minimaal 8 tekens bevatten.")]
-        [RegularExpression(@"^(?=.*[A-Z])(?=.*[!@#$&*]).+$",
-            ErrorMessage = "wachtwoord moet minstens één hoofdletter en één uniek teken bevatten.")]
-        public string wachtwoord { get; set; }
+        public Guid? abonnementId { get; set; }
     }
 }

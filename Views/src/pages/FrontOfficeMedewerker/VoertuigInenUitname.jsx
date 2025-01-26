@@ -11,7 +11,7 @@ const HuurVerzoekenList = () => {
     const [schade, setSchade] = useState(''); // Schade-invoer
 
     const fetchHuurverzoeken = () => {
-        axios.get('https://localhost:5033/api/Huurverzoek/GetAllGoedGekeurde')
+        axios.get('https://localhost:5033/api/Huurverzoek/GetAllGoedGekeurde', { withCredentials: true });
             .then(response => {
                 const filteredHuurverzoeken = response.data.filter(huurverzoek => !huurverzoek.isCompleted);
                 setHuurverzoeken(filteredHuurverzoeken);

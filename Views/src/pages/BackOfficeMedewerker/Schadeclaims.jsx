@@ -23,7 +23,7 @@ const SchadeClaimsList = () => {
     }, []);
 
     const inBehandeling = (id) => {
-        axios.put(`https://localhost:5033/api/Schademelding/inBehandeling/${id}/"In Behandeling"`)
+        axios.put(`https://localhost:5033/api/Schademelding/inBehandeling/${id}/"In Behandeling"`, { withCredentials: true });
             .then(() => {
                 setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
                 alert('Schademelding op In Behandeling gezet.');
@@ -34,11 +34,11 @@ const SchadeClaimsList = () => {
 
     const Afgehandeld = async (id) => {
         try {
-            await axios.put(`https://localhost:5033/api/Schademelding/Afgehandeld/${id}/"Afgehandeld"`);
+            await axios.put(`https://localhost:5033/api/Schademelding/Afgehandeld/${id}/"Afgehandeld"`, { withCredentials: true });
             setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
             alert('Schademelding afgehandeld.');
 
-            await axios.post(`https://localhost:5033/api/FrontOfficeMedewerker/${id}/true/Schademelding-afgehandeld`);
+            await axios.post(`https://localhost:5033/api/FrontOfficeMedewerker/${id}/true/Schademelding-afgehandeld`, { withCredentials: true });
         } catch (err) {
             alert(`Fout bij status aanpassing: ${err.message}`);
         }

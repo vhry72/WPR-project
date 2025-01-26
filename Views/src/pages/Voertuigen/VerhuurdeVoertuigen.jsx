@@ -65,8 +65,7 @@ const VerhuurdeVoertuigen = () => {
             console.log("Ophalen voertuigen voor wagenparkbeheerderId:", userId);
 
             const medewerkersResponse = await axios.get(
-                `https://localhost:5033/api/WagenparkBeheerder/${userId}/medewerkers`
-            );
+                `https://localhost:5033/api/WagenparkBeheerder/${userId}/medewerkers`, { withCredentials: true });
             const medewerkerIds = medewerkersResponse.data;
 
             if (!medewerkerIds.length) {
@@ -76,8 +75,7 @@ const VerhuurdeVoertuigen = () => {
 
             const huurverzoekenPromises = medewerkerIds.map((medewerkerId) =>
                 axios.get(
-                    `https://localhost:5033/api/WagenparkBeheerder/verhuurdevoertuigen/${medewerkerId}`
-                )
+                    `https://localhost:5033/api/WagenparkBeheerder/verhuurdevoertuigen/${medewerkerId}`, { withCredentials: true })
             );
             const huurverzoekenResponses = await Promise.all(huurverzoekenPromises);
             const alleHuurverzoeken = huurverzoekenResponses.flatMap((res) => res.data);
@@ -112,8 +110,7 @@ const VerhuurdeVoertuigen = () => {
     const fetchHuurderNaam = async (wagenparkbeheerderId) => {
         try {
             const response = await axios.get(
-                `https://localhost:5033/api/BedrijfsMedewerkers/${wagenparkbeheerderId}`
-            );
+                `https://localhost:5033/api/BedrijfsMedewerkers/${wagenparkbeheerderId}`, { withCredentials: true });
             return response.data.medewerkerNaam || "Onbekend";
         } catch (error) {
             console.error(`Fout bij ophalen van naam voor HuurderID: ${wagenparkbeheerderId}`, error);

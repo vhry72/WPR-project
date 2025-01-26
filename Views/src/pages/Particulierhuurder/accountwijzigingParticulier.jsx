@@ -44,7 +44,7 @@ const AccountwijzigingParticulier = () => {
         const fetchUserDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`https://localhost:5033/api/ParticulierHuurder/${huurderId}/gegevens`)
+                const response = await axios.get(`https://localhost:5033/api/ParticulierHuurder/${huurderId}/gegevens`, { withCredentials: true });
                 console.log(response.data)
                 if (response && response.data) {
                     setFormData({
@@ -90,7 +90,7 @@ const AccountwijzigingParticulier = () => {
                 telefoonnummer: formData.telephone,
             };
 
-            const response = await axios.put(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`, payload);
+            const response = await axios.put(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`, payload, { withCredentials: true });
             if (response.status === 200) {
                 toast.success("Gebruikersgegevens succesvol bijgewerkt!");
                 navigate("/");
@@ -109,7 +109,7 @@ const AccountwijzigingParticulier = () => {
         if (window.confirm("Weet je zeker dat je je account wilt verwijderen?")) {
             setIsLoading(true);
             try {
-                await axios.delete(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`);
+                await axios.delete(`https://localhost:5033/api/ParticulierHuurder/${huurderId}`, { withCredentials: true });
                 toast.success("Account succesvol verwijderd.");
                 await JwtService.handleLogout(setUserRole, navigate);
                 navigate("/");

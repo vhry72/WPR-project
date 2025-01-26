@@ -28,7 +28,7 @@ function PrepaidSaldo() {
     useEffect(() => {
         const fetchSaldo = async () => {
             try {
-                const response = await axios.get(`/api/abonnement/${beheerderId}/huidig-abonnement`);
+                const response = await axios.get(`/api/abonnement/${beheerderId}/huidig-abonnement`, { withCredentials: true });
                 setSaldo(response.data.prepaidSaldo);
             } catch (error) {
                 console.error("Fout bij het ophalen van saldo:", error);
@@ -44,7 +44,7 @@ function PrepaidSaldo() {
     // functie om saldo op te waarderen
     const laadSaldoOp = async () => {
         try {
-            await axios.post(`/api/abonnement/${beheerderId}/saldo/opwaarderen`, { bedrag });
+            await axios.post(`/api/abonnement/${beheerderId}/saldo/opwaarderen`, { bedrag }, { withCredentials: true });
             alert("Saldo succesvol opgewaardeerd.");
             setSaldo(saldo + bedrag);
         } catch (error) {

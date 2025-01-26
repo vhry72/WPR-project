@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WPR_project.Services;
 using WPR_project.DTO_s;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace WPR_project.Controllers
@@ -23,6 +24,7 @@ namespace WPR_project.Controllers
             return Ok(privacyVerklaring);
         }
 
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpGet("AllePrivacyVerklaringen")]
         public IActionResult GetAllPrivacyVerklaringen()
         {
@@ -30,6 +32,7 @@ namespace WPR_project.Controllers
             return Ok(privacyVerklaringen);
         }
 
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpPost("Voeg-privacyVerklaring-toe")]
         public IActionResult AddPrivacyVerklaring([FromBody] PrivacyVerklaringDTO privacyVerklaring)
         {

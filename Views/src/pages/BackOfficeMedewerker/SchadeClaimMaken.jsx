@@ -28,9 +28,8 @@ const CreateSchadeMelding = () => {
         try {
             // Verstuur de schadeclaim naar de API
             const response = await axios.post(
-                "https://localhost:5033/api/Schademelding/maak", // Verander dit naar de juiste URL voor jouw API
-                formData
-            );
+                `https://localhost:5033/api/Schademelding/maak`, // Verander dit naar de juiste URL voor jouw API
+                formData, { withCredentials: true });
 
             // Toon de succes-notificatie
             toast.success(response.data.Message || "Schademelding succesvol aangemaakt!", {

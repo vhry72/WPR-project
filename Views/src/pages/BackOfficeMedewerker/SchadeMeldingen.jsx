@@ -42,7 +42,7 @@ const SchadeMeldingenList = () => {
     }, []);
 
     const inReparatie = (id) => {
-        axios.put(`https://localhost:5033/api/Schademelding/InReparatie/${id}`, { status: "In Reparatie" })
+        axios.put(`https://localhost:5033/api/Schademelding/InReparatie/${id}/InReparatie`, { withCredentials: true });
             .then(() => {
                 setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
                 alert('Schademelding op In Reparatie gezet.');

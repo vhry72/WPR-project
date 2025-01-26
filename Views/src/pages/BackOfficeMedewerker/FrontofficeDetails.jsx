@@ -18,7 +18,7 @@ const FrontofficeDetails = () => {
     useEffect(() => {
         const fetchMedewerkerDetails = async () => {
             try {
-                const response = await axios.get(`${API_URL}/api/FrontOfficeMedewerker/${medewerkerId}/gegevens`);
+                const response = await axios.get(`${API_URL}/api/FrontOfficeMedewerker/${medewerkerId}/gegevens`, { withCredentials: true });
                 setMedewerker(response.data);
                 setFormData({
                     medewerkerNaam: response.data.medewerkerNaam,
@@ -51,8 +51,7 @@ const FrontofficeDetails = () => {
         try {
             const response = await axios.put(
                 `${API_URL}/api/FrontOfficeMedewerker/${medewerkerId}`,
-                formData
-            );
+                formData, { withCredentials: true });
             if (response.status === 200) {
                 toast.success("Gegevens succesvol bijgewerkt!");
                 setMedewerker((prev) => ({ ...prev, ...formData }));
@@ -67,7 +66,7 @@ const FrontofficeDetails = () => {
         const bevestigen = window.confirm("Weet je zeker dat je deze medewerker wilt verwijderen?");
         if (bevestigen) {
             try {
-                await axios.delete(`${API_URL}/api/BackOfficeMedewerker/verwijdermedewerker/${medewerkerId}`);
+                await axios.delete(`${API_URL}/api/BackOfficeMedewerker/verwijdermedewerker/${medewerkerId}`, { withCredentials: true });
                 toast.success("Medewerker succesvol verwijderd!");
                 navigate(`/FrontofficeTonen`);
             } catch (err) {

@@ -45,7 +45,7 @@ const WagenparkBeheerderForm = () => {
 
     const fetchZakelijkeHuurderData = async (id) => {
         try {
-            const response = await axios.get(`${API_URL}/api/zakelijkehuurder/${id}`);
+            const response = await axios.get(`${API_URL}/api/zakelijkehuurder/${id}`, { withCredentials: true });
             if (response.data) {
                 setAdres(response.data.adres);
                 setKVKNummer(response.data.kvkNummer);
@@ -60,7 +60,7 @@ const WagenparkBeheerderForm = () => {
 
     const fetchAbonnementData = async (id) => {
         try {
-            const response = await axios.get(`${API_URL}/api/ZakelijkeHuurder/${id}/AbonnementId`);
+            const response = await axios.get(`${API_URL}/api/ZakelijkeHuurder/${id}/AbonnementId`, { withCredentials: true });
             if (response.data) {
                 setAbonnementId(response.data.abonnementId);
                 setAbonnementType(response.data.abonnementType);
@@ -103,7 +103,7 @@ const WagenparkBeheerderForm = () => {
                 zakelijkeId: zakelijkeId
             };
             console.log(payload);
-            await axios.post(`${API_URL}/api/Account/register-wagenparkbeheerder`, payload, {
+            await axios.post(`${API_URL}/api/Account/register-wagenparkbeheerder`, payload, { withCredentials: true,
                 headers: {
                     'Content-Type': 'application/json'
                 }

@@ -16,7 +16,8 @@ const VoertuigTonen = () => {
         try {
             console.log("Voertuigen worden opgevraagd");
             const response = await axios.get(
-                `https://localhost:5033/api/Voertuig/VoertuigType?voertuigType=${filterType}`);
+                `https://localhost:5033/api/Voertuig/VoertuigType?voertuigType=${filterType}`
+            );
             console.log(response);
             setVoertuigen(response.data);
         } catch (error) {
@@ -34,10 +35,11 @@ const VoertuigTonen = () => {
     };
 
     const handleVoertuigClick = (voertuig) => {
-        navigate(`/VoertuigDetailsBackOffice/${voertuig.voertuigId}`); // Gebruik routeparameters
+        navigate(`/VoertuigDetailsBackOffice/${voertuig.voertuigId}`);
     };
+
     const handleMaakVoertuigClick = () => {
-        navigate(`/VoertuigToevoegen`); // Gebruik routeparameters
+        navigate(`/VoertuigToevoegen`);
     };
 
     return (
@@ -65,47 +67,40 @@ const VoertuigTonen = () => {
                 <button onClick={() => handleSort("bouwjaar")} className="sort-button">
                     Sorteer op Bouwjaar
                 </button>
-                <button onClick={handleMaakVoertuigClick}>
+                <button onClick={() => handleSort("aantalDeuren")} className="sort-button">
+                    Sorteer op deuren
+                </button>
+                <button onClick={() => handleSort("aantalSlaapplekken")} className="sort-button">
+                    Sorteer op slaapplekken
+                </button>
+                <button onClick={handleMaakVoertuigClick} className="sort-button">
                     Nieuw Voertuig Toevoegen
                 </button>
             </div>
-            <table className="styled-table">
-                <thead>
-                    <tr>
-                        <th>Merk</th>
-                        <th>Model</th>
-                        <th>Prijs Per Dag</th>
-                        <th>Voertuig Type</th>
-                        <th>Bouwjaar</th>
-                        <th>Kenteken</th>
-                        <th>Kleur</th>
-                        <th>Beschikbaar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {voertuigen.map((voertuig, index) => (
-                        <tr key={index}>
-                            <td
-                                onClick={() => handleVoertuigClick(voertuig)}
-                                style={{
-                                    cursor: "pointer",
-                                    color: "blue",
-                                    textDecoration: "underline",
-                                }}
-                            >
-                                {voertuig.merk}
-                            </td>
-                            <td>{voertuig.model}</td>
-                            <td>{voertuig.prijsPerDag}</td>
-                            <td>{voertuig.voertuigType}</td>
-                            <td>{voertuig.bouwjaar}</td>
-                            <td>{voertuig.kenteken}</td>
-                            <td>{voertuig.kleur}</td>
-                            <td>{voertuig.voertuigBeschikbaar ? "Ja" : "Nee"}</td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <div className="card-container">
+                {voertuigen.map((voertuig, index) => (
+                    <div key={index} className="card">
+                        <img
+                            src={`data:image/jpeg;base64,${voertuig.afbeelding}`}
+                            alt={`${voertuig.merk} ${voertuig.model}`}
+                            className="card-image"
+                        />
+                        <div className="card-content">
+                            <h3>{voertuig.merk} {voertuig.model}</h3>
+                            <p><strong>Type:</strong> {voertuig.voertuigType}</p>
+                            <p><strong>Prijs per dag:</strong> {new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(voertuig.prijsPerDag)}</p>
+                            <p><strong>Bouwjaar:</strong> {voertuig.bouwjaar}</p>
+                            <p><strong>Kenteken:</strong> {voertuig.kenteken}</p>
+                            <p><strong>Kleur:</strong> {voertuig.kleur}</p>
+                            <p><strong>Aantal Deuren:</strong> {voertuig.aantalDeuren}</p>
+                            <p><strong>Aantal Slaapplekken:</strong> {voertuig.aantalSlaapplekken}</p>
+                        </div>
+                        <div className="card-actions">
+                            <button onClick={() => handleVoertuigClick(voertuig)}>Details</button>
+                        </div>
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

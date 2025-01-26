@@ -13,7 +13,7 @@ const BedrijfsMedewerkerRegister = () => {
     const [notificatie, setNotificatie] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [wagenparkBeheerderId, setWagenparkBeheerderId] = useState(null);
-    const [zakelijkeHuurderId, setZakelijkeHuurderId] = useState(null);
+    const [zakelijkeHuurderId, setZakelijkeHuurderId] = useState();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -27,26 +27,28 @@ const BedrijfsMedewerkerRegister = () => {
                 console.log("User ID:", userId);
                 if (userId) {
                     setWagenparkBeheerderId(userId);
+                    fetchZakelijkeHuurderId(userId);
                 } else {
                     console.error("Huurder ID kon niet worden opgehaald via de API.");
                 }
             } catch (error) {
                 console.error("Fout bij het ophalen van de huurder ID:", error);
             }
-        };
+        }; 
 
         fetchUserId();
     }, []);
 
-    const fetchZakelijkeHuurderId = async () => {
-        if (!wagenparkBeheerderId) return;
-        try {
-            const response = await axios.get(`https://localhost:5033/api/WagenparkBeheerder/${wagenparkBeheerderId}/zakelijkeId`);
+
+         const fetchZakelijkeHuurderId = async (userId) => {
+             try {
+                 const response = await axios.get(`https://localhost:5033/api/WagenparkBeheerder/${userId}/zakelijkeId`, { withCredentials: true });
+            console.log(response);
             setZakelijkeHuurderId(response.data.zakelijkeId);
         } catch (error) {
             console.error("Error fetching zakelijke huurder data:", error);
         }
-    };
+        };
 
     const validateFormData = () => {
         const errors = [];
@@ -80,13 +82,6 @@ const BedrijfsMedewerkerRegister = () => {
         setIsLoading(true);
 
         try {
-            // Zorg ervoor dat zakelijkeHuurderId wordt opgehaald
-            await fetchZakelijkeHuurderId(); // Ophalen van zakelijkeHuurderId
-
-            // Controleer opnieuw of zakelijkeHuurderId is ingesteld
-            if (!zakelijkeHuurderId) {
-                throw new Error("Zakelijke Huurder ID kon niet worden opgehaald. Probeer opnieuw.");
-            }
 
             const data = {
                 medewerkerNaam: formData.medewerkerNaam,
@@ -103,7 +98,9 @@ const BedrijfsMedewerkerRegister = () => {
             const response = await axios.post(
                 `https://localhost:5033/api/Account/register-bedrijfsmedewerker`,
                 data,
-                {
+                { 
+                    withCredentials: true,
+
                     headers: {
                         'Content-Type': 'application/json',
                     },
