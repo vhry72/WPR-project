@@ -1,6 +1,4 @@
-﻿using iTextSharp.text.pdf;
-using Microsoft.Extensions.Configuration;
-using System.Net;
+﻿using System.Net;
 using System.Net.Mail;
 
 namespace WPR_project.Services.Email

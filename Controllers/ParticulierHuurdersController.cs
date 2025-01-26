@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WPR_project.DTO_s;
 using WPR_project.Services;
-using WPR_project.Models;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
@@ -17,16 +16,7 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-        // verifieer dat het een particuliere huurder is
-        [Authorize(Roles = "ParticuliereHuurder")]
-        [HttpGet]
-        public ActionResult<IEnumerable<ParticulierHuurderDTO>> GetAll()
-        {
-            var huurders = _service.GetAll();
-            return Ok(huurders);
-        }
 
-        // haal huurder op via Id
         [Authorize(Roles = "ParticuliereHuurder")]
         [HttpGet("{id}")]
         public ActionResult<ParticulierHuurderDTO> GetById(Guid id)
@@ -53,27 +43,8 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-        // 2fa authenticatie voor particuliere huurder
-        [Authorize(Roles = "ParticulierHuurder")]
-        [HttpGet("verify")]
-        public IActionResult VerifyEmail(Guid token)
-        {
-            if (token == Guid.Empty)
-            {
-                return BadRequest(new { Message = "Verificatietoken is verplicht." });
-            }
 
-            var result = _service.VerifyEmail(token);
-            if (!result)
-            {
-                return NotFound(new { Message = "Verificatie mislukt. Token is ongeldig of verlopen." });
-            }
 
-            return Ok(new { Message = "E-mail succesvol bevestigd." });
-        }
-
-        // update de huurder
-        //[Authorize(Roles = "ParticuliereHuurder")]
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderWijzigDTO dto)
         {
@@ -95,7 +66,6 @@ namespace WPR_project.Controllers
             }
         }
 
-        // verwijder huurder met gegeven Id
         [HttpDelete("{id}")]
         public IActionResult DeleteHuurder(Guid id)
         {
@@ -108,19 +78,6 @@ namespace WPR_project.Controllers
             {
                 return NotFound(new { Message = "Huurder niet gevonden." });
             }
-        }
-        // haal geverifieerde huurders op
-        [Authorize(Roles = "ParticulierHuurder")]
-        [HttpGet("{id}/isVerified")]
-        public IActionResult IsEmailVerified(Guid id)
-        {
-            var huurder = _service.GetById(id);
-            if (huurder == null)
-            {
-                return NotFound(new { Message = "Huurder niet gevonden." });
-            }
-
-            return Ok(new { IsEmailVerified = huurder.IsEmailBevestigd });
         }
     }
 }

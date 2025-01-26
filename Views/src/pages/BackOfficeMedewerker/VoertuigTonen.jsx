@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/ParticulierVoertuigTonen.css";
-import VoertuigRequestService from "../../services/requests/VoertuigRequestService";
+import axios from "axios";
 
 const VoertuigTonen = () => {
     const [voertuigen, setVoertuigen] = useState([]);
@@ -15,8 +15,10 @@ const VoertuigTonen = () => {
     const handleVoertuigType = async () => {
         try {
             console.log("Voertuigen worden opgevraagd");
-            const response = await VoertuigRequestService.getAll(filterType);
-            setVoertuigen(response);
+            const response = await axios.get(
+                `https://localhost:5033/api/Voertuig/VoertuigType?voertuigType=${filterType}`);
+            console.log(response);
+            setVoertuigen(response.data);
         } catch (error) {
             console.error("Het is niet gelukt om de voertuigtype op te halen", error);
         }

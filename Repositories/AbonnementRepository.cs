@@ -14,27 +14,12 @@ namespace WPR_project.Repositories
             _context = context;
         }
 
-        public BedrijfsMedewerkers GetMedewerkerById(Guid medewerkerId)
-        {
-            return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
-        }
-
 
         public IEnumerable<Abonnement> GetAllAbonnementen()
         {
             return _context.Abonnementen.ToList();
         }
-        public IEnumerable<Abonnement> GetBijnaVerlopenAbonnementen()
-        {
-            var vandaag = DateTime.Now;
-            var eenMaandLater = vandaag.AddMonths(1);
 
-            return _context.Abonnementen
-                .Where(a => a.vervaldatum >= vandaag && a.vervaldatum <= eenMaandLater)
-                .ToList();
-
-
-        }
 
         public Abonnement GetAbonnementById(Guid id)
         {
@@ -65,15 +50,6 @@ namespace WPR_project.Repositories
             if (existingAbonnement != null)
             {
                 _context.Entry(existingAbonnement).CurrentValues.SetValues(abonnement);
-            }
-        }
-
-        public void DeleteAbonnement(Guid id)
-        {
-            var abonnement = _context.Abonnementen.Find(id);
-            if (abonnement != null)
-            {
-                _context.Abonnementen.Remove(abonnement);
             }
         }
 

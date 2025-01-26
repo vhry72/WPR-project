@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using WPR_project.Models;
+﻿using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.DTO_s;
-using NuGet.Protocol.Core.Types;
 
 
 namespace WPR_project.Services
@@ -43,16 +40,7 @@ namespace WPR_project.Services
 
             return voertuig;
         }
-        public Voertuig GetVoertuigByKenteken(String kenteken)
-        {
-            var voertuig = _voertuigRepository.GetVoertuigByKenteken(kenteken);
-            if (voertuig == null)
-            {
-                throw new KeyNotFoundException("Voertuig niet gevonden");
-            }
 
-            return voertuig;
-        }
 
         public IEnumerable<Voertuig> GetVoertuigTypeVoertuigen(string voertuigType)
         { 
@@ -60,27 +48,7 @@ namespace WPR_project.Services
             return _voertuigRepository.GetVoertuigTypeVoertuigen(voertuigType);
         }
 
-        public VoertuigStatus GetVoertuigStatus(Guid voertuigId)
-        {
-            return _voertuigRepository.GetVoertuigStatus(voertuigId);
-        }
 
-        public void UpdateUpVoertuig(Guid id, VoertuigUpDTO DTO)
-        {
-            var voertuig = _voertuigRepository.GetVoertuigById(id);
-            if (voertuig == null)
-            {
-                throw new KeyNotFoundException("Voertuig niet gevonden.");
-            }
-
-            // Pas alleen de velden aan die in de DTO zijn opgenomen
-            voertuig.startDatum = DTO.StartDatum;
-            voertuig.eindDatum = DTO.EindDatum;
-            voertuig.voertuigBeschikbaar = DTO.voertuigBeschikbaar;
-
-            // Sla de wijzigingen op
-            _voertuigRepository.updateVoertuig(voertuig);
-        }
         public void veranderGegevens(Guid id, VoertuigWijzigingDTO DTO)
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);
@@ -125,11 +93,7 @@ namespace WPR_project.Services
                 voertuigBeschikbaar = voertuig.voertuigBeschikbaar,               
             };
         }
-        
-        public IEnumerable<Voertuig> GetAllVoertuigen()
-        {
-            return _voertuigRepository.GetAllVoertuigen();
-        }
+
         public void Delete(Guid id)
         {
             var voertuig = _voertuigRepository.GetByID(id);
@@ -138,6 +102,7 @@ namespace WPR_project.Services
             _voertuigRepository.Delete(id);
             _voertuigRepository.Save();
         }
+
         public void newVoertuig(VoertuigDTO voertuig)
         {
 

@@ -19,23 +19,7 @@ public class HuurverzoekController : ControllerBase
         _voertuigService = voertuigService;
     }
 
-    // zie de actieve huurverzoeken van een huurder
-    [HttpGet("check-active/{huurderId}")]
-    public IActionResult CheckActiveHuurverzoek(Guid huurderId)
-    {
-        var hasActiveRequest = _service.HasActiveHuurverzoek(huurderId);
-        return Ok(new { hasActiveRequest });
-    }
 
-    // zie de beantwoorde huurverzoeken van een huurder
-    [HttpGet("check-Beantwoorde/{huurderId}")]
-    public IActionResult CheckBeantwoordeHuurverzoek(Guid huurderId)
-    {
-        var hasActiveRequest = _service.HasAnsweredHuurverzoek(huurderId);
-        return Ok(new { hasActiveRequest });
-    }
-
-    // Haal alle beschikbare voertuigen op
     [HttpGet("BeschikbareVoertuigen/{startDatum}/{eindDatum}")]
     public IActionResult GetAvailableVehicles(DateTime startDatum, DateTime eindDatum)
     {
@@ -50,7 +34,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-    // Maak een huurverzoek aan
+
     [HttpPost]
     public IActionResult CreateHuurVerzoek([FromBody] HuurVerzoekDTO huurVerzoekDto)
     {
@@ -99,7 +83,7 @@ public class HuurverzoekController : ControllerBase
     }
 
 
-    // Haal alle huurverzoeken op van een bepaalde Id
+
     [HttpGet("GetByHuurderID/{id}")]
     public IActionResult GetHuurverzoekenByHuurderID(Guid id)
     {
@@ -114,22 +98,8 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-    // haal alle verzoeken op
-    [HttpGet]
-    public IActionResult GetAllHuurVerZoeken()
-    {
-        try
-        {
-            var huurverzoeken = _service.GetAllHuurVerzoeken();
-            return Ok(huurverzoeken);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Interne serverfout: {ex.Message}");
-        }
-    }
 
-    // haalde actieve verzoeken op
+
     [HttpGet("GetAllActive")]
     public IActionResult GetAllActiveHuurVerZoeken()
     {
@@ -144,22 +114,9 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-    // haal alle beantwoorde verzoeken op
-    [HttpGet("GetAllBeantwoorde")]
-    public IActionResult GetAllBeantwoordeVerZoeken()
-    {
-        try
-        {
-            var huurverzoeken = _service.GetAllBeantwoordeHuurVerzoeken();
-            return Ok(huurverzoeken);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Interne serverfout: {ex.Message}");
-        }
-    }
 
-    // haal alle afgekeurde verzoeken op
+
+
     [HttpGet("GetAllAfgekeurde")]
     public IActionResult GetAllAfgekeurde()
     {
@@ -174,7 +131,7 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-    // haal alle goedgekeurde verzoeken op
+
     [HttpGet("GetAllGoedGekeurde")]
     public IActionResult GetAllGoedGekeurde()
     {
@@ -189,45 +146,9 @@ public class HuurverzoekController : ControllerBase
         }
     }
 
-    // Haal een specifieke huurverzoek op d.m.v. huurderID
-    [HttpGet("{id}")]
-    public ActionResult<Huurverzoek> GetById(Guid id)
-    {
-        var huurder = _service.GetById(id);
-        if (huurder == null)
-        {
-            return NotFound(new { Message = "Huurder niet gevonden." });
-        }
-        return Ok(huurder);
-    }
+    
 
-    // Werkt bij of een HuurVerzoek is GoedGekeurd of Afgekeurd en of die bevestigd is.
-    [HttpPut("KeurGoed/{id}")]
-    public IActionResult Update(Guid id, [FromBody] HuurverzoekIdDTO dto)
-    {
-        if (!ModelState.IsValid)
-        {
-            var errors = ModelState.Values.SelectMany(v => v.Errors.Select(e => e.ErrorMessage));
-            Console.WriteLine($"ModelState Errors: {string.Join(", ", errors)}");
-            return BadRequest(ModelState);
-        }
-        Console.WriteLine($"Route ID: {id}, DTO ID: {dto.HuurderID}");
-        if (id != dto.HuurVerzoekId)
-        {
-            return BadRequest(new { Message = "ID in de route komt niet overeen met het ID in de body." });
-        }
-        try
-        {
-            _service.Update(id, dto);
-            return Ok("Het huurverzoek is correct bijgewerkt");
-        }
-        catch (KeyNotFoundException)
-        {
-            return NotFound(new { Message = "Huurverzoek niet gevonden." });
-        }
-    }
 
-    // update status van huurverzoek
     [HttpPut("keuring/{id}/{approved}")]
     public IActionResult WeigerRequest(Guid id, bool approved)
     {

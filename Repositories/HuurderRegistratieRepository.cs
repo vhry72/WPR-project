@@ -4,22 +4,18 @@ using Microsoft.AspNetCore.Identity;
 using Hangfire;
 
 namespace WPR_project.Repositories
+{
+    public class HuurderRegistratieRepository : IHuurderRegistratieRepository
     {
-        public class HuurderRegistratieRepository : IHuurderRegistratieRepository
-        {
-            private readonly GegevensContext _context;
-            private readonly UserManager<ApplicationUser> _userManager;
+        private readonly GegevensContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public HuurderRegistratieRepository(GegevensContext context, UserManager<ApplicationUser> userManager)
-            {
-                _context = context;
-                _userManager = userManager;
+        {
+            _context = context;
+            _userManager = userManager;
         }
 
-            public void Add(ParticulierHuurder particulierHuurder)
-            {
-                _context.ParticulierHuurders.Add(particulierHuurder);
-        }
 
         public void DectivateParticulier(Guid id)
         {
@@ -62,35 +58,13 @@ namespace WPR_project.Repositories
             }
         }
 
-        public IEnumerable<ParticulierHuurder> GetAll()
-            {
-                return _context.ParticulierHuurders.ToList();
-            }
-
-            public ParticulierHuurder GetById(Guid id)
-            {
-                return _context.ParticulierHuurders.Find(id);
-            }
-
-        public ParticulierHuurder GetByEmailAndPassword(string email, string password)
+        public ParticulierHuurder GetById(Guid id)
         {
-            return _context.ParticulierHuurders
-                           .FirstOrDefault(h => h.particulierEmail == email && h.wachtwoord == password);
+            return _context.ParticulierHuurders.Find(id);
         }
 
-
-        public ParticulierHuurder GetByToken(Guid token)
-            {
-                return _context.ParticulierHuurders.FirstOrDefault(h => h.EmailBevestigingToken == token);
-            }
-
-            public void Save()
-            {
-                _context.SaveChanges();
-            }
-
-            public void Update(ParticulierHuurder particulierHuurder)
-            {
+        public void Update(ParticulierHuurder particulierHuurder)
+        {
             var emailUpdateIdentity = particulierHuurder.particulierEmail;
             var user = _context.Users.FirstOrDefault(u => u.Id == particulierHuurder.AspNetUserId);
             if (user != null)
@@ -102,6 +76,11 @@ namespace WPR_project.Repositories
                 _context.Users.Update(user);
             }
             _context.ParticulierHuurders.Update(particulierHuurder);
-            }
+        }
+
+        public void Save()
+        {
+            _context.SaveChanges();
         }
     }
+}

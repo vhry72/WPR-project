@@ -28,7 +28,7 @@ const CreateVoertuig = () => {
 
         try {
             const response = await axios.post(
-                "https://localhost:5033/api/Voertuig/maakVoertuig", // Pas aan naar jouw API-url
+                `https://localhost:5033/api/Voertuig/maakVoertuig`, // Pas aan naar jouw API-url
                 formData
             );
 

@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { QRCodeSVG } from "qrcode.react";
-import ParticulierHuurdersRequestService from "../../services/requests/ParticulierHuurderRequestService";
-import ZakelijkeHuurderRequestService from "../../services/requests/ZakelijkeHuurderRequestService";
+import axios from "axios";
 import "../../styles/Register.css";
 
 // form om je gegevens in te vullen
@@ -93,7 +92,7 @@ const Register = () => {
                 telefoonnummer: formData.telefoonnummer,
             };
 
-            const response = await ParticulierHuurdersRequestService.register(payload);
+            const response = await axios.post(`https://localhost:5033/api/Account/register-particulier`, payload);
             const { qrCodeUri } = response.data;
 
             setQrCode(qrCodeUri);
@@ -154,7 +153,7 @@ const Register = () => {
                 wachtwoord: formData.Zakelijkwachtwoord,
             };
 
-            const response = await ZakelijkeHuurderRequestService.register(payload);
+            const response = await axios.post(`https://localhost:5033/api/Account/register-zakelijk`, payload);
             const { qrCodeUri } = response.data;
 
             setQrCode(qrCodeUri);

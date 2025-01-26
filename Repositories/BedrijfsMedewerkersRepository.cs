@@ -1,7 +1,4 @@
 ﻿using Hangfire;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using WPR_project.Data;
 using WPR_project.Models;
 
@@ -14,14 +11,6 @@ namespace WPR_project.Repositories
         public BedrijfsMedewerkersRepository(GegevensContext context)
         {
             _context = context;
-        }
-
-        public void AddMedewerker(BedrijfsMedewerkers medewerker)
-        {
-            if (medewerker == null)
-                throw new ArgumentNullException(nameof(medewerker));
-
-            _context.BedrijfsMedewerkers.Add(medewerker);
         }
         public void Deactivate(Guid medewerkerId)
         {
@@ -72,16 +61,6 @@ namespace WPR_project.Repositories
             return _context.BedrijfsMedewerkers.Find(medewerkerId);
         }
 
-        public IEnumerable<BedrijfsMedewerkers> GetAll()
-        {
-            return _context.BedrijfsMedewerkers.ToList();
-        }
-        public BedrijfsMedewerkers GetByEmailAndPassword(string email, string password)
-        {
-            return _context.BedrijfsMedewerkers.
-                FirstOrDefault(h => h.medewerkerEmail == email && h.wachtwoord == password);
-        }
-
         public void Update(BedrijfsMedewerkers bedrijfsMedewerkers)
         {
             var emailUpdateIdentity = bedrijfsMedewerkers.medewerkerEmail;
@@ -96,7 +75,6 @@ namespace WPR_project.Repositories
             }
             _context.BedrijfsMedewerkers.Update(bedrijfsMedewerkers);
         }
-
 
         public void Save()
         {

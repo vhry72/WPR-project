@@ -1,7 +1,6 @@
 ﻿import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import VoertuigRequestService from "../../services/requests/VoertuigRequestService";
 
 const VoertuigDetails = () => {
     const { voertuigId } = useParams();
@@ -15,7 +14,8 @@ const VoertuigDetails = () => {
     useEffect(() => {
         const fetchVoertuigDetails = async () => {
             try {
-                const response = await VoertuigRequestService.getById(voertuigId);
+                const response = await axios.get(
+                    `https://localhost:5033/api/Voertuig/${voertuigId}`);
                 setVoertuig(response);
                 console.log(response);
                 setNotitie(response.notitie || ""); // Stel de notitie in, indien aanwezig

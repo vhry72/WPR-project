@@ -2,9 +2,6 @@ using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
-using NuGet.Protocol.Core.Types;
-using System;
-using System.Collections.Generic;
 using Hangfire;
 
 namespace WPR_project.Services;
@@ -31,15 +28,6 @@ public class HuurverzoekService
         _zakelijkRepository = zakelijkRepository;
         _particulierRepository = particulierRepository;
         _emailService = emailService;
-    }
-
-    public bool HasActiveHuurverzoek(Guid huurderId)
-    {
-        return _repository.GetActiveHuurverzoekenByHuurderId(huurderId).Any();
-    }
-    public bool HasAnsweredHuurverzoek(Guid huurderId)
-    {
-        return _repository.GetBeantwoordeHuurverzoekenByHuurderId(huurderId).Any();
     }
 
     public IEnumerable<Voertuig> GetAvailableVehicles(DateTime start, DateTime end)

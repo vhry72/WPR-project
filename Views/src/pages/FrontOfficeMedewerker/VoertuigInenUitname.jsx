@@ -68,14 +68,9 @@ const HuurVerzoekenList = () => {
                     toast.success('Voertuig ingenomen zonder schade.');
                 }
 
-                // Voeg hier de API-aanroep toe voor de FrontOfficeMedewerker endpoint
+                
                 axios.post(`https://localhost:5033/api/FrontOfficeMedewerker/${id}/${keuring}/Huurverzoek-isCompleted`)
-                    .then(() => {
-                        // Voer hier eventuele vervolgstappen uit na het aanroepen van de API
-                    })
-                    .catch(err => {
-                        toast.error(`Fout bij het updaten van het huurverzoek: ${err.message}`);
-                    });
+
 
                 setHuurverzoeken(prevState => prevState.filter(req => req.huurVerzoekId !== id));
                 setCurrentInname(null);

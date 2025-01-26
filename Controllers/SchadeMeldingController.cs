@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using WPR_project.Data;
 using WPR_project.DTO_s;
-using WPR_project.Models;
 using WPR_project.Services;
 
 namespace WPR_project.Controllers
@@ -14,16 +13,14 @@ namespace WPR_project.Controllers
     public class SchademeldingController : Controller
     {
 
-        private readonly BedrijfsMedewerkersService _service;
         private readonly SchademeldingService _schademeldingservice;
 
-        public SchademeldingController(BedrijfsMedewerkersService service, SchademeldingService schademeldingservice)
+        public SchademeldingController(SchademeldingService schademeldingservice)
         {
-            _service = service;
             _schademeldingservice = schademeldingservice;
         }
 
-        // Aanmaken van een nieuwe schademelding
+
         [HttpPost("maak")]
         public IActionResult CreateSchadeMelding([FromBody] SchademeldingDTO schademelding)
         {
@@ -34,7 +31,7 @@ namespace WPR_project.Controllers
 
             try
             {
-                _service.newSchademelding(schademelding);
+                _schademeldingservice.newSchademelding(schademelding);
                 return Ok(new { Message = "Schademelding succesvol aangemaakt" });
             }
             catch (Exception ex)
@@ -44,42 +41,14 @@ namespace WPR_project.Controllers
         }
         
 
-        // Ophalen van alle schademeldingen van een specifiek voertuig
-        [HttpGet("{voertuigId}")]
-        public IActionResult GetByVoertuig(Guid voertuigId)
-        {
-            var meldingen = _service.GetSchademeldingByVoertuigId(voertuigId);
-            return Ok(meldingen);
-        }
 
-        // ophalen van alle schademeldingen
         [HttpGet]
         public ActionResult<IQueryable<SchadeMeldingInfoDTO>> GetAllSchademeldingen()
         {
-            var meldingen = _service.GetAllSchademeldingen();
+            var meldingen = _schademeldingservice.GetAllSchademeldingen();
             return Ok(meldingen);
         }
 
-
-        //update schademeldingen
-        [HttpPut]
-        [Route("api/schademeldingen/{id}")]
-        public IActionResult UpdateSchademelding(Guid id, [FromBody] SchademeldingDTO DTO)
-        {
-            try
-            {
-                _service.updateSchademelding(id, DTO);
-                return Ok(new { Message = "Schademelding is succesvol bijgewerkt" });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-        }
 
         // update status van schademelding
         [HttpPut("inBehandeling/{id}/{status}")]

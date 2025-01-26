@@ -1,16 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Services.Email;
-using Microsoft.Extensions.Logging;
-using QRCoder;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using WPR_project.Data;
-using NuGet.Common;
 
 
 [ApiController]
@@ -379,54 +375,18 @@ public class AccountController : ControllerBase
             return Unauthorized("Ongeldige verificatiecode.");
         }
 
-        // Controleer of de gebruiker een van de bekende rollen heeft
-        var particulierHuurder = await _dbContext.ParticulierHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
-        var zakelijkHuurder = await _dbContext.ZakelijkHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
-        var backofficeMedewerker = await _dbContext.BackofficeMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
-        var frontofficeMedewerker = await _dbContext.FrontofficeMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
-        var bedrijfsMedewerker = await _dbContext.BedrijfsMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
-        var wagenparkBeheerder = await _dbContext.WagenparkBeheerders.FirstOrDefaultAsync(h => h.AspNetUserId == user.Id);
+        var roles = await _userManager.GetRolesAsync(user);
+        if (!roles.Any())
+        {
+            return Unauthorized("Geen rollen gevonden voor deze gebruiker.");
+        }
 
-        string huurderId;
-        string role;
+        var role = roles.First();
 
-        if (particulierHuurder != null)
-        {
-            huurderId = particulierHuurder.particulierId.ToString();
-            role = "ParticuliereHuurder";
-        }
-        else if (zakelijkHuurder != null)
-        {
-            huurderId = zakelijkHuurder.zakelijkeId.ToString();
-            role = "ZakelijkeHuurder";
-        }
-        else if (backofficeMedewerker != null)
-        {
-            huurderId = backofficeMedewerker.BackofficeMedewerkerId.ToString();
-            role = "BackofficeMedewerker";
-        }
-        else if (frontofficeMedewerker != null)
-        {
-            huurderId = frontofficeMedewerker.FrontofficeMedewerkerId.ToString();
-            role = "FrontofficeMedewerker";
-        }
-        else if (bedrijfsMedewerker != null)
-        {
-            huurderId = bedrijfsMedewerker.bedrijfsMedewerkerId.ToString();
-            role = "BedrijfsMedewerker";
-        }
-        else if (wagenparkBeheerder != null)
-        {
-            huurderId = wagenparkBeheerder.beheerderId.ToString();
-            role = "WagenparkBeheerder";
-        }
-        else
-        {
-            return Unauthorized("Huurder niet gevonden.");
-        }
+        var huurderId = await _userManagerService.BepaalHuurderId(model.UserId);
 
         // Genereer een token met de huurder-ID en rol
-        var token = _userManagerService.GenerateJwtToken(huurderId, role);
+        var token =  _userManagerService.GenerateJwtToken(huurderId, role);
 
         // Sla de token op in een HttpOnly cookie
         HttpContext.Response.Cookies.Append("jwt", token, new CookieOptions
@@ -486,30 +446,7 @@ public class AccountController : ControllerBase
     }
 
 
-    [HttpPost("enable-2fa")]
-    [Authorize]
-    public async Task<IActionResult> EnableTwoFactorAuthentication()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        if (user == null)
-        {
-            return Unauthorized();
-        }
-
-        var authenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user);
-        if (string.IsNullOrEmpty(authenticatorKey))
-        {
-            await _userManager.ResetAuthenticatorKeyAsync(user);
-            authenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user);
-        }
-
-        var qrCodeUri = $"otpauth://totp/{Uri.EscapeDataString("WPR Project")}:{Uri.EscapeDataString(user.Email)}?secret={authenticatorKey}&issuer={Uri.EscapeDataString("WPR Project")}&digits=6";
-
-        return Ok(new
-        {
-            QrCodeUri = qrCodeUri
-        });
-    }
+   
 
     [HttpPost("forgot-password")]
     public async Task<IActionResult> ForgotPassword([FromBody] string email)

@@ -18,11 +18,6 @@ namespace WPR_project.Repositories
             return _context.BackofficeMedewerkers.Find(id);
         }
 
-        public void AddBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker)
-        {
-            _context.BackofficeMedewerkers.Add(backOfficeMedewerker);
-        }
-
         public void UpdateBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker)
         {
             var emailUpdateIdentity = backOfficeMedewerker.medewerkerEmail;
@@ -98,7 +93,6 @@ namespace WPR_project.Repositories
             }
 
         }
-
 
         public void Save()
         {

@@ -1,7 +1,7 @@
-﻿using NuGet.Protocol.Core.Types;
-using WPR_project.DTO_s;
+﻿using WPR_project.DTO_s;
+using WPR_project.Models;
 using WPR_project.Repositories;
-using WPR_project.Services.Email;
+
 
 namespace WPR_project.Services
 {
@@ -9,13 +9,14 @@ namespace WPR_project.Services
     {
         private readonly ISchademeldingRepository _repo;
 
-        
+
 
         public SchademeldingService(
             ISchademeldingRepository repository)
         {
             _repo = repository;
         }
+
         public SchademeldingDTO GetById(Guid id)
         {
             var schademelding = _repo.GetSchademeldingById(id);
@@ -27,7 +28,7 @@ namespace WPR_project.Services
                 Beschrijving = schademelding.Beschrijving,
                 Opmerkingen = schademelding.Opmerkingen,
                 Status = schademelding.Status
-                
+
             };
         }
         public void Update(Guid id, SchademeldingDTO dto)
@@ -36,8 +37,41 @@ namespace WPR_project.Services
             if (schademelding == null) throw new KeyNotFoundException("Huurverzoek niet gevonden.");
 
             schademelding.Status = dto.Status;
-            
+
             _repo.Update(schademelding);
+            _repo.Save();
+        }
+
+        public IQueryable<SchadeMeldingInfoDTO> GetAllSchademeldingen()
+        {
+            return _repo.GetAllSchademeldingen().Select(h => new SchadeMeldingInfoDTO
+            {
+                SchademeldingId = h.SchademeldingId,
+                Beschrijving = h.Beschrijving,
+                Datum = h.Datum,
+                Status = h.Status,
+                Opmerkingen = h.Opmerkingen,
+                VoertuigId = h.VoertuigId,
+                IsAfgehandeld = h.IsAfgehandeld,
+
+            });
+        }
+
+
+        public void newSchademelding(SchademeldingDTO schademelding)
+        {
+
+            var melding = new Schademelding
+            {
+                SchademeldingId = Guid.NewGuid(),
+                Beschrijving = schademelding.Beschrijving,
+                Datum = schademelding.Datum,
+                Opmerkingen = schademelding.Opmerkingen,
+                Status = schademelding.Status,
+                VoertuigId = schademelding.VoertuigId
+            };
+
+            _repo.Add(melding);
             _repo.Save();
         }
     }

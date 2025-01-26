@@ -1,7 +1,4 @@
-﻿using NuGet.Protocol.Core.Types;
-using System;
-using System.Collections.Generic;
-using WPR_project.Models;
+﻿using WPR_project.Models;
 using WPR_project.Repositories;
 using WPR_project.Services.Email;
 
@@ -10,18 +7,15 @@ namespace WPR_project.Services
     public class AbonnementService
     {
         private readonly IAbonnementRepository _abonnementRepository;
-        private readonly IZakelijkeHuurderRepository _zakelijkeHuurderRepository;
         private readonly IWagenparkBeheerderRepository _wagenparkBeheerderRepository;
         private readonly IEmailService _emailService;
 
         public AbonnementService(
             IAbonnementRepository abonnementRepository,
-            IZakelijkeHuurderRepository zakelijkeHuurderRepository,
             IWagenparkBeheerderRepository wagenparkBeheerderRepository,
             IEmailService emailService)
         {
             _abonnementRepository = abonnementRepository;
-            _zakelijkeHuurderRepository = zakelijkeHuurderRepository;
             _wagenparkBeheerderRepository = wagenparkBeheerderRepository;
             _emailService = emailService;
         }
@@ -30,10 +24,7 @@ namespace WPR_project.Services
         {
             return _abonnementRepository.GetAllAbonnementen();
         }
-        public IEnumerable<Abonnement>GetBijnaVerlopenAbonementen() 
-        {
-            return _abonnementRepository.GetBijnaVerlopenAbonnementen();
-        }
+
 
         public Abonnement GetAbonnementById(Guid id)
         {
@@ -111,28 +102,6 @@ namespace WPR_project.Services
         }
 
 
-        public void VerwerkPayAsYouGoBetaling(Guid beheerderId, decimal bedrag)
-        {
-            var huurder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
-            if (huurder == null)
-                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
-
-            if (huurder.AbonnementType != AbonnementType.PayAsYouGo)
-                throw new InvalidOperationException("Eenmalige betaling is alleen toegestaan voor Pay-As-You-Go abonnementen.");
-
-            string bericht = $@"
-            Beste {huurder.beheerderNaam},
-
-            Uw eenmalige betaling van €{bedrag:F2} is succesvol verwerkt.
-
-            Datum: {DateTime.Now:dd-MM-yyyy}
-
-            Met vriendelijke groet,
-            Het Team";
-
-            _emailService.SendEmail(huurder.bedrijfsEmail, "Betaling bevestigd", bericht);
-        }
-
         public void AddAbonnement(Abonnement abonnement)
         {
             if (abonnement == null)
@@ -145,33 +114,7 @@ namespace WPR_project.Services
         }
 
 
-        public void VerwerkPrepaidBetaling(Guid beheerderId, decimal kosten)
-        {
-            var huurder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
-            if (huurder == null)
-                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
-
-            if (huurder.PrepaidSaldo < kosten)
-                throw new InvalidOperationException("Onvoldoende saldo om deze transactie te voltooien.");
-
-            huurder.PrepaidSaldo -= kosten;
-            _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(huurder);
-            _zakelijkeHuurderRepository.Save();
-
-            string bericht = $@"
-        Beste {huurder.beheerderNaam},
-
-        Uw prepaid saldo is aangepast.
-        Bedrag afgetrokken: €{kosten:F2}
-        Nieuw saldo: €{huurder.PrepaidSaldo:F2}
-
-        Datum: {DateTime.Now:dd-MM-yyyy}
-
-        Met vriendelijke groet,
-        CarAndAll";
-
-            _emailService.SendEmail(huurder.bedrijfsEmail, "Saldo update voor uw prepaid-account", bericht);
-        }
+       
         public void LaadPrepaidSaldoOp(Guid beheerderId, decimal bedrag)
         {
             var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
@@ -195,39 +138,6 @@ namespace WPR_project.Services
         CarAndAll";
 
             _emailService.SendEmail(beheerder.bedrijfsEmail, "Prepaid saldo opgewaardeerd", bericht);
-        }
-
-        public void WijzigAbonnement(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
-        {
-            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
-            if (beheerder == null)
-                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden");
-
-            var nieuwAbonnement = _abonnementRepository.GetAbonnementById(abonnementId);
-            if (nieuwAbonnement == null)
-                throw new KeyNotFoundException("Abonnement niet gevonden.");
-
-            if (nieuwAbonnement.AbonnementType != abonnementType)
-                throw new InvalidOperationException("Abonnementstype komt niet overeen met het geselecteerde type");
-
-            if (beheerder.HuidigAbonnement != null)
-            {
-                var huidigAbonnement = beheerder.HuidigAbonnement;
-                huidigAbonnement.ZakelijkHuurder = null;
-                _abonnementRepository.UpdateAbonnement(huidigAbonnement);
-            }
-
-            beheerder.HuidigAbonnement = nieuwAbonnement;
-            beheerder.AbonnementId = nieuwAbonnement.AbonnementId;
-            beheerder.AbonnementType = abonnementType;
-            beheerder.updateDatumAbonnement = DateTime.Now;
-
-            _abonnementRepository.UpdateAbonnement(nieuwAbonnement);
-            _wagenparkBeheerderRepository.UpdateWagenparkBeheerder(beheerder);
-            _wagenparkBeheerderRepository.Save();
-
-            StuurBevestigingsEmail(beheerderId, abonnementId);
-            StuurFactuurEmail(beheerderId, abonnementId);
         }
 
         public void WijzigAbonnementMetDirecteKosten(Guid beheerderId, Guid abonnementId, AbonnementType abonnementType)
@@ -264,60 +174,6 @@ namespace WPR_project.Services
 
         }
 
-        public void StuurFactuurEmail(Guid beheerderId, Guid abonnementId)
-        {
-            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
-            if (beheerder == null)
-                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
-            var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
-            if (abonnement == null)
-                throw new KeyNotFoundException("Abonnement niet gevonden.");
-
-            string subject = "Factuur voor uw nieuwe abonnement";
-            string body = $@"
-            Beste {beheerder.beheerderNaam},
-
-            Hartelijk dank voor het kiezen van het {abonnement.Naam}-abonnement.
-            Hieronder vindt u de details van uw abonnement:
-
-            Abonnement: {abonnement.Naam}
-            Kosten: €{abonnement.Kosten:F2} per maand
-            Startdatum: {beheerder.updateDatumAbonnement:dd-MM-yyyy}
-
-            Bewaar deze factuur voor uw administratie.
-            Met vriendelijke groet,
-            CarAndAll";
-
-            _emailService.SendEmail(beheerder.bedrijfsEmail, subject, body);
-        }
-        public void StuurBevestigingsEmail(Guid beheerderId, Guid abonnementId)
-        {
-            // Haal de WagenparkBeheerder en Abonnement op
-            var beheerder = _wagenparkBeheerderRepository.GetBeheerderById(beheerderId);
-               if (beheerder == null) {
-                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
-            }
-            var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);
-               if (abonnement == null) {
-                throw new KeyNotFoundException("Abonnement niet gevonden.");
-            }
-            // Factuur bericht
-            string subject = "Bevestiging van uw abonnementswijziging";
-            string body = $@"
-            Beste {beheerder.beheerderNaam},
-
-            Uw abonnementswijziging is geregistreerd.
-
-            Nieuw abonnement: {abonnement.Naam}
-            Kosten: €{abonnement.Kosten:F2} per maand
-            Ingangsdatum: {beheerder.updateDatumAbonnement:dd-MM-yyyy}
-
-            Met vriendelijke groet,
-            CarAndAll";
-
-            // Verstuur de e-mail
-            _emailService.SendEmail(beheerder.bedrijfsEmail, subject, body);
-        }
         public Abonnement GetAbonnementDetails(Guid abonnementId)
         {
             var abonnement = _abonnementRepository.GetAbonnementById(abonnementId);

@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "../../context/UserContext";
 import "../../styles/styles.css";
-import ParticulierHuurdersRequestService from "../../services/requests/ParticulierHuurderRequestService";
 import { useNavigate, useLocation } from "react-router-dom";
 import JwtService from "../../services/JwtService";
 import axios from "axios";
 import { toast } from 'react-toastify';
-import BackOfficeMedewerker from "./BackOfficeMedewerker";
 
 const AccountwijzigingBackOffice = () => {
     const [formData, setFormData] = useState({

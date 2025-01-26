@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
-import ParticulierHuurdersRequestService from '../../services/requests/ParticulierHuurderRequestService';
-import BedrijfsMedewerkerRequestService from '../../services/requests/bedrijfsMedewerkerRequestService';
-import VoertuigRequestService from '../../services/requests/VoertuigRequestService';
-import HuurVerzoekRequestService from '../../services/requests/HuurVerzoekRequestService';
 import JwtService from "../../services/JwtService";
+import axios from "axios";
 
 const BevestigingHuur = () => {
     const navigate = useNavigate();
@@ -43,10 +40,12 @@ const BevestigingHuur = () => {
                 let huurderResponse;
 
                 if (userRole === "ParticuliereHuurder") {
-                    huurderResponse = await ParticulierHuurdersRequestService.getById(huurderId);
+                    const huurderResponse = await axios.get(
+                        `https://localhost:5033/api/ParticulierHuurder/${huurderId}`);
                     console.log("Particulier Huurder Data:", huurderResponse.data);
-                } else if (userRole === "BedrijfsMedewerker") {
-                    huurderResponse = await BedrijfsMedewerkerRequestService.getById(huurderId);
+                } else if (userRole === "Bedrijfsmedewerker") {
+                    const huurderResponse = await axios.get(
+                        `https://localhost:5033/api/BedrijfsMedewerkers/${huurderId}`);
                     console.log("Zakelijk Huurder Data:", huurderResponse.data);
                 }
                 console.log(huurderResponse.data);
@@ -88,7 +87,7 @@ const BevestigingHuur = () => {
 
             
             console.log("Huurverzoek object:", huurverzoek);
-            await HuurVerzoekRequestService.register(huurverzoek);
+            await axios.post(`https://localhost:5033/api/Huurverzoek`, huurverzoek);
 
             alert(`Huurverzoek succesvol bevestigd voor ${huurderNaam}!`);
             navigate("/");

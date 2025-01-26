@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using WPR_project.Models;
+﻿using WPR_project.Models;
 using WPR_project.Repositories;
 
 namespace WPR_project.Services
