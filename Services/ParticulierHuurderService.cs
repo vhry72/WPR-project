@@ -6,18 +6,21 @@ using WPR_project.Services.Email;
 
 namespace WPR_project.Services
 {
+    // Service voor het beheren van particuliere huurders
     public class ParticulierHuurderService
     {
+        // Constructor: initialiseert de repository en de e-mailservice
         private readonly IHuurderRegistratieRepository _repository;
         private readonly IEmailService _emailService;
 
+        // Haal de gegevens van een particuliere huurder op voor bewerking
         public ParticulierHuurderService(IHuurderRegistratieRepository repository, IEmailService emailService)
         {
             _repository = repository;
             _emailService = emailService;
         }
 
-
+        // Haal de basisgegevens van een particuliere huurder op
         public ParticulierHuurderWijzigDTO GetGegevensById(Guid id)
         {
             var huurder = _repository.GetById(id);
@@ -35,7 +38,7 @@ namespace WPR_project.Services
             };
 
         }
-
+        // Haal de basisgegevens van een particuliere huurder op
         public ParticulierHuurderDTO GetById(Guid id)
         {
             var huurder = _repository.GetById(id);
@@ -50,7 +53,7 @@ namespace WPR_project.Services
             };
         }
 
-
+        // Werk de gegevens van een particuliere huurder bij
         public void Update(Guid id, ParticulierHuurderWijzigDTO dto)
         {
             var huurder = _repository.GetById(id);
@@ -69,6 +72,7 @@ namespace WPR_project.Services
             _repository.Save();
         }
 
+        // Verwijder (deactiveer) een particuliere huurder en stuur een e-mailbevestiging
         public void Delete(Guid id)
         {
             var huurder = _repository.GetById(id);

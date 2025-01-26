@@ -5,6 +5,7 @@ using WPR_project.Services.Email;
 using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
+// dit is de controller voor de abonnementen van de wagenparkbeheerder en de zakelijke huurder
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -31,6 +32,7 @@ namespace WPR_project.Controllers
             _emailService = emailService;
         }
 
+        // Hier vraag je alle abonnementen op
         [HttpGet]
         public IActionResult GetAllAbonnementen()
         {
@@ -45,10 +47,12 @@ namespace WPR_project.Controllers
             }
         }
 
+
         [Authorize(Roles = "WagenparkBeheerder")]
         [HttpPost("{beheerderId}/abonnement/maken")]
         public IActionResult MaakBedrijfsAbonnement(Guid beheerderId, [FromBody] AbonnementDTO abonnementDto)
         {
+            // Controleer of het verzoek geldig is
             if (abonnementDto == null)
             {
                 return BadRequest(new { Error = "Het verzoek mag niet null zijn." });
@@ -80,7 +84,7 @@ namespace WPR_project.Controllers
                     return NotFound(new { Error = "Zakelijke huurder niet gevonden." });
                 }
 
-                // Maak een nieuw abonnement aan
+                // Maak een nieuw abonnement aan met de gegeven gegevens
                 var nieuwAbonnement = new Abonnement
                 {
                     AbonnementId = Guid.NewGuid(),
@@ -112,12 +116,15 @@ namespace WPR_project.Controllers
         }
 
 
+
         [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpPost("{beheerderId}/saldo/opwaarderen")]
         public IActionResult LaadSaldoOp(Guid zakelijkeId, [FromBody] decimal bedrag)
         {
             try
             {
+                // Laad het saldo van een zakelijke huurder op met een specifiek bedrag
                 _service.LaadPrepaidSaldoOp(zakelijkeId, bedrag);
                 return Ok(new { Message = "Saldo succesvol opgewaardeerd." });
             }
@@ -128,12 +135,16 @@ namespace WPR_project.Controllers
         }
 
 
+
         [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpPost("{beheerderId}/medewerker/toevoegen/{medewerkerId}")]
         public IActionResult VoegMedewerkerToe(Guid beheerderId, Guid medewerkerId)
         {
+           
             try
             {
+                // Voeg de medewerker toe aan het abonnement
                 _service.VoegMedewerkerToe(beheerderId, medewerkerId);
                 return Ok(new { Message = "Medewerker succesvol toegevoegd." });
             }
@@ -143,7 +154,9 @@ namespace WPR_project.Controllers
             }
         }
 
+
         [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpDelete("{beheerderId}/medewerker/verwijderen/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid beheerderId, Guid medewerkerId)
         {
@@ -163,12 +176,15 @@ namespace WPR_project.Controllers
         }
 
 
+
         [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpGet("{beheerderId}/huidig-abonnement")]
         public IActionResult GetHuidigAbonnement(Guid beheerderId)
         {
             try
             {
+                // Haal de details van het huidige abonnement van een wagenparkbeheerder op
                 var abonnement = _service.GetAbonnementDetails(beheerderId);
                 return Ok(abonnement);
             }
@@ -182,7 +198,9 @@ namespace WPR_project.Controllers
             }
         }
 
+
         [Authorize(Roles = "WagenparkBeheerder")]
+
         [HttpPost("{beheerderId}/abonnement/wijzig")]
         public IActionResult WijzigAbonnement(Guid beheerderId, [FromBody] AbonnementWijzigDTO abonnement)
         {
@@ -206,6 +224,7 @@ namespace WPR_project.Controllers
             {
                 return BadRequest(new { Error = ex.Message });
             }
+
         }
     }
 }

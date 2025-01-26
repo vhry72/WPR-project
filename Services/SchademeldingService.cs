@@ -5,18 +5,19 @@ using WPR_project.Repositories;
 
 namespace WPR_project.Services
 {
+    // Service voor het beheren van schademeldingen
     public class SchademeldingService
     {
         private readonly ISchademeldingRepository _repo;
 
 
-
+        // Constructor: initialiseert de repository
         public SchademeldingService(
             ISchademeldingRepository repository)
         {
             _repo = repository;
         }
-
+        // Haal een specifieke schademelding op via ID
         public SchademeldingDTO GetById(Guid id)
         {
             var schademelding = _repo.GetSchademeldingById(id);
@@ -31,6 +32,7 @@ namespace WPR_project.Services
 
             };
         }
+        // Werk de status van een schademelding bij
         public void Update(Guid id, SchademeldingDTO dto)
         {
             var schademelding = _repo.GetSchademeldingById(id);
@@ -42,6 +44,7 @@ namespace WPR_project.Services
             _repo.Save();
         }
 
+        // Haal alle schademeldingen op
         public IQueryable<SchadeMeldingInfoDTO> GetAllSchademeldingen()
         {
             return _repo.GetAllSchademeldingen().Select(h => new SchadeMeldingInfoDTO
@@ -58,6 +61,7 @@ namespace WPR_project.Services
         }
 
 
+        // Maak een nieuwe schademelding aan
         public void newSchademelding(SchademeldingDTO schademelding)
         {
 

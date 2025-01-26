@@ -52,13 +52,13 @@ namespace WPR_project.Services.Email
                 mailMessage.Dispose();
             }
         }
-
+        // Verstuur een e-mail met een afbeelding als bijlage
         public async Task SendEmailWithImage(string naarGebruiker, string subject, string body, byte[] attachmentData)
         {
             using (var client = new SmtpClient(_smtpServer, _smtpPort)
             {
                 Credentials = new NetworkCredential(_smtpUser, _smtpPass),
-                EnableSsl = true
+                EnableSsl = true // Zorg voor een veilige verbinding via SSL/TLS
             })
             {
                 var mailMessage = new MailMessage

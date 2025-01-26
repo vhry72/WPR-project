@@ -6,6 +6,8 @@ using Hangfire;
 
 namespace WPR_project.Services;
 
+// Service voor het beheren van huurverzoeken
+
 public class HuurverzoekService 
 {
 
@@ -18,6 +20,7 @@ public class HuurverzoekService
     
     private const string OphaalLocatie = "Johanna Westerdijkplein 75, 2521 EP Den Haag";
 
+    // Initialiseer repositories en e-mailservice
     public HuurverzoekService(
         IHuurVerzoekRepository repository,
         IBedrijfsMedewerkersRepository zakelijkRepository,
@@ -30,11 +33,13 @@ public class HuurverzoekService
         _emailService = emailService;
     }
 
+    // Haal beschikbare voertuigen op binnen een opgegeven periode
     public IEnumerable<Voertuig> GetAvailableVehicles(DateTime start, DateTime end)
     {
         return _repository.GetAvailableVehicles(start, end).ToList();
     }
 
+    // Haal het e-mailadres op van een huurder op basis van het ID
     public string GetEmailByHuurderId(Guid huurderId)
     {
         var particulier = _particulierRepository.GetById(huurderId);
@@ -52,6 +57,7 @@ public class HuurverzoekService
         throw new Exception("Geen gebruiker gevonden met het opgegeven ID.");
     }
 
+    // Genereer de inhoud van een e-mail
     private string GenerateEmailBody(DateTime beginDate, string emailType)
     {
         var typeTekst = emailType == "herinnering"
@@ -71,6 +77,7 @@ public class HuurverzoekService
                   Met vriendelijke groet,<br/>Het CarAndAll Team";
     }
 
+    // Voeg een nieuw huurverzoek toe en stuur een e-mailbevestiging
     public void Add(Huurverzoek huurVerzoek)
     {
         if (huurVerzoek.beginDate <= DateTime.Now)
@@ -105,33 +112,44 @@ public class HuurverzoekService
 
 
 
-
+    // haal alle huurverzoeken op
     public IEnumerable<Huurverzoek> GetAllHuurVerzoeken()
         {
             return _repository.GetAllHuurVerzoeken();
         }
-        public IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken()
+
+    // haal alle actieve huurverzoeken op
+    public IEnumerable<Huurverzoek> GetAllActiveHuurVerzoeken()
         {
             return _repository.GetAllActiveHuurVerzoeken();
         }
 
+
+    // haal alle beantwoorde huurverzoeken op
     public IEnumerable<Huurverzoek> GetAllBeantwoordeHuurVerzoeken()
     {
         return _repository.GetAllBeantwoorde();
     }
+
+    // haal alle afgekeurde huurverzoeken op
     public IEnumerable<Huurverzoek> GetAllAfgekeurde()
     {
         return _repository.GetAllAfgekeurde();
     }
 
+    // Haal alle huurverzoeken op van een specifieke huurder
     public IEnumerable<Huurverzoek> GetHuurverzoekByHuurderID(Guid id)
     {
         return _repository.GetHuurverzoekenByHuurderID(id);
     }
+
+    // haal alle goedgekeurde huurverzoeken op
     public IEnumerable<Huurverzoek> GetAllGoedGekeurde()
     {
         return _repository.GetAllGoedGekeurde();
     }
+
+    // Haal details van een specifiek huurverzoek op
     public HuurverzoekIdDTO GetById(Guid id)
     {
         var huurder = _repository.GetByID(id);
@@ -147,6 +165,8 @@ public class HuurverzoekService
             approved = huurder.approved
         };
     }
+
+    // Werk een huurverzoek bij
     public void Update(Guid id, HuurverzoekIdDTO dto)
     {
         var huurder = _repository.GetByID(id);
