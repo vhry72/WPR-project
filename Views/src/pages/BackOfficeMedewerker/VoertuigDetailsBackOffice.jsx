@@ -2,26 +2,40 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 const VoertuigDetails = () => {
     const { voertuigId } = useParams();
     const navigate = useNavigate();
     const [voertuig, setVoertuig] = useState(null);
-    const [formData, setFormData] = useState({ prijsPerDag: "", kleur: "", kenteken: "" });
+    const [formData, setFormData] = useState({
+        merk: "",
+        model: "",
+        kleur: "",
+        prijsPerDag: "",
+        bouwjaar: "",
+        kenteken: "",
+        AantalDeuren: "",
+        AantalSlaapplekken: ""
+    });
+    const [afbeelding, setAfbeelding] = useState(null);
     const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchVoertuigDetails = async () => {
             try {
-                const response = await axios.get(
-                    `https://localhost:5033/api/Voertuig/${voertuigId}`);
-                    console.log(response)
-                setVoertuig(response.data);
-                setFormData({
-                    prijsPerDag: response.prijsPerDag,
-                    kleur: response.kleur,
-                    kenteken: response.kenteken,
-                });
+                const response = await axios.get(`https://localhost:5033/api/Voertuig/${voertuigId}`);
+                if (response.data) {
+                    setVoertuig(response.data);
+                    setFormData({
+                        merk: response.data.merk || "",
+                        model: response.data.model || "",
+                        kleur: response.data.kleur || "",
+                        prijsPerDag: response.data.prijsPerDag || "",
+                        bouwjaar: response.data.bouwjaar || "",
+                        kenteken: response.data.kenteken || "",
+                        AantalDeuren: response.data.AantalDeuren || "",
+                        AantalSlaapplekken: response.data.AantalSlaapplekken || ""
+                    });
+                }
             } catch (err) {
                 console.error("Fout bij ophalen voertuigdetails:", err);
                 setError(err);
@@ -33,116 +47,79 @@ const VoertuigDetails = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleFileChange = (e) => {
+        setAfbeelding(e.target.files[0]);
     };
 
     const handleVoertuigChange = async (e) => {
         e.preventDefault();
+
+        const uploadData = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+            uploadData.append(key, value);
+        });
+        if (afbeelding) {
+            uploadData.append("afbeelding", afbeelding);
+        }
+
         try {
-            const response = await axios.put(
-                `https://localhost:5033/api/Voertuig/veranderGegevens/${voertuigId}`,
-                formData
-            );
-            if (response.status === 200) {
-                alert("Gegevens succesvol bijgewerkt!");
-                setVoertuig((prev) => ({ ...prev, ...formData }));
-            }
+            await axios.put(`https://localhost:5033/api/Voertuig/veranderGegevens/${voertuigId}`, uploadData, { withCredentials: true });
+            alert("Voertuiggegevens succesvol bijgewerkt!");
+            navigate(`/VoertuigTonen`);
         } catch (err) {
-            console.error("Fout bij het bijwerken van de gegevens:", err);
-            setError(err);
+            console.error("Fout bij het bijwerken van de gegevens:", err.response ? err.response.data : err);
+            setError(err.response ? err.response.data : err);
         }
     };
 
-   
-    const handleDelete = async () => {
-        const bevestigen = window.confirm("Weet je zeker dat je dit voertuig wilt verwijderen?");
-        if (bevestigen) {
-            try {
-                const response = await axios.delete(
-                    `https://localhost:5033/api/Voertuig/verwijderVoertuig/${voertuigId}`
-                );
-
-                // Toon een normale alert bij succes
-                alert(response.data.Message || "Voertuig succesvol verwijderd!");
-
-                // Navigeer na succesvolle verwijdering
-                navigate(`/VoertuigTonen`);
-            } catch (err) {
-                console.error("Fout bij verwijderen voertuig:", err);
-
-                // Toon een alert bij een fout
-                alert("Er is een fout opgetreden bij het verwijderen van het voertuig.");
-            }
-        }
-    };
-
-
-
-
-    if (error) {
-        return <div>Er is een fout opgetreden: {error.message}</div>;
-    }
-
-    if (!voertuig) {
-        return <div>Gegevens laden...</div>;
-    }
 
     return (
         <div>
             <h1>Voertuig Details</h1>
-            <p>Merk: {voertuig.merk}</p>
-            <p>Model: {voertuig.model}</p>
-            <p>Prijs Per Dag: {voertuig.prijsPerDag}</p>
-            <p>Kleur: {voertuig.kleur}</p>
-            <p>Bouwjaar: {voertuig.bouwjaar}</p>
             <form onSubmit={handleVoertuigChange}>
                 <div>
-                    <label>Prijs Per Dag:</label>
-                    <input
-                        type="number"
-                        name="prijsPerDag"
-                        value={formData.prijsPerDag}
-                        onChange={handleInputChange}
-                    />
+                    <label>Merk:</label>
+                    <input type="text" name="merk" value={formData.merk} onChange={handleInputChange} />
+                </div>
+                <div>
+                    <label>Model:</label>
+                    <input type="text" name="model" value={formData.model} onChange={handleInputChange} />
                 </div>
                 <div>
                     <label>Kleur:</label>
-                    <input
-                        type="text"
-                        name="kleur"
-                        value={formData.kleur}
-                        onChange={handleInputChange}
-                    />
+                    <input type="text" name="kleur" value={formData.kleur} onChange={handleInputChange} />
+                </div>
+                <div>
+                    <label>Prijs Per Dag:</label>
+                    <input type="number" name="prijsPerDag" value={formData.prijsPerDag} onChange={handleInputChange} />
+                </div>
+                <div>
+                    <label>Bouwjaar:</label>
+                    <input type="number" name="bouwjaar" value={formData.bouwjaar} onChange={handleInputChange} />
                 </div>
                 <div>
                     <label>Kenteken:</label>
-                    <input
-                        type="text"
-                        name="kenteken"
-                        value={formData.kenteken}
-                        onChange={handleInputChange}
-                    />
+                    <input type="text" name="kenteken" value={formData.kenteken} onChange={handleInputChange} />
+                </div>
+                <div>
+                    <label>Aantal Deuren:</label>
+                    <input type="number" name="AantalDeuren" value={formData.AantalDeuren} onChange={handleInputChange} />
+                </div>
+                <div>
+                    <label>Aantal Slaapplekken:</label>
+                    <input type="number" name="AantalSlaapplekken" value={formData.AantalSlaapplekken} onChange={handleInputChange} />
+                </div>
+                <div>
+                    <label>Afbeelding:</label>
+                    <input type="file" onChange={handleFileChange} />
                 </div>
                 <button type="submit">Verander Gegevens</button>
             </form>
-            <button
-                onClick={handleDelete}
-                style={{
-                    backgroundColor: "red",
-                    color: "white",
-                    padding: "10px",
-                    border: "none",
-                    cursor: "pointer",
-                }}
-            >
-                Verwijder Voertuig
-            </button>
-            <button onClick={() => navigate(`/VoertuigTonen`)} className="button">
-                Terug naar Overzicht
-            </button>
-            
+            {error && <div>Er is een fout opgetreden: {error.message}</div>}
         </div>
-
     );
 };
 

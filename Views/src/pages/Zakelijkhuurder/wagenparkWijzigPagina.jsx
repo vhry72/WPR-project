@@ -35,8 +35,7 @@ const WagenparkWijzigPagina = () => {
 
             try {
                 const response = await axios.get(
-                    `https://localhost:5033/api/ZakelijkeHuurder/${beheerderId}/WagenparkGegevens`
-                );
+                    `https://localhost:5033/api/ZakelijkeHuurder/${beheerderId}/WagenparkGegevens`, { withCredentials: true });
 
 
                 const actieveMedewerkers = response.data.filter(
@@ -70,7 +69,7 @@ const WagenparkWijzigPagina = () => {
             if (!medewerkerId) return;
             setIsLoading(true);
             try {
-                const response = await axios.get(`https://localhost:5033/api/WagenparkBeheerder/${medewerkerId}/gegevens`);
+                const response = await axios.get(`https://localhost:5033/api/WagenparkBeheerder/${medewerkerId}/gegevens`, { withCredentials: true });
                 if (response.data) {
                     setMedewerkerGegevens({
                         beheerderNaam: response.data.beheerderNaam,
@@ -110,7 +109,7 @@ const WagenparkWijzigPagina = () => {
         if (confirmDelete) {
             setIsLoading(true);
             try {
-                const response = await axios.delete(`https://localhost:5033/api/WagenparkBeheerder/${medewerkerId}`);
+                const response = await axios.delete(`https://localhost:5033/api/WagenparkBeheerder/${medewerkerId}`, { withCredentials: true });
                 toast.success("Medewerker is succesvol verwijderd!");
                 setMedewerkers(medewerkers.filter(medewerker => medewerker.beheerderId !== medewerkerId));
                 setMedewerkerGegevens({ beheerderNaam: '', bedrijfsEmail: '' });
@@ -132,7 +131,7 @@ const WagenparkWijzigPagina = () => {
         try {
             console.log(medewerkerId);
             console.log(medewerkerGegevens);
-            const response = await axios.put(`https://localhost:5033/api/WagenparkBeheerder/${medewerkerId}/updateGegevens`, medewerkerGegevens, {
+            const response = await axios.put(`https://localhost:5033/api/WagenparkBeheerder/${medewerkerId}/updateGegevens`, medewerkerGegevens, {withCredentials: true ,
                 headers: {
                     'Content-Type': 'application/json'
                 }

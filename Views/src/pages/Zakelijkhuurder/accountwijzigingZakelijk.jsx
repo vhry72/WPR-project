@@ -43,7 +43,7 @@ const AccountwijzigingZakelijk = () => {
         const fetchUserDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`https://localhost:5033/api/ZakelijkeHuurder/${huurderId}/gegevens`)
+                const response = await axios.get(`https://localhost:5033/api/ZakelijkeHuurder/${huurderId}/gegevens`, { withCredentials: true });
                 console.log(response.data)
                 if (response && response.data) {
                     setFormData({
@@ -86,7 +86,7 @@ const AccountwijzigingZakelijk = () => {
                 bedrijfsNaam: formData.name,
             };
 
-            const response = await axios.put(`https://localhost:5033/api/ZakelijkeHuurder/${huurderId}`, payload);
+            const response = await axios.put(`https://localhost:5033/api/ZakelijkeHuurder/${huurderId}`, payload, { withCredentials: true });
             if (response.status === 200) {
                 toast.success("Gebruikersgegevens succesvol bijgewerkt!");
                 navigate("/");
@@ -105,7 +105,7 @@ const AccountwijzigingZakelijk = () => {
         if (window.confirm("Weet je zeker dat je je account wilt verwijderen?")) {
             setIsLoading(true);
             try {
-                await axios.delete(`https://localhost:5033/api/ZakelijkeHuurder/${huurderId}`);
+                await axios.delete(`https://localhost:5033/api/ZakelijkeHuurder/${huurderId}`, { withCredentials: true });
                 toast.success("Account succesvol verwijderd.");
                 await JwtService.handleLogout(setUserRole, navigate);
                 navigate("/");

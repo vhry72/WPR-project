@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WPR_project.Data;
 
@@ -11,9 +12,11 @@ using WPR_project.Data;
 namespace WPR_project.Migrations
 {
     [DbContext(typeof(GegevensContext))]
-    partial class GegevensContextModelSnapshot : ModelSnapshot
+    [Migration("20250126173108_updatemedewerker")]
+    partial class updatemedewerker
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -391,6 +394,9 @@ namespace WPR_project.Migrations
                     b.Property<bool>("IsEmailBevestigd")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("ZakelijkHuurderzakelijkeId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("beheerderId")
                         .HasColumnType("uniqueidentifier");
 
@@ -411,6 +417,8 @@ namespace WPR_project.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("bedrijfsMedewerkerId");
+
+                    b.HasIndex("ZakelijkHuurderzakelijkeId");
 
                     b.ToTable("BedrijfsMedewerkers");
                 });
@@ -900,6 +908,13 @@ namespace WPR_project.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("WPR_project.Models.BedrijfsMedewerkers", b =>
+                {
+                    b.HasOne("ZakelijkHuurder", null)
+                        .WithMany("Medewerkers")
+                        .HasForeignKey("ZakelijkHuurderzakelijkeId");
+                });
+
             modelBuilder.Entity("WPR_project.Models.FrontofficeMedewerker", b =>
                 {
                     b.HasOne("WPR_project.Models.FrontofficeMedewerker", null)
@@ -966,6 +981,11 @@ namespace WPR_project.Migrations
             modelBuilder.Entity("WPR_project.Models.Voertuig", b =>
                 {
                     b.Navigation("Schademeldingen");
+                });
+
+            modelBuilder.Entity("ZakelijkHuurder", b =>
+                {
+                    b.Navigation("Medewerkers");
                 });
 #pragma warning restore 612, 618
         }

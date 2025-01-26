@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using WPR_project.DTO_s;
 using WPR_project.Services;
 
@@ -16,7 +17,7 @@ namespace WPR_project.Controllers
         }
 
 
-
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder,Bedrijfsmedewerker")]
         [HttpGet("{id}")]
         public ActionResult<BedrijfsMedewerkersDTO> GetById(Guid id)
         {
@@ -29,6 +30,7 @@ namespace WPR_project.Controllers
             return Ok(medewerker);
         }
 
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder,Bedrijfsmedewerker")]
         [HttpGet("{id}/gegevens")]
         public ActionResult<BedrijfsMedewerkerWijzigDTO> GetGegevensById(Guid id)
         {
@@ -41,7 +43,7 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
- 
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder")]
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] BedrijfsMedewerkerWijzigDTO dto)
         {
@@ -64,7 +66,7 @@ namespace WPR_project.Controllers
         }
 
 
-
+        [Authorize(Roles = "Wagenparkbeheerder,ZakelijkeHuurder")]
         [HttpDelete("{id}")]
         public IActionResult DeleteMedewerker(Guid id)
         {

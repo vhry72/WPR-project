@@ -47,7 +47,7 @@ const PrivacyVerklaringWijziging = () => {
 
     const fetchPrivacyVerklaringen = async () => {
         try {
-            const response = await axios.get('https://localhost:5033/api/PrivacyVerklaring/AllePrivacyVerklaringen');
+            const response = await axios.get(`https://localhost:5033/api/PrivacyVerklaring/AllePrivacyVerklaringen`, { withCredentials: true });
             setPrivacyVerklaringen(response.data);
         } catch (error) {
             console.error("Fout bij het ophalen van privacyverklaringen:", error);
@@ -69,7 +69,7 @@ const PrivacyVerklaringWijziging = () => {
                 verklaring: genormaliseerdeVerklaring
             };
 
-            await axios.post('https://localhost:5033/api/PrivacyVerklaring/Voeg-privacyVerklaring-toe', nieuweVerklaring, config);
+            await axios.post('https://localhost:5033/api/PrivacyVerklaring/Voeg-privacyVerklaring-toe', nieuweVerklaring, config, { withCredentials: true });
             toast.success("Succesvol de nieuwe privacyverklaring geupload!");
             fetchPrivacyVerklaringen();
             fetchLatestPrivacyVerklaring()

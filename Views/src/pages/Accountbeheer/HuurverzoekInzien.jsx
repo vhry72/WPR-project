@@ -21,7 +21,7 @@ const HuurverzoekInzien = () => {
             try {
                 setLoading(true);
                 const userId = await JwtService.getUserId();
-                const response = await axios.get(`https://localhost:5033/api/HuurVerzoek/GetByHuurderID/${userId}`);
+                const response = await axios.get(`https://localhost:5033/api/HuurVerzoek/GetByHuurderID/${userId}`, { withCredentials: true });
                 const voertuigenData = await Promise.all(response.data.map(async (huur) => {
                     const voertuigGegevens = await fetchVoertuigGegevens(huur.voertuigId);
                     return {
@@ -44,7 +44,7 @@ const HuurverzoekInzien = () => {
 
     const fetchVoertuigGegevens = async (voertuigId) => {
         try {
-            const response = await axios.get(`https://localhost:5033/api/Voertuig/${voertuigId}`);
+            const response = await axios.get(`https://localhost:5033/api/Voertuig/${voertuigId}`, { withCredentials: true });
             return response.data;
         } catch (error) {
             console.error(`Fout bij het ophalen van voertuiggegevens voor VoertuigID: ${voertuigId}`, error);

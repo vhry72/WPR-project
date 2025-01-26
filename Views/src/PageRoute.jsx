@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-/*import Layout from "./pages/Beveiliging/LayoutTest";*/
 import Layout from "./pages/Beveiliging/Layout";
 import Register from "./pages/Accountbeheer/register";
 import Index from "./pages/Index";
@@ -31,7 +30,6 @@ import VoertuigToevoegen from "./pages/BackOfficeMedewerker/VoertuigToevoegen";
 import MedewerkersWijzigen from "./pages/Wagenparkbeheerder/MedewerkersWijzigen"
 import WijzigBedrijfsAbonnement from "./pages/AbonnementBeheer/WijzigBedrijfsAbonnement";
 import WagenparkBeheerderForm from "./pages/Zakelijkhuurder/WagenparkBeheerderForm";
-import WijzigingVoertuig from "./pages/FrontOfficeMedewerker/WijzigingenVoertuig";
 import HuurverzoekInzien from "./pages/Accountbeheer/HuurverzoekInzien";
 import RegisterBedrijfsmedewerker from "./pages/Wagenparkbeheerder/RegisterBedrijfsmedewerker";
 import PrivacyverklaringWijziging from "./pages/BackOfficeMedewerker/PrivacyVerklaringWijziging";
@@ -275,14 +273,6 @@ function PageRoute() {
                             }
                         />
                         <Route
-                            path="WijzigingenVoertuig/:voertuigId"
-                            element={
-                                <PrivateRoute allowedRoles={["Frontofficemedewerker"]}>
-                                    <WijzigingVoertuig/>
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
                             path="VoeruigInenUitname"
                             element={
                                 <PrivateRoute allowedRoles={["Frontofficemedewerker"]}>
@@ -378,12 +368,11 @@ function PageRoute() {
                         <Route
                             path="Schadeclaims"
                             element={
-                                <PrivateRoute allowedRoles={["Backofficemedewerker"]}>
+                                <PrivateRoute allowedRoles={["Backofficemedewerker", "Frontofficemedewerker"]}>
                                     <Schadeclaims />
                                 </PrivateRoute>
                             }
                         />
-                       
                     </Route>
                 </Routes>
             </BrowserRouter>

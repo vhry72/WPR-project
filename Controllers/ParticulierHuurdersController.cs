@@ -30,7 +30,7 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-
+        [Authorize(Roles = "ParticuliereHuurder")]
         [HttpGet("{id}/gegevens")]
         public ActionResult<ParticulierHuurderDTO> GetGegevensById(Guid id)
         {
@@ -44,7 +44,7 @@ namespace WPR_project.Controllers
         }
 
 
-
+        [Authorize(Roles = "ParticuliereHuurder")]
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] ParticulierHuurderWijzigDTO dto)
         {
@@ -66,6 +66,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "ParticuliereHuurder")]
         [HttpDelete("{id}")]
         public IActionResult DeleteHuurder(Guid id)
         {

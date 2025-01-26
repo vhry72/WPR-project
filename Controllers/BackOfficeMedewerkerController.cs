@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WPR_project.Services;
 using WPR_project.DTO_s;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
 {
@@ -18,7 +19,7 @@ namespace WPR_project.Controllers
             _frontOfficeService = frontOfficeService;
         }
 
-
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpDelete("verwijdermedewerker/{frontOfficeMedewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid frontOfficeMedewerkerId)
         {
@@ -38,6 +39,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpDelete("VerwijderBackoffice/{Id}")]
         public IActionResult VerwijderBackOfficeMedewerker(Guid id)
         {
@@ -52,6 +54,7 @@ namespace WPR_project.Controllers
             }
         }
 
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpGet("{id}/gegevens")]
         public ActionResult<BackofficeMedewerkerWijzigDTO> GetGegevensById(Guid id)
         {
@@ -64,7 +67,7 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] BackofficeMedewerkerWijzigDTO dto)
         {
@@ -86,7 +89,7 @@ namespace WPR_project.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Backofficemedewerker")]
         [HttpPost("{Abonnementid}/Keuring/{keuring}")]
         public IActionResult keuringAbonnement(Guid Abonnementid, bool keuring)
         {

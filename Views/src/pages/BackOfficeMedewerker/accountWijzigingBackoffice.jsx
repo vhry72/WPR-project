@@ -40,7 +40,7 @@ const AccountwijzigingBackOffice = () => {
         const fetchUserDetails = async () => {
             setIsLoading(true);
             try {
-                const response = await axios.get(`https://localhost:5033/api/BackOfficeMedewerker/${medewerkerId}/gegevens`)
+                const response = await axios.get(`https://localhost:5033/api/BackOfficeMedewerker/${medewerkerId}/gegevens`, { withCredentials: true });
                 console.log(response.data)
                 if (response && response.data) {
                     setFormData({
@@ -77,7 +77,7 @@ const AccountwijzigingBackOffice = () => {
                 medewerkerEmail: formData.email,
             };
 
-            const response = await axios.put(`https://localhost:5033/api/BackOfficeMedewerker/${medewerkerId}`, payload);
+            const response = await axios.put(`https://localhost:5033/api/BackOfficeMedewerker/${medewerkerId}`, payload, { withCredentials: true });
             if (response.status === 200) {
                 toast.success("Gebruikersgegevens succesvol bijgewerkt!");
                 navigate("/");
@@ -96,7 +96,7 @@ const AccountwijzigingBackOffice = () => {
         if (window.confirm("Weet je zeker dat je je account wilt verwijderen?")) {
             setIsLoading(true);
             try {
-                await axios.delete(`https://localhost:5033/api/BackOfficeMedewerker/VerwijderBackoffice/${medewerkerId}`);
+                await axios.delete(`https://localhost:5033/api/BackOfficeMedewerker/VerwijderBackoffice/${medewerkerId}`, { withCredentials: true });
                 toast.success("Account succesvol verwijderd.");
                 await JwtService.handleLogout(setUserRole, navigate);
                 navigate("/");
