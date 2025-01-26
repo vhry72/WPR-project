@@ -36,6 +36,7 @@ namespace WPR_project.Services
                 VerklaringId = Guid.NewGuid(),
             };
 
+            SendEmailToBackOffice(privacyVerklaringdto.MedewerkerId);
             _repository.Add(privacyVerklaring);
         }
 

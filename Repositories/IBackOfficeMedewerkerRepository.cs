@@ -8,8 +8,6 @@ namespace WPR_project.Repositories
     {
         public BackofficeMedewerker GetBackofficemedewerkerById(Guid id);
 
-        void AddBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker);
-
         void UpdateBackOfficeMedewerker(BackofficeMedewerker backOfficeMedewerker);
 
         void DeleteBackOfficeMedewerker(Guid id);

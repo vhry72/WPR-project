@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using WPR_project.DTO_s;
 using WPR_project.Services;
-using WPR_project.Models;
 
 namespace WPR_project.Controllers
 {
@@ -16,15 +15,8 @@ namespace WPR_project.Controllers
             _service = service;
         }
 
-        // haal bedrijfsmedewerkers op
-        [HttpGet]
-        public ActionResult<IEnumerable<BedrijfsMedewerkersDTO>> GetAll()
-        {
-            var medewerkers = _service.GetAll();
-            return Ok(medewerkers);
-        }
 
-        // haal medewerker op via Id
+
         [HttpGet("{id}")]
         public ActionResult<BedrijfsMedewerkersDTO> GetById(Guid id)
         {
@@ -49,7 +41,7 @@ namespace WPR_project.Controllers
             return Ok(huurder);
         }
 
-
+ 
         [HttpPut("{id}")]
         public IActionResult UpdateHuurder(Guid id, [FromBody] BedrijfsMedewerkerWijzigDTO dto)
         {
@@ -72,7 +64,7 @@ namespace WPR_project.Controllers
         }
 
 
-        // verwijder medewerker met gegeven Id
+
         [HttpDelete("{id}")]
         public IActionResult DeleteMedewerker(Guid id)
         {

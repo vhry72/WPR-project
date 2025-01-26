@@ -19,19 +19,6 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         _context.SaveChanges();
     }
 
-    public IQueryable<Huurverzoek> GetActiveHuurverzoekenByHuurderId(Guid huurderId)
-    {
-        return _context.Huurverzoeken
-           .Where(h => h.HuurderID == huurderId && h.endDate > DateTime.Now)
-           .Include(h => h.Voertuig);
-    }
-    public IQueryable<Huurverzoek> GetBeantwoordeHuurverzoekenByHuurderId(Guid huurderId)
-    {
-        return _context.Huurverzoeken
-           .Where(h => h.HuurderID == huurderId && (h.isBevestigd == true))
-           .Include(h => h.Voertuig);
-    }
-
     public IQueryable<Voertuig> GetAvailableVehicles(DateTime startDatum, DateTime eindDatum)
     {
 
@@ -48,21 +35,6 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
 
         return _context.Voertuigen
             .Where(v => !unavailableVehicleIds.Contains(v.voertuigId));
-    }
-
-
-
-    public IQueryable<Huurverzoek> GetHuurverzoekenForReminder(DateTime reminderTime)
-    {
-        return _context.Huurverzoeken
-            .Where(h => h.beginDate <= reminderTime && h.beginDate > DateTime.Now)
-            .Include(h => h.Voertuig);
-    }
-
-    public IQueryable<Huurverzoek> GetHuurverzoekIdByHuurderID(Guid id)
-    {
-        return _context.Huurverzoeken
-            .Where(h => h.HuurderID == id);
     }
 
     public IQueryable<Huurverzoek> GetAllHuurVerzoeken()
@@ -112,11 +84,6 @@ public class HuurVerzoekRepository : IHuurVerzoekRepository
         return _context.Huurverzoeken.Find(id);
     }
 
-    public IQueryable<Huurverzoek> GetById(Guid id)
-    {
-        return _context.Huurverzoeken
-            .Where(h => h.HuurVerzoekId == id);
-    }
 
     public void Update(Huurverzoek huurVerzoek)
     {

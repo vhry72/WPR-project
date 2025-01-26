@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.Identity;
 using WPR_project.Services.Email;
 using Microsoft.EntityFrameworkCore;
 using QRCoder;
-using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
+using System.Data;
+using Microsoft.Identity.Client;
 
 public class UserManagerService
 {
@@ -19,6 +20,7 @@ public class UserManagerService
     private readonly IEmailService _emailService;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ILogger<UserManagerService> _logger;
+    private string huurderID;
 
     public UserManagerService(
      IConfiguration configuration,
@@ -32,6 +34,43 @@ public class UserManagerService
         _emailService = emailService;
         _userManager = userManager;
         _logger = logger;
+    }
+
+    public async Task<string> BepaalHuurderId(string aspnetUserId)
+    {
+        var particulierHuurder = await _dbContext.ParticulierHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
+        var zakelijkHuurder = await _dbContext.ZakelijkHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
+        var backofficeMedewerker = await _dbContext.BackofficeMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
+        var frontofficeMedewerker = await _dbContext.FrontofficeMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
+        var bedrijfsMedewerker = await _dbContext.BedrijfsMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
+        var wagenparkBeheerder = await _dbContext.WagenparkBeheerders.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
+
+        if (particulierHuurder != null)
+        {
+            huurderID = particulierHuurder.particulierId.ToString();
+        }
+        else if (zakelijkHuurder != null)
+        {
+            huurderID = zakelijkHuurder.zakelijkeId.ToString();
+        }
+        else if (backofficeMedewerker != null)
+        {
+            huurderID = backofficeMedewerker.BackofficeMedewerkerId.ToString();
+        }
+        else if (frontofficeMedewerker != null)
+        {
+            huurderID = frontofficeMedewerker.FrontofficeMedewerkerId.ToString();
+        }
+        else if (bedrijfsMedewerker != null)
+        {
+            huurderID = bedrijfsMedewerker.bedrijfsMedewerkerId.ToString();
+        }
+        else if (wagenparkBeheerder != null)
+        {
+            huurderID = wagenparkBeheerder.beheerderId.ToString();
+        }
+
+        return huurderID;
     }
 
     public async Task<ParticulierHuurder> RegisterParticulierHuurder(ParticulierHuurderRegisterDTO dto)
@@ -283,37 +322,6 @@ public class UserManagerService
             throw;
         }
     }
-
-    public async Task<ApplicationUser> FindByIdAsync(string userId)
-    {
-        var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Id == userId);
-        if (user == null)
-        {
-            throw new KeyNotFoundException("Gebruiker niet gevonden.");
-        }
-        return user;
-    }
-
-    public async Task<bool> DeleteAsync(string aspNetUserId)
-    {
-        // Zoek de gebruiker in de AspNetUsers-tabel
-        var user = await _userManager.FindByIdAsync(aspNetUserId);
-        if (user == null)
-        {
-            throw new KeyNotFoundException("Gebruiker niet gevonden.");
-        }
-
-        // Verwijder de gebruiker
-        var result = await _userManager.DeleteAsync(user);
-        if (!result.Succeeded)
-        {
-            throw new Exception($"Fout bij het verwijderen van de gebruiker: {string.Join(", ", result.Errors)}");
-        }
-
-        return true;
-    }
-
-
 
 
     public async Task<ZakelijkHuurder> RegisterZakelijkeHuurder(ZakelijkeHuurderDTO dto)
@@ -595,41 +603,6 @@ public class UserManagerService
 
 
 
-    public async Task<bool> VerifyTwoFactorTokenAsync(ApplicationUser user, string token)
-    {
-        if (user == null)
-        {
-            _logger.LogError("2FA-verificatie mislukt: Gebruiker is null.");
-            throw new ArgumentNullException(nameof(user), "De gebruiker mag niet null zijn.");
-        }
-
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            _logger.LogWarning("2FA-verificatie mislukt: Token is leeg of null.");
-            return false;
-        }
-
-        try
-        {
-            var isValid = await _userManager.VerifyTwoFactorTokenAsync(user, _userManager.Options.Tokens.AuthenticatorTokenProvider, token);
-            if (!isValid)
-            {
-                _logger.LogWarning("2FA-verificatie mislukt: Ongeldig token voor gebruiker {UserId}.", user.Id);
-            }
-            else
-            {
-                _logger.LogInformation("2FA-verificatie geslaagd voor gebruiker {UserId}.", user.Id);
-            }
-
-            return isValid;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Er is een fout opgetreden tijdens 2FA-verificatie voor gebruiker {UserId}.", user.Id);
-            throw;
-        }
-    }
-
     public byte[] GenerateQrCode(string qrCodeUri)
     {
         using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
@@ -766,8 +739,5 @@ public class UserManagerService
         await _emailService.SendEmailWithImage(email, "2FA QR-code",
             "Hierbij je reset QR-code voor 2FA. Open de bijlage om de QR-code te scannen en in te stellen.", qrCodeImage);
     }
-
-
-
 }
 

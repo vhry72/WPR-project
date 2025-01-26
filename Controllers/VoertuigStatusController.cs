@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WPR_project.Models;
 using WPR_project.Services;
 
 namespace WPR_project.Controllers

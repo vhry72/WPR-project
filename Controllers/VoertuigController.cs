@@ -1,10 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using WPR_project.Models;
 using WPR_project.Services;
 using WPR_project.DTO_s;
-using Microsoft.AspNetCore.Authorization;
 
 namespace WPR_project.Controllers
 {
@@ -19,35 +15,8 @@ namespace WPR_project.Controllers
             _voertuigService = voertuigService;
         }
 
-        // filter de gehaalde voertuigen
-        [HttpGet("filter")]
-        public IActionResult GetFilteredVoertuigen([FromQuery] string voertuigType, DateTime? startDatum, DateTime? eindDatum, [FromQuery] string sorteerOptie)
-        {
-            try
-            {
-                var voertuigen = _voertuigService.GetFilteredVoertuigen(voertuigType, startDatum, eindDatum, sorteerOptie);
-                return Ok(voertuigen);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
 
 
-        [HttpGet]
-        public IActionResult GetAllVoertuigen()
-        {
-            try
-            {
-                var voertuigen = _voertuigService.GetAllVoertuigen();
-                return Ok(voertuigen);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Interne serverfout: {ex.Message}");
-            }
-        }
 
         [HttpGet("VoertuigType")]
         public IActionResult GetVoertuigTypeVoertuigen([FromQuery] string voertuigType)
@@ -77,54 +46,10 @@ namespace WPR_project.Controllers
                 return NotFound(ex.Message);
             }
         }
-        [HttpGet("getByKenteken/{kenteken}")]
-        public IActionResult GetVoertuigbyKenteken(string kenteken)
-        {
-            try
-            {
-                var voertuig = _voertuigService.GetVoertuigByKenteken(kenteken);
-                return Ok(voertuig);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
-
-
-        [HttpGet("/checkstatus/{id}")]
-        public IActionResult GetVoertuigStatus(Guid id)
-        {
-            try
-            {
-                var status = _voertuigService.GetVoertuigStatus(id);
-                return Ok(status);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(ex.Message);
-            }
-        }
 
 
 
-        [HttpPut("{id}")]
-        public IActionResult UpdateVoertuig(Guid id, [FromBody] VoertuigUpDTO DTO)
-        {
-            try
-            {
-                _voertuigService.UpdateUpVoertuig(id, DTO);
-                return Ok(new { Message = "Voertuiggegevens succesvol bijgewerkt." });
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return NotFound(new { Message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { Message = ex.Message });
-            }
-        }
+
         [HttpPut("veranderGegevens/{id}")]
         public IActionResult veranderGegevens(Guid id, [FromBody] VoertuigWijzigingDTO DTO)
         {
@@ -142,6 +67,7 @@ namespace WPR_project.Controllers
                 return BadRequest(new { Message = ex.Message });
             }
         }
+
 
         [HttpPut("veranderBeschikbaar/{id}/{voertuigBeschikbaar}")]
         public IActionResult neemIn(Guid id, bool voertuigBeschikbaar)
@@ -163,6 +89,7 @@ namespace WPR_project.Controllers
             }
         }
 
+
         [HttpPut("maaknotitie/{id}")]
         public IActionResult maakNotitie(Guid id, [FromBody] VoertuigDTO voertuigNotitieDTO)
         {
@@ -182,6 +109,7 @@ namespace WPR_project.Controllers
                 return StatusCode(500, $"Interne serverfout: {ex.Message}");
             }
         }
+
         [HttpDelete("verwijderVoertuig/{id}")]
         public IActionResult DeleteVoertuig(Guid id)
         {
@@ -195,7 +123,9 @@ namespace WPR_project.Controllers
                 return NotFound(new { Message = "Voertuig niet gevonden." });
             }
         }
-        
+
+
+
         [HttpPost("maakVoertuig")]
         public IActionResult maakVoertuig([FromBody] VoertuigDTO voertuig)
         {
@@ -220,6 +150,5 @@ namespace WPR_project.Controllers
             }
 
         }
-
     }
 }

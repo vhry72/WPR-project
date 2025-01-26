@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import VoertuigRequestService from "../../services/requests/VoertuigRequestService";
 import axios from "axios";
 
 
@@ -14,8 +13,10 @@ const VoertuigDetails = () => {
     useEffect(() => {
         const fetchVoertuigDetails = async () => {
             try {
-                const response = await VoertuigRequestService.getById(voertuigId);
-                setVoertuig(response);
+                const response = await axios.get(
+                    `https://localhost:5033/api/Voertuig/${voertuigId}`);
+                    console.log(response)
+                setVoertuig(response.data);
                 setFormData({
                     prijsPerDag: response.prijsPerDag,
                     kleur: response.kleur,

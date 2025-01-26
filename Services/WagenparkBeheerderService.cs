@@ -1,7 +1,4 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using WPR_project.Data;
+﻿using WPR_project.Data;
 using WPR_project.DTO_s;
 using WPR_project.Models;
 using WPR_project.Repositories;
@@ -34,21 +31,12 @@ namespace WPR_project.Services
             _emailService = emailService;
         }
 
-        public IEnumerable<WagenparkBeheerder> GetWagenparkBeheerders()
-        {
-            return _repository.GetWagenparkBeheerders();
-        }
 
         public WagenparkBeheerder GetBeheerderById(Guid id)
         {
             return _repository.GetBeheerderById(id);
         }
 
-        public void AddWagenparkBeheerder(WagenparkBeheerder beheerder)
-        {
-            _repository.AddWagenparkBeheerder(beheerder);
-            _repository.Save();
-        }
 
         public void UpdateWagenParkBeheerderAbonnement(Guid id, Guid abonnementId)
         {
@@ -57,24 +45,6 @@ namespace WPR_project.Services
             {
                 existingBeheerder.AbonnementId = abonnementId;
                 
-
-                _repository.UpdateWagenparkBeheerder(existingBeheerder);
-                _repository.Save();
-            }
-            else
-            {
-                throw new KeyNotFoundException("Beheerder niet gevonden.");
-            }
-        }
-
-        public void UpdateWagenparkBeheerder(Guid id, WagenparkBeheerder beheerder)
-        {
-            var existingBeheerder = _repository.GetBeheerderById(id);
-            if (existingBeheerder != null)
-            {
-                existingBeheerder.beheerderNaam = beheerder.beheerderNaam;
-                existingBeheerder.bedrijfsEmail = beheerder.bedrijfsEmail;
-                existingBeheerder.telefoonNummer = beheerder.telefoonNummer;
 
                 _repository.UpdateWagenparkBeheerder(existingBeheerder);
                 _repository.Save();
@@ -194,48 +164,7 @@ namespace WPR_project.Services
             _emailService.SendEmail(medewerkerEmail, "Welkom bij het bedrijfsaccount", bericht);
         }
 
-        public void ZetVoertuigenLimiet(Guid beheerderId, int nieuwLimiet)
-        {
-            var beheerder = _repository.GetBeheerderById(beheerderId);
-            if (beheerder == null)
-            {
-                throw new KeyNotFoundException("Beheerder niet gevonden.");
-            }
-            beheerder.voertuiglimiet = nieuwLimiet;
-            _repository.UpdateWagenparkBeheerder(beheerder);
-            _repository.Save();
-        }
-
-        public void VerhoogVoertuigenLimiet(Guid beheerderId, int verhoging)
-        {
-            var beheerder = _repository.GetBeheerderById(beheerderId);
-            if (beheerder == null)
-            {
-                throw new KeyNotFoundException("Beheerder niet gevonden.");
-            }
-            beheerder.voertuiglimiet += verhoging;
-            _repository.UpdateWagenparkBeheerder(beheerder);
-            _repository.Save();
-        }
-
-        public void VerlaagVoertuigenLimiet(Guid beheerderId, int verlaging)
-        {
-            var beheerder = _repository.GetBeheerderById(beheerderId);
-            if (beheerder == null)
-            {
-                throw new KeyNotFoundException("Beheerder niet gevonden.");
-            }
-            if (beheerder.voertuiglimiet - verlaging >= 0)
-            {
-                beheerder.voertuiglimiet -= verlaging;
-                _repository.UpdateWagenparkBeheerder(beheerder);
-                _repository.Save();
-            }
-            else
-            {
-                throw new InvalidOperationException("Limiet kan niet negatief zijn.");
-            }
-        }
+       
     
         // Verwijder een medewerker van een zakelijke huurder
         public void VerwijderMedewerker(Guid zakelijkeId, Guid medewerkerId)
@@ -255,41 +184,6 @@ namespace WPR_project.Services
             string bericht = $"Beste {medewerker.medewerkerNaam},\n\nU bent verwijderd uit het bedrijfsaccount van {huurder.bedrijfsNaam}.";
             _emailService.SendEmail(medewerker.medewerkerEmail, "Medewerker verwijderd", bericht);
         }
-
-        public string GetBeheerderEmailById(Guid zakelijkeId)
-        {
-            var beheerder = _context.WagenparkBeheerders.FirstOrDefault(b => b.beheerderId == zakelijkeId);
-            return beheerder?.bedrijfsEmail;
-        }
-
-        public BedrijfsMedewerkers? GetMedewerkerById(Guid medewerkerId)
-        {
-            return _context.BedrijfsMedewerkers.FirstOrDefault(m => m.bedrijfsMedewerkerId == medewerkerId);
-        }
-
-        // Haal alle medewerkers van een zakelijke huurder op
-        public IEnumerable<BedrijfsMedewerkers> GetMedewerkers(Guid zakelijkeId)
-        {
-            var huurder = _zakelijkeHuurderRepository.GetZakelijkHuurderById(zakelijkeId);
-            if (huurder == null)
-                throw new KeyNotFoundException("Zakelijke huurder niet gevonden.");
-
-            return huurder.Medewerkers;
-        }
-
-        // Haal alle abonnementen van een zakelijke huurder op
-        public IEnumerable<Abonnement> GetAbonnementen(Guid beheerderId)
-        {
-            var beheerder = _repository.GetBeheerderById(beheerderId);
-            if (beheerder == null)
-                throw new KeyNotFoundException("Wagenparkbeheerder niet gevonden.");
-
-            // Correct filteren van abonnementen die gekoppeld zijn aan de beheerder
-            return _abonnementRepository.GetAllAbonnementen()
-                .Where(a => a.zakelijkeId == beheerderId)
-                .ToList(); // Returnt een lijst met gefilterde abonnementen
-        }
-
 
         public List<Guid> GetMedewerkersIdsByWagenparkbeheerder(Guid wagenparkbeheerderId)
         {

@@ -1,7 +1,5 @@
-﻿using WPR_project.Models;
-using WPR_project.Repositories;
+﻿using WPR_project.Repositories;
 using WPR_project.DTO_s;
-using NuGet.Protocol.Core.Types;
 
 namespace WPR_project.Services
 {

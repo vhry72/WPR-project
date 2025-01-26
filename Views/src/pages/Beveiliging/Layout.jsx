@@ -22,12 +22,12 @@ const Layout = () => {
             { to: "/wagenparkWijzigPagina", label: "Wijzig Wagenparkbeheerder" },
             { to: "/accountwijzigingZakelijk", label: "Wijzig gegevens"}
         ],
-        BedrijfsMedewerker: [
+        Bedrijfsmedewerker: [
             { to: "/zakelijkHuurderDashBoard", label: "Dashboard" },
             { to: "/huurVoertuig", label: "Auto's huren" },
             { to: "/HuurverzoekInzien", label: "Huurverzoek inzien" }
         ],
-        BackofficeMedewerker: [
+        Backofficemedewerker: [
             { to: "/BackOfficeVerhuuraanvragen", label: "Huur Verzoeken" },
             { to: "/SchadeMeldingen", label: "Schademeldingen" },
             { to: "/VerhuurGegevens", label: "Afgekeurde huurverzoeken" },
@@ -39,19 +39,17 @@ const Layout = () => {
             { to: "/AbonnementKeuren", label: "Abonnementen keuren" }
 
         ],
-        FrontofficeMedewerker: [
+        Frontofficemedewerker: [
             { to: "/Schadeclaims", label: "Schadeclaims" },
             { to: "/VoertuigDetails", label: "Voertuig Gegevens" },
             { to: "/VoertuigInenUitname", label: "Voertuigen Verhuur"}
 
         ],
-        WagenparkBeheerder: [
-            { to: "/wagendashboard", label: "Wagen Dashboard" },
+        Wagenparkbeheerder: [
             { to: "/wagenbeheer", label: "Medewerkersbeheer" },
             { to: "/abonnement", label: "Kies Abonnement" },
             { to: "/RegisterBedrijfsmedewerker", label: "Voeg medewerker toe" },
             { to: "/MedewerkersWijzigen", label: "Wijzig Medewerkers"},
-            { to: "/medewerkerAbonnementDashboard", label: "Beheer Abonnement"},
             { to: "/VerhuurdeVoertuigen", label: "gehuurde voertuigen"}
         ],
     };

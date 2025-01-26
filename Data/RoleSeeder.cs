@@ -10,11 +10,11 @@ public class RoleSeeder
         var roles = new[]
         {
             "ZakelijkeHuurder",
-            "WagenparkBeheerder",
-            "BedrijfsMedewerker",
+            "Wagenparkbeheerder",
+            "Bedrijfsmedewerker",
             "ParticuliereHuurder",
-            "FrontofficeMedewerker",
-            "BackofficeMedewerker"
+            "Frontofficemedewerker",
+            "Backofficemedewerker"
         };
 
         foreach (var role in roles)

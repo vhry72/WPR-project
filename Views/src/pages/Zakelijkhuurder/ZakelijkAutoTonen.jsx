@@ -1,6 +1,5 @@
 ﻿import React, { useEffect, useState } from 'react';
 import "../../styles/ParticulierVoertuigTonen.css";
-import VoertuigRequestService from "../../services/requests/VoertuigRequestService";
 import { useNavigate } from 'react-router-dom';
 
 const ZakelijkAutoTonen = () => {
