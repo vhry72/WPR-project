@@ -2,6 +2,7 @@
 import axios from 'axios';
 import { v4 as uuidv4 } from "uuid";
 import { toast } from 'react-toastify';
+axios.defaults.withCredentials = true;
 
 const HuurVerzoekenList = () => {
     const [huurverzoeken, setHuurverzoeken] = useState([]);

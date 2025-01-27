@@ -82,7 +82,7 @@ const BevestigingHuur = () => {
 
             
             console.log("Huurverzoek object:", huurverzoek);
-            await axios.post(`https://localhost:5033/api/Huurverzoek`, huurverzoek);
+            await axios.post(`https://localhost:5033/api/Huurverzoek`, huurverzoek, { withCredentials: true });
 
             alert(`Huurverzoek succesvol bevestigd voor ${huurderNaam}!`);
             navigate("/");

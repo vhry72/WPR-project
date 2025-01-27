@@ -257,7 +257,7 @@ function PageRoute() {
                         <Route
                             path="SchadeClaimMaken"
                             element={
-                                <PrivateRoute allowedRoles={["Backofficemedewerker"]}>
+                                <PrivateRoute allowedRoles={["Backofficemedewerker", "Frontofficemedewerker"]}>
                                     <SchadeClaimMaken />
                                 </PrivateRoute>
                             }

@@ -1,6 +1,7 @@
 ﻿import React, { useEffect, useState } from 'react';
 
 
+
 const HuurVerzoekenList = () => {
     const [huurverzoeken, setHuurverzoeken] = useState([]);
     const [error, setError] = useState(null);
@@ -8,7 +9,9 @@ const HuurVerzoekenList = () => {
    
 
     useEffect(() => {
-        fetch('https://localhost:5033/api/Huurverzoek/GetAllAfgekeurde')
+        fetch('https://localhost:5033/api/Huurverzoek/GetAllAfgekeurde', {
+            credentials: 'include',
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Netwerk reactie was niet ok');

@@ -1,6 +1,9 @@
 ﻿import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; 
+axios.defaults.withCredentials = true;
+
+
 
 const SchadeClaimsList = () => {
     const [schademeldingen, setSchademeldingen] = useState([]);
@@ -10,7 +13,7 @@ const SchadeClaimsList = () => {
 
 
     useEffect(() => {
-        axios.get('https://localhost:5033/api/Schademelding')
+        axios.get(`https://localhost:5033/api/Schademelding`, { withCredentials: true })
             .then(response => {
                 const filteredSchademeldingen = response.data.filter(schademelding => !schademelding.isAfgehandeld);
                 setSchademeldingen(filteredSchademeldingen);
@@ -22,8 +25,9 @@ const SchadeClaimsList = () => {
             });
     }, []);
 
-    const inBehandeling = (id) => {
-        axios.put(`https://localhost:5033/api/Schademelding/inBehandeling/${id}/"In Behandeling"`, { withCredentials: true })
+    const inBehandeling = async (id) => {
+        const status = "InBehandeling";
+        await axios.put(`https://localhost:5033/api/Schademelding/Afgehandeld/${id}/${status}`, { withCredentials: true })
             .then(() => {
                 setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
                 alert('Schademelding op In Behandeling gezet.');
@@ -32,9 +36,10 @@ const SchadeClaimsList = () => {
     };
 
 
-    const Afgehandeld = async (id) => {
+    const Afgehandeld = async (id) => { 
+        const status = "Afgehandeld";
         try {
-            await axios.put(`https://localhost:5033/api/Schademelding/Afgehandeld/${id}/"Afgehandeld"`, { withCredentials: true });
+            await axios.put(`https://localhost:5033/api/Schademelding/Afgehandeld/${id}/${status}`, { withCredentials: true });
             setSchademeldingen(prevState => prevState.filter(req => req.schademeldingId !== id));
             alert('Schademelding afgehandeld.');
 

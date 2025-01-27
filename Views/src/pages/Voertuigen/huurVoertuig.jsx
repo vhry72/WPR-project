@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import JwtService from "../../services/JwtService";
 import { toast } from 'react-toastify';
+import axios from "axios";
+axios.defaults.withCredentials = true;
+
 
 const HuurVoertuig = () => {
     const navigate = useNavigate();
@@ -25,11 +28,10 @@ const HuurVoertuig = () => {
                 setUserRole(role);
 
                 if (role === 'Bedrijfsmedewerker') {
-                    const response = await fetch(`https://localhost:5033/api/BedrijfsMedewerkers/${userId}`, { withCredentials: true });
-                    const data = await response.json();
+                    const response = await axios.get(`https://localhost:5033/api/BedrijfsMedewerkers/${userId}`, { withCredentials: true });
                     console.log(response);
 
-                    if (!response.ok || !data.abonnementId) {
+                    if (!response.data.abonnementId) {
                         toast.error("U maakt geen deel uit van een bedrijfsabonnement. Neem contact op met uw wagenparkbeheerder.");
                         navigate('/');
                         return;
@@ -49,6 +51,8 @@ const HuurVoertuig = () => {
     const now = new Date();
     const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
     const minSelectableTime = twoHoursLater.toISOString().slice(0, 16);
+    const oneYearLater = new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+    const maxSelectableTime = oneYearLater.toISOString().slice(0, 16);
 
     const isTimeValid = (dateTime) => {
         const time = new Date(dateTime).getHours();
@@ -113,6 +117,7 @@ const HuurVoertuig = () => {
                         onChange={handleStartDateTimeChange}
                         required
                         min={minSelectableTime}
+                        max={maxSelectableTime}
                     />
                 </div>
 
@@ -125,6 +130,7 @@ const HuurVoertuig = () => {
                         onChange={handleEndDateTimeChange}
                         required
                         min={startDateTime || minSelectableTime}
+                        max={maxSelectableTime}
                     />
                 </div>
 

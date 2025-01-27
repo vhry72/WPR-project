@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import JwtService from "../../services/JwtService";
 import "../../styles/Abonnement.css";
+axios.defaults.withCredentials = true;
 
 const API_URL = "https://localhost:5033/api/Abonnement";
 
