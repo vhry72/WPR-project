@@ -19,11 +19,13 @@ namespace WPR_project.Services
             _emailService = emailService;
         }
 
-        
+
+
         public ZakelijkHuurder GetZakelijkHuurderById(Guid id)
         {
             return _repository.GetZakelijkHuurderById(id);
         }
+
 
         public List<WagenparkBeheerderGetGegevensDTO> GetWagenparkBeheerdersByZakelijkeId(Guid id)
         {

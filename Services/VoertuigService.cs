@@ -5,15 +5,18 @@ using WPR_project.DTO_s;
 
 namespace WPR_project.Services
 {
+    // Service voor het beheren van voertuigen
     public class VoertuigService
     {
         private readonly IVoertuigRepository _voertuigRepository;
 
+        // Constructor: initialiseert de repository
         public VoertuigService(IVoertuigRepository voertuigRepository)
         {
             _voertuigRepository = voertuigRepository;
         }
 
+        // Haal alle voertuigen op basis van een filter
         public IEnumerable<Voertuig> GetFilteredVoertuigen(string voertuigType, DateTime? startDatum, DateTime? eindDatum, string sorteerOptie)
         {
             if (!startDatum.HasValue || !eindDatum.HasValue)
@@ -30,6 +33,7 @@ namespace WPR_project.Services
         }
 
 
+        // Haal alle voertuigendetails op
         public Voertuig GetVoertuigDetails(Guid id)
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);
@@ -41,7 +45,7 @@ namespace WPR_project.Services
             return voertuig;
         }
 
-
+        // Haal alle voertuigen van een bepaald type op
         public IEnumerable<Voertuig> GetVoertuigTypeVoertuigen(string voertuigType)
         { 
 
@@ -49,7 +53,9 @@ namespace WPR_project.Services
         }
 
 
-        public void veranderGegevens(Guid id, VoertuigWijzigingDTO dto)
+        // wijzig de gegevens van een voertuig
+        public void veranderGegevens(Guid id, VoertuigWijzigingDTO DTO)
+
         {
             var voertuig = _voertuigRepository.GetVoertuigById(id);
             if (voertuig == null)
@@ -69,6 +75,9 @@ namespace WPR_project.Services
 
             _voertuigRepository.updateVoertuig(voertuig);
         }
+
+
+        // Wijzig de beschikbaarheid van een voertuig
 
         public void UpdateVoertuig(Guid id, VoertuigDTO DTO)
         {
@@ -101,6 +110,7 @@ namespace WPR_project.Services
             };
         }
 
+        // verwijder een voertuig
         public void Delete(Guid id)
         {
             var voertuig = _voertuigRepository.GetByID(id);
@@ -110,6 +120,7 @@ namespace WPR_project.Services
             _voertuigRepository.Save();
         }
 
+        // Maak een nieuw voertuig aan
         public void newVoertuig(VoertuigDTO voertuig)
         {
 

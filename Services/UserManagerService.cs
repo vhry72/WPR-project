@@ -15,6 +15,7 @@ using Microsoft.Identity.Client;
 
 public class UserManagerService
 {
+    // Service voor het beheren van gebruikers
     private readonly IConfiguration _configuration;
     private readonly GegevensContext _dbContext;
     private readonly IEmailService _emailService;
@@ -29,6 +30,7 @@ public class UserManagerService
      UserManager<ApplicationUser> userManager,
      ILogger<UserManagerService> logger)
     {
+        // Initialiseer dependencies
         _configuration = configuration;
         _dbContext = dbContext;
         _emailService = emailService;
@@ -36,8 +38,10 @@ public class UserManagerService
         _logger = logger;
     }
 
+    // Bepaal het huurder-ID op basis van de gebruiker in verschillende rollen
     public async Task<string> BepaalHuurderId(string aspnetUserId)
     {
+        // Zoek in alle mogelijke rollen en tabellen naar de gebruiker
         var particulierHuurder = await _dbContext.ParticulierHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
         var zakelijkHuurder = await _dbContext.ZakelijkHuurders.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
         var backofficeMedewerker = await _dbContext.BackofficeMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
@@ -45,6 +49,7 @@ public class UserManagerService
         var bedrijfsMedewerker = await _dbContext.BedrijfsMedewerkers.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
         var wagenparkBeheerder = await _dbContext.WagenparkBeheerders.FirstOrDefaultAsync(h => h.AspNetUserId == aspnetUserId);
 
+        // Controleer in welke tabel de gebruiker bestaat en stel het huurder-ID in
         if (particulierHuurder != null)
         {
             huurderID = particulierHuurder.particulierId.ToString();
@@ -73,6 +78,7 @@ public class UserManagerService
         return huurderID;
     }
 
+    // Registreer een particuliere huurder
     public async Task<ParticulierHuurder> RegisterParticulierHuurder(ParticulierHuurderRegisterDTO dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -148,6 +154,7 @@ public class UserManagerService
         }
     }
 
+    // Registreer een gebruiker
     private async Task<IdentityUser> RegisterUser(string email, string password, string role)
     {
         var user = new ApplicationUser
@@ -174,6 +181,7 @@ public class UserManagerService
         return user;
     }
 
+    // Registreer een backofficemedewerker
     public async Task<BackofficeMedewerker> RegisterBackofficeMedewerker(BackofficeMedewerker dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -209,6 +217,7 @@ public class UserManagerService
         }
     }
 
+    // Registreer een frontofficemedewerker
     public async Task<FrontofficeMedewerker> RegisterFrontofficeMedewerker(FrontofficeMedewerker dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -244,6 +253,7 @@ public class UserManagerService
         }
     }
 
+    // Registreer een bedrijfsmedewerker
     public async Task<BedrijfsMedewerkers> RegisterBedrijfsMedewerker(BedrijfsmedewerkerRegDTO dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -282,6 +292,7 @@ public class UserManagerService
         }
     }
 
+    // Registreer een wagenparkbeheerder
     public async Task<WagenparkBeheerder> RegisterWagenParkBeheerder(WagenparkBeheerderDTO dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -323,7 +334,7 @@ public class UserManagerService
         }
     }
 
-
+    // Registreer een zakelijke huurder
     public async Task<ZakelijkHuurder> RegisterZakelijkeHuurder(ZakelijkeHuurderDTO dto)
     {
         using var transaction = await _dbContext.Database.BeginTransactionAsync();
@@ -396,7 +407,7 @@ public class UserManagerService
     }
 
 
-
+    // Genereer een JWT-token voor authenticatie
     public string GenerateJwtToken(string huurderId, string role)
     {
         var claims = new List<Claim>
@@ -420,7 +431,7 @@ public class UserManagerService
 
 
 
-
+    // Verstuur een e-mail met een bevestigingslink
     public async Task<bool> ConfirmEmailAsync(string userId, string token)
     {
         if (!Guid.TryParse(userId, out Guid parsedUserId) || !Guid.TryParse(token, out Guid parsedToken))
@@ -517,6 +528,7 @@ public class UserManagerService
         throw new InvalidOperationException("Ongeldige gebruiker of token.");
     }
 
+    // Controleer of een e-mailadres is bevestigd
     public async Task<bool> IsEmailConfirmedAsync(string email)
     {
         // Controleer in ParticulierHuurders
@@ -578,7 +590,7 @@ public class UserManagerService
         return false;
     }
 
-
+    // Activeer tweefactorauthenticatie voor een gebruiker
     public async Task<string> EnableTwoFactorAuthenticationAsync(ApplicationUser user)
     {
         if (user == null)
