@@ -58,7 +58,8 @@ public class HuurverzoekController : ControllerBase
             beginDate = huurVerzoekDto.beginDate,
             endDate = huurVerzoekDto.endDate,
             approved = false,
-            isBevestigd = false
+            isBevestigd = false,
+            IsCompleted = false,
         };
 
         _service.Add(huurVerzoek);

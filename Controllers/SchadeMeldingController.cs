@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
-using WPR_project.Data;
+
 using WPR_project.DTO_s;
 using WPR_project.Services;
 
@@ -21,7 +18,7 @@ namespace WPR_project.Controllers
             _schademeldingservice = schademeldingservice;
         }
 
-        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
+        [Authorize(Roles = "Frontofficemedewerker,Backofficemedewerker")]
         [HttpPost("maak")]
         public IActionResult CreateSchadeMelding([FromBody] SchademeldingDTO schademelding)
         {
@@ -42,7 +39,7 @@ namespace WPR_project.Controllers
         }
 
 
-        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
+        [Authorize(Roles = "Frontofficemedewerker,Backofficemedewerker")]
         [HttpGet]
         public ActionResult<IQueryable<SchadeMeldingInfoDTO>> GetAllSchademeldingen()
         {
@@ -51,7 +48,7 @@ namespace WPR_project.Controllers
         }
 
 
-        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
+        [Authorize(Roles = "Frontofficemedewerker,Backofficemedewerker")]
         [HttpPut("inBehandeling/{id}/{status}")]
         public IActionResult zetOpInBehandeling(Guid id, string status)
         {
@@ -75,7 +72,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
+        [Authorize(Roles = "Frontofficemedewerker,Backofficemedewerker")]
         [HttpPut("Afgehandeld/{id}/{status}")]
         public IActionResult zetOpAfgehandeld(Guid id, string status)
         {
@@ -99,7 +96,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [Authorize(Roles = "Backofficemedewerker,Frontofficemedewerker")]
+        [Authorize(Roles = "Frontofficemedewerker,Backofficemedewerker")]
         [HttpPut("InReparatie/{id}/{status}")]
         public IActionResult zetOpInReparatie(Guid id, string status)
         {

@@ -45,7 +45,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [Authorize(Roles = "WagenparkBeheerder")]
+        [Authorize(Roles = "Wagenparkbeheerder")]
         [HttpPost("{beheerderId}/abonnement/maken")]
         public IActionResult MaakBedrijfsAbonnement(Guid beheerderId, [FromBody] AbonnementDTO abonnementDto)
         {
@@ -112,7 +112,7 @@ namespace WPR_project.Controllers
         }
 
 
-        [Authorize(Roles = "WagenparkBeheerder")]
+        [Authorize(Roles = "Wagenparkbeheerder")]
         [HttpPost("{beheerderId}/saldo/opwaarderen")]
         public IActionResult LaadSaldoOp(Guid zakelijkeId, [FromBody] decimal bedrag)
         {
@@ -128,7 +128,7 @@ namespace WPR_project.Controllers
         }
 
 
-        [Authorize(Roles = "WagenparkBeheerder")]
+        [Authorize(Roles = "Wagenparkbeheerder")]
         [HttpPost("{beheerderId}/medewerker/toevoegen/{medewerkerId}")]
         public IActionResult VoegMedewerkerToe(Guid beheerderId, Guid medewerkerId)
         {
@@ -143,7 +143,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [Authorize(Roles = "WagenparkBeheerder")]
+        [Authorize(Roles = "Wagenparkbeheerder")]
         [HttpDelete("{beheerderId}/medewerker/verwijderen/{medewerkerId}")]
         public IActionResult VerwijderMedewerker(Guid beheerderId, Guid medewerkerId)
         {
@@ -163,7 +163,7 @@ namespace WPR_project.Controllers
         }
 
 
-        [Authorize(Roles = "WagenparkBeheerder")]
+        [Authorize(Roles = "Wagenparkbeheerder")]
         [HttpGet("{beheerderId}/huidig-abonnement")]
         public IActionResult GetHuidigAbonnement(Guid beheerderId)
         {
@@ -182,7 +182,7 @@ namespace WPR_project.Controllers
             }
         }
 
-        [Authorize(Roles = "WagenparkBeheerder")]
+        [Authorize(Roles = "Wagenparkbeheerder")]
         [HttpPost("{beheerderId}/abonnement/wijzig")]
         public IActionResult WijzigAbonnement(Guid beheerderId, [FromBody] AbonnementWijzigDTO abonnement)
         {

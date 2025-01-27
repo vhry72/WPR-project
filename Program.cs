@@ -11,6 +11,7 @@ using System.Text.Json.Serialization;
 using Hangfire;
 using NuGet.Protocol.Resources;
 using Hangfire.Dashboard;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,51 +47,6 @@ builder.Services.AddDbContext<GegevensContext>(options =>
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<GegevensContext>()
     .AddDefaultTokenProviders();
-
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    // Haal de JWT-token uit de cookie
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            var jwtCookie = context.HttpContext.Request.Cookies["jwt"];
-            if (!string.IsNullOrEmpty(jwtCookie))
-            {
-                context.Token = jwtCookie; // Stel de JWT-token in vanuit de cookie
-            }
-            return Task.CompletedTask;
-        },
-        OnAuthenticationFailed = context =>
-        {
-            // Optionele logging voor debugging van mislukte authenticatie
-            Console.WriteLine("JWT authenticatie mislukt: " + context.Exception.Message);
-            return Task.CompletedTask;
-        }
-    };
-
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        // Validatie van de JWT-inhoud
-        ValidateIssuer = true, // Controleer de 'issuer' claim
-        ValidateAudience = true, // Controleer de 'audience' claim
-        ValidateLifetime = true, // Controleer of de token verlopen is
-        ValidateIssuerSigningKey = true, // Controleer de handtekening van de token
-
-        // Instellingen voor validatie
-        ValidIssuer = builder.Configuration["Jwt:Issuer"], // Uit je appsettings.json
-        ValidAudience = builder.Configuration["Jwt:Audience"], // Uit je appsettings.json
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
-
-        // Tolerantie voor tijdssynchronisatie (optioneel)
-        ClockSkew = TimeSpan.Zero // Verwijdert standaard tolerantie van 5 minuten
-    };
-});
 
 
 builder.Services.AddHangfire(configuration => configuration
@@ -137,17 +93,66 @@ builder.Services.AddScoped<FrontOfficeService>();
 
 
 
-
-
-
 // Controllers en Swagger
 builder.Services.AddControllers();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    // Haal de JWT-token uit de cookie
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var jwtCookie = context.HttpContext.Request.Cookies["jwt"];
+            if (!string.IsNullOrEmpty(jwtCookie))
+            {
+                Console.WriteLine($"JWT ontvangen: {jwtCookie}");
+                context.Token = jwtCookie;
+            }
+            return Task.CompletedTask;
+        },
+        OnTokenValidated = context =>
+        {
+            // Log de claims
+            var claims = context.Principal.Claims.Select(c => $"{c.Type}: {c.Value}");
+            Console.WriteLine($"Claims gevalideerd: {string.Join(", ", claims)}");
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine($"Authenticatie mislukt: {context.Exception.Message}");
+            return Task.CompletedTask;
+        }
+    };
+
+
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        // Zorg ervoor dat de juiste claimnamen worden gebruikt
+        NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", // userId
+        RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",         // role
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+
 
 
 if (app.Environment.IsDevelopment())

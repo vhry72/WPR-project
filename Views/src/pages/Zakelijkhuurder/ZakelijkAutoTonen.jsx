@@ -100,6 +100,12 @@ const ZakelijkAutoTonen = () => {
                 <button onClick={() => handleSort("bouwjaar")} className="sort-button">
                     Sorteer op Bouwjaar
                 </button>
+                <button onClick={() => handleSort("aantalDeuren")} className="sort-button">
+                    Sorteer op deuren
+                </button>
+                <button onClick={() => handleSort("aantalSlaapplekken")} className="sort-button">
+                    Sorteer op slaapplekken
+                </button>
             </div>
             <div className="card-container">
                 {filteredVoertuigen.map((voertuig, index) => (
@@ -113,26 +119,6 @@ const ZakelijkAutoTonen = () => {
                             alt={`${voertuig.merk} ${voertuig.model}`}
                             className="card-image"
                         />
-                        <div className="button-container">
-                            <button onClick={() => handleSort("merk")} className="sort-button">
-                                Sorteer op Merk
-                            </button>
-                            <button onClick={() => handleSort("model")} className="sort-button">
-                                Sorteer op Model
-                            </button>
-                            <button onClick={() => handleSort("prijsPerDag")} className="sort-button">
-                                Sorteer op Prijs
-                            </button>
-                            <button onClick={() => handleSort("bouwjaar")} className="sort-button">
-                                Sorteer op Bouwjaar
-                            </button>
-                            <button onClick={() => handleSort("aantalDeuren")} className="sort-button">
-                                Sorteer op deuren
-                            </button>
-                            <button onClick={() => handleSort("aantalSlaapplekken")} className="sort-button">
-                                Sorteer op slaapplekken
-                            </button>
-                        </div>
                         <div className="card-content">
                             <h3>{voertuig.merk} {voertuig.model}</h3>
                             <p><strong>Type:</strong> {voertuig.voertuigType}</p>
