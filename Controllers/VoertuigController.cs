@@ -57,7 +57,7 @@ namespace WPR_project.Controllers
         [Authorize(Roles = "Backofficemedewerker")]
         [HttpPut("veranderGegevens/{id}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IActionResult> veranderGegevens(Guid id, [FromForm] VoertuigWijzigingDTO DTO, [FromForm] IFormFile afbeelding)
+        public async Task<IActionResult> veranderGegevens(Guid id, [FromForm] VoertuigWijzigingDTO DTO, [FromForm] IFormFile? afbeelding)
         {
             if (afbeelding != null)
             {

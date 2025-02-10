@@ -1,0 +1,15 @@
+[
+  {
+    "bedrijfsMedewerkerId": "1d840e69-f8e6-4331-8ec2-6f193c6a4ee9",
+    "medewerkerNaam": "testmail10min",
+    "medewerkerEmail": "qap20008@bcooq.com",
+    "emailBevestigingToken": "b441d5ee-8ffc-481f-81cb-5c6efab7348d",
+    "isEmailBevestigd": false,
+    "wachtwoord": "Hallo123!",
+    "abonnementId": "53ca58d7-ef39-447b-bc57-14c275a28119",
+    "zakelijkeId": "73f21dc1-e9f2-40f3-8f6c-5a21f78c5235",
+    "beheerderId": "ba6e3439-7021-4c1c-b92e-4451a254f1b3",
+    "aspNetUserId": "abbc03b1-c6b5-456a-8766-be61a825f578",
+    "isActive": true
+  }
+]

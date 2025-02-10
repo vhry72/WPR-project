@@ -32,8 +32,8 @@ const VoertuigDetails = () => {
                         prijsPerDag: response.data.prijsPerDag || "",
                         bouwjaar: response.data.bouwjaar || "",
                         kenteken: response.data.kenteken || "",
-                        AantalDeuren: response.data.AantalDeuren || "",
-                        AantalSlaapplekken: response.data.AantalSlaapplekken || ""
+                        AantalDeuren: response.data.aantalDeuren || "",
+                        AantalSlaapplekken: response.data.aantalSlaapplekken || ""
                     });
                 }
             } catch (err) {

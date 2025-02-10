@@ -109,7 +109,7 @@ namespace WPR_project.Services
 
 
         // Voeg een nieuw abonnement toe
-        public void AddAbonnement(Abonnement abonnement)
+        public void AddAbonnement(Abonnement abonnement, Guid beheerderId)
 
         {
             if (abonnement == null)
@@ -120,7 +120,7 @@ namespace WPR_project.Services
             
             _abonnementRepository.AddAbonnement(abonnement);
             _abonnementRepository.Save();
-            StuurFactuur(id, abonnement.AbonnementId);
+            StuurFactuur(beheerderId, abonnement.AbonnementId);
         }
 
 

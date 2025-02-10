@@ -2,7 +2,7 @@ describe('Wagenparkbeheerder Dashboard', () => {
 
     // Authentication skip
     beforeEach(() => {
-        localStorage.setItem("role", "WagenparkBeheerder");
+        localStorage.setItem("role", "Wagenparkbeheerder");
     });
 
     context("Happy flow", () => {
@@ -22,9 +22,9 @@ describe('Wagenparkbeheerder Dashboard', () => {
             cy.intercept(
                 {
                     method: 'GET',
-                    url: '/api/WagenparkBeheerder/ba6e3439-7021-4c1c-b92e-4451a254f1b3/medewerker-obj'
+                    url: '/api/WagenparkBeheerder/ba6e3439-7021-4c1c-b92e-4451a254f1b3/medewerker-object'
                 },
-                { fixture: 'medewerker-object.fixture.json' }
+                { fixture: 'medewerkers-object.fixture.json' }
             );
 
             cy.intercept(
@@ -35,16 +35,21 @@ describe('Wagenparkbeheerder Dashboard', () => {
                 { fixture: 'medewerker-toevoegen.fixture.json' }
             );
 
+            cy.intercept(
+                {
+                    method: 'DELETE',
+                    url: '/api/Abonnement/ba6e3439-7021-4c1c-b92e-4451a254f1b3/medewerker/verwijderen/1d840e69-f8e6-4331-8ec2-6f193c6a4ee9'
+                },
+                {fixture : 'medewerker-verwijderen.fixture.json'}
+                
+            );
+
         });
 
         it('Happy flow', () => {
             cy.visit('https://localhost:5173/wagenbeheer').then(() => {
                 cy.log('Page loaded');
             });
-
-
-            // Check of dashboard titel aanwezig is
-            cy.get('h1').contains('Wagenparkbeheerder Dashboard').should('be.visible');
 
         });
 

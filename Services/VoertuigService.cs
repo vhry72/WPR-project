@@ -63,15 +63,24 @@ namespace WPR_project.Services
                 throw new KeyNotFoundException("Voertuig niet gevonden.");
             }
 
-            voertuig.merk = dto.merk;
-            voertuig.model = dto.model;
-            voertuig.kleur = dto.kleur;
-            voertuig.prijsPerDag = dto.prijsPerDag;
-            voertuig.bouwjaar = dto.bouwjaar;
-            voertuig.kenteken = dto.kenteken;
-            voertuig.AantalDeuren = dto.AantalDeuren;
-            voertuig.AantalSlaapplekken = dto.AantalSlaapplekken;
-            voertuig.Afbeelding = dto.Afbeelding;
+            voertuig.merk = DTO.merk;
+            voertuig.model = DTO.model;
+            voertuig.kleur = DTO.kleur;
+            voertuig.prijsPerDag = DTO.prijsPerDag;
+            voertuig.bouwjaar = DTO.bouwjaar;
+            voertuig.kenteken = DTO.kenteken;
+            if (DTO.AantalDeuren != null)
+            {
+                voertuig.AantalDeuren = DTO.AantalDeuren;
+            }
+            if (DTO.AantalSlaapplekken != null)
+            {
+                voertuig.AantalSlaapplekken = DTO.AantalSlaapplekken;
+            }
+            if (DTO.Afbeelding != null)
+            {
+                voertuig.Afbeelding = DTO.Afbeelding;
+            }
 
             _voertuigRepository.updateVoertuig(voertuig);
         }
