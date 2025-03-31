@@ -30,4 +30,4 @@ na de backend aan te zetten voer je de volgende stappen uit:
 11. En nog veeeeeel meer
 
 #Eindresultaat
-Een 9
+1. Een 9
